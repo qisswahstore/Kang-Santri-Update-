@@ -8,6 +8,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>Auva - Keuangan Kantor</title>
     
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Auva%20-%20Keuangan%20Kantor%22,%22short_name%22:%22Auva%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22theme_color%22:%22%230d5d4e%22,%22background_color%22:%22%230d5d4e%22,%22icons%22:[{%22src%22:%22https://placehold.co/192x192/0d5d4e/white?text=AUVA%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22},{%22src%22:%22https://placehold.co/512x512/0d5d4e/white?text=AUVA%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
@@ -365,7 +367,6 @@
             <div class="form-group" style="flex:1;"><label>📅 Tanggal Bayar</label><input type="date" id="cicilanTanggal" class="form-control"></div>
             <div class="form-group" style="flex:1;"><label>📅 Jatuh Tempo</label><input type="date" id="cicilanJatuhTempo" class="form-control"></div>
         </div>
-        <!-- FITUR BARU: Pilihan Logo untuk PDF per Orang -->
         <div class="form-group">
             <label>🏢 Logo untuk PDF Tagihan</label>
             <select id="cicilanLogoPilih" class="form-control">
@@ -457,6 +458,29 @@
     // ==================== GLOBAL STATE ====================
     let kasKantor = [], cicilanList = [], titipanList = [], currentTab = 'cicilan', currentTipeKas = 'masuk', kategoriList = [];
 
+    // ==================== NOTIFIKASI (FITUR BARU) ====================
+    function notifikasiCicilanJatuhTempo() {
+        const today = new Date().toISOString().split('T')[0];
+        const jatuhTempo = cicilanList.filter(c => c.status === 'belum' && c.jatuh && c.jatuh === today);
+        if (jatuhTempo.length > 0 && Notification.permission === 'granted') {
+            jatuhTempo.forEach(c => {
+                new Notification('🔔 Tagihan Jatuh Tempo', {
+                    body: `Cicilan ${c.nama} jatuh tempo hari ini! Sisa: ${formatRupiah(c.total - c.dibayar)}`,
+                    icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%230d5d4e" viewBox="0 0 24 24"%3E%3Cpath d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/%3E%3C/svg%3E'
+                });
+            });
+        }
+    }
+
+    function mintaIzinNotifikasi() {
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+        setInterval(() => {
+            if (Notification.permission === 'granted') notifikasiCicilanJatuhTempo();
+        }, 24 * 60 * 60 * 1000);
+    }
+
     // ==================== INIT ====================
     function initApp() {
         setTimeout(() => {
@@ -470,6 +494,7 @@
         document.getElementById('cicilanTanggal').value = today;
         document.getElementById('titipanTanggalTitip').value = today;
         refreshAllUI();
+        mintaIzinNotifikasi(); // FITUR BARU: minta izin notifikasi
     }
 
     function loadAllData() {
@@ -488,10 +513,25 @@
         localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList));
     }
 
+    // ==================== KONFIGURASI (DIPERBAIKI) ====================
     function loadConfig() {
         let config = localStorage.getItem('auva_config_v2');
-        if (!config) { config = DEFAULT_CONFIG; localStorage.setItem('auva_config_v2', JSON.stringify(config)); }
-        else { config = JSON.parse(config); }
+        
+        if (!config) {
+            config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+            localStorage.setItem('auva_config_v2', JSON.stringify(config));
+        } else {
+            config = JSON.parse(config);
+        }
+        
+        config.instansi1 = config.instansi1 || DEFAULT_CONFIG.instansi1;
+        config.instansi2 = config.instansi2 || DEFAULT_CONFIG.instansi2;
+        config.settings = config.settings || DEFAULT_CONFIG.settings;
+        config.watermark = config.watermark || DEFAULT_CONFIG.watermark;
+        config.qr = config.qr || DEFAULT_CONFIG.qr;
+        config.wa_template = config.wa_template || DEFAULT_CONFIG.wa_template;
+        config.kategori = config.kategori || DEFAULT_CONFIG.kategori;
+        
         document.getElementById('cfg_instansi1_nama').value = config.instansi1.nama || '';
         document.getElementById('cfg_instansi1_alamat').value = config.instansi1.alamat || '';
         document.getElementById('cfg_instansi1_telepon').value = config.instansi1.telepon || '';
@@ -500,6 +540,7 @@
         document.getElementById('cfg_instansi1_pimpinan').value = config.instansi1.pimpinan || '';
         document.getElementById('cfg_instansi1_jabatan').value = config.instansi1.jabatan || '';
         if (config.instansi1.logo) document.getElementById('previewLogo1').src = config.instansi1.logo;
+        
         document.getElementById('cfg_instansi2_aktif').checked = config.instansi2.aktif || false;
         document.getElementById('cfg_instansi2_nama').value = config.instansi2.nama || '';
         document.getElementById('cfg_instansi2_alamat').value = config.instansi2.alamat || '';
@@ -509,71 +550,96 @@
         document.getElementById('cfg_instansi2_pimpinan').value = config.instansi2.pimpinan || '';
         document.getElementById('cfg_instansi2_jabatan').value = config.instansi2.jabatan || '';
         if (config.instansi2.logo) document.getElementById('previewLogo2').src = config.instansi2.logo;
-        document.getElementById('cfg_header_mode').value = config.settings?.header_mode || 'both';
-        document.getElementById('cfg_ttd_mode').value = config.settings?.ttd_mode || 'both';
-        document.getElementById('cfg_invoice_prefix').value = config.settings?.invoice_prefix || 'INV/AUVA';
-        document.getElementById('cfg_watermark_enabled').checked = config.watermark?.enabled || true;
-        document.getElementById('cfg_watermark_text').value = config.watermark?.text || 'DOKUMEN RESMI';
-        document.getElementById('cfg_watermark_opacity').value = config.watermark?.opacity || 0.3;
-        document.getElementById('cfg_qr_enabled').checked = config.qr?.enabled || true;
-        document.getElementById('cfg_qr_text').value = config.qr?.text || 'Dokumen Resmi KBIHU Amanatul Ummah';
-        document.getElementById('cfg_wa_cicilan').value = config.wa_template?.cicilan || 'Yth. [nama], sisa tagihan [sisa] jatuh tempo [tanggal]. Mohon segera dibayar.';
-        document.getElementById('cfg_wa_titipan').value = config.wa_template?.titipan || 'Yth. [penerima], ada titipan dari [penitip] sebesar [nominal]. Silakan ambil.';
-        kategoriList = config.kategori || ['operasional', 'gaji', 'listrik', 'atk', 'lain'];
+        
+        document.getElementById('cfg_header_mode').value = config.settings.header_mode || 'both';
+        document.getElementById('cfg_ttd_mode').value = config.settings.ttd_mode || 'both';
+        document.getElementById('cfg_invoice_prefix').value = config.settings.invoice_prefix || 'INV/AUVA';
+        
+        document.getElementById('cfg_watermark_enabled').checked = config.watermark.enabled !== false;
+        document.getElementById('cfg_watermark_text').value = config.watermark.text || 'DOKUMEN RESMI';
+        document.getElementById('cfg_watermark_opacity').value = config.watermark.opacity || 0.3;
+        
+        document.getElementById('cfg_qr_enabled').checked = config.qr.enabled !== false;
+        document.getElementById('cfg_qr_text').value = config.qr.text || 'Dokumen Resmi KBIHU Amanatul Ummah';
+        
+        document.getElementById('cfg_wa_cicilan').value = config.wa_template.cicilan || 'Yth. [nama], sisa tagihan [sisa] jatuh tempo [tanggal]. Mohon segera dibayar.';
+        document.getElementById('cfg_wa_titipan').value = config.wa_template.titipan || 'Yth. [penerima], ada titipan dari [penitip] sebesar [nominal]. Silakan ambil.';
+        
+        kategoriList = config.kategori;
         renderKategoriList();
         updateKategoriSelect();
     }
 
     function saveConfig() {
-        const config = {
-            instansi1: {
-                nama: document.getElementById('cfg_instansi1_nama').value,
-                alamat: document.getElementById('cfg_instansi1_alamat').value,
-                telepon: document.getElementById('cfg_instansi1_telepon').value,
-                email: document.getElementById('cfg_instansi1_email').value,
-                npwp: document.getElementById('cfg_instansi1_npwp').value,
-                pimpinan: document.getElementById('cfg_instansi1_pimpinan').value,
-                jabatan: document.getElementById('cfg_instansi1_jabatan').value,
-                logo: document.getElementById('previewLogo1').src || ''
-            },
-            instansi2: {
-                aktif: document.getElementById('cfg_instansi2_aktif').checked,
-                nama: document.getElementById('cfg_instansi2_nama').value,
-                alamat: document.getElementById('cfg_instansi2_alamat').value,
-                telepon: document.getElementById('cfg_instansi2_telepon').value,
-                email: document.getElementById('cfg_instansi2_email').value,
-                izin: document.getElementById('cfg_instansi2_izin').value,
-                pimpinan: document.getElementById('cfg_instansi2_pimpinan').value,
-                jabatan: document.getElementById('cfg_instansi2_jabatan').value,
-                logo: document.getElementById('previewLogo2').src || ''
-            },
-            settings: {
-                header_mode: document.getElementById('cfg_header_mode').value,
-                ttd_mode: document.getElementById('cfg_ttd_mode').value,
-                invoice_prefix: document.getElementById('cfg_invoice_prefix').value
-            },
-            watermark: {
-                enabled: document.getElementById('cfg_watermark_enabled').checked,
-                text: document.getElementById('cfg_watermark_text').value,
-                opacity: parseFloat(document.getElementById('cfg_watermark_opacity').value)
-            },
-            qr: {
-                enabled: document.getElementById('cfg_qr_enabled').checked,
-                text: document.getElementById('cfg_qr_text').value
-            },
-            wa_template: {
-                cicilan: document.getElementById('cfg_wa_cicilan').value,
-                titipan: document.getElementById('cfg_wa_titipan').value
-            },
+        const instansi1 = {
+            nama: document.getElementById('cfg_instansi1_nama').value,
+            alamat: document.getElementById('cfg_instansi1_alamat').value,
+            telepon: document.getElementById('cfg_instansi1_telepon').value,
+            email: document.getElementById('cfg_instansi1_email').value,
+            npwp: document.getElementById('cfg_instansi1_npwp').value,
+            pimpinan: document.getElementById('cfg_instansi1_pimpinan').value,
+            jabatan: document.getElementById('cfg_instansi1_jabatan').value,
+            logo: document.getElementById('previewLogo1').src || ''
+        };
+        
+        const instansi2 = {
+            aktif: document.getElementById('cfg_instansi2_aktif').checked,
+            nama: document.getElementById('cfg_instansi2_nama').value,
+            alamat: document.getElementById('cfg_instansi2_alamat').value,
+            telepon: document.getElementById('cfg_instansi2_telepon').value,
+            email: document.getElementById('cfg_instansi2_email').value,
+            izin: document.getElementById('cfg_instansi2_izin').value,
+            pimpinan: document.getElementById('cfg_instansi2_pimpinan').value,
+            jabatan: document.getElementById('cfg_instansi2_jabatan').value,
+            logo: document.getElementById('previewLogo2').src || ''
+        };
+        
+        const settings = {
+            header_mode: document.getElementById('cfg_header_mode').value,
+            ttd_mode: document.getElementById('cfg_ttd_mode').value,
+            invoice_prefix: document.getElementById('cfg_invoice_prefix').value
+        };
+        
+        const watermark = {
+            enabled: document.getElementById('cfg_watermark_enabled').checked,
+            text: document.getElementById('cfg_watermark_text').value,
+            opacity: parseFloat(document.getElementById('cfg_watermark_opacity').value)
+        };
+        
+        const qr = {
+            enabled: document.getElementById('cfg_qr_enabled').checked,
+            text: document.getElementById('cfg_qr_text').value
+        };
+        
+        const wa_template = {
+            cicilan: document.getElementById('cfg_wa_cicilan').value,
+            titipan: document.getElementById('cfg_wa_titipan').value
+        };
+        
+        const configBaru = {
+            instansi1: instansi1,
+            instansi2: instansi2,
+            settings: settings,
+            watermark: watermark,
+            qr: qr,
+            wa_template: wa_template,
             kategori: kategoriList
         };
-        localStorage.setItem('auva_config_v2', JSON.stringify(config));
-        showToast('✅ Konfigurasi disimpan!');
+        
+        localStorage.setItem('auva_config_v2', JSON.stringify(configBaru));
+        showToast('✅ Konfigurasi berhasil disimpan!');
         showPage('keuangan');
+        refreshAllUI();
     }
 
     function resetConfigToDefault() {
-        if (confirm('Reset ke default?')) { localStorage.setItem('auva_config_v2', JSON.stringify(DEFAULT_CONFIG)); loadConfig(); showToast('✅ Reset ke default'); }
+        if (confirm('⚠️ Reset semua konfigurasi ke default?')) {
+            localStorage.setItem('auva_config_v2', JSON.stringify(DEFAULT_CONFIG));
+            loadConfig();
+            showToast('✅ Konfigurasi direset ke default');
+            showPage('keuangan');
+            refreshAllUI();
+        }
     }
 
     function exportConfig() {
@@ -740,13 +806,19 @@
     function closeModal(id) { document.getElementById(id).classList.remove('show'); }
     function handleFabClick() { if(currentTab==='cicilan') openCicilanModal(); else if(currentTab==='titipan') openTitipanModal(); else openKasModal('masuk'); }
 
-    // ==================== SIMPAN ====================
+    // ==================== SIMPAN (DENGAN RESET FORM) ====================
     function simpanKas() {
         const tgl = document.getElementById('kasTanggal').value, nominal = parseInt(document.getElementById('kasNominal').value), kategori = document.getElementById('kasKategori').value, keterangan = document.getElementById('kasKeterangan').value.trim();
         if(!tgl) return showToast('❌ Tanggal harus diisi!'); if(!nominal||nominal<1000) return showToast('❌ Nominal minimal Rp 1.000!'); if(!keterangan) return showToast('❌ Keterangan harus diisi!');
         kasKantor.push({ id: Date.now(), tgl, tipe: currentTipeKas, nominal, kategori, keterangan });
-        saveAllData(); closeModal('modalKas'); refreshAllUI(); showToast(`✅ Kas ${currentTipeKas} berhasil disimpan!`);
-        document.getElementById('kasNominal').value = ''; document.getElementById('kasKeterangan').value = '';
+        saveAllData(); 
+        closeModal('modalKas'); 
+        refreshAllUI(); 
+        showToast(`✅ Kas ${currentTipeKas} berhasil disimpan!`);
+        // RESET FORM
+        document.getElementById('kasNominal').value = '';
+        document.getElementById('kasKeterangan').value = '';
+        document.getElementById('kasTanggal').value = new Date().toISOString().split('T')[0];
     }
 
     function simpanCicilan() {
@@ -756,6 +828,10 @@
         if(id) { const idx = cicilanList.findIndex(c=>c.id==id); if(idx!==-1) cicilanList[idx] = {...cicilanList[idx], nama, total, tenor, nominal, ke, tgl, jatuh:jatuhFinal, status, dibayar, logo_pilih}; showToast('✅ Cicilan diupdate!'); }
         else { cicilanList.push({ id: Date.now(), nama, total, tenor, nominal, ke, tgl, jatuh:jatuhFinal, status, dibayar, logo_pilih }); showToast('✅ Cicilan ditambahkan!'); }
         saveAllData(); closeModal('modalCicilan'); renderCicilanList();
+        // RESET FORM
+        document.getElementById('cicilanNama').value = '';
+        document.getElementById('cicilanTotal').value = '';
+        document.getElementById('cicilanNominal').value = '';
     }
 
     function simpanTitipan() {
@@ -764,6 +840,11 @@
         if(id) { const idx = titipanList.findIndex(t=>t.id==id); if(idx!==-1) titipanList[idx] = {...titipanList[idx], penitip, penerima, nominal, tgl, ket, logo_pilih}; showToast('✅ Titipan diupdate!'); }
         else { titipanList.push({ id: Date.now(), penitip, penerima, nominal, tgl, status: 'aktif', ket, logo_pilih }); showToast('✅ Titipan ditambahkan!'); }
         saveAllData(); closeModal('modalTitipan'); renderTitipanList();
+        // RESET FORM
+        document.getElementById('titipanPenitip').value = '';
+        document.getElementById('titipanPenerima').value = '';
+        document.getElementById('titipanNominal').value = '';
+        document.getElementById('titipanKeterangan').value = '';
     }
 
     // ==================== ACTIONS ====================
@@ -809,7 +890,7 @@
         showToast('📄 PDF Laporan didownload!');
     }
 
-    // ==================== PDF TAGIHAN PER CICILAN (FITUR BARU) ====================
+    // ==================== PDF TAGIHAN PER CICILAN ====================
     async function downloadTagihanPDF(cicilanId) {
         const cicilan = cicilanList.find(c => c.id === cicilanId);
         if (!cicilan) { showToast('❌ Data cicilan tidak ditemukan'); return; }
@@ -819,10 +900,8 @@
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         
-        // Pilih instansi berdasarkan logo_pilih
         const pakaiPT = cicilan.logo_pilih === 'pt';
         const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
-        const instansiLain = pakaiPT ? cfg.instansi2 : cfg.instansi1;
         const namaInstansi = instansi.nama;
         const alamatInstansi = instansi.alamat;
         const teleponInstansi = instansi.telepon;
@@ -830,7 +909,6 @@
         const jabatanInstansi = instansi.jabatan;
         const logoInstansi = instansi.logo;
         
-        // Watermark
         if (cfg.watermark.enabled) {
             doc.setTextColor(150,150,150);
             doc.setFontSize(50);
@@ -840,7 +918,6 @@
             doc.setTextColor(0,0,0);
         }
         
-        // Header
         doc.setFillColor(13,93,78);
         doc.rect(0,0,210,50,'F');
         doc.setTextColor(255,255,255);
@@ -894,7 +971,6 @@
         doc.text(pimpinanInstansi, 150, finalY + 12, { align: 'right' });
         doc.text(jabatanInstansi, 150, finalY + 18, { align: 'right' });
         
-        // TTD tambahan dari instansi lain jika both
         if (cfg.settings.ttd_mode === 'both' && cfg.instansi2.aktif && !pakaiPT) {
             doc.text(cfg.instansi1.pimpinan, 150, finalY + 32, { align: 'right' });
             doc.text(cfg.instansi1.jabatan, 150, finalY + 38, { align: 'right' });
@@ -903,7 +979,6 @@
             doc.text(cfg.instansi2.jabatan, 150, finalY + 38, { align: 'right' });
         }
         
-        // QR Code
         if (cfg.qr.enabled) {
             try {
                 const canvas = document.createElement('canvas');
@@ -917,7 +992,7 @@
         showToast('📄 PDF Tagihan berhasil didownload!');
     }
 
-    // ==================== PDF KWITANSI PER TITIPAN (FITUR BARU) ====================
+    // ==================== PDF KWITANSI PER TITIPAN ====================
     async function downloadKwitansiPDF(titipanId) {
         const titipan = titipanList.find(t => t.id === titipanId);
         if (!titipan) { showToast('❌ Data titipan tidak ditemukan'); return; }
@@ -1032,7 +1107,19 @@
     function escapeHtml(t) { if(!t) return ''; const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
     function showToast(m) { let t=document.querySelector('.toast-msg'); if(t) t.remove(); t=document.createElement('div'); t.className='toast-msg'; t.innerText=m; document.body.appendChild(t); setTimeout(()=>t?.remove(),2800); }
 
+    // ==================== PWA SERVICE WORKER ====================
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('Service Worker gagal:', err));
+    }
+
     window.onload = initApp;
 </script>
+
+<!-- Service Worker sederhana (inline) -->
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(e => console.log('SW tidak terdaftar'));
+    }
+</script>
 </body>
-                                                                                                        </html>
+            </html>
