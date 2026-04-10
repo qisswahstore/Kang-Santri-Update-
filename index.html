@@ -6,9 +6,12 @@
     <meta name="theme-color" content="#0d5d4e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>Auva - Keuangan Kantor</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Auva Kantor">
+    <title>Auva - Keuangan Kantor Pro</title>
     
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Auva%20-%20Keuangan%20Kantor%22,%22short_name%22:%22Auva%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22theme_color%22:%22%230d5d4e%22,%22background_color%22:%22%230d5d4e%22,%22icons%22:[{%22src%22:%22https://placehold.co/192x192/0d5d4e/white?text=AUVA%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22},{%22src%22:%22https://placehold.co/512x512/0d5d4e/white?text=AUVA%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Auva%20-%20Keuangan%20Kantor%22,%22short_name%22:%22Auva%22,%22description%22:%22Aplikasi%20Keuangan%20Kantor%20PT%20Auva%20%26%20KBIH%20AU%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22theme_color%22:%22%230d5d4e%22,%22background_color%22:%22%230d5d4e%22,%22icons%22:[{%22src%22:%22https://placehold.co/192x192/0d5d4e/white?text=AUVA%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22},{%22src%22:%22https://placehold.co/512x512/0d5d4e/white?text=AUVA%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
+    <link rel="apple-touch-icon" href="https://placehold.co/192x192/0d5d4e/white?text=AUVA">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -168,6 +171,25 @@
             85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(20px); }
         }
         
+        .install-banner {
+            position: fixed; bottom: 20px; left: 16px; right: 16px; background: white;
+            border-radius: 24px; padding: 18px 20px; box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+            display: none; align-items: center; justify-content: space-between; z-index: 2500;
+            border: 2px solid var(--primary); animation: slideUpBanner 0.4s ease;
+            max-width: 500px; margin: 0 auto;
+        }
+        @keyframes slideUpBanner { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .install-banner.show { display: flex; }
+        .install-banner .banner-content { display: flex; align-items: center; gap: 15px; }
+        .install-banner .banner-icon { font-size: 40px; color: var(--primary); }
+        .install-banner .banner-text h4 { font-size: 16px; margin-bottom: 4px; color: var(--dark); }
+        .install-banner .banner-text p { font-size: 13px; color: #64748b; }
+        .install-banner .btn-install {
+            background: var(--primary); color: white; border: none; padding: 12px 20px;
+            border-radius: 40px; font-weight: 700; font-size: 14px; cursor: pointer; white-space: nowrap;
+        }
+        .install-banner .btn-close { background: none; border: none; color: #94a3b8; font-size: 22px; cursor: pointer; padding: 5px; margin-left: 8px; }
+        
         .hidden { display: none !important; }
         .row { display: flex; gap: 12px; flex-wrap: wrap; }
         .mt-4 { margin-top: 20px; }
@@ -181,16 +203,48 @@
         .logo-preview { max-width: 100px; max-height: 60px; margin-top: 8px; border-radius: 8px; object-fit: contain; }
         .empty-state { text-align: center; padding: 50px 24px; background: var(--white); border-radius: 24px; color: #94a3b8; }
         .empty-state i { font-size: 56px; margin-bottom: 20px; opacity: 0.6; }
+        
+        /* Kategori List Item Style */
+        .kategori-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--gray-light); border-radius: 16px; margin-bottom: 8px; }
+        .kategori-item .nama { font-weight: 600; text-transform: capitalize; }
+        .kategori-actions { display: flex; gap: 8px; }
+        .kategori-actions button { background: none; border: none; font-size: 16px; cursor: pointer; padding: 5px; border-radius: 8px; }
+        .kategori-actions .edit-btn { color: var(--blue); }
+        .kategori-actions .delete-btn { color: var(--red); }
+        
+        .opacity-slider { display: flex; align-items: center; gap: 12px; }
+        .opacity-slider span { min-width: 45px; font-weight: 600; color: var(--primary); }
+        .preview-watermark-btn, .preview-qr-btn { background: var(--gray-light); border: 1px dashed var(--gray-border); padding: 12px; border-radius: 16px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: 600; color: var(--primary); }
+        .qr-preview { text-align: center; margin-top: 15px; }
+        .qr-preview canvas { border: 1px solid var(--gray-border); border-radius: 12px; padding: 8px; background: white; }
+        .template-variables { font-size: 11px; color: #64748b; margin-top: 5px; }
+        .template-variables code { background: var(--gray-light); padding: 2px 6px; border-radius: 6px; margin: 0 3px; }
     </style>
 </head>
 <body>
 
+<!-- Splash Screen -->
 <div id="splashScreen" style="position:fixed; inset:0; background:var(--primary); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition:opacity 0.4s;">
     <div style="width:100px; height:100px; background:white; border-radius:30px; display:flex; align-items:center; justify-content:center; margin-bottom:24px;">
         <i class="fas fa-mosque" style="font-size:56px; color:var(--primary);"></i>
     </div>
-    <div style="color:white; font-size:28px; font-weight:bold;">Auva</div>
-    <div style="color:rgba(255,255,255,0.8); font-size:14px; margin-top:8px;">Keuangan Kantor</div>
+    <div style="color:white; font-size:28px; font-weight:bold;">Auva Pro</div>
+    <div style="color:rgba(255,255,255,0.8); font-size:14px; margin-top:8px;">Keuangan Kantor Profesional</div>
+</div>
+
+<!-- Install Banner PWA -->
+<div id="installBanner" class="install-banner">
+    <div class="banner-content">
+        <div class="banner-icon"><i class="fas fa-mosque"></i></div>
+        <div class="banner-text">
+            <h4>📱 Install Auva Kantor</h4>
+            <p>Tambahkan ke layar utama untuk akses cepat & offline</p>
+        </div>
+    </div>
+    <div style="display: flex; align-items: center;">
+        <button class="btn-install" id="btnInstallPWA">Install</button>
+        <button class="btn-close" onclick="closeInstallBanner()">✕</button>
+    </div>
 </div>
 
 <div id="page-keuangan" class="page active">
@@ -292,11 +346,20 @@
             <label>Aktifkan Watermark</label><label class="switch"><input type="checkbox" id="cfg_watermark_enabled"><span class="slider"></span></label>
         </div>
         <div class="setting-row"><label>Teks Watermark</label><input type="text" id="cfg_watermark_text" class="form-control"></div>
-        <div class="setting-row"><label>Opacity (0.1-0.5)</label><input type="range" id="cfg_watermark_opacity" min="0.1" max="0.5" step="0.05" value="0.3"></div>
-        <div class="setting-row" style="flex-direction:row; align-items:center; justify-content:space-between;">
-            <label>Aktifkan QR Code</label><label class="switch"><input type="checkbox" id="cfg_qr_enabled" checked><span class="slider"></span></label>
+        <div class="setting-row"><label>Opacity</label><div class="opacity-slider"><input type="range" id="cfg_watermark_opacity" min="0.05" max="0.4" step="0.05" value="0.15" style="flex:1;"><span id="opacityValue">0.15</span></div></div>
+        <div class="setting-row"><label>Ukuran Font</label><select id="cfg_watermark_fontsize" class="form-control"><option value="40">Kecil (40)</option><option value="60" selected>Sedang (60)</option><option value="80">Besar (80)</option></select></div>
+        <div class="setting-row"><label>Posisi</label><select id="cfg_watermark_position" class="form-control"><option value="diagonal" selected>Diagonal</option><option value="center">Tengah</option><option value="tile">Ulangi (Tile)</option></select></div>
+        <button class="preview-watermark-btn" onclick="previewWatermark()"><i class="fas fa-eye"></i> Preview Watermark</button>
+        
+        <div style="margin-top:25px; padding-top:20px; border-top:1px solid var(--gray-border);">
+            <div class="setting-row" style="flex-direction:row; align-items:center; justify-content:space-between;">
+                <label>Aktifkan QR Code</label><label class="switch"><input type="checkbox" id="cfg_qr_enabled" checked><span class="slider"></span></label>
+            </div>
+            <div class="setting-row"><label>Teks QR</label><input type="text" id="cfg_qr_text" class="form-control"></div>
+            <div class="setting-row"><label>Ukuran QR</label><select id="cfg_qr_size" class="form-control"><option value="60">Kecil (60px)</option><option value="80" selected>Sedang (80px)</option><option value="100">Besar (100px)</option></select></div>
+            <div id="qrPreviewContainer" class="qr-preview hidden"><canvas id="qrPreviewCanvas" width="100" height="100"></canvas></div>
+            <button class="preview-watermark-btn" onclick="generateQRPreview()"><i class="fas fa-qrcode"></i> Generate QR Preview</button>
         </div>
-        <div class="setting-row"><label>Teks QR</label><input type="text" id="cfg_qr_text" class="form-control"></div>
     </div>
 
     <div class="setting-section">
@@ -308,12 +371,14 @@
 
     <div class="setting-section">
         <h3><i class="fab fa-whatsapp"></i> Template WA</h3>
-        <div class="setting-row"><label>Template Cicilan</label><textarea id="cfg_wa_cicilan" class="form-control" rows="3"></textarea></div>
-        <div class="setting-row"><label>Template Titipan</label><textarea id="cfg_wa_titipan" class="form-control" rows="3"></textarea></div>
+        <div class="setting-row"><label>Template Cicilan</label><textarea id="cfg_wa_cicilan" class="form-control" rows="3"></textarea><div class="template-variables">Variabel: <code>[nama]</code> <code>[sisa]</code> <code>[tanggal]</code> <code>[nominal]</code></div></div>
+        <div class="setting-row"><label>Template Titipan</label><textarea id="cfg_wa_titipan" class="form-control" rows="3"></textarea><div class="template-variables">Variabel: <code>[penerima]</code> <code>[penitip]</code> <code>[nominal]</code> <code>[tanggal]</code> <code>[keterangan]</code></div></div>
+        <div class="setting-row"><label>Template Laporan Kas</label><textarea id="cfg_wa_laporan" class="form-control" rows="3"></textarea><div class="template-variables">Variabel: <code>[saldo]</code> <code>[masuk]</code> <code>[keluar]</code></div></div>
     </div>
 
     <div class="setting-section">
         <h3><i class="fas fa-tags"></i> Kategori Kas <button class="btn-save" onclick="openKategoriModal()" style="padding:8px 16px; font-size:12px; margin-left:10px;"><i class="fas fa-plus"></i> Tambah</button></h3>
+        <input type="text" id="searchKategoriInput" placeholder="🔍 Cari kategori..." oninput="filterKategoriList()" class="form-control" style="margin-bottom:15px;">
         <div id="kategoriListContainer" class="card-list"></div>
     </div>
 
@@ -446,19 +511,40 @@
             logo: ''
         },
         settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/AUVA' },
-        watermark: { enabled: true, text: 'DOKUMEN RESMI', opacity: 0.3 },
-        qr: { enabled: true, text: 'Dokumen Resmi KBIHU Amanatul Ummah' },
+        watermark: { enabled: true, text: 'DOKUMEN RESMI', opacity: 0.15, fontsize: 60, position: 'diagonal' },
+        qr: { enabled: true, text: 'Dokumen Resmi KBIHU Amanatul Ummah - Divalidasi oleh Sistem Auva', size: 80 },
         wa_template: {
-            cicilan: 'Yth. [nama], sisa tagihan [sisa] jatuh tempo [tanggal]. Mohon segera dibayar.',
-            titipan: 'Yth. [penerima], ada titipan dari [penitip] sebesar [nominal]. Silakan ambil.'
+            cicilan: '📋 *TAGIHAN CICILAN*\nYth. [nama],\nSisa: [sisa]\nJatuh Tempo: [tanggal]\nNominal: [nominal]\nMohon segera dibayar.',
+            titipan: '💼 *TITIPAN*\nYth. [penerima],\nDari: [penitip]\nNominal: [nominal]\nTanggal: [tanggal]\nKeterangan: [keterangan]\nSilakan ambil.',
+            laporan: '🏢 *LAPORAN KAS KANTOR*\n\n💰 Saldo: [saldo]\n📥 Pemasukan: [masuk]\n📤 Pengeluaran: [keluar]\n\nTerima kasih.'
         },
         kategori: ['operasional', 'gaji', 'listrik', 'atk', 'lain']
     };
 
     // ==================== GLOBAL STATE ====================
-    let kasKantor = [], cicilanList = [], titipanList = [], currentTab = 'cicilan', currentTipeKas = 'masuk', kategoriList = [];
+    let kasKantor = [], cicilanList = [], titipanList = [], kategoriList = [], currentTab = 'cicilan', currentTipeKas = 'masuk';
+    let deferredPrompt = null;
 
-    // ==================== NOTIFIKASI (FITUR BARU) ====================
+    // ==================== PWA & INSTALL BANNER ====================
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; setTimeout(() => { if (deferredPrompt && !isAppInstalled() && shouldShowInstallBanner()) { document.getElementById('installBanner').classList.add('show'); } }, 3000); });
+    
+    function isAppInstalled() { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; }
+    function closeInstallBanner() { document.getElementById('installBanner').classList.remove('show'); localStorage.setItem('auva_install_dismissed', Date.now()); }
+    function shouldShowInstallBanner() { const d = localStorage.getItem('auva_install_dismissed'); if (!d) return true; return (Date.now() - parseInt(d)) > 7 * 24 * 60 * 60 * 1000; }
+    
+    document.addEventListener('DOMContentLoaded', () => { 
+        const btn = document.getElementById('btnInstallPWA');
+        if (btn) btn.addEventListener('click', async () => { 
+            if (!deferredPrompt) { showToast('📱 Aplikasi sudah terinstall'); return; } 
+            deferredPrompt.prompt(); 
+            const { outcome } = await deferredPrompt.userChoice; 
+            if (outcome === 'accepted') showToast('✅ Terima kasih!'); 
+            deferredPrompt = null; 
+            closeInstallBanner(); 
+        }); 
+    });
+
+    // ==================== NOTIFIKASI ====================
     function notifikasiCicilanJatuhTempo() {
         const today = new Date().toISOString().split('T')[0];
         const jatuhTempo = cicilanList.filter(c => c.status === 'belum' && c.jatuh && c.jatuh === today);
@@ -481,39 +567,44 @@
         }, 24 * 60 * 60 * 1000);
     }
 
-    // ==================== INIT ====================
+    // ==================== INIT & MIGRASI DATA ====================
     function initApp() {
         setTimeout(() => {
             document.getElementById('splashScreen').style.opacity = '0';
             setTimeout(() => document.getElementById('splashScreen').style.display = 'none', 400);
         }, 800);
-        loadAllData();
+        
+        // Load atau migrasi data
+        const oldKas = localStorage.getItem('auva_kas_kantor_v1');
+        const oldCicilan = localStorage.getItem('auva_cicilan_v1');
+        const oldTitipan = localStorage.getItem('auva_titipan_v1');
+        
+        kasKantor = oldKas ? JSON.parse(oldKas) : JSON.parse(JSON.stringify(DEFAULT_KAS));
+        cicilanList = oldCicilan ? JSON.parse(oldCicilan) : JSON.parse(JSON.stringify(DEFAULT_CICILAN));
+        titipanList = oldTitipan ? JSON.parse(oldTitipan) : JSON.parse(JSON.stringify(DEFAULT_TITIPAN));
+        
+        // Simpan ke storage (migrasi otomatis)
+        localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
+        localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList));
+        localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList));
+        
         loadConfig();
+        
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('kasTanggal').value = today;
         document.getElementById('cicilanTanggal').value = today;
         document.getElementById('titipanTanggalTitip').value = today;
+        
         refreshAllUI();
-        mintaIzinNotifikasi(); // FITUR BARU: minta izin notifikasi
+        mintaIzinNotifikasi();
+        
+        // Slider opacity live display
+        const slider = document.getElementById('cfg_watermark_opacity');
+        if (slider) slider.addEventListener('input', e => document.getElementById('opacityValue').textContent = parseFloat(e.target.value).toFixed(2));
+        
+        if (!isAppInstalled() && shouldShowInstallBanner()) setTimeout(() => document.getElementById('installBanner').classList.add('show'), 5000);
     }
 
-    function loadAllData() {
-        const savedKas = localStorage.getItem('auva_kas_kantor_v1');
-        kasKantor = savedKas ? JSON.parse(savedKas) : JSON.parse(JSON.stringify(DEFAULT_KAS));
-        const savedCicilan = localStorage.getItem('auva_cicilan_v1');
-        cicilanList = savedCicilan ? JSON.parse(savedCicilan) : JSON.parse(JSON.stringify(DEFAULT_CICILAN));
-        const savedTitipan = localStorage.getItem('auva_titipan_v1');
-        titipanList = savedTitipan ? JSON.parse(savedTitipan) : JSON.parse(JSON.stringify(DEFAULT_TITIPAN));
-        saveAllData();
-    }
-
-    function saveAllData() {
-        localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
-        localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList));
-        localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList));
-    }
-
-    // ==================== KONFIGURASI (DIPERBAIKI) ====================
     function loadConfig() {
         let config = localStorage.getItem('auva_config_v2');
         
@@ -522,16 +613,11 @@
             localStorage.setItem('auva_config_v2', JSON.stringify(config));
         } else {
             config = JSON.parse(config);
+            // Merge dengan default untuk field baru
+            config = mergeConfig(config, DEFAULT_CONFIG);
         }
         
-        config.instansi1 = config.instansi1 || DEFAULT_CONFIG.instansi1;
-        config.instansi2 = config.instansi2 || DEFAULT_CONFIG.instansi2;
-        config.settings = config.settings || DEFAULT_CONFIG.settings;
-        config.watermark = config.watermark || DEFAULT_CONFIG.watermark;
-        config.qr = config.qr || DEFAULT_CONFIG.qr;
-        config.wa_template = config.wa_template || DEFAULT_CONFIG.wa_template;
-        config.kategori = config.kategori || DEFAULT_CONFIG.kategori;
-        
+        // Isi form instansi1
         document.getElementById('cfg_instansi1_nama').value = config.instansi1.nama || '';
         document.getElementById('cfg_instansi1_alamat').value = config.instansi1.alamat || '';
         document.getElementById('cfg_instansi1_telepon').value = config.instansi1.telepon || '';
@@ -541,6 +627,7 @@
         document.getElementById('cfg_instansi1_jabatan').value = config.instansi1.jabatan || '';
         if (config.instansi1.logo) document.getElementById('previewLogo1').src = config.instansi1.logo;
         
+        // Isi form instansi2
         document.getElementById('cfg_instansi2_aktif').checked = config.instansi2.aktif || false;
         document.getElementById('cfg_instansi2_nama').value = config.instansi2.nama || '';
         document.getElementById('cfg_instansi2_alamat').value = config.instansi2.alamat || '';
@@ -551,23 +638,45 @@
         document.getElementById('cfg_instansi2_jabatan').value = config.instansi2.jabatan || '';
         if (config.instansi2.logo) document.getElementById('previewLogo2').src = config.instansi2.logo;
         
+        // Settings
         document.getElementById('cfg_header_mode').value = config.settings.header_mode || 'both';
         document.getElementById('cfg_ttd_mode').value = config.settings.ttd_mode || 'both';
         document.getElementById('cfg_invoice_prefix').value = config.settings.invoice_prefix || 'INV/AUVA';
         
+        // Watermark
         document.getElementById('cfg_watermark_enabled').checked = config.watermark.enabled !== false;
         document.getElementById('cfg_watermark_text').value = config.watermark.text || 'DOKUMEN RESMI';
-        document.getElementById('cfg_watermark_opacity').value = config.watermark.opacity || 0.3;
+        document.getElementById('cfg_watermark_opacity').value = config.watermark.opacity || 0.15;
+        document.getElementById('opacityValue').textContent = (config.watermark.opacity || 0.15).toFixed(2);
+        document.getElementById('cfg_watermark_fontsize').value = config.watermark.fontsize || 60;
+        document.getElementById('cfg_watermark_position').value = config.watermark.position || 'diagonal';
         
+        // QR
         document.getElementById('cfg_qr_enabled').checked = config.qr.enabled !== false;
-        document.getElementById('cfg_qr_text').value = config.qr.text || 'Dokumen Resmi KBIHU Amanatul Ummah';
+        document.getElementById('cfg_qr_text').value = config.qr.text || 'Dokumen Resmi KBIHU Amanatul Ummah - Divalidasi oleh Sistem Auva';
+        document.getElementById('cfg_qr_size').value = config.qr.size || 80;
         
-        document.getElementById('cfg_wa_cicilan').value = config.wa_template.cicilan || 'Yth. [nama], sisa tagihan [sisa] jatuh tempo [tanggal]. Mohon segera dibayar.';
-        document.getElementById('cfg_wa_titipan').value = config.wa_template.titipan || 'Yth. [penerima], ada titipan dari [penitip] sebesar [nominal]. Silakan ambil.';
+        // WA Template
+        document.getElementById('cfg_wa_cicilan').value = config.wa_template.cicilan || '';
+        document.getElementById('cfg_wa_titipan').value = config.wa_template.titipan || '';
+        document.getElementById('cfg_wa_laporan').value = config.wa_template.laporan || '';
         
-        kategoriList = config.kategori;
+        // Kategori
+        kategoriList = config.kategori || ['operasional', 'gaji', 'listrik', 'atk', 'lain'];
         renderKategoriList();
         updateKategoriSelect();
+    }
+    
+    function mergeConfig(existing, defaults) {
+        const merged = JSON.parse(JSON.stringify(defaults));
+        for (let key in existing) {
+            if (merged[key] && typeof merged[key] === 'object' && !Array.isArray(merged[key])) {
+                merged[key] = { ...merged[key], ...existing[key] };
+            } else {
+                merged[key] = existing[key];
+            }
+        }
+        return merged;
     }
 
     function saveConfig() {
@@ -603,29 +712,24 @@
         const watermark = {
             enabled: document.getElementById('cfg_watermark_enabled').checked,
             text: document.getElementById('cfg_watermark_text').value,
-            opacity: parseFloat(document.getElementById('cfg_watermark_opacity').value)
+            opacity: parseFloat(document.getElementById('cfg_watermark_opacity').value),
+            fontsize: parseInt(document.getElementById('cfg_watermark_fontsize').value),
+            position: document.getElementById('cfg_watermark_position').value
         };
         
         const qr = {
             enabled: document.getElementById('cfg_qr_enabled').checked,
-            text: document.getElementById('cfg_qr_text').value
+            text: document.getElementById('cfg_qr_text').value,
+            size: parseInt(document.getElementById('cfg_qr_size').value)
         };
         
         const wa_template = {
             cicilan: document.getElementById('cfg_wa_cicilan').value,
-            titipan: document.getElementById('cfg_wa_titipan').value
+            titipan: document.getElementById('cfg_wa_titipan').value,
+            laporan: document.getElementById('cfg_wa_laporan').value
         };
         
-        const configBaru = {
-            instansi1: instansi1,
-            instansi2: instansi2,
-            settings: settings,
-            watermark: watermark,
-            qr: qr,
-            wa_template: wa_template,
-            kategori: kategoriList
-        };
-        
+        const configBaru = { instansi1, instansi2, settings, watermark, qr, wa_template, kategori: kategoriList };
         localStorage.setItem('auva_config_v2', JSON.stringify(configBaru));
         showToast('✅ Konfigurasi berhasil disimpan!');
         showPage('keuangan');
@@ -657,15 +761,27 @@
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (e) => {
-            try { const config = JSON.parse(e.target.result); localStorage.setItem('auva_config_v2', JSON.stringify(config)); loadConfig(); showToast('📥 Config diimport!'); }
-            catch(err) { alert('File tidak valid!'); }
+            try { 
+                const config = JSON.parse(e.target.result); 
+                localStorage.setItem('auva_config_v2', JSON.stringify(config)); 
+                loadConfig(); 
+                showToast('📥 Config diimport!'); 
+            } catch(err) { 
+                alert('File tidak valid!'); 
+            }
             input.value = '';
         };
         reader.readAsText(file);
     }
 
     function exportAllData() {
-        const allData = { config: JSON.parse(localStorage.getItem('auva_config_v2') || '{}'), kas: kasKantor, cicilan: cicilanList, titipan: titipanList, export_date: new Date().toISOString() };
+        const allData = { 
+            config: JSON.parse(localStorage.getItem('auva_config_v2') || '{}'), 
+            kas: kasKantor, 
+            cicilan: cicilanList, 
+            titipan: titipanList, 
+            export_date: new Date().toISOString() 
+        };
         const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -682,23 +798,136 @@
         }
     }
 
-    // ==================== KATEGORI ====================
+    // ==================== WATERMARK & QR PREVIEW ====================
+    function previewWatermark() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 400;
+        canvas.height = 300;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, 400, 300);
+        ctx.strokeStyle = '#0d5d4e';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(2, 2, 396, 296);
+        ctx.save();
+        ctx.globalAlpha = parseFloat(document.getElementById('cfg_watermark_opacity').value);
+        const fontSize = parseInt(document.getElementById('cfg_watermark_fontsize').value);
+        ctx.font = `bold ${fontSize}px "Segoe UI"`;
+        ctx.fillStyle = '#888';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        const position = document.getElementById('cfg_watermark_position').value;
+        const text = document.getElementById('cfg_watermark_text').value;
+        
+        if (position === 'diagonal') {
+            ctx.translate(200, 150);
+            ctx.rotate(-45 * Math.PI / 180);
+            ctx.fillText(text, 0, 0);
+        } else if (position === 'center') {
+            ctx.fillText(text, 200, 150);
+        } else if (position === 'tile') {
+            ctx.font = `bold ${fontSize * 0.6}px "Segoe UI"`;
+            for (let x = 0; x < 400; x += 100) {
+                for (let y = 0; y < 300; y += 60) {
+                    ctx.fillText(text, x, y);
+                }
+            }
+        }
+        ctx.restore();
+        
+        const modal = document.createElement('div');
+        modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:9999; display:flex; align-items:center; justify-content:center;';
+        modal.innerHTML = `<div style="background:white; padding:24px; border-radius:24px; max-width:90%;"><h3 style="margin-bottom:16px;">Preview Watermark</h3><img src="${canvas.toDataURL()}" style="max-width:100%; border-radius:12px;"><button onclick="this.closest('div').parentElement.remove()" style="margin-top:20px; padding:12px 24px; background:var(--primary); color:white; border:none; border-radius:40px; width:100%;">Tutup</button></div>`;
+        document.body.appendChild(modal);
+    }
+
+    async function generateQRPreview() {
+        const text = document.getElementById('cfg_qr_text').value;
+        const size = parseInt(document.getElementById('cfg_qr_size').value);
+        const canvas = document.getElementById('qrPreviewCanvas');
+        canvas.width = size;
+        canvas.height = size;
+        try {
+            await QRCode.toCanvas(canvas, text, { width: size });
+            document.getElementById('qrPreviewContainer').classList.remove('hidden');
+            showToast('✅ QR Code digenerate!');
+        } catch(e) { 
+            showToast('❌ Gagal generate QR'); 
+        }
+    }
+
+    // ==================== KATEGORI (UI Upgrade) ====================
     function renderKategoriList() {
         let html = '';
-        kategoriList.forEach((k, i) => html += `<div class="transaksi-card" style="border-left-color: var(--primary);"><div class="card-header"><h4>${escapeHtml(k)}</h4></div><div class="card-actions"><button onclick="editKategori(${i})"><i class="fas fa-edit"></i> Edit</button><button onclick="hapusKategori(${i})" style="color:#ef4444;"><i class="fas fa-trash"></i> Hapus</button></div></div>`);
+        kategoriList.forEach((k, i) => {
+            html += `<div class="kategori-item">
+                        <span class="nama"><i class="fas fa-tag" style="color:var(--primary); margin-right:8px;"></i>${escapeHtml(k)}</span>
+                        <div class="kategori-actions">
+                            <button class="edit-btn" onclick="editKategori(${i})"><i class="fas fa-edit"></i></button>
+                            <button class="delete-btn" onclick="hapusKategori(${i})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+        });
         document.getElementById('kategoriListContainer').innerHTML = html || '<div class="empty-state"><p>Belum ada kategori</p></div>';
     }
-    function openKategoriModal() { document.getElementById('modalKategoriTitle').innerText = 'Tambah Kategori'; document.getElementById('kategoriEditId').value = ''; document.getElementById('kategoriNama').value = ''; document.getElementById('modalKategori').classList.add('show'); }
-    function editKategori(i) { document.getElementById('modalKategoriTitle').innerText = 'Edit Kategori'; document.getElementById('kategoriEditId').value = i; document.getElementById('kategoriNama').value = kategoriList[i]; document.getElementById('modalKategori').classList.add('show'); }
-    function hapusKategori(i) { if (confirm('Hapus kategori?')) { kategoriList.splice(i, 1); renderKategoriList(); updateKategoriSelect(); showToast('🗑️ Kategori dihapus'); } }
+    
+    function filterKategoriList() {
+        const search = document.getElementById('searchKategoriInput').value.toLowerCase();
+        const filtered = kategoriList.filter(k => k.toLowerCase().includes(search));
+        let html = '';
+        filtered.forEach((k, idx) => {
+            const i = kategoriList.indexOf(k);
+            html += `<div class="kategori-item">
+                        <span class="nama"><i class="fas fa-tag" style="color:var(--primary); margin-right:8px;"></i>${escapeHtml(k)}</span>
+                        <div class="kategori-actions">
+                            <button class="edit-btn" onclick="editKategori(${i})"><i class="fas fa-edit"></i></button>
+                            <button class="delete-btn" onclick="hapusKategori(${i})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+        });
+        document.getElementById('kategoriListContainer').innerHTML = html || '<div class="empty-state"><p>Tidak ditemukan</p></div>';
+    }
+    
+    function openKategoriModal() { 
+        document.getElementById('modalKategoriTitle').innerText = 'Tambah Kategori'; 
+        document.getElementById('kategoriEditId').value = ''; 
+        document.getElementById('kategoriNama').value = ''; 
+        document.getElementById('modalKategori').classList.add('show'); 
+    }
+    
+    function editKategori(i) { 
+        document.getElementById('modalKategoriTitle').innerText = 'Edit Kategori'; 
+        document.getElementById('kategoriEditId').value = i; 
+        document.getElementById('kategoriNama').value = kategoriList[i]; 
+        document.getElementById('modalKategori').classList.add('show'); 
+    }
+    
+    function hapusKategori(i) { 
+        if (confirm('Hapus kategori?')) { 
+            kategoriList.splice(i, 1); 
+            renderKategoriList(); 
+            updateKategoriSelect(); 
+            showToast('🗑️ Kategori dihapus'); 
+        } 
+    }
+    
     function simpanKategori() {
         const nama = document.getElementById('kategoriNama').value.trim().toLowerCase();
         const id = document.getElementById('kategoriEditId').value;
         if (!nama) return showToast('❌ Nama harus diisi!');
-        if (id === '') { if (!kategoriList.includes(nama)) kategoriList.push(nama); else return showToast('⚠️ Sudah ada!'); }
-        else { kategoriList[parseInt(id)] = nama; }
-        renderKategoriList(); updateKategoriSelect(); closeModal('modalKategori'); showToast('✅ Kategori disimpan!');
+        if (id === '') { 
+            if (!kategoriList.includes(nama)) kategoriList.push(nama); 
+            else return showToast('⚠️ Sudah ada!');
+        } else { 
+            kategoriList[parseInt(id)] = nama; 
+        }
+        renderKategoriList(); 
+        updateKategoriSelect(); 
+        closeModal('modalKategori'); 
+        showToast('✅ Kategori disimpan!');
     }
+    
     function updateKategoriSelect() {
         const select = document.getElementById('kasKategori');
         const filterSelect = document.getElementById('filterKategori');
@@ -707,8 +936,16 @@
     }
 
     // ==================== UI FUNCTIONS ====================
-    function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(`page-${id}`).classList.add('active'); if (id === 'keuangan') refreshAllUI(); if (id === 'pengaturan') loadConfig(); window.scrollTo(0, 0); }
-    function goToDashboard() { showToast('Fitur navigasi ke dashboard'); }
+    function showPage(id) { 
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+        document.getElementById(`page-${id}`).classList.add('active'); 
+        if (id === 'keuangan') refreshAllUI(); 
+        if (id === 'pengaturan') loadConfig(); 
+        window.scrollTo(0, 0); 
+    }
+    
+    function goToDashboard() { showToast('🏠 Kembali ke Dashboard'); showPage('keuangan'); }
+    
     function switchTab(tab) {
         currentTab = tab;
         document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (tab==='cicilan'&&i===0)||(tab==='titipan'&&i===1)||(tab==='transaksi'&&i===2)));
@@ -716,8 +953,25 @@
         document.getElementById('tab-titipan').classList.toggle('hidden', tab !== 'titipan');
         document.getElementById('tab-transaksi').classList.toggle('hidden', tab !== 'transaksi');
     }
+    
     function refreshAllUI() { hitungSaldo(); renderCicilanList(); renderTitipanList(); renderTransaksiList(); }
-    function hitungSaldo() { let s=0,m=0,k=0; const bln = new Date().toISOString().slice(0,7); kasKantor.forEach(t=>{ if(t.tipe==='masuk'){ s+=t.nominal; if(t.tgl?.startsWith(bln)) m+=t.nominal; } else { s-=t.nominal; if(t.tgl?.startsWith(bln)) k+=t.nominal; } }); document.getElementById('saldoKantor').innerHTML=formatRupiah(s); document.getElementById('masukBulanIni').innerHTML=formatRupiah(m); document.getElementById('keluarBulanIni').innerHTML=formatRupiah(k); }
+    
+    function hitungSaldo() { 
+        let s=0,m=0,k=0; 
+        const bln = new Date().toISOString().slice(0,7); 
+        kasKantor.forEach(t=>{ 
+            if(t.tipe==='masuk'){ 
+                s+=t.nominal; 
+                if(t.tgl?.startsWith(bln)) m+=t.nominal; 
+            } else { 
+                s-=t.nominal; 
+                if(t.tgl?.startsWith(bln)) k+=t.nominal; 
+            } 
+        }); 
+        document.getElementById('saldoKantor').innerHTML=formatRupiah(s); 
+        document.getElementById('masukBulanIni').innerHTML=formatRupiah(m); 
+        document.getElementById('keluarBulanIni').innerHTML=formatRupiah(k); 
+    }
     
     function renderCicilanList() {
         const container = document.getElementById('cicilanList');
@@ -769,7 +1023,7 @@
                     <div class="detail-row"><span class="label">Keterangan:</span><span class="value">${escapeHtml(t.ket)}</span></div>
                 </div>
                 <div class="card-actions">
-                    <button class="wa" onclick="waTitipan('${t.penerima}', '${t.penitip}', ${t.nominal})"><i class="fab fa-whatsapp"></i> WA</button>
+                    <button class="wa" onclick="waTitipan('${t.penerima}', '${t.penitip}', ${t.nominal}, '${t.tgl}', '${escapeHtml(t.ket)}')"><i class="fab fa-whatsapp"></i> WA</button>
                     <button class="primary" onclick="editTitipan(${t.id})"><i class="fas fa-edit"></i> Edit</button>
                     ${t.status === 'aktif' ? `<button onclick="tandaiDiambil(${t.id})"><i class="fas fa-check"></i> Diambil</button>` : ''}
                     <button class="pdf-btn" onclick="downloadKwitansiPDF(${t.id})"><i class="fas fa-file-pdf"></i> PDF</button>
@@ -806,16 +1060,15 @@
     function closeModal(id) { document.getElementById(id).classList.remove('show'); }
     function handleFabClick() { if(currentTab==='cicilan') openCicilanModal(); else if(currentTab==='titipan') openTitipanModal(); else openKasModal('masuk'); }
 
-    // ==================== SIMPAN (DENGAN RESET FORM) ====================
+    // ==================== SIMPAN DATA ====================
     function simpanKas() {
         const tgl = document.getElementById('kasTanggal').value, nominal = parseInt(document.getElementById('kasNominal').value), kategori = document.getElementById('kasKategori').value, keterangan = document.getElementById('kasKeterangan').value.trim();
         if(!tgl) return showToast('❌ Tanggal harus diisi!'); if(!nominal||nominal<1000) return showToast('❌ Nominal minimal Rp 1.000!'); if(!keterangan) return showToast('❌ Keterangan harus diisi!');
         kasKantor.push({ id: Date.now(), tgl, tipe: currentTipeKas, nominal, kategori, keterangan });
-        saveAllData(); 
+        localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
         closeModal('modalKas'); 
         refreshAllUI(); 
         showToast(`✅ Kas ${currentTipeKas} berhasil disimpan!`);
-        // RESET FORM
         document.getElementById('kasNominal').value = '';
         document.getElementById('kasKeterangan').value = '';
         document.getElementById('kasTanggal').value = new Date().toISOString().split('T')[0];
@@ -827,8 +1080,9 @@
         const dibayar = nominal * ke, status = (dibayar >= total) ? 'lunas' : 'belum', jatuhFinal = status === 'lunas' ? '-' : (jatuh || '');
         if(id) { const idx = cicilanList.findIndex(c=>c.id==id); if(idx!==-1) cicilanList[idx] = {...cicilanList[idx], nama, total, tenor, nominal, ke, tgl, jatuh:jatuhFinal, status, dibayar, logo_pilih}; showToast('✅ Cicilan diupdate!'); }
         else { cicilanList.push({ id: Date.now(), nama, total, tenor, nominal, ke, tgl, jatuh:jatuhFinal, status, dibayar, logo_pilih }); showToast('✅ Cicilan ditambahkan!'); }
-        saveAllData(); closeModal('modalCicilan'); renderCicilanList();
-        // RESET FORM
+        localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList));
+        closeModal('modalCicilan'); 
+        renderCicilanList();
         document.getElementById('cicilanNama').value = '';
         document.getElementById('cicilanTotal').value = '';
         document.getElementById('cicilanNominal').value = '';
@@ -839,8 +1093,9 @@
         if(!penitip) return showToast('❌ Penitip harus diisi!'); if(!penerima) return showToast('❌ Penerima harus diisi!'); if(!nominal||nominal<1000) return showToast('❌ Nominal minimal Rp 1.000!'); if(!tgl) return showToast('❌ Tanggal harus diisi!');
         if(id) { const idx = titipanList.findIndex(t=>t.id==id); if(idx!==-1) titipanList[idx] = {...titipanList[idx], penitip, penerima, nominal, tgl, ket, logo_pilih}; showToast('✅ Titipan diupdate!'); }
         else { titipanList.push({ id: Date.now(), penitip, penerima, nominal, tgl, status: 'aktif', ket, logo_pilih }); showToast('✅ Titipan ditambahkan!'); }
-        saveAllData(); closeModal('modalTitipan'); renderTitipanList();
-        // RESET FORM
+        localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList));
+        closeModal('modalTitipan'); 
+        renderTitipanList();
         document.getElementById('titipanPenitip').value = '';
         document.getElementById('titipanPenerima').value = '';
         document.getElementById('titipanNominal').value = '';
@@ -848,17 +1103,41 @@
     }
 
     // ==================== ACTIONS ====================
-    function tandaiLunas(id) { const c = cicilanList.find(x=>x.id===id); if(c) { c.status='lunas'; c.jatuh='-'; c.dibayar=c.total; saveAllData(); renderCicilanList(); showToast(`✅ ${c.nama} LUNAS!`); } }
-    function tandaiDiambil(id) { const t = titipanList.find(x=>x.id===id); if(t) { t.status='diambil'; saveAllData(); renderTitipanList(); showToast(`✅ Titipan ${t.penerima} diambil!`); } }
-    function hapusTransaksi(id) { if(confirm('Hapus transaksi?')) { kasKantor = kasKantor.filter(k=>k.id!==id); saveAllData(); refreshAllUI(); showToast('🗑️ Transaksi dihapus'); } }
-    function hapusCicilan(id) { if(confirm('Hapus cicilan?')) { cicilanList = cicilanList.filter(c=>c.id!==id); saveAllData(); renderCicilanList(); showToast('🗑️ Cicilan dihapus'); } }
-    function hapusTitipan(id) { if(confirm('Hapus titipan?')) { titipanList = titipanList.filter(t=>t.id!==id); saveAllData(); renderTitipanList(); showToast('🗑️ Titipan dihapus'); } }
+    function tandaiLunas(id) { const c = cicilanList.find(x=>x.id===id); if(c) { c.status='lunas'; c.jatuh='-'; c.dibayar=c.total; localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList)); renderCicilanList(); showToast(`✅ ${c.nama} LUNAS!`); } }
+    function tandaiDiambil(id) { const t = titipanList.find(x=>x.id===id); if(t) { t.status='diambil'; localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList)); renderTitipanList(); showToast(`✅ Titipan ${t.penerima} diambil!`); } }
+    function hapusTransaksi(id) { if(confirm('Hapus transaksi?')) { kasKantor = kasKantor.filter(k=>k.id!==id); localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor)); refreshAllUI(); showToast('🗑️ Transaksi dihapus'); } }
+    function hapusCicilan(id) { if(confirm('Hapus cicilan?')) { cicilanList = cicilanList.filter(c=>c.id!==id); localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList)); renderCicilanList(); showToast('🗑️ Cicilan dihapus'); } }
+    function hapusTitipan(id) { if(confirm('Hapus titipan?')) { titipanList = titipanList.filter(t=>t.id!==id); localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList)); renderTitipanList(); showToast('🗑️ Titipan dihapus'); } }
 
     // ==================== WA ====================
     function getConfig() { return JSON.parse(localStorage.getItem('auva_config_v2')) || DEFAULT_CONFIG; }
-    function waTagihan(nama, sisa, jatuh, nominal) { const cfg = getConfig(); let tpl = cfg.wa_template.cicilan; tpl = tpl.replace(/\[nama\]/g, nama).replace(/\[sisa\]/g, formatRupiah(sisa)).replace(/\[tanggal\]/g, formatTanggal(jatuh)).replace(/\[nominal\]/g, formatRupiah(nominal)); window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); }
-    function waTitipan(penerima, penitip, nominal) { const cfg = getConfig(); let tpl = cfg.wa_template.titipan; tpl = tpl.replace(/\[penerima\]/g, penerima).replace(/\[penitip\]/g, penitip).replace(/\[nominal\]/g, formatRupiah(nominal)); window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); }
-    function kirimLaporanWA() { let s=0,m=0,k=0; kasKantor.forEach(t=>{ if(t.tipe==='masuk'){ s+=t.nominal; m+=t.nominal; } else { s-=t.nominal; k+=t.nominal; } }); const cfg=getConfig(); const text = `🏢 *LAPORAN KAS KANTOR*\n━━━━━━━━━━━━━━━━━━\n📅 ${new Date().toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'})}\n\n💰 Saldo: *${formatRupiah(s)}*\n📥 Masuk: ${formatRupiah(m)}\n📤 Keluar: ${formatRupiah(k)}\n\n📋 *Ringkasan:*\n• Cicilan Aktif: ${cicilanList.filter(c=>c.status==='belum').length} jamaah\n• Titipan Aktif: ${titipanList.filter(t=>t.status==='aktif').length} item\n\n- *${cfg.instansi1.nama}* -\n${cfg.instansi2.aktif ? `- *${cfg.instansi2.nama}* -` : ''}`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); showToast('📤 Laporan WA siap dikirim!'); }
+    
+    function waTagihan(nama, sisa, jatuh, nominal) { 
+        const cfg = getConfig(); 
+        let tpl = cfg.wa_template.cicilan; 
+        tpl = tpl.replace(/\[nama\]/g, nama).replace(/\[sisa\]/g, formatRupiah(sisa)).replace(/\[tanggal\]/g, formatTanggal(jatuh)).replace(/\[nominal\]/g, formatRupiah(nominal)); 
+        window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); 
+    }
+    
+    function waTitipan(penerima, penitip, nominal, tgl, ket) { 
+        const cfg = getConfig(); 
+        let tpl = cfg.wa_template.titipan; 
+        tpl = tpl.replace(/\[penerima\]/g, penerima).replace(/\[penitip\]/g, penitip).replace(/\[nominal\]/g, formatRupiah(nominal)).replace(/\[tanggal\]/g, formatTanggal(tgl)).replace(/\[keterangan\]/g, ket); 
+        window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); 
+    }
+    
+    function kirimLaporanWA() { 
+        const cfg = getConfig(); 
+        let s=0,m=0,k=0; 
+        kasKantor.forEach(t=>{ 
+            if(t.tipe==='masuk'){ s+=t.nominal; m+=t.nominal; } 
+            else { s-=t.nominal; k+=t.nominal; } 
+        }); 
+        let tpl = cfg.wa_template.laporan || DEFAULT_CONFIG.wa_template.laporan;
+        tpl = tpl.replace(/\[saldo\]/g, formatRupiah(s)).replace(/\[masuk\]/g, formatRupiah(m)).replace(/\[keluar\]/g, formatRupiah(k));
+        window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); 
+        showToast('📤 Laporan WA siap dikirim!'); 
+    }
 
     // ==================== PDF LAPORAN KESELURUHAN ====================
     async function downloadLaporanPDF() {
@@ -867,25 +1146,94 @@
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
-        if (cfg.watermark.enabled) { doc.setTextColor(150,150,150); doc.setFontSize(50); doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity })); doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' }); doc.setGState(new doc.GState({ opacity: 1 })); doc.setTextColor(0,0,0); }
-        doc.setFillColor(13,93,78); doc.rect(0,0,210,55,'F'); doc.setTextColor(255,255,255);
+        
+        // Watermark
+        if (cfg.watermark.enabled) { 
+            doc.setTextColor(150,150,150); 
+            doc.setFontSize(cfg.watermark.fontsize || 60); 
+            doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 })); 
+            if (cfg.watermark.position === 'diagonal') {
+                doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+            } else if (cfg.watermark.position === 'center') {
+                doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
+            } else if (cfg.watermark.position === 'tile') {
+                for (let x = 20; x < pageWidth; x += 60) {
+                    for (let y = 20; y < pageHeight; y += 40) {
+                        doc.text(cfg.watermark.text, x, y, { angle: -30, align: 'center' });
+                    }
+                }
+            }
+            doc.setGState(new doc.GState({ opacity: 1 })); 
+            doc.setTextColor(0,0,0); 
+        }
+        
+        doc.setFillColor(13,93,78); 
+        doc.rect(0,0,210,55,'F'); 
+        doc.setTextColor(255,255,255);
         if(cfg.instansi1.logo) try{ doc.addImage(cfg.instansi1.logo,'PNG',10,8,20,20); }catch(e){}
         if(cfg.instansi2.aktif && cfg.instansi2.logo) try{ doc.addImage(cfg.instansi2.logo,'PNG',180,8,20,20); }catch(e){}
+        
         const hm = cfg.settings.header_mode||'both';
-        if(hm==='both'||hm==='instansi1'){ doc.setFontSize(16); doc.text(cfg.instansi1.nama,105,22,{align:'center'}); doc.setFontSize(9); doc.text(cfg.instansi1.alamat,105,42,{align:'center'}); doc.text(`Telp: ${cfg.instansi1.telepon}`,105,48,{align:'center'}); }
-        if(hm==='both'&&cfg.instansi2.aktif){ doc.setFontSize(13); doc.text(cfg.instansi2.nama,105,32,{align:'center'}); }
-        else if(hm==='instansi2'&&cfg.instansi2.aktif){ doc.setFontSize(16); doc.text(cfg.instansi2.nama,105,22,{align:'center'}); doc.setFontSize(9); doc.text(cfg.instansi2.alamat,105,42,{align:'center'}); doc.text(`Telp: ${cfg.instansi2.telepon}`,105,48,{align:'center'}); if(cfg.instansi2.izin) doc.text(`Izin: ${cfg.instansi2.izin}`,105,54,{align:'center'}); }
-        doc.setTextColor(0,0,0); doc.setFontSize(14); doc.text('LAPORAN KEUANGAN KANTOR',105,68,{align:'center'}); doc.setFontSize(10); doc.text(`Periode: ${new Date().toLocaleDateString('id-ID',{month:'long', year:'numeric'})}`,105,78,{align:'center'});
-        let saldo=0,masuk=0,keluar=0; kasKantor.forEach(k=>{ if(k.tipe==='masuk'){ saldo+=k.nominal; masuk+=k.nominal; } else { saldo-=k.nominal; keluar+=k.nominal; } });
-        doc.setFontSize(11); doc.text(`Saldo Kantor: ${formatRupiah(saldo)}`,14,95); doc.text(`Total Pemasukan: ${formatRupiah(masuk)}`,14,104); doc.text(`Total Pengeluaran: ${formatRupiah(keluar)}`,14,113);
+        if(hm==='both'||hm==='instansi1'){ 
+            doc.setFontSize(16); 
+            doc.text(cfg.instansi1.nama,105,22,{align:'center'}); 
+            doc.setFontSize(9); 
+            doc.text(cfg.instansi1.alamat,105,42,{align:'center'}); 
+            doc.text(`Telp: ${cfg.instansi1.telepon}`,105,48,{align:'center'}); 
+        }
+        if(hm==='both'&&cfg.instansi2.aktif){ 
+            doc.setFontSize(13); 
+            doc.text(cfg.instansi2.nama,105,32,{align:'center'}); 
+        }
+        else if(hm==='instansi2'&&cfg.instansi2.aktif){ 
+            doc.setFontSize(16); 
+            doc.text(cfg.instansi2.nama,105,22,{align:'center'}); 
+            doc.setFontSize(9); 
+            doc.text(cfg.instansi2.alamat,105,42,{align:'center'}); 
+            doc.text(`Telp: ${cfg.instansi2.telepon}`,105,48,{align:'center'}); 
+            if(cfg.instansi2.izin) doc.text(`Izin: ${cfg.instansi2.izin}`,105,54,{align:'center'}); 
+        }
+        
+        doc.setTextColor(0,0,0); 
+        doc.setFontSize(14); 
+        doc.text('LAPORAN KEUANGAN KANTOR',105,68,{align:'center'}); 
+        doc.setFontSize(10); 
+        doc.text(`Periode: ${new Date().toLocaleDateString('id-ID',{month:'long', year:'numeric'})}`,105,78,{align:'center'});
+        
+        let saldo=0,masuk=0,keluar=0; 
+        kasKantor.forEach(k=>{ 
+            if(k.tipe==='masuk'){ saldo+=k.nominal; masuk+=k.nominal; } 
+            else { saldo-=k.nominal; keluar+=k.nominal; } 
+        });
+        
+        doc.setFontSize(11); 
+        doc.text(`Saldo Kantor: ${formatRupiah(saldo)}`,14,95); 
+        doc.text(`Total Pemasukan: ${formatRupiah(masuk)}`,14,104); 
+        doc.text(`Total Pengeluaran: ${formatRupiah(keluar)}`,14,113);
+        
         const tableData = kasKantor.slice(0,20).map(k=>[formatTanggal(k.tgl), k.keterangan, k.kategori, k.tipe==='masuk'?formatRupiah(k.nominal):'-', k.tipe==='keluar'?formatRupiah(k.nominal):'-']);
         doc.autoTable({ startY:122, head:[['Tanggal','Keterangan','Kategori','Masuk','Keluar']], body:tableData, theme:'striped', headStyles:{fillColor:[13,93,78],textColor:[255,255,255]}, styles:{fontSize:9} });
+        
         const finalY = doc.lastAutoTable.finalY + 20;
         const ttdMode = cfg.settings.ttd_mode||'both';
-        doc.setFontSize(10); doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`,150,finalY,{align:'right'});
-        if(ttdMode==='both'||ttdMode==='single'){ doc.text(cfg.instansi1.pimpinan,150,finalY+12,{align:'right'}); doc.text(cfg.instansi1.jabatan,150,finalY+18,{align:'right'}); }
-        if(cfg.instansi2.aktif && ttdMode==='both'){ doc.text(cfg.instansi2.pimpinan,150,finalY+32,{align:'right'}); doc.text(cfg.instansi2.jabatan,150,finalY+38,{align:'right'}); }
-        if(cfg.qr.enabled) { try{ const canvas=document.createElement('canvas'); await QRCode.toCanvas(canvas, cfg.qr.text, {width:80,margin:1}); doc.addImage(canvas.toDataURL(),'PNG',pageWidth-35,pageHeight-35,25,25); }catch(e){} }
+        doc.setFontSize(10); 
+        doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`,150,finalY,{align:'right'});
+        if(ttdMode==='both'||ttdMode==='single'){ 
+            doc.text(cfg.instansi1.pimpinan,150,finalY+12,{align:'right'}); 
+            doc.text(cfg.instansi1.jabatan,150,finalY+18,{align:'right'}); 
+        }
+        if(cfg.instansi2.aktif && ttdMode==='both'){ 
+            doc.text(cfg.instansi2.pimpinan,150,finalY+32,{align:'right'}); 
+            doc.text(cfg.instansi2.jabatan,150,finalY+38,{align:'right'}); 
+        }
+        
+        if(cfg.qr.enabled) { 
+            try{ 
+                const canvas=document.createElement('canvas'); 
+                await QRCode.toCanvas(canvas, cfg.qr.text, {width:cfg.qr.size||80,margin:1}); 
+                doc.addImage(canvas.toDataURL(),'PNG',pageWidth-35,pageHeight-35,25,25); 
+            }catch(e){} 
+        }
         doc.save(`Laporan_Keuangan_${new Date().toISOString().split('T')[0]}.pdf`);
         showToast('📄 PDF Laporan didownload!');
     }
@@ -911,9 +1259,13 @@
         
         if (cfg.watermark.enabled) {
             doc.setTextColor(150,150,150);
-            doc.setFontSize(50);
-            doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity }));
-            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+            doc.setFontSize(cfg.watermark.fontsize || 60);
+            doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 }));
+            if (cfg.watermark.position === 'diagonal') {
+                doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+            } else if (cfg.watermark.position === 'center') {
+                doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
+            }
             doc.setGState(new doc.GState({ opacity: 1 }));
             doc.setTextColor(0,0,0);
         }
@@ -983,7 +1335,7 @@
             try {
                 const canvas = document.createElement('canvas');
                 const qrText = `${cfg.qr.text}\nNo: ${nomorInvoice}\nJamaah: ${cicilan.nama}\nSisa: ${formatRupiah(sisa)}`;
-                await QRCode.toCanvas(canvas, qrText, { width: 70, margin: 1 });
+                await QRCode.toCanvas(canvas, qrText, { width: cfg.qr.size || 80, margin: 1 });
                 doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-30, pageHeight-35, 22, 22);
             } catch(e) {}
         }
@@ -1013,9 +1365,13 @@
         
         if (cfg.watermark.enabled) {
             doc.setTextColor(150,150,150);
-            doc.setFontSize(50);
-            doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity }));
-            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+            doc.setFontSize(cfg.watermark.fontsize || 60);
+            doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 }));
+            if (cfg.watermark.position === 'diagonal') {
+                doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+            } else if (cfg.watermark.position === 'center') {
+                doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
+            }
             doc.setGState(new doc.GState({ opacity: 1 }));
             doc.setTextColor(0,0,0);
         }
@@ -1081,7 +1437,7 @@
             try {
                 const canvas = document.createElement('canvas');
                 const qrText = `${cfg.qr.text}\nNo: ${nomorKwitansi}\nPenerima: ${titipan.penerima}\nNominal: ${formatRupiah(titipan.nominal)}`;
-                await QRCode.toCanvas(canvas, qrText, { width: 70, margin: 1 });
+                await QRCode.toCanvas(canvas, qrText, { width: cfg.qr.size || 80, margin: 1 });
                 doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-30, pageHeight-35, 22, 22);
             } catch(e) {}
         }
@@ -1107,19 +1463,7 @@
     function escapeHtml(t) { if(!t) return ''; const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
     function showToast(m) { let t=document.querySelector('.toast-msg'); if(t) t.remove(); t=document.createElement('div'); t.className='toast-msg'; t.innerText=m; document.body.appendChild(t); setTimeout(()=>t?.remove(),2800); }
 
-    // ==================== PWA SERVICE WORKER ====================
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log('Service Worker gagal:', err));
-    }
-
     window.onload = initApp;
 </script>
-
-<!-- Service Worker sederhana (inline) -->
-<script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(e => console.log('SW tidak terdaftar'));
-    }
-</script>
 </body>
-            </html>
+    </html>
