@@ -8,9 +8,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Auva Kantor">
-    <title>Auva - Keuangan Kantor Pro</title>
+    <title>Auva Pro - Keuangan Kantor + Kontrol Bayar</title>
     
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Auva%20-%20Keuangan%20Kantor%22,%22short_name%22:%22Auva%22,%22description%22:%22Aplikasi%20Keuangan%20Kantor%20PT%20Auva%20%26%20KBIH%20AU%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22theme_color%22:%22%230d5d4e%22,%22background_color%22:%22%230d5d4e%22,%22icons%22:[{%22src%22:%22https://placehold.co/192x192/0d5d4e/white?text=AUVA%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22},{%22src%22:%22https://placehold.co/512x512/0d5d4e/white?text=AUVA%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Auva%20Pro%20Keuangan%22,%22short_name%22:%22Auva%22,%22description%22:%22Aplikasi%20Keuangan%20Kantor%20dengan%20Kontrol%20Bayar%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22theme_color%22:%22%230d5d4e%22,%22background_color%22:%22%230d5d4e%22,%22icons%22:[{%22src%22:%22https://placehold.co/192x192/0d5d4e/white?text=AUVA%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22},{%22src%22:%22https://placehold.co/512x512/0d5d4e/white?text=AUVA%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
     <link rel="apple-touch-icon" href="https://placehold.co/192x192/0d5d4e/white?text=AUVA">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -55,7 +55,7 @@
         .saldo-utama { text-align: center; padding: 8px 0; }
         .saldo-utama .label { font-size: 14px; opacity: 0.9; letter-spacing: 0.5px; }
         .saldo-utama .value { font-size: 40px; font-weight: 800; margin-top: 8px; line-height: 1.2; }
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
         .stat-item { background: rgba(255,255,255,0.12); padding: 14px 10px; border-radius: 18px; backdrop-filter: blur(4px); text-align: center; }
         .stat-item .label { font-size: 11px; opacity: 0.9; margin-bottom: 6px; }
         .stat-item .value { font-size: 20px; font-weight: 800; }
@@ -82,21 +82,21 @@
         .laporan-btn.pdf { background: #ef444415; color: #dc2626; border-color: #ef444430; }
         .laporan-btn.excel { background: #10b98115; color: #059669; border-color: #10b98130; }
         
-        .tabs { display: flex; gap: 6px; background: var(--white); padding: 6px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-        .tab { flex: 1; padding: 14px 8px; text-align: center; border-radius: 16px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #64748b; }
+        .tabs { display: flex; gap: 6px; background: var(--white); padding: 6px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); flex-wrap: wrap; }
+        .tab { flex: 1; padding: 12px 6px; text-align: center; border-radius: 16px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #64748b; }
         .tab.active { background: var(--primary); color: white; }
         
         .page { display: none; max-width: 500px; margin: 0 auto; }
         .page.active { display: block; }
         
-        .filter-row { display: flex; gap: 10px; margin-bottom: 16px; }
+        .filter-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
         .filter-row select, .filter-row input {
             padding: 12px 14px; border: 1.5px solid var(--gray-border); border-radius: 16px;
             font-size: 14px; background: var(--white); flex: 1; font-family: inherit;
         }
         
         .card-list { display: flex; flex-direction: column; gap: 14px; }
-        .cicilan-card, .titipan-card, .transaksi-card {
+        .cicilan-card, .titipan-card, .transaksi-card, .kontrol-card {
             background: var(--white); border-radius: 20px; padding: 18px 16px;
             box-shadow: 0 4px 14px rgba(0,0,0,0.05); border-left: 5px solid;
         }
@@ -116,12 +116,17 @@
         .card-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
         .card-actions button {
             flex: 1; padding: 12px 8px; border: none; border-radius: 40px; font-weight: 600;
-            font-size: 13px; cursor: pointer; background: var(--gray-light); color: var(--dark);
+            font-size: 12px; cursor: pointer; background: var(--gray-light); color: var(--dark);
             display: inline-flex; align-items: center; justify-content: center; gap: 6px;
         }
         .card-actions button.primary { background: var(--primary); color: white; }
         .card-actions button.wa { background: #25d36615; color: #1a7f4e; }
         .card-actions button.pdf-btn { background: #ef444415; color: #dc2626; }
+        .card-actions button.konversi-btn { background: var(--accent); color: white; }
+        
+        .kontrol-summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .kontrol-summary-card { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 16px; border-radius: 20px; text-align: center; }
+        .kontrol-summary-card .value { font-size: 24px; font-weight: 800; }
         
         .setting-section {
             background: var(--white); border-radius: 24px; padding: 22px 18px;
@@ -204,7 +209,6 @@
         .empty-state { text-align: center; padding: 50px 24px; background: var(--white); border-radius: 24px; color: #94a3b8; }
         .empty-state i { font-size: 56px; margin-bottom: 20px; opacity: 0.6; }
         
-        /* Kategori List Item Style */
         .kategori-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--gray-light); border-radius: 16px; margin-bottom: 8px; }
         .kategori-item .nama { font-weight: 600; text-transform: capitalize; }
         .kategori-actions { display: flex; gap: 8px; }
@@ -229,7 +233,7 @@
         <i class="fas fa-mosque" style="font-size:56px; color:var(--primary);"></i>
     </div>
     <div style="color:white; font-size:28px; font-weight:bold;">Auva Pro</div>
-    <div style="color:rgba(255,255,255,0.8); font-size:14px; margin-top:8px;">Keuangan Kantor Profesional</div>
+    <div style="color:rgba(255,255,255,0.8); font-size:14px; margin-top:8px;">Keuangan + Kontrol Bayar</div>
 </div>
 
 <!-- Install Banner PWA -->
@@ -237,7 +241,7 @@
     <div class="banner-content">
         <div class="banner-icon"><i class="fas fa-mosque"></i></div>
         <div class="banner-text">
-            <h4>📱 Install Auva Kantor</h4>
+            <h4>📱 Install Auva Pro</h4>
             <p>Tambahkan ke layar utama untuk akses cepat & offline</p>
         </div>
     </div>
@@ -247,6 +251,7 @@
     </div>
 </div>
 
+<!-- PAGE KEUANGAN -->
 <div id="page-keuangan" class="page active">
     <div class="header">
         <div class="back-btn" onclick="goToDashboard()"><i class="fas fa-arrow-left"></i></div>
@@ -256,9 +261,11 @@
 
     <div class="dashboard-card">
         <div class="saldo-utama"><div class="label">💰 SALDO KANTOR</div><div class="value" id="saldoKantor">Rp 0</div></div>
-        <div class="stats-row">
+        <div class="stats-row" id="statsRow">
             <div class="stat-item"><div class="label">📥 MASUK BULAN INI</div><div class="value" id="masukBulanIni">Rp 0</div></div>
             <div class="stat-item"><div class="label">📤 KELUAR BULAN INI</div><div class="value" id="keluarBulanIni">Rp 0</div></div>
+            <div class="stat-item"><div class="label">💼 TOTAL TITIPAN/DP</div><div class="value" id="totalTitipan">Rp 0</div></div>
+            <div class="stat-item"><div class="label">📋 TOTAL PIUTANG</div><div class="value" id="totalPiutang">Rp 0</div></div>
         </div>
     </div>
 
@@ -279,6 +286,7 @@
         <div class="tab active" onclick="switchTab('cicilan')">📋 Cicilan</div>
         <div class="tab" onclick="switchTab('titipan')">💼 Titipan</div>
         <div class="tab" onclick="switchTab('transaksi')">📊 Kas</div>
+        <div class="tab" onclick="switchTab('kontrolbayar')">💰 Kontrol Bayar</div>
     </div>
 
     <div id="tab-cicilan">
@@ -290,7 +298,7 @@
     </div>
     <div id="tab-titipan" class="hidden">
         <div class="filter-row">
-            <select id="filterStatusTitipan" onchange="renderTitipanList()"><option value="all">Semua</option><option value="aktif">Belum Diambil</option><option value="diambil">Sudah Diambil</option></select>
+            <select id="filterStatusTitipan" onchange="renderTitipanList()"><option value="all">Semua</option><option value="aktif">Belum Dipakai</option><option value="diambil">Sudah Dipakai</option></select>
             <input type="text" id="searchTitipan" placeholder="🔍 Cari nama..." oninput="renderTitipanList()">
         </div>
         <div class="card-list" id="titipanList"></div>
@@ -302,10 +310,23 @@
         </div>
         <div class="card-list" id="transaksiList"></div>
     </div>
+    <div id="tab-kontrolbayar" class="hidden">
+        <div class="kontrol-summary">
+            <div class="kontrol-summary-card"><div class="label">💰 Total Tagihan</div><div class="value" id="totalTagihanKontrol">Rp 0</div></div>
+            <div class="kontrol-summary-card"><div class="label">✅ Total Terbayar</div><div class="value" id="totalTerbayarKontrol">Rp 0</div></div>
+        </div>
+        <button class="btn-save" onclick="openKontrolTagihanModal()" style="width:100%; margin-bottom:16px; padding:14px;"><i class="fas fa-plus-circle"></i> + Buat Tagihan Baru</button>
+        <div class="filter-row">
+            <select id="filterStatusKontrol" onchange="renderKontrolTagihanList()"><option value="all">Semua</option><option value="belum">Belum Lunas</option><option value="lunas">Lunas</option></select>
+            <input type="text" id="searchKontrol" placeholder="🔍 Cari nama..." oninput="renderKontrolTagihanList()">
+        </div>
+        <div class="card-list" id="kontrolTagihanList"></div>
+    </div>
 
     <button class="fab" onclick="handleFabClick()"><i class="fas fa-plus"></i></button>
 </div>
 
+<!-- PAGE PENGATURAN -->
 <div id="page-pengaturan" class="page">
     <div class="header">
         <div class="back-btn" onclick="showPage('keuangan')"><i class="fas fa-arrow-left"></i></div>
@@ -374,6 +395,7 @@
         <div class="setting-row"><label>Template Cicilan</label><textarea id="cfg_wa_cicilan" class="form-control" rows="3"></textarea><div class="template-variables">Variabel: <code>[nama]</code> <code>[sisa]</code> <code>[tanggal]</code> <code>[nominal]</code></div></div>
         <div class="setting-row"><label>Template Titipan</label><textarea id="cfg_wa_titipan" class="form-control" rows="3"></textarea><div class="template-variables">Variabel: <code>[penerima]</code> <code>[penitip]</code> <code>[nominal]</code> <code>[tanggal]</code> <code>[keterangan]</code></div></div>
         <div class="setting-row"><label>Template Laporan Kas</label><textarea id="cfg_wa_laporan" class="form-control" rows="3"></textarea><div class="template-variables">Variabel: <code>[saldo]</code> <code>[masuk]</code> <code>[keluar]</code></div></div>
+        <div class="setting-row"><label>Template Kontrol Bayar</label><textarea id="cfg_wa_kontrol" class="form-control" rows="3"></textarea><div class="template-variables">Variabel: <code>[nama]</code> <code>[sisa]</code> <code>[total]</code> <code>[terbayar]</code></div></div>
     </div>
 
     <div class="setting-section">
@@ -396,6 +418,33 @@
     <button class="btn-cancel" onclick="resetConfigToDefault()" style="width:100%; margin-top:10px; padding:16px;"><i class="fas fa-undo-alt"></i> Reset ke Default</button>
 </div>
 
+<!-- MODAL KONTROL TAGIHAN -->
+<div class="modal" id="modalKontrolTagihan">
+    <div class="modal-content">
+        <h3 id="modalKontrolTitle">📝 Buat Tagihan Baru</h3>
+        <div class="form-group"><label>👤 Nama Jamaah</label><input type="text" id="kontrolNama" class="form-control" placeholder="Nama lengkap"></div>
+        <div class="form-group"><label>💰 Total Tagihan (Rp)</label><input type="number" id="kontrolTotalTagihan" class="form-control" placeholder="Contoh: 5000000"></div>
+        <div class="form-group"><label>📝 Keterangan Tagihan</label><input type="text" id="kontrolKeteranganTagihan" class="form-control" placeholder="DP Umroh / SPP / dll"></div>
+        <input type="hidden" id="kontrolEditId" value="">
+        <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('modalKontrolTagihan')">Batal</button><button class="btn-save" onclick="simpanKontrolTagihan()">Simpan Tagihan</button></div>
+    </div>
+</div>
+
+<!-- MODAL BAYAR TAGIHAN -->
+<div class="modal" id="modalBayarTagihan">
+    <div class="modal-content">
+        <h3>💳 Bayar Tagihan</h3>
+        <div class="form-group"><label>👤 Nama Jamaah</label><input type="text" id="bayarNama" class="form-control" readonly></div>
+        <div class="form-group"><label>💰 Sisa Tagihan</label><input type="text" id="bayarSisa" class="form-control" readonly></div>
+        <div class="form-group"><label>💵 Nominal Bayar (Rp)</label><input type="number" id="bayarNominal" class="form-control" placeholder="Masukkan nominal"></div>
+        <div class="form-group"><label>🏦 Metode</label><select id="bayarMetode" class="form-control"><option>Transfer Bank</option><option>Kas Tunai</option><option>QRIS</option><option>E-Wallet</option></select></div>
+        <div class="form-group"><label>📅 Tanggal Bayar</label><input type="date" id="bayarTanggal" class="form-control"></div>
+        <input type="hidden" id="bayarTagihanId" value="">
+        <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('modalBayarTagihan')">Batal</button><button class="btn-save" onclick="prosesBayarTagihan()">Bayar</button></div>
+    </div>
+</div>
+
+<!-- MODAL KATEGORI -->
 <div class="modal" id="modalKategori">
     <div class="modal-content">
         <h3 id="modalKategoriTitle">Tambah Kategori</h3>
@@ -405,6 +454,7 @@
     </div>
 </div>
 
+<!-- MODAL KAS -->
 <div class="modal" id="modalKas">
     <div class="modal-content">
         <h3 id="modalKasTitle">💰 Kas Masuk</h3>
@@ -416,6 +466,7 @@
     </div>
 </div>
 
+<!-- MODAL CICILAN -->
 <div class="modal" id="modalCicilan">
     <div class="modal-content">
         <h3 id="modalCicilanTitle">📋 Tambah Cicilan</h3>
@@ -444,6 +495,7 @@
     </div>
 </div>
 
+<!-- MODAL TITIPAN -->
 <div class="modal" id="modalTitipan">
     <div class="modal-content">
         <h3 id="modalTitipanTitle">💼 Tambah Titipan</h3>
@@ -464,690 +516,1054 @@
     </div>
 </div>
 
+<!-- MODAL KONVERSI TITIPAN KE CICILAN -->
+<div class="modal" id="modalKonversiTitipan">
+    <div class="modal-content">
+        <h3>🔄 Konversi Titipan ke Cicilan</h3>
+        <div class="form-group"><label>👤 Nama Jamaah</label><input type="text" id="konversiNama" class="form-control" readonly></div>
+        <div class="form-group"><label>💎 Total Paket</label><input type="number" id="konversiTotal" class="form-control" min="1000"></div>
+        <div class="form-group"><label>🔢 Tenor</label><input type="number" id="konversiTenor" class="form-control" min="1" value="1"></div>
+        <div class="form-group"><label>💵 Nominal Bayar (Cicilan Ke-1)</label><input type="number" id="konversiNominal" class="form-control" min="1000"></div>
+        <div class="form-group"><label>📅 Tanggal Bayar</label><input type="date" id="konversiTanggal" class="form-control"></div>
+        <div class="form-group">
+            <label>🏢 Logo untuk PDF</label>
+            <select id="konversiLogoPilih" class="form-control">
+                <option value="pt">🏢 PT AUVA EQTENA NAHDHA</option>
+                <option value="kbih">🕋 KBIH AMANATUL UMMAH</option>
+            </select>
+        </div>
+        <input type="hidden" id="konversiTitipanId">
+        <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('modalKonversiTitipan')">Batal</button><button class="btn-save" onclick="prosesKonversiKeCicilan()">Konversi</button></div>
+    </div>
+</div>
+
 <script>
-    // ==================== DEFAULT DATA ====================
-    const DEFAULT_KAS = [
-        { id: 1, tgl: '2026-04-01', tipe: 'masuk', nominal: 5000000, kategori: 'operasional', keterangan: 'Setoran awal bulan' },
-        { id: 2, tgl: '2026-04-03', tipe: 'keluar', nominal: 350000, kategori: 'listrik', keterangan: 'Pembayaran token listrik' },
-        { id: 3, tgl: '2026-04-05', tipe: 'masuk', nominal: 2500000, kategori: 'operasional', keterangan: 'Setoran harian' },
-        { id: 4, tgl: '2026-04-07', tipe: 'keluar', nominal: 400000, kategori: 'atk', keterangan: 'Pembelian kertas dan tinta' },
-        { id: 5, tgl: '2026-04-08', tipe: 'masuk', nominal: 8000000, kategori: 'operasional', keterangan: 'Setoran mingguan' },
-        { id: 6, tgl: '2026-04-08', tipe: 'keluar', nominal: 2500000, kategori: 'gaji', keterangan: 'Gaji staff administrasi' },
-    ];
+// ==================== DEFAULT DATA ====================
+const DEFAULT_KAS = [
+    { id: 1, tgl: '2026-04-01', tipe: 'masuk', nominal: 5000000, kategori: 'operasional', keterangan: 'Setoran awal bulan' },
+    { id: 2, tgl: '2026-04-03', tipe: 'keluar', nominal: 350000, kategori: 'listrik', keterangan: 'Pembayaran token listrik' },
+    { id: 3, tgl: '2026-04-05', tipe: 'masuk', nominal: 2500000, kategori: 'operasional', keterangan: 'Setoran harian' },
+    { id: 4, tgl: '2026-04-07', tipe: 'keluar', nominal: 400000, kategori: 'atk', keterangan: 'Pembelian kertas dan tinta' },
+    { id: 5, tgl: '2026-04-08', tipe: 'masuk', nominal: 8000000, kategori: 'operasional', keterangan: 'Setoran mingguan' },
+    { id: 6, tgl: '2026-04-08', tipe: 'keluar', nominal: 2500000, kategori: 'gaji', keterangan: 'Gaji staff administrasi' },
+];
 
-    const DEFAULT_CICILAN = [
-        { id: 1, nama: 'Budi Santoso', total: 35000000, tenor: 7, ke: 3, nominal: 5000000, tgl: '2026-04-01', jatuh: '2026-05-01', status: 'belum', dibayar: 15000000, logo_pilih: 'pt' },
-        { id: 2, nama: 'Siti Aminah', total: 28500000, tenor: 3, ke: 3, nominal: 9500000, tgl: '2026-04-05', jatuh: '-', status: 'lunas', dibayar: 28500000, logo_pilih: 'kbih' },
-        { id: 3, nama: 'Keluarga Hadi', total: 82000000, tenor: 10, ke: 4, nominal: 8000000, tgl: '2026-03-15', jatuh: '2026-04-15', status: 'belum', dibayar: 32000000, logo_pilih: 'pt' },
-        { id: 4, nama: 'Ahmad Fauzan', total: 42500000, tenor: 5, ke: 2, nominal: 8500000, tgl: '2026-03-20', jatuh: '2026-04-20', status: 'belum', dibayar: 17000000, logo_pilih: 'kbih' },
-    ];
+const DEFAULT_CICILAN = [
+    { id: 1, nama: 'Budi Santoso', total: 35000000, tenor: 7, ke: 3, nominal: 5000000, tgl: '2026-04-01', jatuh: '2026-05-01', status: 'belum', dibayar: 15000000, logo_pilih: 'pt' },
+    { id: 2, nama: 'Siti Aminah', total: 28500000, tenor: 3, ke: 3, nominal: 9500000, tgl: '2026-04-05', jatuh: '-', status: 'lunas', dibayar: 28500000, logo_pilih: 'kbih' },
+    { id: 3, nama: 'Keluarga Hadi', total: 82000000, tenor: 10, ke: 4, nominal: 8000000, tgl: '2026-03-15', jatuh: '2026-04-15', status: 'belum', dibayar: 32000000, logo_pilih: 'pt' },
+    { id: 4, nama: 'Ahmad Fauzan', total: 42500000, tenor: 5, ke: 2, nominal: 8500000, tgl: '2026-03-20', jatuh: '2026-04-20', status: 'belum', dibayar: 17000000, logo_pilih: 'kbih' },
+];
 
-    const DEFAULT_TITIPAN = [
-        { id: 1, penitip: 'Haji Ahmad', penerima: 'Budi Santoso', nominal: 2000000, tgl: '2026-04-01', status: 'aktif', ket: 'Oleh-oleh dari Mekkah', logo_pilih: 'kbih' },
-        { id: 2, penitip: 'Ibu Fatimah', penerima: 'Siti Aminah', nominal: 500000, tgl: '2026-03-20', status: 'diambil', ket: 'Titipan keluarga', logo_pilih: 'pt' },
-        { id: 3, penitip: 'Pak Rahman', penerima: 'Keluarga Hadi', nominal: 1500000, tgl: '2026-04-07', status: 'aktif', ket: 'Uang saku tambahan', logo_pilih: 'pt' },
-    ];
+const DEFAULT_TITIPAN = [
+    { id: 1, penitip: 'Haji Ahmad', penerima: 'Budi Santoso', nominal: 2000000, tgl: '2026-04-01', status: 'aktif', ket: 'Oleh-oleh dari Mekkah', logo_pilih: 'kbih' },
+    { id: 2, penitip: 'Ibu Fatimah', penerima: 'Siti Aminah', nominal: 500000, tgl: '2026-03-20', status: 'diambil', ket: 'Titipan keluarga', logo_pilih: 'pt' },
+    { id: 3, penitip: 'Pak Rahman', penerima: 'Keluarga Hadi', nominal: 1500000, tgl: '2026-04-07', status: 'aktif', ket: 'Uang saku tambahan', logo_pilih: 'pt' },
+];
 
-    const DEFAULT_CONFIG = {
-        instansi1: {
-            nama: 'PT AUVA EQTENA NAHDHA',
-            alamat: 'Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya',
-            telepon: '0858-1515-9999',
-            email: '',
-            npwp: '',
-            pimpinan: 'Dr. Mauhibur Rokhman, Lc., MIRKH',
-            jabatan: 'Pembimbing',
-            logo: ''
-        },
-        instansi2: {
-            aktif: true,
-            nama: 'KBIH Amanatul Ummah',
-            alamat: 'Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya',
-            telepon: '0858-1515-9999',
-            email: '',
-            izin: '',
-            pimpinan: 'Dr. Mauhibur Rokhman, Lc., MIRKH',
-            jabatan: 'Pembimbing',
-            logo: ''
-        },
-        settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/AUVA' },
-        watermark: { enabled: true, text: 'DOKUMEN RESMI', opacity: 0.15, fontsize: 60, position: 'diagonal' },
-        qr: { enabled: true, text: 'Dokumen Resmi KBIHU Amanatul Ummah - Divalidasi oleh Sistem Auva', size: 80 },
-        wa_template: {
-            cicilan: '📋 *TAGIHAN CICILAN*\nYth. [nama],\nSisa: [sisa]\nJatuh Tempo: [tanggal]\nNominal: [nominal]\nMohon segera dibayar.',
-            titipan: '💼 *TITIPAN*\nYth. [penerima],\nDari: [penitip]\nNominal: [nominal]\nTanggal: [tanggal]\nKeterangan: [keterangan]\nSilakan ambil.',
-            laporan: '🏢 *LAPORAN KAS KANTOR*\n\n💰 Saldo: [saldo]\n📥 Pemasukan: [masuk]\n📤 Pengeluaran: [keluar]\n\nTerima kasih.'
-        },
-        kategori: ['operasional', 'gaji', 'listrik', 'atk', 'lain']
-    };
+const DEFAULT_CONFIG = {
+    instansi1: {
+        nama: 'PT AUVA EQTENA NAHDHA',
+        alamat: 'Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya',
+        telepon: '0858-1515-9999',
+        email: '',
+        npwp: '',
+        pimpinan: 'Dr. Mauhibur Rokhman, Lc., MIRKH',
+        jabatan: 'Pembimbing',
+        logo: ''
+    },
+    instansi2: {
+        aktif: true,
+        nama: 'KBIH Amanatul Ummah',
+        alamat: 'Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya',
+        telepon: '0858-1515-9999',
+        email: '',
+        izin: '',
+        pimpinan: 'Dr. Mauhibur Rokhman, Lc., MIRKH',
+        jabatan: 'Pembimbing',
+        logo: ''
+    },
+    settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/AUVA' },
+    watermark: { enabled: true, text: 'DOKUMEN RESMI', opacity: 0.15, fontsize: 60, position: 'diagonal' },
+    qr: { enabled: true, text: 'Dokumen Resmi KBIHU Amanatul Ummah - Divalidasi oleh Sistem Auva', size: 80 },
+    wa_template: {
+        cicilan: '📋 *TAGIHAN CICILAN*\nYth. [nama],\nSisa: [sisa]\nJatuh Tempo: [tanggal]\nNominal: [nominal]\nMohon segera dibayar.',
+        titipan: '💼 *TITIPAN*\nYth. [penerima],\nDari: [penitip]\nNominal: [nominal]\nTanggal: [tanggal]\nKeterangan: [keterangan]\nSilakan ambil.',
+        laporan: '🏢 *LAPORAN KAS KANTOR*\n\n💰 Saldo: [saldo]\n📥 Pemasukan: [masuk]\n📤 Pengeluaran: [keluar]\n\nTerima kasih.',
+        kontrol: '📝 *TAGIHAN* [nama]\nSisa: [sisa]\nTotal: [total]\nTerbayar: [terbayar]'
+    },
+    kategori: ['operasional', 'gaji', 'listrik', 'atk', 'lain']
+};
 
-    // ==================== GLOBAL STATE ====================
-    let kasKantor = [], cicilanList = [], titipanList = [], kategoriList = [], currentTab = 'cicilan', currentTipeKas = 'masuk';
-    let deferredPrompt = null;
+// ==================== GLOBAL STATE ====================
+let kasKantor = [], cicilanList = [], titipanList = [], kategoriList = [], kontrolTagihanList = [];
+let currentTab = 'cicilan', currentTipeKas = 'masuk';
+let deferredPrompt = null;
 
-    // ==================== PWA & INSTALL BANNER ====================
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; setTimeout(() => { if (deferredPrompt && !isAppInstalled() && shouldShowInstallBanner()) { document.getElementById('installBanner').classList.add('show'); } }, 3000); });
-    
-    function isAppInstalled() { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; }
-    function closeInstallBanner() { document.getElementById('installBanner').classList.remove('show'); localStorage.setItem('auva_install_dismissed', Date.now()); }
-    function shouldShowInstallBanner() { const d = localStorage.getItem('auva_install_dismissed'); if (!d) return true; return (Date.now() - parseInt(d)) > 7 * 24 * 60 * 60 * 1000; }
-    
-    document.addEventListener('DOMContentLoaded', () => { 
-        const btn = document.getElementById('btnInstallPWA');
-        if (btn) btn.addEventListener('click', async () => { 
-            if (!deferredPrompt) { showToast('📱 Aplikasi sudah terinstall'); return; } 
-            deferredPrompt.prompt(); 
-            const { outcome } = await deferredPrompt.userChoice; 
-            if (outcome === 'accepted') showToast('✅ Terima kasih!'); 
-            deferredPrompt = null; 
-            closeInstallBanner(); 
-        }); 
-    });
-
-    // ==================== NOTIFIKASI ====================
-    function notifikasiCicilanJatuhTempo() {
-        const today = new Date().toISOString().split('T')[0];
-        const jatuhTempo = cicilanList.filter(c => c.status === 'belum' && c.jatuh && c.jatuh === today);
-        if (jatuhTempo.length > 0 && Notification.permission === 'granted') {
-            jatuhTempo.forEach(c => {
-                new Notification('🔔 Tagihan Jatuh Tempo', {
-                    body: `Cicilan ${c.nama} jatuh tempo hari ini! Sisa: ${formatRupiah(c.total - c.dibayar)}`,
-                    icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%230d5d4e" viewBox="0 0 24 24"%3E%3Cpath d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/%3E%3C/svg%3E'
-                });
-            });
-        }
-    }
-
-    function mintaIzinNotifikasi() {
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
-        }
-        setInterval(() => {
-            if (Notification.permission === 'granted') notifikasiCicilanJatuhTempo();
-        }, 24 * 60 * 60 * 1000);
-    }
-
-    // ==================== INIT & MIGRASI DATA ====================
-    function initApp() {
-        setTimeout(() => {
-            document.getElementById('splashScreen').style.opacity = '0';
-            setTimeout(() => document.getElementById('splashScreen').style.display = 'none', 400);
-        }, 800);
-        
-        // Load atau migrasi data
-        const oldKas = localStorage.getItem('auva_kas_kantor_v1');
-        const oldCicilan = localStorage.getItem('auva_cicilan_v1');
-        const oldTitipan = localStorage.getItem('auva_titipan_v1');
-        
-        kasKantor = oldKas ? JSON.parse(oldKas) : JSON.parse(JSON.stringify(DEFAULT_KAS));
-        cicilanList = oldCicilan ? JSON.parse(oldCicilan) : JSON.parse(JSON.stringify(DEFAULT_CICILAN));
-        titipanList = oldTitipan ? JSON.parse(oldTitipan) : JSON.parse(JSON.stringify(DEFAULT_TITIPAN));
-        
-        // Simpan ke storage (migrasi otomatis)
-        localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
-        localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList));
-        localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList));
-        
-        loadConfig();
-        
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('kasTanggal').value = today;
-        document.getElementById('cicilanTanggal').value = today;
-        document.getElementById('titipanTanggalTitip').value = today;
-        
-        refreshAllUI();
-        mintaIzinNotifikasi();
-        
-        // Slider opacity live display
-        const slider = document.getElementById('cfg_watermark_opacity');
-        if (slider) slider.addEventListener('input', e => document.getElementById('opacityValue').textContent = parseFloat(e.target.value).toFixed(2));
-        
-        if (!isAppInstalled() && shouldShowInstallBanner()) setTimeout(() => document.getElementById('installBanner').classList.add('show'), 5000);
-    }
-
-    function loadConfig() {
-        let config = localStorage.getItem('auva_config_v2');
-        
-        if (!config) {
-            config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-            localStorage.setItem('auva_config_v2', JSON.stringify(config));
-        } else {
-            config = JSON.parse(config);
-            // Merge dengan default untuk field baru
-            config = mergeConfig(config, DEFAULT_CONFIG);
-        }
-        
-        // Isi form instansi1
-        document.getElementById('cfg_instansi1_nama').value = config.instansi1.nama || '';
-        document.getElementById('cfg_instansi1_alamat').value = config.instansi1.alamat || '';
-        document.getElementById('cfg_instansi1_telepon').value = config.instansi1.telepon || '';
-        document.getElementById('cfg_instansi1_email').value = config.instansi1.email || '';
-        document.getElementById('cfg_instansi1_npwp').value = config.instansi1.npwp || '';
-        document.getElementById('cfg_instansi1_pimpinan').value = config.instansi1.pimpinan || '';
-        document.getElementById('cfg_instansi1_jabatan').value = config.instansi1.jabatan || '';
-        if (config.instansi1.logo) document.getElementById('previewLogo1').src = config.instansi1.logo;
-        
-        // Isi form instansi2
-        document.getElementById('cfg_instansi2_aktif').checked = config.instansi2.aktif || false;
-        document.getElementById('cfg_instansi2_nama').value = config.instansi2.nama || '';
-        document.getElementById('cfg_instansi2_alamat').value = config.instansi2.alamat || '';
-        document.getElementById('cfg_instansi2_telepon').value = config.instansi2.telepon || '';
-        document.getElementById('cfg_instansi2_email').value = config.instansi2.email || '';
-        document.getElementById('cfg_instansi2_izin').value = config.instansi2.izin || '';
-        document.getElementById('cfg_instansi2_pimpinan').value = config.instansi2.pimpinan || '';
-        document.getElementById('cfg_instansi2_jabatan').value = config.instansi2.jabatan || '';
-        if (config.instansi2.logo) document.getElementById('previewLogo2').src = config.instansi2.logo;
-        
-        // Settings
-        document.getElementById('cfg_header_mode').value = config.settings.header_mode || 'both';
-        document.getElementById('cfg_ttd_mode').value = config.settings.ttd_mode || 'both';
-        document.getElementById('cfg_invoice_prefix').value = config.settings.invoice_prefix || 'INV/AUVA';
-        
-        // Watermark
-        document.getElementById('cfg_watermark_enabled').checked = config.watermark.enabled !== false;
-        document.getElementById('cfg_watermark_text').value = config.watermark.text || 'DOKUMEN RESMI';
-        document.getElementById('cfg_watermark_opacity').value = config.watermark.opacity || 0.15;
-        document.getElementById('opacityValue').textContent = (config.watermark.opacity || 0.15).toFixed(2);
-        document.getElementById('cfg_watermark_fontsize').value = config.watermark.fontsize || 60;
-        document.getElementById('cfg_watermark_position').value = config.watermark.position || 'diagonal';
-        
-        // QR
-        document.getElementById('cfg_qr_enabled').checked = config.qr.enabled !== false;
-        document.getElementById('cfg_qr_text').value = config.qr.text || 'Dokumen Resmi KBIHU Amanatul Ummah - Divalidasi oleh Sistem Auva';
-        document.getElementById('cfg_qr_size').value = config.qr.size || 80;
-        
-        // WA Template
-        document.getElementById('cfg_wa_cicilan').value = config.wa_template.cicilan || '';
-        document.getElementById('cfg_wa_titipan').value = config.wa_template.titipan || '';
-        document.getElementById('cfg_wa_laporan').value = config.wa_template.laporan || '';
-        
-        // Kategori
-        kategoriList = config.kategori || ['operasional', 'gaji', 'listrik', 'atk', 'lain'];
-        renderKategoriList();
-        updateKategoriSelect();
-    }
-    
-    function mergeConfig(existing, defaults) {
-        const merged = JSON.parse(JSON.stringify(defaults));
-        for (let key in existing) {
-            if (merged[key] && typeof merged[key] === 'object' && !Array.isArray(merged[key])) {
-                merged[key] = { ...merged[key], ...existing[key] };
-            } else {
-                merged[key] = existing[key];
-            }
-        }
-        return merged;
-    }
-
-    function saveConfig() {
-        const instansi1 = {
-            nama: document.getElementById('cfg_instansi1_nama').value,
-            alamat: document.getElementById('cfg_instansi1_alamat').value,
-            telepon: document.getElementById('cfg_instansi1_telepon').value,
-            email: document.getElementById('cfg_instansi1_email').value,
-            npwp: document.getElementById('cfg_instansi1_npwp').value,
-            pimpinan: document.getElementById('cfg_instansi1_pimpinan').value,
-            jabatan: document.getElementById('cfg_instansi1_jabatan').value,
-            logo: document.getElementById('previewLogo1').src || ''
-        };
-        
-        const instansi2 = {
-            aktif: document.getElementById('cfg_instansi2_aktif').checked,
-            nama: document.getElementById('cfg_instansi2_nama').value,
-            alamat: document.getElementById('cfg_instansi2_alamat').value,
-            telepon: document.getElementById('cfg_instansi2_telepon').value,
-            email: document.getElementById('cfg_instansi2_email').value,
-            izin: document.getElementById('cfg_instansi2_izin').value,
-            pimpinan: document.getElementById('cfg_instansi2_pimpinan').value,
-            jabatan: document.getElementById('cfg_instansi2_jabatan').value,
-            logo: document.getElementById('previewLogo2').src || ''
-        };
-        
-        const settings = {
-            header_mode: document.getElementById('cfg_header_mode').value,
-            ttd_mode: document.getElementById('cfg_ttd_mode').value,
-            invoice_prefix: document.getElementById('cfg_invoice_prefix').value
-        };
-        
-        const watermark = {
-            enabled: document.getElementById('cfg_watermark_enabled').checked,
-            text: document.getElementById('cfg_watermark_text').value,
-            opacity: parseFloat(document.getElementById('cfg_watermark_opacity').value),
-            fontsize: parseInt(document.getElementById('cfg_watermark_fontsize').value),
-            position: document.getElementById('cfg_watermark_position').value
-        };
-        
-        const qr = {
-            enabled: document.getElementById('cfg_qr_enabled').checked,
-            text: document.getElementById('cfg_qr_text').value,
-            size: parseInt(document.getElementById('cfg_qr_size').value)
-        };
-        
-        const wa_template = {
-            cicilan: document.getElementById('cfg_wa_cicilan').value,
-            titipan: document.getElementById('cfg_wa_titipan').value,
-            laporan: document.getElementById('cfg_wa_laporan').value
-        };
-        
-        const configBaru = { instansi1, instansi2, settings, watermark, qr, wa_template, kategori: kategoriList };
-        localStorage.setItem('auva_config_v2', JSON.stringify(configBaru));
-        showToast('✅ Konfigurasi berhasil disimpan!');
-        showPage('keuangan');
-        refreshAllUI();
-    }
-
-    function resetConfigToDefault() {
-        if (confirm('⚠️ Reset semua konfigurasi ke default?')) {
-            localStorage.setItem('auva_config_v2', JSON.stringify(DEFAULT_CONFIG));
-            loadConfig();
-            showToast('✅ Konfigurasi direset ke default');
-            showPage('keuangan');
-            refreshAllUI();
-        }
-    }
-
-    function exportConfig() {
-        const config = localStorage.getItem('auva_config_v2');
-        const blob = new Blob([config], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `auva_config_${new Date().toISOString().split('T')[0]}.json`;
-        a.click();
-        showToast('📤 Config diexport');
-    }
-
-    function importConfig(input) {
-        const file = input.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try { 
-                const config = JSON.parse(e.target.result); 
-                localStorage.setItem('auva_config_v2', JSON.stringify(config)); 
-                loadConfig(); 
-                showToast('📥 Config diimport!'); 
-            } catch(err) { 
-                alert('File tidak valid!'); 
-            }
-            input.value = '';
-        };
-        reader.readAsText(file);
-    }
-
-    function exportAllData() {
-        const allData = { 
-            config: JSON.parse(localStorage.getItem('auva_config_v2') || '{}'), 
-            kas: kasKantor, 
-            cicilan: cicilanList, 
-            titipan: titipanList, 
-            export_date: new Date().toISOString() 
-        };
-        const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `auva_full_backup_${new Date().toISOString().split('T')[0]}.json`;
-        a.click();
-        showToast('📤 Semua data diexport');
-    }
-
-    function previewLogo(input, previewId) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => document.getElementById(previewId).src = e.target.result;
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    // ==================== WATERMARK & QR PREVIEW ====================
-    function previewWatermark() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 400;
-        canvas.height = 300;
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, 400, 300);
-        ctx.strokeStyle = '#0d5d4e';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(2, 2, 396, 296);
-        ctx.save();
-        ctx.globalAlpha = parseFloat(document.getElementById('cfg_watermark_opacity').value);
-        const fontSize = parseInt(document.getElementById('cfg_watermark_fontsize').value);
-        ctx.font = `bold ${fontSize}px "Segoe UI"`;
-        ctx.fillStyle = '#888';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        const position = document.getElementById('cfg_watermark_position').value;
-        const text = document.getElementById('cfg_watermark_text').value;
-        
-        if (position === 'diagonal') {
-            ctx.translate(200, 150);
-            ctx.rotate(-45 * Math.PI / 180);
-            ctx.fillText(text, 0, 0);
-        } else if (position === 'center') {
-            ctx.fillText(text, 200, 150);
-        } else if (position === 'tile') {
-            ctx.font = `bold ${fontSize * 0.6}px "Segoe UI"`;
-            for (let x = 0; x < 400; x += 100) {
-                for (let y = 0; y < 300; y += 60) {
-                    ctx.fillText(text, x, y);
-                }
-            }
-        }
-        ctx.restore();
-        
-        const modal = document.createElement('div');
-        modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:9999; display:flex; align-items:center; justify-content:center;';
-        modal.innerHTML = `<div style="background:white; padding:24px; border-radius:24px; max-width:90%;"><h3 style="margin-bottom:16px;">Preview Watermark</h3><img src="${canvas.toDataURL()}" style="max-width:100%; border-radius:12px;"><button onclick="this.closest('div').parentElement.remove()" style="margin-top:20px; padding:12px 24px; background:var(--primary); color:white; border:none; border-radius:40px; width:100%;">Tutup</button></div>`;
-        document.body.appendChild(modal);
-    }
-
-    async function generateQRPreview() {
-        const text = document.getElementById('cfg_qr_text').value;
-        const size = parseInt(document.getElementById('cfg_qr_size').value);
-        const canvas = document.getElementById('qrPreviewCanvas');
-        canvas.width = size;
-        canvas.height = size;
-        try {
-            await QRCode.toCanvas(canvas, text, { width: size });
-            document.getElementById('qrPreviewContainer').classList.remove('hidden');
-            showToast('✅ QR Code digenerate!');
-        } catch(e) { 
-            showToast('❌ Gagal generate QR'); 
-        }
-    }
-
-    // ==================== KATEGORI (UI Upgrade) ====================
-    function renderKategoriList() {
-        let html = '';
-        kategoriList.forEach((k, i) => {
-            html += `<div class="kategori-item">
-                        <span class="nama"><i class="fas fa-tag" style="color:var(--primary); margin-right:8px;"></i>${escapeHtml(k)}</span>
-                        <div class="kategori-actions">
-                            <button class="edit-btn" onclick="editKategori(${i})"><i class="fas fa-edit"></i></button>
-                            <button class="delete-btn" onclick="hapusKategori(${i})"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>`;
-        });
-        document.getElementById('kategoriListContainer').innerHTML = html || '<div class="empty-state"><p>Belum ada kategori</p></div>';
-    }
-    
-    function filterKategoriList() {
-        const search = document.getElementById('searchKategoriInput').value.toLowerCase();
-        const filtered = kategoriList.filter(k => k.toLowerCase().includes(search));
-        let html = '';
-        filtered.forEach((k, idx) => {
-            const i = kategoriList.indexOf(k);
-            html += `<div class="kategori-item">
-                        <span class="nama"><i class="fas fa-tag" style="color:var(--primary); margin-right:8px;"></i>${escapeHtml(k)}</span>
-                        <div class="kategori-actions">
-                            <button class="edit-btn" onclick="editKategori(${i})"><i class="fas fa-edit"></i></button>
-                            <button class="delete-btn" onclick="hapusKategori(${i})"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>`;
-        });
-        document.getElementById('kategoriListContainer').innerHTML = html || '<div class="empty-state"><p>Tidak ditemukan</p></div>';
-    }
-    
-    function openKategoriModal() { 
-        document.getElementById('modalKategoriTitle').innerText = 'Tambah Kategori'; 
-        document.getElementById('kategoriEditId').value = ''; 
-        document.getElementById('kategoriNama').value = ''; 
-        document.getElementById('modalKategori').classList.add('show'); 
-    }
-    
-    function editKategori(i) { 
-        document.getElementById('modalKategoriTitle').innerText = 'Edit Kategori'; 
-        document.getElementById('kategoriEditId').value = i; 
-        document.getElementById('kategoriNama').value = kategoriList[i]; 
-        document.getElementById('modalKategori').classList.add('show'); 
-    }
-    
-    function hapusKategori(i) { 
-        if (confirm('Hapus kategori?')) { 
-            kategoriList.splice(i, 1); 
-            renderKategoriList(); 
-            updateKategoriSelect(); 
-            showToast('🗑️ Kategori dihapus'); 
+// ==================== PWA & INSTALL BANNER ====================
+window.addEventListener('beforeinstallprompt', (e) => { 
+    e.preventDefault(); 
+    deferredPrompt = e; 
+    setTimeout(() => { 
+        if (deferredPrompt && !isAppInstalled() && shouldShowInstallBanner()) { 
+            document.getElementById('installBanner').classList.add('show'); 
         } 
+    }, 3000); 
+});
+
+function isAppInstalled() { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; }
+function closeInstallBanner() { document.getElementById('installBanner').classList.remove('show'); localStorage.setItem('auva_install_dismissed', Date.now()); }
+function shouldShowInstallBanner() { const d = localStorage.getItem('auva_install_dismissed'); if (!d) return true; return (Date.now() - parseInt(d)) > 7 * 24 * 60 * 60 * 1000; }
+
+document.addEventListener('DOMContentLoaded', () => { 
+    const btn = document.getElementById('btnInstallPWA');
+    if (btn) btn.addEventListener('click', async () => { 
+        if (!deferredPrompt) { showToast('📱 Aplikasi sudah terinstall'); return; } 
+        deferredPrompt.prompt(); 
+        const { outcome } = await deferredPrompt.userChoice; 
+        if (outcome === 'accepted') showToast('✅ Terima kasih!'); 
+        deferredPrompt = null; 
+        closeInstallBanner(); 
+    }); 
+});
+
+// ==================== NOTIFIKASI JATUH TEMPO ====================
+function notifikasiCicilanJatuhTempo() {
+    const today = new Date().toISOString().split('T')[0];
+    const jatuhTempo = cicilanList.filter(c => c.status === 'belum' && c.jatuh && c.jatuh === today);
+    if (jatuhTempo.length > 0 && Notification.permission === 'granted') {
+        jatuhTempo.forEach(c => {
+            new Notification('🔔 Tagihan Jatuh Tempo', {
+                body: `Cicilan ${c.nama} jatuh tempo hari ini! Sisa: ${formatRupiah(c.total - c.dibayar)}`,
+                icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%230d5d4e" viewBox="0 0 24 24"%3E%3Cpath d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/%3E%3C/svg%3E'
+            });
+        });
     }
-    
-    function simpanKategori() {
-        const nama = document.getElementById('kategoriNama').value.trim().toLowerCase();
-        const id = document.getElementById('kategoriEditId').value;
-        if (!nama) return showToast('❌ Nama harus diisi!');
-        if (id === '') { 
-            if (!kategoriList.includes(nama)) kategoriList.push(nama); 
-            else return showToast('⚠️ Sudah ada!');
-        } else { 
-            kategoriList[parseInt(id)] = nama; 
+}
+
+function mintaIzinNotifikasi() {
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+    setInterval(() => {
+        if (Notification.permission === 'granted') notifikasiCicilanJatuhTempo();
+    }, 24 * 60 * 60 * 1000);
+}
+
+// ==================== FUNGSI BANTU ====================
+function formatRupiah(n) { return 'Rp ' + (n||0).toLocaleString('id-ID'); }
+function formatTanggal(t) { return t && t!=='-' ? t.split('-').reverse().join('/') : '-'; }
+function escapeHtml(t) { if(!t) return ''; const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+function showToast(m) { let t=document.querySelector('.toast-msg'); if(t) t.remove(); t=document.createElement('div'); t.className='toast-msg'; t.innerText=m; document.body.appendChild(t); setTimeout(()=>t?.remove(),2800); }
+function hitungTotalTitipan() { return titipanList.filter(t => t.status === 'aktif').reduce((sum, t) => sum + t.nominal, 0); }
+function hitungTotalPiutang() { return cicilanList.filter(c => c.status === 'belum').reduce((sum, c) => sum + (c.total - c.dibayar), 0); }
+
+function catatKasMasukDariCicilan(nama, nominal, tgl) {
+    if (!nominal || nominal <= 0) return;
+    kasKantor.push({
+        id: Date.now(),
+        tgl: tgl,
+        tipe: 'masuk',
+        nominal: nominal,
+        kategori: 'cicilan',
+        keterangan: `Pembayaran cicilan dari ${nama}`
+    });
+    localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
+    showToast(`💰 Kas masuk: Pembayaran cicilan dari ${nama} sebesar ${formatRupiah(nominal)}`);
+}
+
+// ==================== KONTROL TAGIHAN ====================
+function loadKontrolTagihan() { const saved = localStorage.getItem('auva_kontrol_tagihan_v1'); kontrolTagihanList = saved ? JSON.parse(saved) : []; }
+function saveKontrolTagihan() { localStorage.setItem('auva_kontrol_tagihan_v1', JSON.stringify(kontrolTagihanList)); }
+
+function openKontrolTagihanModal() {
+    document.getElementById('modalKontrolTitle').innerText = '📝 Buat Tagihan Baru';
+    document.getElementById('kontrolEditId').value = '';
+    document.getElementById('kontrolNama').value = '';
+    document.getElementById('kontrolTotalTagihan').value = '';
+    document.getElementById('kontrolKeteranganTagihan').value = '';
+    document.getElementById('modalKontrolTagihan').classList.add('show');
+}
+
+function editKontrolTagihan(id) {
+    const item = kontrolTagihanList.find(x=>x.id===id);
+    if(!item) return;
+    document.getElementById('modalKontrolTitle').innerText = '✏️ Edit Tagihan';
+    document.getElementById('kontrolEditId').value = id;
+    document.getElementById('kontrolNama').value = item.nama;
+    document.getElementById('kontrolTotalTagihan').value = item.totalTagihan;
+    document.getElementById('kontrolKeteranganTagihan').value = item.keterangan;
+    document.getElementById('modalKontrolTagihan').classList.add('show');
+}
+
+function simpanKontrolTagihan() {
+    const id = document.getElementById('kontrolEditId').value;
+    const nama = document.getElementById('kontrolNama').value.trim();
+    const totalTagihan = parseInt(document.getElementById('kontrolTotalTagihan').value);
+    const keterangan = document.getElementById('kontrolKeteranganTagihan').value.trim();
+    if(!nama) { showToast('❌ Nama harus diisi!'); return; }
+    if(!totalTagihan || totalTagihan<1000) { showToast('❌ Total tagihan minimal Rp 1.000!'); return; }
+    if(id) {
+        const idx = kontrolTagihanList.findIndex(x=>x.id==id);
+        if(idx!==-1) { kontrolTagihanList[idx] = {...kontrolTagihanList[idx], nama, totalTagihan, keterangan}; showToast('✅ Tagihan diupdate!'); }
+    } else {
+        kontrolTagihanList.push({ id: Date.now(), nama, totalTagihan, terbayar: 0, keterangan, tglBuat: new Date().toISOString().split('T')[0], riwayatBayar: [] });
+        showToast('✅ Tagihan baru dibuat!');
+    }
+    saveKontrolTagihan();
+    closeModal('modalKontrolTagihan');
+    renderKontrolTagihanList();
+    updateKontrolSummary();
+}
+
+function openBayarTagihan(id) {
+    const item = kontrolTagihanList.find(x=>x.id===id);
+    if(!item) return;
+    document.getElementById('bayarTagihanId').value = id;
+    document.getElementById('bayarNama').value = item.nama;
+    const sisa = item.totalTagihan - (item.terbayar||0);
+    document.getElementById('bayarSisa').value = formatRupiah(sisa);
+    document.getElementById('bayarNominal').value = '';
+    document.getElementById('bayarMetode').value = 'Transfer Bank';
+    document.getElementById('bayarTanggal').value = new Date().toISOString().split('T')[0];
+    document.getElementById('modalBayarTagihan').classList.add('show');
+}
+
+function prosesBayarTagihan() {
+    const id = parseInt(document.getElementById('bayarTagihanId').value);
+    const idx = kontrolTagihanList.findIndex(x=>x.id===id);
+    if(idx===-1) return;
+    const nominal = parseInt(document.getElementById('bayarNominal').value);
+    const metode = document.getElementById('bayarMetode').value;
+    const tgl = document.getElementById('bayarTanggal').value;
+    if(!nominal || nominal<1000) { showToast('❌ Nominal minimal Rp 1.000!'); return; }
+    const item = kontrolTagihanList[idx];
+    const sisaSekarang = item.totalTagihan - (item.terbayar||0);
+    if(nominal > sisaSekarang) { showToast(`❌ Nominal melebihi sisa tagihan (${formatRupiah(sisaSekarang)})`); return; }
+    if(!item.riwayatBayar) item.riwayatBayar = [];
+    item.riwayatBayar.push({ tgl, nominal, metode });
+    item.terbayar = (item.terbayar||0) + nominal;
+    kontrolTagihanList[idx] = item;
+    saveKontrolTagihan();
+    closeModal('modalBayarTagihan');
+    renderKontrolTagihanList();
+    updateKontrolSummary();
+    showToast(`✅ Pembayaran Rp ${nominal.toLocaleString()} untuk ${item.nama} berhasil!`);
+}
+
+function hapusKontrolTagihan(id) {
+    if(confirm('⚠️ Yakin ingin menghapus tagihan ini? Semua riwayat pembayaran juga akan hilang!')) {
+        kontrolTagihanList = kontrolTagihanList.filter(x=>x.id!==id);
+        saveKontrolTagihan();
+        renderKontrolTagihanList();
+        updateKontrolSummary();
+        showToast('🗑️ Tagihan dihapus');
+    }
+}
+
+function hapusRiwayatBayar(tagihanId, riwayatIdx) {
+    if(confirm('⚠️ Hapus riwayat pembayaran ini?')) {
+        const idx = kontrolTagihanList.findIndex(x=>x.id===tagihanId);
+        if(idx!==-1 && kontrolTagihanList[idx].riwayatBayar && kontrolTagihanList[idx].riwayatBayar[riwayatIdx]) {
+            const nominal = kontrolTagihanList[idx].riwayatBayar[riwayatIdx].nominal;
+            kontrolTagihanList[idx].terbayar -= nominal;
+            kontrolTagihanList[idx].riwayatBayar.splice(riwayatIdx,1);
+            saveKontrolTagihan();
+            renderKontrolTagihanList();
+            updateKontrolSummary();
+            showToast('🗑️ Riwayat pembayaran dihapus');
         }
-        renderKategoriList(); 
-        updateKategoriSelect(); 
-        closeModal('modalKategori'); 
-        showToast('✅ Kategori disimpan!');
     }
-    
-    function updateKategoriSelect() {
-        const select = document.getElementById('kasKategori');
-        const filterSelect = document.getElementById('filterKategori');
-        if (select) select.innerHTML = kategoriList.map(k => `<option value="${k}">${k.toUpperCase()}</option>`).join('');
-        if (filterSelect) filterSelect.innerHTML = '<option value="all">Semua Kategori</option>' + kategoriList.map(k => `<option value="${k}">${k.toUpperCase()}</option>`).join('');
-    }
+}
 
-    // ==================== UI FUNCTIONS ====================
-    function showPage(id) { 
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
-        document.getElementById(`page-${id}`).classList.add('active'); 
-        if (id === 'keuangan') refreshAllUI(); 
-        if (id === 'pengaturan') loadConfig(); 
-        window.scrollTo(0, 0); 
-    }
-    
-    function goToDashboard() { showToast('🏠 Kembali ke Dashboard'); showPage('keuangan'); }
-    
-    function switchTab(tab) {
-        currentTab = tab;
-        document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (tab==='cicilan'&&i===0)||(tab==='titipan'&&i===1)||(tab==='transaksi'&&i===2)));
-        document.getElementById('tab-cicilan').classList.toggle('hidden', tab !== 'cicilan');
-        document.getElementById('tab-titipan').classList.toggle('hidden', tab !== 'titipan');
-        document.getElementById('tab-transaksi').classList.toggle('hidden', tab !== 'transaksi');
-    }
-    
-    function refreshAllUI() { hitungSaldo(); renderCicilanList(); renderTitipanList(); renderTransaksiList(); }
-    
-    function hitungSaldo() { 
-        let s=0,m=0,k=0; 
-        const bln = new Date().toISOString().slice(0,7); 
-        kasKantor.forEach(t=>{ 
-            if(t.tipe==='masuk'){ 
-                s+=t.nominal; 
-                if(t.tgl?.startsWith(bln)) m+=t.nominal; 
-            } else { 
-                s-=t.nominal; 
-                if(t.tgl?.startsWith(bln)) k+=t.nominal; 
-            } 
-        }); 
-        document.getElementById('saldoKantor').innerHTML=formatRupiah(s); 
-        document.getElementById('masukBulanIni').innerHTML=formatRupiah(m); 
-        document.getElementById('keluarBulanIni').innerHTML=formatRupiah(k); 
-    }
-    
-    function renderCicilanList() {
-        const container = document.getElementById('cicilanList');
-        const filter = document.getElementById('filterStatusCicilan')?.value || 'all';
-        const search = document.getElementById('searchCicilan')?.value.toLowerCase().trim() || '';
-        let filtered = cicilanList.filter(c => (filter==='all'||c.status===filter) && (!search||c.nama.toLowerCase().includes(search)));
-        if (filtered.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-calendar-times"></i><p>Belum ada data cicilan</p></div>`; return; }
-        let html = '';
-        filtered.forEach(c => {
-            const sisa = c.total - c.dibayar;
-            const borderColor = c.status === 'lunas' ? '#10b981' : '#ef4444';
-            const logoBadge = c.logo_pilih === 'pt' ? '<span class="badge badge-logo-pt">🏢 PT Auva</span>' : '<span class="badge badge-logo-kbih">🕋 KBIH</span>';
-            html += `<div class="cicilan-card" style="border-left-color: ${borderColor};">
-                <div class="card-header"><h4>${escapeHtml(c.nama)}</h4><div style="display:flex; gap:6px;"><span class="badge ${c.status}">${c.status === 'lunas' ? '✅ LUNAS' : '⏳ BELUM'}</span>${logoBadge}</div></div>
-                <div class="card-detail">
-                    <div class="detail-row"><span class="label">Total Paket:</span><span class="value">${formatRupiah(c.total)}</span></div>
-                    <div class="detail-row"><span class="label">Cicilan ke-${c.ke}/${c.tenor}:</span><span class="value">${formatRupiah(c.nominal)}</span></div>
-                    <div class="detail-row"><span class="label">Total Dibayar:</span><span class="value">${formatRupiah(c.dibayar)}</span></div>
-                    <div class="detail-row"><span class="label">Sisa:</span><span class="value" style="color:${borderColor};">${formatRupiah(sisa)}</span></div>
-                    ${c.jatuh && c.jatuh !== '-' ? `<div class="detail-row"><span class="label">📅 Jatuh Tempo:</span><span class="value">${formatTanggal(c.jatuh)}</span></div>` : ''}
-                </div>
-                <div class="card-actions">
-                    <button class="wa" onclick="waTagihan('${c.nama}', ${sisa}, '${c.jatuh}', ${c.nominal})"><i class="fab fa-whatsapp"></i> WA</button>
-                    <button class="primary" onclick="editCicilan(${c.id})"><i class="fas fa-edit"></i> Edit</button>
-                    ${c.status === 'belum' ? `<button onclick="tandaiLunas(${c.id})"><i class="fas fa-check"></i> Lunas</button>` : ''}
-                    <button class="pdf-btn" onclick="downloadTagihanPDF(${c.id})"><i class="fas fa-file-pdf"></i> PDF</button>
-                    <button onclick="hapusCicilan(${c.id})" style="color:#ef4444;"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>`;
-        });
-        container.innerHTML = html;
-    }
+function updateKontrolSummary() {
+    const totalTagihan = kontrolTagihanList.reduce((s,x)=>s+x.totalTagihan,0);
+    const totalTerbayar = kontrolTagihanList.reduce((s,x)=>s+(x.terbayar||0),0);
+    document.getElementById('totalTagihanKontrol').innerHTML = formatRupiah(totalTagihan);
+    document.getElementById('totalTerbayarKontrol').innerHTML = formatRupiah(totalTerbayar);
+}
 
-    function renderTitipanList() {
-        const container = document.getElementById('titipanList');
-        const filter = document.getElementById('filterStatusTitipan')?.value || 'all';
-        const search = document.getElementById('searchTitipan')?.value.toLowerCase().trim() || '';
-        let filtered = titipanList.filter(t => (filter==='all'||t.status===filter) && (!search||t.penitip.toLowerCase().includes(search)||t.penerima.toLowerCase().includes(search)));
-        if (filtered.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>Belum ada data titipan</p></div>`; return; }
-        let html = '';
-        filtered.forEach(t => {
-            const borderColor = t.status === 'aktif' ? '#3b82f6' : '#10b981';
-            html += `<div class="titipan-card" style="border-left-color: ${borderColor};">
-                <div class="card-header"><h4>${escapeHtml(t.penerima)}</h4><span class="badge ${t.status === 'aktif' ? 'titip' : 'diambil'}">${t.status === 'aktif' ? '📦 BELUM' : '✅ DIAMBIL'}</span></div>
-                <div class="card-detail">
-                    <div class="detail-row"><span class="label">Penitip:</span><span class="value">${escapeHtml(t.penitip)}</span></div>
-                    <div class="detail-row"><span class="label">Nominal:</span><span class="value">${formatRupiah(t.nominal)}</span></div>
-                    <div class="detail-row"><span class="label">Tanggal Titip:</span><span class="value">${formatTanggal(t.tgl)}</span></div>
-                    <div class="detail-row"><span class="label">Keterangan:</span><span class="value">${escapeHtml(t.ket)}</span></div>
-                </div>
-                <div class="card-actions">
-                    <button class="wa" onclick="waTitipan('${t.penerima}', '${t.penitip}', ${t.nominal}, '${t.tgl}', '${escapeHtml(t.ket)}')"><i class="fab fa-whatsapp"></i> WA</button>
-                    <button class="primary" onclick="editTitipan(${t.id})"><i class="fas fa-edit"></i> Edit</button>
-                    ${t.status === 'aktif' ? `<button onclick="tandaiDiambil(${t.id})"><i class="fas fa-check"></i> Diambil</button>` : ''}
-                    <button class="pdf-btn" onclick="downloadKwitansiPDF(${t.id})"><i class="fas fa-file-pdf"></i> PDF</button>
-                    <button onclick="hapusTitipan(${t.id})" style="color:#ef4444;"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>`;
-        });
-        container.innerHTML = html;
-    }
+function waKontrolTagihan(id) {
+    const item = kontrolTagihanList.find(x=>x.id===id);
+    if(!item) return;
+    const cfg = getConfig();
+    const sisa = item.totalTagihan - (item.terbayar||0);
+    let tpl = cfg.wa_template?.kontrol || '📝 Tagihan [nama]\nSisa: [sisa]\nTotal: [total]\nTerbayar: [terbayar]';
+    tpl = tpl.replace(/\[nama\]/g, item.nama).replace(/\[sisa\]/g, formatRupiah(sisa)).replace(/\[total\]/g, formatRupiah(item.totalTagihan)).replace(/\[terbayar\]/g, formatRupiah(item.terbayar||0));
+    window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank');
+}
 
-    function renderTransaksiList() {
-        const container = document.getElementById('transaksiList');
-        const filter = document.getElementById('filterKategori')?.value || 'all';
-        const search = document.getElementById('searchTransaksi')?.value.toLowerCase().trim() || '';
-        let filtered = kasKantor.filter(k => (filter==='all'||k.kategori===filter) && (!search||k.keterangan.toLowerCase().includes(search))).sort((a,b)=>(b.tgl||'').localeCompare(a.tgl||''));
-        if (filtered.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-receipt"></i><p>Belum ada transaksi</p></div>`; return; }
-        let html = '';
-        filtered.forEach(k => { const borderColor = k.tipe === 'masuk' ? '#10b981' : '#ef4444';
-            html += `<div class="transaksi-card" style="border-left-color: ${borderColor};"><div class="card-header"><h4>${k.tipe === 'masuk' ? '📥 MASUK' : '📤 KELUAR'}</h4><span class="badge" style="background:#f1f5f9; color:#475569;">${k.kategori}</span></div>
-                <div class="card-detail"><div class="detail-row"><span class="label">Nominal:</span><span class="value" style="color:${borderColor};">${formatRupiah(k.nominal)}</span></div>
-                <div class="detail-row"><span class="label">Tanggal:</span><span class="value">${formatTanggal(k.tgl)}</span></div>
-                <div class="detail-row"><span class="label">Keterangan:</span><span class="value">${escapeHtml(k.keterangan)}</span></div></div>
-                <div class="card-actions"><button onclick="hapusTransaksi(${k.id})" style="color:#ef4444;"><i class="fas fa-trash"></i> Hapus</button></div></div>`;
-        });
-        container.innerHTML = html;
-    }
-
-    // ==================== MODAL ====================
-    function openKasModal(t) { currentTipeKas=t; document.getElementById('modalKasTitle').innerHTML = t==='masuk'?'💰 Kas Masuk':'💸 Kas Keluar'; updateKategoriSelect(); document.getElementById('modalKas').classList.add('show'); }
-    function openCicilanModal() { document.getElementById('modalCicilanTitle').innerText = '📋 Tambah Cicilan'; document.getElementById('cicilanEditId').value = ''; document.getElementById('cicilanNama').value = ''; document.getElementById('cicilanTotal').value = ''; document.getElementById('cicilanTenor').value = '7'; document.getElementById('cicilanNominal').value = ''; document.getElementById('cicilanKe').value = '1'; document.getElementById('cicilanJatuhTempo').value = ''; document.getElementById('cicilanLogoPilih').value = 'pt'; document.getElementById('modalCicilan').classList.add('show'); }
-    function editCicilan(id) { const c = cicilanList.find(x=>x.id===id); if(!c) return; document.getElementById('modalCicilanTitle').innerText = '✏️ Edit Cicilan'; document.getElementById('cicilanEditId').value = id; document.getElementById('cicilanNama').value = c.nama; document.getElementById('cicilanTotal').value = c.total; document.getElementById('cicilanTenor').value = c.tenor; document.getElementById('cicilanNominal').value = c.nominal; document.getElementById('cicilanKe').value = c.ke; document.getElementById('cicilanTanggal').value = c.tgl; document.getElementById('cicilanJatuhTempo').value = c.jatuh !== '-' ? c.jatuh : ''; document.getElementById('cicilanLogoPilih').value = c.logo_pilih || 'pt'; document.getElementById('modalCicilan').classList.add('show'); }
-    function openTitipanModal() { document.getElementById('modalTitipanTitle').innerText = '💼 Tambah Titipan'; document.getElementById('titipanEditId').value = ''; document.getElementById('titipanPenitip').value = ''; document.getElementById('titipanPenerima').value = ''; document.getElementById('titipanNominal').value = ''; document.getElementById('titipanKeterangan').value = ''; document.getElementById('titipanLogoPilih').value = 'pt'; document.getElementById('modalTitipan').classList.add('show'); }
-    function editTitipan(id) { const t = titipanList.find(x=>x.id===id); if(!t) return; document.getElementById('modalTitipanTitle').innerText = '✏️ Edit Titipan'; document.getElementById('titipanEditId').value = id; document.getElementById('titipanPenitip').value = t.penitip; document.getElementById('titipanPenerima').value = t.penerima; document.getElementById('titipanNominal').value = t.nominal; document.getElementById('titipanTanggalTitip').value = t.tgl; document.getElementById('titipanKeterangan').value = t.ket; document.getElementById('titipanLogoPilih').value = t.logo_pilih || 'pt'; document.getElementById('modalTitipan').classList.add('show'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-    function handleFabClick() { if(currentTab==='cicilan') openCicilanModal(); else if(currentTab==='titipan') openTitipanModal(); else openKasModal('masuk'); }
-
-    // ==================== SIMPAN DATA ====================
-    function simpanKas() {
-        const tgl = document.getElementById('kasTanggal').value, nominal = parseInt(document.getElementById('kasNominal').value), kategori = document.getElementById('kasKategori').value, keterangan = document.getElementById('kasKeterangan').value.trim();
-        if(!tgl) return showToast('❌ Tanggal harus diisi!'); if(!nominal||nominal<1000) return showToast('❌ Nominal minimal Rp 1.000!'); if(!keterangan) return showToast('❌ Keterangan harus diisi!');
-        kasKantor.push({ id: Date.now(), tgl, tipe: currentTipeKas, nominal, kategori, keterangan });
-        localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
-        closeModal('modalKas'); 
-        refreshAllUI(); 
-        showToast(`✅ Kas ${currentTipeKas} berhasil disimpan!`);
-        document.getElementById('kasNominal').value = '';
-        document.getElementById('kasKeterangan').value = '';
-        document.getElementById('kasTanggal').value = new Date().toISOString().split('T')[0];
-    }
-
-    function simpanCicilan() {
-        const id = document.getElementById('cicilanEditId').value, nama = document.getElementById('cicilanNama').value.trim(), total = parseInt(document.getElementById('cicilanTotal').value), tenor = parseInt(document.getElementById('cicilanTenor').value), nominal = parseInt(document.getElementById('cicilanNominal').value), ke = parseInt(document.getElementById('cicilanKe').value), tgl = document.getElementById('cicilanTanggal').value, jatuh = document.getElementById('cicilanJatuhTempo').value, logo_pilih = document.getElementById('cicilanLogoPilih').value;
-        if(!nama) return showToast('❌ Nama harus diisi!'); if(!total||total<1000) return showToast('❌ Total minimal Rp 1.000!'); if(!tenor||tenor<1) return showToast('❌ Tenor minimal 1!'); if(!nominal||nominal<1000) return showToast('❌ Nominal minimal Rp 1.000!'); if(!ke||ke<1) return showToast('❌ Cicilan ke- minimal 1!'); if(!tgl) return showToast('❌ Tanggal harus diisi!');
-        const dibayar = nominal * ke, status = (dibayar >= total) ? 'lunas' : 'belum', jatuhFinal = status === 'lunas' ? '-' : (jatuh || '');
-        if(id) { const idx = cicilanList.findIndex(c=>c.id==id); if(idx!==-1) cicilanList[idx] = {...cicilanList[idx], nama, total, tenor, nominal, ke, tgl, jatuh:jatuhFinal, status, dibayar, logo_pilih}; showToast('✅ Cicilan diupdate!'); }
-        else { cicilanList.push({ id: Date.now(), nama, total, tenor, nominal, ke, tgl, jatuh:jatuhFinal, status, dibayar, logo_pilih }); showToast('✅ Cicilan ditambahkan!'); }
-        localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList));
-        closeModal('modalCicilan'); 
-        renderCicilanList();
-        document.getElementById('cicilanNama').value = '';
-        document.getElementById('cicilanTotal').value = '';
-        document.getElementById('cicilanNominal').value = '';
-    }
-
-    function simpanTitipan() {
-        const id = document.getElementById('titipanEditId').value, penitip = document.getElementById('titipanPenitip').value.trim(), penerima = document.getElementById('titipanPenerima').value.trim(), nominal = parseInt(document.getElementById('titipanNominal').value), tgl = document.getElementById('titipanTanggalTitip').value, ket = document.getElementById('titipanKeterangan').value.trim(), logo_pilih = document.getElementById('titipanLogoPilih').value;
-        if(!penitip) return showToast('❌ Penitip harus diisi!'); if(!penerima) return showToast('❌ Penerima harus diisi!'); if(!nominal||nominal<1000) return showToast('❌ Nominal minimal Rp 1.000!'); if(!tgl) return showToast('❌ Tanggal harus diisi!');
-        if(id) { const idx = titipanList.findIndex(t=>t.id==id); if(idx!==-1) titipanList[idx] = {...titipanList[idx], penitip, penerima, nominal, tgl, ket, logo_pilih}; showToast('✅ Titipan diupdate!'); }
-        else { titipanList.push({ id: Date.now(), penitip, penerima, nominal, tgl, status: 'aktif', ket, logo_pilih }); showToast('✅ Titipan ditambahkan!'); }
-        localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList));
-        closeModal('modalTitipan'); 
-        renderTitipanList();
-        document.getElementById('titipanPenitip').value = '';
-        document.getElementById('titipanPenerima').value = '';
-        document.getElementById('titipanNominal').value = '';
-        document.getElementById('titipanKeterangan').value = '';
-    }
-
-    // ==================== ACTIONS ====================
-    function tandaiLunas(id) { const c = cicilanList.find(x=>x.id===id); if(c) { c.status='lunas'; c.jatuh='-'; c.dibayar=c.total; localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList)); renderCicilanList(); showToast(`✅ ${c.nama} LUNAS!`); } }
-    function tandaiDiambil(id) { const t = titipanList.find(x=>x.id===id); if(t) { t.status='diambil'; localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList)); renderTitipanList(); showToast(`✅ Titipan ${t.penerima} diambil!`); } }
-    function hapusTransaksi(id) { if(confirm('Hapus transaksi?')) { kasKantor = kasKantor.filter(k=>k.id!==id); localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor)); refreshAllUI(); showToast('🗑️ Transaksi dihapus'); } }
-    function hapusCicilan(id) { if(confirm('Hapus cicilan?')) { cicilanList = cicilanList.filter(c=>c.id!==id); localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList)); renderCicilanList(); showToast('🗑️ Cicilan dihapus'); } }
-    function hapusTitipan(id) { if(confirm('Hapus titipan?')) { titipanList = titipanList.filter(t=>t.id!==id); localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList)); renderTitipanList(); showToast('🗑️ Titipan dihapus'); } }
-
-    // ==================== WA ====================
-    function getConfig() { return JSON.parse(localStorage.getItem('auva_config_v2')) || DEFAULT_CONFIG; }
-    
-    function waTagihan(nama, sisa, jatuh, nominal) { 
-        const cfg = getConfig(); 
-        let tpl = cfg.wa_template.cicilan; 
-        tpl = tpl.replace(/\[nama\]/g, nama).replace(/\[sisa\]/g, formatRupiah(sisa)).replace(/\[tanggal\]/g, formatTanggal(jatuh)).replace(/\[nominal\]/g, formatRupiah(nominal)); 
-        window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); 
-    }
-    
-    function waTitipan(penerima, penitip, nominal, tgl, ket) { 
-        const cfg = getConfig(); 
-        let tpl = cfg.wa_template.titipan; 
-        tpl = tpl.replace(/\[penerima\]/g, penerima).replace(/\[penitip\]/g, penitip).replace(/\[nominal\]/g, formatRupiah(nominal)).replace(/\[tanggal\]/g, formatTanggal(tgl)).replace(/\[keterangan\]/g, ket); 
-        window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); 
-    }
-    
-    function kirimLaporanWA() { 
-        const cfg = getConfig(); 
-        let s=0,m=0,k=0; 
-        kasKantor.forEach(t=>{ 
-            if(t.tipe==='masuk'){ s+=t.nominal; m+=t.nominal; } 
-            else { s-=t.nominal; k+=t.nominal; } 
-        }); 
-        let tpl = cfg.wa_template.laporan || DEFAULT_CONFIG.wa_template.laporan;
-        tpl = tpl.replace(/\[saldo\]/g, formatRupiah(s)).replace(/\[masuk\]/g, formatRupiah(m)).replace(/\[keluar\]/g, formatRupiah(k));
-        window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); 
-        showToast('📤 Laporan WA siap dikirim!'); 
-    }
-
-    // ==================== PDF LAPORAN KESELURUHAN ====================
-    async function downloadLaporanPDF() {
-    const cfg = JSON.parse(localStorage.getItem('auva_config_v2')) || DEFAULT_CONFIG;
+async function downloadKontrolTagihanPDF(id) {
+    const item = kontrolTagihanList.find(x=>x.id===id);
+    if(!item) return;
+    const cfg = getConfig();
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     
-    // Watermark
+    if(cfg.watermark?.enabled) {
+        doc.setTextColor(150,150,150);
+        doc.setFontSize(cfg.watermark.fontsize||60);
+        doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity||0.15 }));
+        const pos = cfg.watermark.position || 'diagonal';
+        if (pos === 'diagonal') {
+            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+        } else if (pos === 'center') {
+            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
+        } else if (pos === 'tile') {
+            for (let y = 20; y < pageHeight; y += 80) {
+                for (let x = 20; x < pageWidth; x += 100) {
+                    doc.text(cfg.watermark.text, x, y, { angle: -30 });
+                }
+            }
+        }
+        doc.setGState(new doc.GState({ opacity: 1 }));
+        doc.setTextColor(0,0,0);
+    }
+    
+    doc.setFillColor(13,93,78);
+    doc.rect(0,0,210,45,'F');
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(16);
+    doc.text('TAGIHAN', 105, 22, { align: 'center' });
+    doc.setTextColor(0,0,0);
+    
+    const sisa = item.totalTagihan - (item.terbayar||0);
+    doc.setFontSize(12);
+    doc.text(`Kepada: ${item.nama}`, 14, 60);
+    doc.autoTable({
+        startY: 70,
+        body: [
+            ['Total Tagihan', formatRupiah(item.totalTagihan)],
+            ['Sudah Dibayar', formatRupiah(item.terbayar||0)],
+            ['Sisa Tagihan', formatRupiah(sisa)],
+            ['Keterangan', item.keterangan||'-']
+        ],
+        theme: 'plain',
+        styles: { fontSize: 11 },
+        columnStyles: { 0: { fontStyle: 'bold' }, 1: { halign: 'right' } },
+        margin: { left: 14, right: 14 }
+    });
+    
+    const finalY = doc.lastAutoTable.finalY + 25;
+    doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, 150, finalY, { align: 'right' });
+    doc.text(cfg.instansi1.pimpinan, 150, finalY+12, { align: 'right' });
+    doc.text(cfg.instansi1.jabatan, 150, finalY+18, { align: 'right' });
+    
+    // QR Code
+    if (cfg.qr?.enabled) {
+        try {
+            const canvas = document.createElement('canvas');
+            const qrText = `${cfg.qr.text}\nNo: TGH/${item.id}\nNama: ${item.nama}\nSisa: ${formatRupiah(sisa)}`;
+            await QRCode.toCanvas(canvas, qrText, { width: 60 });
+            doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-25, pageHeight-30, 20, 20);
+        } catch(e) {}
+    }
+    
+    doc.save(`Tagihan_${item.nama.replace(/\s/g,'_')}.pdf`);
+    showToast('📄 PDF Tagihan berhasil didownload!');
+}
+
+function renderKontrolTagihanList() {
+    const container = document.getElementById('kontrolTagihanList');
+    const filter = document.getElementById('filterStatusKontrol')?.value || 'all';
+    const search = document.getElementById('searchKontrol')?.value.toLowerCase().trim() || '';
+    let filtered = kontrolTagihanList.filter(x => {
+        const matchSearch = !search || x.nama.toLowerCase().includes(search);
+        const sisa = x.totalTagihan - (x.terbayar||0);
+        const status = sisa <= 0 ? 'lunas' : 'belum';
+        if(filter==='all') return matchSearch;
+        return matchSearch && status === filter;
+    });
+    if(filtered.length===0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-receipt"></i><p>Belum ada tagihan</p></div>`; return; }
+    let html = '';
+    filtered.forEach(x => {
+        const sisa = x.totalTagihan - (x.terbayar||0);
+        const status = sisa <= 0 ? 'lunas' : 'belum';
+        const borderColor = status === 'lunas' ? '#10b981' : '#ef4444';
+        html += `<div class="kontrol-card" style="border-left-color:${borderColor};">
+            <div class="card-header"><h4>${escapeHtml(x.nama)}</h4><span class="badge ${status}">${status==='lunas'?'✅ LUNAS':'⏳ BELUM'}</span></div>
+            <div class="card-detail">
+                <div class="detail-row"><span class="label">📝 Tagihan:</span><span class="value">${escapeHtml(x.keterangan||'-')}</span></div>
+                <div class="detail-row"><span class="label">💰 Total Tagihan:</span><span class="value">${formatRupiah(x.totalTagihan)}</span></div>
+                <div class="detail-row"><span class="label">💵 Terbayar:</span><span class="value">${formatRupiah(x.terbayar||0)}</span></div>
+                <div class="detail-row"><span class="label">📋 Sisa:</span><span class="value" style="color:${borderColor};">${formatRupiah(sisa)}</span></div>`;
+        if(x.riwayatBayar && x.riwayatBayar.length>0) {
+            html += `<div style="margin-top:10px; padding-top:8px; border-top:1px solid #eee;"><span class="label">📜 Riwayat Bayar:</span>`;
+            x.riwayatBayar.forEach((r,idx) => {
+                html += `<div class="detail-row" style="font-size:12px;"><span>${formatTanggal(r.tgl)} - ${formatRupiah(r.nominal)} (${r.metode})</span><button onclick="hapusRiwayatBayar(${x.id},${idx})" style="background:none; border:none; color:var(--red); font-size:12px;"><i class="fas fa-trash"></i></button></div>`;
+            });
+            html += `</div>`;
+        }
+        html += `</div><div class="card-actions">
+            <button class="wa" onclick="waKontrolTagihan(${x.id})"><i class="fab fa-whatsapp"></i> WA</button>
+            <button class="primary" onclick="editKontrolTagihan(${x.id})"><i class="fas fa-edit"></i> Edit</button>
+            ${status==='belum' ? `<button onclick="openBayarTagihan(${x.id})"><i class="fas fa-credit-card"></i> Bayar</button>` : ''}
+            <button class="pdf-btn" onclick="downloadKontrolTagihanPDF(${x.id})"><i class="fas fa-file-pdf"></i> PDF</button>
+            <button onclick="hapusKontrolTagihan(${x.id})" style="color:#ef4444;"><i class="fas fa-trash"></i> Hapus</button>
+        </div></div>`;
+    });
+    container.innerHTML = html;
+}
+
+// ==================== KATEGORI ====================
+function renderKategoriList() {
+    let html = '';
+    kategoriList.forEach((k, i) => {
+        html += `<div class="kategori-item">
+                    <span class="nama"><i class="fas fa-tag" style="color:var(--primary); margin-right:8px;"></i>${escapeHtml(k)}</span>
+                    <div class="kategori-actions">
+                        <button class="edit-btn" onclick="editKategori(${i})"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn" onclick="hapusKategori(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+    });
+    document.getElementById('kategoriListContainer').innerHTML = html || '<div class="empty-state"><p>Belum ada kategori</p></div>';
+}
+
+function filterKategoriList() {
+    const search = document.getElementById('searchKategoriInput').value.toLowerCase();
+    const filtered = kategoriList.filter(k => k.toLowerCase().includes(search));
+    let html = '';
+    filtered.forEach((k, idx) => {
+        const i = kategoriList.indexOf(k);
+        html += `<div class="kategori-item">
+                    <span class="nama"><i class="fas fa-tag" style="color:var(--primary); margin-right:8px;"></i>${escapeHtml(k)}</span>
+                    <div class="kategori-actions">
+                        <button class="edit-btn" onclick="editKategori(${i})"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn" onclick="hapusKategori(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+    });
+    document.getElementById('kategoriListContainer').innerHTML = html || '<div class="empty-state"><p>Tidak ditemukan</p></div>';
+}
+
+function openKategoriModal() { 
+    document.getElementById('modalKategoriTitle').innerText = 'Tambah Kategori'; 
+    document.getElementById('kategoriEditId').value = ''; 
+    document.getElementById('kategoriNama').value = ''; 
+    document.getElementById('modalKategori').classList.add('show'); 
+}
+
+function editKategori(i) { 
+    document.getElementById('modalKategoriTitle').innerText = 'Edit Kategori'; 
+    document.getElementById('kategoriEditId').value = i; 
+    document.getElementById('kategoriNama').value = kategoriList[i]; 
+    document.getElementById('modalKategori').classList.add('show'); 
+}
+
+function hapusKategori(i) { 
+    if (confirm('Hapus kategori?')) { 
+        kategoriList.splice(i, 1); 
+        renderKategoriList(); 
+        updateKategoriSelect(); 
+        showToast('🗑️ Kategori dihapus'); 
+    } 
+}
+
+function simpanKategori() {
+    const nama = document.getElementById('kategoriNama').value.trim().toLowerCase();
+    const id = document.getElementById('kategoriEditId').value;
+    if (!nama) return showToast('❌ Nama harus diisi!');
+    if (id === '') { 
+        if (!kategoriList.includes(nama)) kategoriList.push(nama); 
+        else return showToast('⚠️ Sudah ada!');
+    } else { 
+        kategoriList[parseInt(id)] = nama; 
+    }
+    renderKategoriList(); 
+    updateKategoriSelect(); 
+    closeModal('modalKategori'); 
+    showToast('✅ Kategori disimpan!');
+}
+
+function updateKategoriSelect() {
+    const select = document.getElementById('kasKategori');
+    const filterSelect = document.getElementById('filterKategori');
+    if (select) select.innerHTML = kategoriList.map(k => `<option value="${k}">${k.toUpperCase()}</option>`).join('');
+    if (filterSelect) filterSelect.innerHTML = '<option value="all">Semua Kategori</option>' + kategoriList.map(k => `<option value="${k}">${k.toUpperCase()}</option>`).join('');
+}
+
+// ==================== KONFIGURASI ====================
+function loadConfig() {
+    let config = localStorage.getItem('auva_config_v2');
+    if (!config) {
+        config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+        localStorage.setItem('auva_config_v2', JSON.stringify(config));
+    } else {
+        config = JSON.parse(config);
+        config = mergeConfig(config, DEFAULT_CONFIG);
+    }
+    
+    document.getElementById('cfg_instansi1_nama').value = config.instansi1.nama || '';
+    document.getElementById('cfg_instansi1_alamat').value = config.instansi1.alamat || '';
+    document.getElementById('cfg_instansi1_telepon').value = config.instansi1.telepon || '';
+    document.getElementById('cfg_instansi1_email').value = config.instansi1.email || '';
+    document.getElementById('cfg_instansi1_npwp').value = config.instansi1.npwp || '';
+    document.getElementById('cfg_instansi1_pimpinan').value = config.instansi1.pimpinan || '';
+    document.getElementById('cfg_instansi1_jabatan').value = config.instansi1.jabatan || '';
+    if (config.instansi1.logo) document.getElementById('previewLogo1').src = config.instansi1.logo;
+    
+    document.getElementById('cfg_instansi2_aktif').checked = config.instansi2.aktif || false;
+    document.getElementById('cfg_instansi2_nama').value = config.instansi2.nama || '';
+    document.getElementById('cfg_instansi2_alamat').value = config.instansi2.alamat || '';
+    document.getElementById('cfg_instansi2_telepon').value = config.instansi2.telepon || '';
+    document.getElementById('cfg_instansi2_email').value = config.instansi2.email || '';
+    document.getElementById('cfg_instansi2_izin').value = config.instansi2.izin || '';
+    document.getElementById('cfg_instansi2_pimpinan').value = config.instansi2.pimpinan || '';
+    document.getElementById('cfg_instansi2_jabatan').value = config.instansi2.jabatan || '';
+    if (config.instansi2.logo) document.getElementById('previewLogo2').src = config.instansi2.logo;
+    
+    document.getElementById('cfg_header_mode').value = config.settings.header_mode || 'both';
+    document.getElementById('cfg_ttd_mode').value = config.settings.ttd_mode || 'both';
+    document.getElementById('cfg_invoice_prefix').value = config.settings.invoice_prefix || 'INV/AUVA';
+    
+    document.getElementById('cfg_watermark_enabled').checked = config.watermark.enabled !== false;
+    document.getElementById('cfg_watermark_text').value = config.watermark.text || 'DOKUMEN RESMI';
+    document.getElementById('cfg_watermark_opacity').value = config.watermark.opacity || 0.15;
+    document.getElementById('opacityValue').textContent = (config.watermark.opacity || 0.15).toFixed(2);
+    document.getElementById('cfg_watermark_fontsize').value = config.watermark.fontsize || 60;
+    document.getElementById('cfg_watermark_position').value = config.watermark.position || 'diagonal';
+    
+    document.getElementById('cfg_qr_enabled').checked = config.qr.enabled !== false;
+    document.getElementById('cfg_qr_text').value = config.qr.text || 'Dokumen Resmi KBIHU Amanatul Ummah - Divalidasi oleh Sistem Auva';
+    document.getElementById('cfg_qr_size').value = config.qr.size || 80;
+    
+    document.getElementById('cfg_wa_cicilan').value = config.wa_template.cicilan || '';
+    document.getElementById('cfg_wa_titipan').value = config.wa_template.titipan || '';
+    document.getElementById('cfg_wa_laporan').value = config.wa_template.laporan || '';
+    document.getElementById('cfg_wa_kontrol').value = config.wa_template.kontrol || '📝 Tagihan [nama]\nSisa: [sisa]';
+    
+    kategoriList = config.kategori || ['operasional', 'gaji', 'listrik', 'atk', 'lain'];
+    renderKategoriList();
+    updateKategoriSelect();
+}
+
+function mergeConfig(existing, defaults) {
+    const merged = JSON.parse(JSON.stringify(defaults));
+    for (let key in existing) {
+        if (merged[key] && typeof merged[key] === 'object' && !Array.isArray(merged[key])) {
+            merged[key] = { ...merged[key], ...existing[key] };
+        } else {
+            merged[key] = existing[key];
+        }
+    }
+    return merged;
+}
+
+function saveConfig() {
+    const instansi1 = {
+        nama: document.getElementById('cfg_instansi1_nama').value,
+        alamat: document.getElementById('cfg_instansi1_alamat').value,
+        telepon: document.getElementById('cfg_instansi1_telepon').value,
+        email: document.getElementById('cfg_instansi1_email').value,
+        npwp: document.getElementById('cfg_instansi1_npwp').value,
+        pimpinan: document.getElementById('cfg_instansi1_pimpinan').value,
+        jabatan: document.getElementById('cfg_instansi1_jabatan').value,
+        logo: document.getElementById('previewLogo1').src || ''
+    };
+    
+    const instansi2 = {
+        aktif: document.getElementById('cfg_instansi2_aktif').checked,
+        nama: document.getElementById('cfg_instansi2_nama').value,
+        alamat: document.getElementById('cfg_instansi2_alamat').value,
+        telepon: document.getElementById('cfg_instansi2_telepon').value,
+        email: document.getElementById('cfg_instansi2_email').value,
+        izin: document.getElementById('cfg_instansi2_izin').value,
+        pimpinan: document.getElementById('cfg_instansi2_pimpinan').value,
+        jabatan: document.getElementById('cfg_instansi2_jabatan').value,
+        logo: document.getElementById('previewLogo2').src || ''
+    };
+    
+    const settings = {
+        header_mode: document.getElementById('cfg_header_mode').value,
+        ttd_mode: document.getElementById('cfg_ttd_mode').value,
+        invoice_prefix: document.getElementById('cfg_invoice_prefix').value
+    };
+    
+    const watermark = {
+        enabled: document.getElementById('cfg_watermark_enabled').checked,
+        text: document.getElementById('cfg_watermark_text').value,
+        opacity: parseFloat(document.getElementById('cfg_watermark_opacity').value),
+        fontsize: parseInt(document.getElementById('cfg_watermark_fontsize').value),
+        position: document.getElementById('cfg_watermark_position').value
+    };
+    
+    const qr = {
+        enabled: document.getElementById('cfg_qr_enabled').checked,
+        text: document.getElementById('cfg_qr_text').value,
+        size: parseInt(document.getElementById('cfg_qr_size').value)
+    };
+    
+    const wa_template = {
+        cicilan: document.getElementById('cfg_wa_cicilan').value,
+        titipan: document.getElementById('cfg_wa_titipan').value,
+        laporan: document.getElementById('cfg_wa_laporan').value,
+        kontrol: document.getElementById('cfg_wa_kontrol').value
+    };
+    
+    const configBaru = { instansi1, instansi2, settings, watermark, qr, wa_template, kategori: kategoriList };
+    localStorage.setItem('auva_config_v2', JSON.stringify(configBaru));
+    showToast('✅ Konfigurasi berhasil disimpan!');
+    showPage('keuangan');
+    refreshAllUI();
+}
+
+function resetConfigToDefault() {
+    if (confirm('⚠️ Reset semua konfigurasi ke default?')) {
+        localStorage.setItem('auva_config_v2', JSON.stringify(DEFAULT_CONFIG));
+        loadConfig();
+        showToast('✅ Konfigurasi direset ke default');
+        showPage('keuangan');
+        refreshAllUI();
+    }
+}
+
+function exportConfig() {
+    const config = localStorage.getItem('auva_config_v2');
+    const blob = new Blob([config], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `auva_config_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    showToast('📤 Config diexport');
+}
+
+function importConfig(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try { 
+            const config = JSON.parse(e.target.result); 
+            localStorage.setItem('auva_config_v2', JSON.stringify(config)); 
+            loadConfig(); 
+            showToast('📥 Config diimport!'); 
+        } catch(err) { 
+            alert('File tidak valid!'); 
+        }
+        input.value = '';
+    };
+    reader.readAsText(file);
+}
+
+function exportAllData() {
+    const allData = { 
+        config: JSON.parse(localStorage.getItem('auva_config_v2') || '{}'), 
+        kas: kasKantor, 
+        cicilan: cicilanList, 
+        titipan: titipanList, 
+        kontrolTagihan: kontrolTagihanList,
+        export_date: new Date().toISOString() 
+    };
+    const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `auva_full_backup_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    showToast('📤 Semua data diexport');
+}
+
+function previewLogo(input, previewId) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => document.getElementById(previewId).src = e.target.result;
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// ==================== WATERMARK & QR PREVIEW ====================
+function previewWatermark() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 400;
+    canvas.height = 300;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, 400, 300);
+    ctx.strokeStyle = '#0d5d4e';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 396, 296);
+    ctx.save();
+    ctx.globalAlpha = parseFloat(document.getElementById('cfg_watermark_opacity').value);
+    const fontSize = parseInt(document.getElementById('cfg_watermark_fontsize').value);
+    ctx.font = `bold ${fontSize}px "Segoe UI"`;
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    const position = document.getElementById('cfg_watermark_position').value;
+    const text = document.getElementById('cfg_watermark_text').value;
+    
+    if (position === 'diagonal') {
+        ctx.translate(200, 150);
+        ctx.rotate(-45 * Math.PI / 180);
+        ctx.fillText(text, 0, 0);
+    } else if (position === 'center') {
+        ctx.fillText(text, 200, 150);
+    } else if (position === 'tile') {
+        ctx.font = `bold ${fontSize * 0.6}px "Segoe UI"`;
+        for (let x = 0; x < 400; x += 100) {
+            for (let y = 0; y < 300; y += 60) {
+                ctx.fillText(text, x, y);
+            }
+        }
+    }
+    ctx.restore();
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:9999; display:flex; align-items:center; justify-content:center;';
+    modal.innerHTML = `<div style="background:white; padding:24px; border-radius:24px; max-width:90%;"><h3 style="margin-bottom:16px;">Preview Watermark</h3><img src="${canvas.toDataURL()}" style="max-width:100%; border-radius:12px;"><button onclick="this.closest('div').parentElement.remove()" style="margin-top:20px; padding:12px 24px; background:var(--primary); color:white; border:none; border-radius:40px; width:100%;">Tutup</button></div>`;
+    document.body.appendChild(modal);
+}
+
+async function generateQRPreview() {
+    const text = document.getElementById('cfg_qr_text').value;
+    const size = parseInt(document.getElementById('cfg_qr_size').value);
+    const canvas = document.getElementById('qrPreviewCanvas');
+    canvas.width = size;
+    canvas.height = size;
+    try {
+        await QRCode.toCanvas(canvas, text, { width: size });
+        document.getElementById('qrPreviewContainer').classList.remove('hidden');
+        showToast('✅ QR Code digenerate!');
+    } catch(e) { 
+        showToast('❌ Gagal generate QR'); 
+    }
+}
+
+// ==================== UI FUNCTIONS ====================
+function showPage(id) { 
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+    document.getElementById(`page-${id}`).classList.add('active'); 
+    if (id === 'keuangan') refreshAllUI(); 
+    if (id === 'pengaturan') loadConfig(); 
+    window.scrollTo(0, 0); 
+}
+
+function goToDashboard() { showToast('🏠 Kembali ke Dashboard'); showPage('keuangan'); }
+
+function switchTab(tab) {
+    currentTab = tab;
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach((t, i) => {
+        const isActive = (tab==='cicilan'&&i===0)||(tab==='titipan'&&i===1)||(tab==='transaksi'&&i===2)||(tab==='kontrolbayar'&&i===3);
+        t.classList.toggle('active', isActive);
+    });
+    document.getElementById('tab-cicilan').classList.toggle('hidden', tab !== 'cicilan');
+    document.getElementById('tab-titipan').classList.toggle('hidden', tab !== 'titipan');
+    document.getElementById('tab-transaksi').classList.toggle('hidden', tab !== 'transaksi');
+    document.getElementById('tab-kontrolbayar').classList.toggle('hidden', tab !== 'kontrolbayar');
+    if (tab === 'kontrolbayar') { renderKontrolTagihanList(); updateKontrolSummary(); }
+}
+
+function handleFabClick() { 
+    if(currentTab==='cicilan') openCicilanModal(); 
+    else if(currentTab==='titipan') openTitipanModal(); 
+    else if(currentTab==='transaksi') openKasModal('masuk'); 
+    else openKontrolTagihanModal(); 
+}
+
+function refreshAllUI() { hitungSaldo(); renderCicilanList(); renderTitipanList(); renderTransaksiList(); renderKontrolTagihanList(); updateKontrolSummary(); }
+
+function hitungSaldo() { 
+    let s=0,m=0,k=0; 
+    const bln = new Date().toISOString().slice(0,7); 
+    kasKantor.forEach(t=>{ 
+        if(t.tipe==='masuk'){ 
+            s+=t.nominal; 
+            if(t.tgl?.startsWith(bln)) m+=t.nominal; 
+        } else { 
+            s-=t.nominal; 
+            if(t.tgl?.startsWith(bln)) k+=t.nominal; 
+        } 
+    }); 
+    document.getElementById('saldoKantor').innerHTML=formatRupiah(s); 
+    document.getElementById('masukBulanIni').innerHTML=formatRupiah(m); 
+    document.getElementById('keluarBulanIni').innerHTML=formatRupiah(k);
+    document.getElementById('totalTitipan').innerHTML=formatRupiah(hitungTotalTitipan());
+    document.getElementById('totalPiutang').innerHTML=formatRupiah(hitungTotalPiutang());
+}
+
+function renderCicilanList() {
+    const container = document.getElementById('cicilanList');
+    const filter = document.getElementById('filterStatusCicilan')?.value || 'all';
+    const search = document.getElementById('searchCicilan')?.value.toLowerCase().trim() || '';
+    let filtered = cicilanList.filter(c => (filter==='all'||c.status===filter) && (!search||c.nama.toLowerCase().includes(search)));
+    if (filtered.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-calendar-times"></i><p>Belum ada data cicilan</p></div>`; return; }
+    let html = '';
+    filtered.forEach(c => {
+        const sisa = c.total - c.dibayar;
+        const borderColor = c.status === 'lunas' ? '#10b981' : '#ef4444';
+        const logoBadge = c.logo_pilih === 'pt' ? '<span class="badge badge-logo-pt">🏢 PT Auva</span>' : '<span class="badge badge-logo-kbih">🕋 KBIH</span>';
+        html += `<div class="cicilan-card" style="border-left-color: ${borderColor};">
+            <div class="card-header"><h4>${escapeHtml(c.nama)}</h4><div style="display:flex; gap:6px;"><span class="badge ${c.status}">${c.status === 'lunas' ? '✅ LUNAS' : '⏳ BELUM'}</span>${logoBadge}</div></div>
+            <div class="card-detail">
+                <div class="detail-row"><span class="label">Total Paket:</span><span class="value">${formatRupiah(c.total)}</span></div>
+                <div class="detail-row"><span class="label">Cicilan ke-${c.ke}/${c.tenor}:</span><span class="value">${formatRupiah(c.nominal)}</span></div>
+                <div class="detail-row"><span class="label">Total Dibayar:</span><span class="value">${formatRupiah(c.dibayar)}</span></div>
+                <div class="detail-row"><span class="label">Sisa:</span><span class="value" style="color:${borderColor};">${formatRupiah(sisa)}</span></div>
+                ${c.jatuh && c.jatuh !== '-' ? `<div class="detail-row"><span class="label">📅 Jatuh Tempo:</span><span class="value">${formatTanggal(c.jatuh)}</span></div>` : ''}
+            </div>
+            <div class="card-actions">
+                <button class="wa" onclick="waTagihan('${c.nama}', ${sisa}, '${c.jatuh}', ${c.nominal})"><i class="fab fa-whatsapp"></i> WA</button>
+                <button class="primary" onclick="editCicilan(${c.id})"><i class="fas fa-edit"></i> Edit</button>
+                ${c.status === 'belum' ? `<button onclick="tandaiLunas(${c.id})"><i class="fas fa-check"></i> Lunas</button>` : ''}
+                <button class="pdf-btn" onclick="downloadTagihanPDF(${c.id})"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button onclick="hapusCicilan(${c.id})" style="color:#ef4444;"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
+
+function renderTitipanList() {
+    const container = document.getElementById('titipanList');
+    const filter = document.getElementById('filterStatusTitipan')?.value || 'all';
+    const search = document.getElementById('searchTitipan')?.value.toLowerCase().trim() || '';
+    let filtered = titipanList.filter(t => (filter==='all'||t.status===filter) && (!search||t.penitip.toLowerCase().includes(search)||t.penerima.toLowerCase().includes(search)));
+    if (filtered.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>Belum ada data titipan</p></div>`; return; }
+    let html = '';
+    filtered.forEach(t => {
+        const borderColor = t.status === 'aktif' ? '#3b82f6' : '#10b981';
+        const statusBadge = t.status === 'aktif' ? '<span class="badge titip">📦 BELUM DIPAKAI</span>' : '<span class="badge diambil">✅ SUDAH DIPAKAI</span>';
+        html += `<div class="titipan-card" style="border-left-color: ${borderColor};">
+            <div class="card-header"><h4>${escapeHtml(t.penerima)}</h4>${statusBadge}</div>
+            <div class="card-detail">
+                <div class="detail-row"><span class="label">Penitip:</span><span class="value">${escapeHtml(t.penitip)}</span></div>
+                <div class="detail-row"><span class="label">Nominal:</span><span class="value">${formatRupiah(t.nominal)}</span></div>
+                <div class="detail-row"><span class="label">Tanggal Titip:</span><span class="value">${formatTanggal(t.tgl)}</span></div>
+                <div class="detail-row"><span class="label">Keterangan:</span><span class="value">${escapeHtml(t.ket)}</span></div>
+            </div>
+            <div class="card-actions">
+                <button class="wa" onclick="waTitipan('${t.penerima}', '${t.penitip}', ${t.nominal}, '${t.tgl}', '${escapeHtml(t.ket)}')"><i class="fab fa-whatsapp"></i> WA</button>
+                <button class="primary" onclick="editTitipan(${t.id})"><i class="fas fa-edit"></i> Edit</button>
+                ${t.status === 'aktif' ? `<button onclick="tandaiDiambil(${t.id})"><i class="fas fa-check"></i> Pakai</button>` : ''}
+                ${t.status === 'aktif' ? `<button class="konversi-btn" onclick="openKonversiModal(${t.id})"><i class="fas fa-exchange-alt"></i> Jadi Cicilan</button>` : ''}
+                <button class="pdf-btn" onclick="downloadKwitansiPDF(${t.id})"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button onclick="hapusTitipan(${t.id})" style="color:#ef4444;"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
+
+function renderTransaksiList() {
+    const container = document.getElementById('transaksiList');
+    const filter = document.getElementById('filterKategori')?.value || 'all';
+    const search = document.getElementById('searchTransaksi')?.value.toLowerCase().trim() || '';
+    let filtered = kasKantor.filter(k => (filter==='all'||k.kategori===filter) && (!search||k.keterangan.toLowerCase().includes(search))).sort((a,b)=>(b.tgl||'').localeCompare(a.tgl||''));
+    if (filtered.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-receipt"></i><p>Belum ada transaksi</p></div>`; return; }
+    let html = '';
+    filtered.forEach(k => { const borderColor = k.tipe === 'masuk' ? '#10b981' : '#ef4444';
+        html += `<div class="transaksi-card" style="border-left-color: ${borderColor};"><div class="card-header"><h4>${k.tipe === 'masuk' ? '📥 MASUK' : '📤 KELUAR'}</h4><span class="badge" style="background:#f1f5f9; color:#475569;">${k.kategori}</span></div>
+            <div class="card-detail"><div class="detail-row"><span class="label">Nominal:</span><span class="value" style="color:${borderColor};">${formatRupiah(k.nominal)}</span></div>
+            <div class="detail-row"><span class="label">Tanggal:</span><span class="value">${formatTanggal(k.tgl)}</span></div>
+            <div class="detail-row"><span class="label">Keterangan:</span><span class="value">${escapeHtml(k.keterangan)}</span></div></div>
+            <div class="card-actions"><button onclick="hapusTransaksi(${k.id})" style="color:#ef4444;"><i class="fas fa-trash"></i> Hapus</button></div></div>`;
+    });
+    container.innerHTML = html;
+}
+
+// ==================== MODAL ====================
+function openKasModal(t) { currentTipeKas=t; document.getElementById('modalKasTitle').innerHTML = t==='masuk'?'💰 Kas Masuk':'💸 Kas Keluar'; updateKategoriSelect(); document.getElementById('modalKas').classList.add('show'); }
+function openCicilanModal() { document.getElementById('modalCicilanTitle').innerText = '📋 Tambah Cicilan'; document.getElementById('cicilanEditId').value = ''; document.getElementById('cicilanNama').value = ''; document.getElementById('cicilanTotal').value = ''; document.getElementById('cicilanTenor').value = '7'; document.getElementById('cicilanNominal').value = ''; document.getElementById('cicilanKe').value = '1'; document.getElementById('cicilanJatuhTempo').value = ''; document.getElementById('cicilanLogoPilih').value = 'pt'; document.getElementById('modalCicilan').classList.add('show'); }
+function editCicilan(id) { const c = cicilanList.find(x=>x.id===id); if(!c) return; document.getElementById('modalCicilanTitle').innerText = '✏️ Edit Cicilan'; document.getElementById('cicilanEditId').value = id; document.getElementById('cicilanNama').value = c.nama; document.getElementById('cicilanTotal').value = c.total; document.getElementById('cicilanTenor').value = c.tenor; document.getElementById('cicilanNominal').value = c.nominal; document.getElementById('cicilanKe').value = c.ke; document.getElementById('cicilanTanggal').value = c.tgl; document.getElementById('cicilanJatuhTempo').value = c.jatuh !== '-' ? c.jatuh : ''; document.getElementById('cicilanLogoPilih').value = c.logo_pilih || 'pt'; document.getElementById('modalCicilan').classList.add('show'); }
+function openTitipanModal() { document.getElementById('modalTitipanTitle').innerText = '💼 Tambah Titipan'; document.getElementById('titipanEditId').value = ''; document.getElementById('titipanPenitip').value = ''; document.getElementById('titipanPenerima').value = ''; document.getElementById('titipanNominal').value = ''; document.getElementById('titipanKeterangan').value = ''; document.getElementById('titipanLogoPilih').value = 'pt'; document.getElementById('modalTitipan').classList.add('show'); }
+function editTitipan(id) { const t = titipanList.find(x=>x.id===id); if(!t) return; document.getElementById('modalTitipanTitle').innerText = '✏️ Edit Titipan'; document.getElementById('titipanEditId').value = id; document.getElementById('titipanPenitip').value = t.penitip; document.getElementById('titipanPenerima').value = t.penerima; document.getElementById('titipanNominal').value = t.nominal; document.getElementById('titipanTanggalTitip').value = t.tgl; document.getElementById('titipanKeterangan').value = t.ket; document.getElementById('titipanLogoPilih').value = t.logo_pilih || 'pt'; document.getElementById('modalTitipan').classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// ==================== SIMPAN DATA ====================
+function simpanKas() {
+    const tgl = document.getElementById('kasTanggal').value, nominal = parseInt(document.getElementById('kasNominal').value), kategori = document.getElementById('kasKategori').value, keterangan = document.getElementById('kasKeterangan').value.trim();
+    if(!tgl) return showToast('❌ Tanggal harus diisi!'); if(!nominal||nominal<1000) return showToast('❌ Nominal minimal Rp 1.000!'); if(!keterangan) return showToast('❌ Keterangan harus diisi!');
+    kasKantor.push({ id: Date.now(), tgl, tipe: currentTipeKas, nominal, kategori, keterangan });
+    localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
+    closeModal('modalKas'); 
+    refreshAllUI(); 
+    showToast(`✅ Kas ${currentTipeKas} berhasil disimpan!`);
+    document.getElementById('kasNominal').value = '';
+    document.getElementById('kasKeterangan').value = '';
+    document.getElementById('kasTanggal').value = new Date().toISOString().split('T')[0];
+}
+
+function simpanCicilan() {
+    const id = document.getElementById('cicilanEditId').value, nama = document.getElementById('cicilanNama').value.trim(), total = parseInt(document.getElementById('cicilanTotal').value), tenor = parseInt(document.getElementById('cicilanTenor').value), nominal = parseInt(document.getElementById('cicilanNominal').value), ke = parseInt(document.getElementById('cicilanKe').value), tgl = document.getElementById('cicilanTanggal').value, jatuh = document.getElementById('cicilanJatuhTempo').value, logo_pilih = document.getElementById('cicilanLogoPilih').value;
+    if(!nama) return showToast('❌ Nama harus diisi!'); if(!total||total<1000) return showToast('❌ Total minimal Rp 1.000!'); if(!tenor||tenor<1) return showToast('❌ Tenor minimal 1!'); if(!nominal||nominal<1000) return showToast('❌ Nominal minimal Rp 1.000!'); if(!ke||ke<1) return showToast('❌ Cicilan ke- minimal 1!'); if(!tgl) return showToast('❌ Tanggal harus diisi!');
+    const dibayar = nominal * ke, status = (dibayar >= total) ? 'lunas' : 'belum', jatuhFinal = status === 'lunas' ? '-' : (jatuh || '');
+    
+    let isNew = false;
+    if(id) { 
+        const idx = cicilanList.findIndex(c=>c.id==id); 
+        if(idx!==-1) {
+            const oldDibayar = cicilanList[idx].dibayar;
+            cicilanList[idx] = {...cicilanList[idx], nama, total, tenor, nominal, ke, tgl, jatuh:jatuhFinal, status, dibayar, logo_pilih};
+            const nominalTambahan = dibayar - oldDibayar;
+            if (nominalTambahan > 0) {
+                catatKasMasukDariCicilan(nama, nominalTambahan, tgl);
+            }
+        }
+        showToast('✅ Cicilan diupdate!'); 
+    } else { 
+        cicilanList.push({ id: Date.now(), nama, total, tenor, nominal, ke, tgl, jatuh:jatuhFinal, status, dibayar, logo_pilih });
+        catatKasMasukDariCicilan(nama, nominal, tgl);
+        isNew = true;
+        showToast('✅ Cicilan ditambahkan!'); 
+    }
+    localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList));
+    closeModal('modalCicilan'); 
+    refreshAllUI();
+    document.getElementById('cicilanNama').value = '';
+    document.getElementById('cicilanTotal').value = '';
+    document.getElementById('cicilanNominal').value = '';
+}
+
+function simpanTitipan() {
+    const id = document.getElementById('titipanEditId').value, penitip = document.getElementById('titipanPenitip').value.trim(), penerima = document.getElementById('titipanPenerima').value.trim(), nominal = parseInt(document.getElementById('titipanNominal').value), tgl = document.getElementById('titipanTanggalTitip').value, ket = document.getElementById('titipanKeterangan').value.trim(), logo_pilih = document.getElementById('titipanLogoPilih').value;
+    if(!penitip) return showToast('❌ Penitip harus diisi!'); if(!penerima) return showToast('❌ Penerima harus diisi!'); if(!nominal||nominal<1000) return showToast('❌ Nominal minimal Rp 1.000!'); if(!tgl) return showToast('❌ Tanggal harus diisi!');
+    if(id) { const idx = titipanList.findIndex(t=>t.id==id); if(idx!==-1) titipanList[idx] = {...titipanList[idx], penitip, penerima, nominal, tgl, ket, logo_pilih}; showToast('✅ Titipan diupdate!'); }
+    else { titipanList.push({ id: Date.now(), penitip, penerima, nominal, tgl, status: 'aktif', ket, logo_pilih }); showToast('✅ Titipan ditambahkan!'); }
+    localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList));
+    closeModal('modalTitipan'); 
+    refreshAllUI();
+    document.getElementById('titipanPenitip').value = '';
+    document.getElementById('titipanPenerima').value = '';
+    document.getElementById('titipanNominal').value = '';
+    document.getElementById('titipanKeterangan').value = '';
+}
+
+// ==================== ACTIONS ====================
+function tandaiLunas(id) { 
+    const c = cicilanList.find(x=>x.id===id); 
+    if(c && c.status !== 'lunas') { 
+        const sisa = c.total - c.dibayar;
+        if (sisa > 0) {
+            catatKasMasukDariCicilan(c.nama, sisa, new Date().toISOString().split('T')[0]);
+        }
+        c.status='lunas'; 
+        c.jatuh='-'; 
+        c.dibayar=c.total; 
+        localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList)); 
+        refreshAllUI();
+        showToast(`✅ ${c.nama} LUNAS!`); 
+    } 
+}
+
+function tandaiDiambil(id) { 
+    const t = titipanList.find(x=>x.id===id); 
+    if(t && t.status !== 'diambil') { 
+        t.status='diambil'; 
+        localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList)); 
+        refreshAllUI();
+        showToast(`✅ Titipan ${t.penerima} sudah dipakai!`); 
+    } 
+}
+
+function hapusTransaksi(id) { if(confirm('Hapus transaksi?')) { kasKantor = kasKantor.filter(k=>k.id!==id); localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor)); refreshAllUI(); showToast('🗑️ Transaksi dihapus'); } }
+function hapusCicilan(id) { if(confirm('Hapus cicilan?')) { cicilanList = cicilanList.filter(c=>c.id!==id); localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList)); refreshAllUI(); showToast('🗑️ Cicilan dihapus'); } }
+function hapusTitipan(id) { if(confirm('Hapus titipan?')) { titipanList = titipanList.filter(t=>t.id!==id); localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList)); refreshAllUI(); showToast('🗑️ Titipan dihapus'); } }
+
+// ==================== KONVERSI TITIPAN KE CICILAN ====================
+function openKonversiModal(titipanId) {
+    const titipan = titipanList.find(t => t.id === titipanId);
+    if (!titipan) return;
+    document.getElementById('konversiTitipanId').value = titipanId;
+    document.getElementById('konversiNama').value = titipan.penerima;
+    document.getElementById('konversiTotal').value = titipan.nominal;
+    document.getElementById('konversiNominal').value = titipan.nominal;
+    document.getElementById('konversiTenor').value = 1;
+    document.getElementById('konversiTanggal').value = new Date().toISOString().split('T')[0];
+    document.getElementById('konversiLogoPilih').value = titipan.logo_pilih || 'pt';
+    document.getElementById('modalKonversiTitipan').classList.add('show');
+}
+
+function prosesKonversiKeCicilan() {
+    const titipanId = parseInt(document.getElementById('konversiTitipanId').value);
+    const titipan = titipanList.find(t => t.id === titipanId);
+    if (!titipan) { showToast('❌ Data titipan tidak ditemukan'); closeModal('modalKonversiTitipan'); return; }
+    
+    const nama = document.getElementById('konversiNama').value.trim();
+    const total = parseInt(document.getElementById('konversiTotal').value);
+    const tenor = parseInt(document.getElementById('konversiTenor').value);
+    const nominal = parseInt(document.getElementById('konversiNominal').value);
+    const tgl = document.getElementById('konversiTanggal').value;
+    const logo_pilih = document.getElementById('konversiLogoPilih').value;
+    
+    if (!nama) { showToast('❌ Nama harus diisi!'); return; }
+    if (!total || total < 1000) { showToast('❌ Total minimal Rp 1.000!'); return; }
+    if (!tenor || tenor < 1) { showToast('❌ Tenor minimal 1!'); return; }
+    if (!nominal || nominal < 1000) { showToast('❌ Nominal minimal Rp 1.000!'); return; }
+    if (!tgl) { showToast('❌ Tanggal harus diisi!'); return; }
+    
+    const dibayar = nominal;
+    const status = dibayar >= total ? 'lunas' : 'belum';
+    const jatuh = status === 'lunas' ? '-' : '';
+    
+    const cicilanBaru = {
+        id: Date.now(),
+        nama: nama,
+        total: total,
+        tenor: tenor,
+        ke: 1,
+        nominal: nominal,
+        tgl: tgl,
+        jatuh: jatuh,
+        status: status,
+        dibayar: dibayar,
+        logo_pilih: logo_pilih
+    };
+    
+    cicilanList.push(cicilanBaru);
+    localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList));
+    
+    catatKasMasukDariCicilan(nama, nominal, tgl);
+    
+    titipan.status = 'diambil';
+    localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList));
+    
+    closeModal('modalKonversiTitipan');
+    refreshAllUI();
+    showToast(`✅ Berhasil mengkonversi titipan ${nama} menjadi cicilan!`);
+}
+
+// ==================== WA ====================
+function getConfig() { return JSON.parse(localStorage.getItem('auva_config_v2')) || DEFAULT_CONFIG; }
+
+function waTagihan(nama, sisa, jatuh, nominal) { 
+    const cfg = getConfig(); 
+    let tpl = cfg.wa_template.cicilan; 
+    tpl = tpl.replace(/\[nama\]/g, nama).replace(/\[sisa\]/g, formatRupiah(sisa)).replace(/\[tanggal\]/g, formatTanggal(jatuh)).replace(/\[nominal\]/g, formatRupiah(nominal)); 
+    window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); 
+}
+
+function waTitipan(penerima, penitip, nominal, tgl, ket) { 
+    const cfg = getConfig(); 
+    let tpl = cfg.wa_template.titipan; 
+    tpl = tpl.replace(/\[penerima\]/g, penerima).replace(/\[penitip\]/g, penitip).replace(/\[nominal\]/g, formatRupiah(nominal)).replace(/\[tanggal\]/g, formatTanggal(tgl)).replace(/\[keterangan\]/g, ket); 
+    window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); 
+}
+
+function kirimLaporanWA() { 
+    const cfg = getConfig(); 
+    let s=0,m=0,k=0; 
+    kasKantor.forEach(t=>{ 
+        if(t.tipe==='masuk'){ s+=t.nominal; m+=t.nominal; } 
+        else { s-=t.nominal; k+=t.nominal; } 
+    }); 
+    let tpl = cfg.wa_template.laporan || DEFAULT_CONFIG.wa_template.laporan;
+    tpl = tpl.replace(/\[saldo\]/g, formatRupiah(s)).replace(/\[masuk\]/g, formatRupiah(m)).replace(/\[keluar\]/g, formatRupiah(k));
+    window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank'); 
+    showToast('📤 Laporan WA siap dikirim!'); 
+}
+
+// ==================== PDF LAPORAN KESELURUHAN ====================
+async function downloadLaporanPDF() {
+    const cfg = getConfig();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    
     if (cfg.watermark?.enabled) {
         const opacity = cfg.watermark.opacity || 0.15;
         const text = cfg.watermark.text || 'DOKUMEN RESMI';
@@ -1172,22 +1588,17 @@
         doc.setGState(new doc.GState({ opacity: 1 }));
     }
     
-    // Header
     doc.setFillColor(13, 93, 78);
     doc.rect(0, 0, 210, 55, 'F');
     doc.setTextColor(255, 255, 255);
     
-    // Logo Instansi 1
     if (cfg.instansi1?.logo) {
         try { doc.addImage(cfg.instansi1.logo, 'PNG', 12, 10, 22, 22); } catch(e) {}
     }
-    
-    // Logo Instansi 2
     if (cfg.instansi2?.aktif && cfg.instansi2?.logo) {
         try { doc.addImage(cfg.instansi2.logo, 'PNG', pageWidth - 34, 10, 22, 22); } catch(e) {}
     }
     
-    // Header Mode (PENTING: dari settings!)
     const hm = cfg.settings?.header_mode || 'both';
     
     if (hm === 'both' || hm === 'instansi1') {
@@ -1218,7 +1629,6 @@
     doc.setFontSize(10);
     doc.text(`Periode: ${new Date().toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}`, 105, 78, { align: 'center' });
     
-    // QR Code
     if (cfg.qr?.enabled) {
         try {
             const canvas = document.createElement('canvas');
@@ -1234,7 +1644,6 @@
         } catch(e) {}
     }
     
-    // Ringkasan Saldo
     let saldo = 0, masuk = 0, keluar = 0;
     kasKantor.forEach(k => {
         if (k.tipe === 'masuk') { saldo += k.nominal; masuk += k.nominal; }
@@ -1247,7 +1656,6 @@
     doc.text(`Total Pemasukan: ${formatRupiah(masuk)}`, 14, 104);
     doc.text(`Total Pengeluaran: ${formatRupiah(keluar)}`, 14, 113);
     
-    // Tabel Transaksi
     const tableData = kasKantor.slice(0, 25).map(k => [
         formatTanggal(k.tgl),
         k.keterangan.length > 25 ? k.keterangan.substring(0, 22) + '...' : k.keterangan,
@@ -1274,14 +1682,12 @@
     
     const finalY = doc.lastAutoTable.finalY + 25;
     
-    // Tanda Tangan (dari Konfigurasi + settings)
     doc.setFontSize(10);
     const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
     const ttdMode = cfg.settings?.ttd_mode || 'both';
     
     doc.text(`Surabaya, ${today}`, pageWidth - 20, finalY, { align: 'right' });
     
-    // Nama Pimpinan dari Konfigurasi (BUKAN statis!)
     const namaPimpinan = cfg.instansi1.pimpinan || 'Dr. Mauhibur Rokhman, Lc., MIRKH';
     const jabatanPimpinan = cfg.instansi1.jabatan || 'Pembimbing';
     
@@ -1298,244 +1704,296 @@
         doc.text(jabatanPimpinan2, pageWidth - 20, finalY + 38, { align: 'right' });
     }
     
-    // Nomor Dokumen
     const docNo = `LAP-KEU/${new Date().getMonth()+1}${new Date().getFullYear().toString().slice(-2)}/${String(kasKantor.length).padStart(3,'0')}`;
     doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
     doc.text(`No. Dokumen: ${docNo}`, 14, pageHeight - 10);
     doc.text('Digenerate oleh Sistem Auva Mobile', 105, pageHeight - 10, { align: 'center' });
     
-    // Simpan PDF
     doc.save(`Laporan_Keuangan_${new Date().toISOString().split('T')[0]}.pdf`);
     showToast('📄 PDF Profesional berhasil didownload!');
 }
 
-    // ==================== PDF TAGIHAN PER CICILAN ====================
-    async function downloadTagihanPDF(cicilanId) {
-        const cicilan = cicilanList.find(c => c.id === cicilanId);
-        if (!cicilan) { showToast('❌ Data cicilan tidak ditemukan'); return; }
-        const cfg = getConfig();
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        
-        const pakaiPT = cicilan.logo_pilih === 'pt';
-        const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
-        const namaInstansi = instansi.nama;
-        const alamatInstansi = instansi.alamat;
-        const teleponInstansi = instansi.telepon;
-        const pimpinanInstansi = instansi.pimpinan;
-        const jabatanInstansi = instansi.jabatan;
-        const logoInstansi = instansi.logo;
-        
-        if (cfg.watermark.enabled) {
-            doc.setTextColor(150,150,150);
-            doc.setFontSize(cfg.watermark.fontsize || 60);
-            doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 }));
-            if (cfg.watermark.position === 'diagonal') {
-                doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
-            } else if (cfg.watermark.position === 'center') {
-                doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
+// ==================== PDF TAGIHAN PER CICILAN ====================
+async function downloadTagihanPDF(cicilanId) {
+    const cicilan = cicilanList.find(c => c.id === cicilanId);
+    if (!cicilan) { showToast('❌ Data cicilan tidak ditemukan'); return; }
+    const cfg = getConfig();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    
+    const pakaiPT = cicilan.logo_pilih === 'pt';
+    const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
+    const namaInstansi = instansi.nama;
+    const alamatInstansi = instansi.alamat;
+    const teleponInstansi = instansi.telepon;
+    const pimpinanInstansi = instansi.pimpinan;
+    const jabatanInstansi = instansi.jabatan;
+    const logoInstansi = instansi.logo;
+    
+    if (cfg.watermark.enabled) {
+        doc.setTextColor(150,150,150);
+        doc.setFontSize(cfg.watermark.fontsize || 60);
+        doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 }));
+        const pos = cfg.watermark.position || 'diagonal';
+        if (pos === 'diagonal') {
+            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+        } else if (pos === 'center') {
+            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
+        } else if (pos === 'tile') {
+            for (let y = 20; y < pageHeight; y += 80) {
+                for (let x = 20; x < pageWidth; x += 100) {
+                    doc.text(cfg.watermark.text, x, y, { angle: -30 });
+                }
             }
-            doc.setGState(new doc.GState({ opacity: 1 }));
-            doc.setTextColor(0,0,0);
         }
-        
-        doc.setFillColor(13,93,78);
-        doc.rect(0,0,210,50,'F');
-        doc.setTextColor(255,255,255);
-        if (logoInstansi) {
-            try { doc.addImage(logoInstansi, 'PNG', 10, 8, 20, 20); } catch(e) {}
-        }
-        doc.setFontSize(16);
-        doc.text(namaInstansi, 105, 22, { align: 'center' });
-        doc.setFontSize(9);
-        doc.text(alamatInstansi, 105, 38, { align: 'center' });
-        doc.text(`Telp: ${teleponInstansi}`, 105, 44, { align: 'center' });
-        
+        doc.setGState(new doc.GState({ opacity: 1 }));
         doc.setTextColor(0,0,0);
-        doc.setFontSize(14);
-        doc.text('TAGIHAN CICILAN', 105, 65, { align: 'center' });
-        
-        const nomorInvoice = `${cfg.settings.invoice_prefix || 'INV/AUVA'}/${cicilan.id}/${new Date().toISOString().slice(0,10).replace(/-/g,'')}`;
-        doc.setFontSize(10);
-        doc.text(`Nomor: ${nomorInvoice}`, 105, 73, { align: 'center' });
-        doc.text(`Tanggal: ${formatTanggal(new Date().toISOString().split('T')[0])}`, 105, 79, { align: 'center' });
-        
-        const sisa = cicilan.total - cicilan.dibayar;
-        const jatuhTempo = cicilan.jatuh !== '-' ? formatTanggal(cicilan.jatuh) : '-';
-        
-        doc.setFontSize(11);
-        doc.text(`Kepada Yth.`, 14, 95);
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text(`Bapak/Ibu ${cicilan.nama}`, 14, 103);
-        doc.setFont(undefined, 'normal');
-        
-        doc.autoTable({
-            startY: 115,
-            body: [
-                ['Total Paket', formatRupiah(cicilan.total)],
-                ['Total Dibayar', formatRupiah(cicilan.dibayar)],
-                ['Sisa Tagihan', formatRupiah(sisa)],
-                ['Cicilan Ke-', `${cicilan.ke} / ${cicilan.tenor}`],
-                ['Nominal Cicilan Ini', formatRupiah(cicilan.nominal)],
-                ['Jatuh Tempo', jatuhTempo],
-            ],
-            theme: 'plain',
-            styles: { fontSize: 11, cellPadding: 6 },
-            columnStyles: { 0: { fontStyle: 'bold', textColor: [51,51,51] }, 1: { halign: 'right' } },
-            margin: { left: 14, right: 14 }
-        });
-        
-        const finalY = doc.lastAutoTable.finalY + 25;
-        doc.setFontSize(10);
-        doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, 150, finalY, { align: 'right' });
-        doc.text(pimpinanInstansi, 150, finalY + 12, { align: 'right' });
-        doc.text(jabatanInstansi, 150, finalY + 18, { align: 'right' });
-        
-        if (cfg.settings.ttd_mode === 'both' && cfg.instansi2.aktif && !pakaiPT) {
-            doc.text(cfg.instansi1.pimpinan, 150, finalY + 32, { align: 'right' });
-            doc.text(cfg.instansi1.jabatan, 150, finalY + 38, { align: 'right' });
-        } else if (cfg.settings.ttd_mode === 'both' && pakaiPT && cfg.instansi2.aktif) {
-            doc.text(cfg.instansi2.pimpinan, 150, finalY + 32, { align: 'right' });
-            doc.text(cfg.instansi2.jabatan, 150, finalY + 38, { align: 'right' });
-        }
-        
-        if (cfg.qr.enabled) {
-            try {
-                const canvas = document.createElement('canvas');
-                const qrText = `${cfg.qr.text}\nNo: ${nomorInvoice}\nJamaah: ${cicilan.nama}\nSisa: ${formatRupiah(sisa)}`;
-                await QRCode.toCanvas(canvas, qrText, { width: cfg.qr.size || 80, margin: 1 });
-                doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-30, pageHeight-35, 22, 22);
-            } catch(e) {}
-        }
-        
-        doc.save(`Tagihan_${cicilan.nama.replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
-        showToast('📄 PDF Tagihan berhasil didownload!');
     }
+    
+    doc.setFillColor(13,93,78);
+    doc.rect(0,0,210,50,'F');
+    doc.setTextColor(255,255,255);
+    if (logoInstansi) {
+        try { doc.addImage(logoInstansi, 'PNG', 10, 8, 20, 20); } catch(e) {}
+    }
+    doc.setFontSize(16);
+    doc.text(namaInstansi, 105, 22, { align: 'center' });
+    doc.setFontSize(9);
+    doc.text(alamatInstansi, 105, 38, { align: 'center' });
+    doc.text(`Telp: ${teleponInstansi}`, 105, 44, { align: 'center' });
+    
+    doc.setTextColor(0,0,0);
+    doc.setFontSize(14);
+    doc.text('TAGIHAN CICILAN', 105, 65, { align: 'center' });
+    
+    const nomorInvoice = `${cfg.settings.invoice_prefix || 'INV/AUVA'}/${cicilan.id}/${new Date().toISOString().slice(0,10).replace(/-/g,'')}`;
+    doc.setFontSize(10);
+    doc.text(`Nomor: ${nomorInvoice}`, 105, 73, { align: 'center' });
+    doc.text(`Tanggal: ${formatTanggal(new Date().toISOString().split('T')[0])}`, 105, 79, { align: 'center' });
+    
+    const sisa = cicilan.total - cicilan.dibayar;
+    const jatuhTempo = cicilan.jatuh !== '-' ? formatTanggal(cicilan.jatuh) : '-';
+    
+    doc.setFontSize(11);
+    doc.text(`Kepada Yth.`, 14, 95);
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'bold');
+    doc.text(`Bapak/Ibu ${cicilan.nama}`, 14, 103);
+    doc.setFont(undefined, 'normal');
+    
+    doc.autoTable({
+        startY: 115,
+        body: [
+            ['Total Paket', formatRupiah(cicilan.total)],
+            ['Total Dibayar', formatRupiah(cicilan.dibayar)],
+            ['Sisa Tagihan', formatRupiah(sisa)],
+            ['Cicilan Ke-', `${cicilan.ke} / ${cicilan.tenor}`],
+            ['Nominal Cicilan Ini', formatRupiah(cicilan.nominal)],
+            ['Jatuh Tempo', jatuhTempo],
+        ],
+        theme: 'plain',
+        styles: { fontSize: 11, cellPadding: 6 },
+        columnStyles: { 0: { fontStyle: 'bold', textColor: [51,51,51] }, 1: { halign: 'right' } },
+        margin: { left: 14, right: 14 }
+    });
+    
+    const finalY = doc.lastAutoTable.finalY + 25;
+    doc.setFontSize(10);
+    doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, 150, finalY, { align: 'right' });
+    doc.text(pimpinanInstansi, 150, finalY + 12, { align: 'right' });
+    doc.text(jabatanInstansi, 150, finalY + 18, { align: 'right' });
+    
+    if (cfg.settings.ttd_mode === 'both' && cfg.instansi2.aktif && !pakaiPT) {
+        doc.text(cfg.instansi1.pimpinan, 150, finalY + 32, { align: 'right' });
+        doc.text(cfg.instansi1.jabatan, 150, finalY + 38, { align: 'right' });
+    } else if (cfg.settings.ttd_mode === 'both' && pakaiPT && cfg.instansi2.aktif) {
+        doc.text(cfg.instansi2.pimpinan, 150, finalY + 32, { align: 'right' });
+        doc.text(cfg.instansi2.jabatan, 150, finalY + 38, { align: 'right' });
+    }
+    
+    if (cfg.qr.enabled) {
+        try {
+            const canvas = document.createElement('canvas');
+            const qrText = `${cfg.qr.text}\nNo: ${nomorInvoice}\nJamaah: ${cicilan.nama}\nSisa: ${formatRupiah(sisa)}`;
+            await QRCode.toCanvas(canvas, qrText, { width: cfg.qr.size || 80, margin: 1 });
+            doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-30, pageHeight-35, 22, 22);
+        } catch(e) {}
+    }
+    
+    doc.save(`Tagihan_${cicilan.nama.replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+    showToast('📄 PDF Tagihan berhasil didownload!');
+}
 
-    // ==================== PDF KWITANSI PER TITIPAN ====================
-    async function downloadKwitansiPDF(titipanId) {
-        const titipan = titipanList.find(t => t.id === titipanId);
-        if (!titipan) { showToast('❌ Data titipan tidak ditemukan'); return; }
-        const cfg = getConfig();
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        
-        const pakaiPT = titipan.logo_pilih === 'pt';
-        const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
-        const namaInstansi = instansi.nama;
-        const alamatInstansi = instansi.alamat;
-        const teleponInstansi = instansi.telepon;
-        const pimpinanInstansi = instansi.pimpinan;
-        const jabatanInstansi = instansi.jabatan;
-        const logoInstansi = instansi.logo;
-        
-        if (cfg.watermark.enabled) {
-            doc.setTextColor(150,150,150);
-            doc.setFontSize(cfg.watermark.fontsize || 60);
-            doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 }));
-            if (cfg.watermark.position === 'diagonal') {
-                doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
-            } else if (cfg.watermark.position === 'center') {
-                doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
+// ==================== PDF KWITANSI PER TITIPAN ====================
+async function downloadKwitansiPDF(titipanId) {
+    const titipan = titipanList.find(t => t.id === titipanId);
+    if (!titipan) { showToast('❌ Data titipan tidak ditemukan'); return; }
+    const cfg = getConfig();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    
+    const pakaiPT = titipan.logo_pilih === 'pt';
+    const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
+    const namaInstansi = instansi.nama;
+    const alamatInstansi = instansi.alamat;
+    const teleponInstansi = instansi.telepon;
+    const pimpinanInstansi = instansi.pimpinan;
+    const jabatanInstansi = instansi.jabatan;
+    const logoInstansi = instansi.logo;
+    
+    if (cfg.watermark.enabled) {
+        doc.setTextColor(150,150,150);
+        doc.setFontSize(cfg.watermark.fontsize || 60);
+        doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 }));
+        const pos = cfg.watermark.position || 'diagonal';
+        if (pos === 'diagonal') {
+            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+        } else if (pos === 'center') {
+            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
+        } else if (pos === 'tile') {
+            for (let y = 20; y < pageHeight; y += 80) {
+                for (let x = 20; x < pageWidth; x += 100) {
+                    doc.text(cfg.watermark.text, x, y, { angle: -30 });
+                }
             }
-            doc.setGState(new doc.GState({ opacity: 1 }));
-            doc.setTextColor(0,0,0);
         }
-        
-        doc.setFillColor(13,93,78);
-        doc.rect(0,0,210,50,'F');
-        doc.setTextColor(255,255,255);
-        if (logoInstansi) {
-            try { doc.addImage(logoInstansi, 'PNG', 10, 8, 20, 20); } catch(e) {}
-        }
-        doc.setFontSize(16);
-        doc.text(namaInstansi, 105, 22, { align: 'center' });
-        doc.setFontSize(9);
-        doc.text(alamatInstansi, 105, 38, { align: 'center' });
-        doc.text(`Telp: ${teleponInstansi}`, 105, 44, { align: 'center' });
-        
+        doc.setGState(new doc.GState({ opacity: 1 }));
         doc.setTextColor(0,0,0);
-        doc.setFontSize(14);
-        doc.text('BUKTI TITIPAN', 105, 65, { align: 'center' });
-        
-        const nomorKwitansi = `TTP/${cfg.settings.invoice_prefix || 'AUVA'}/${titipan.id}/${new Date().toISOString().slice(0,10).replace(/-/g,'')}`;
-        doc.setFontSize(10);
-        doc.text(`Nomor: ${nomorKwitansi}`, 105, 73, { align: 'center' });
-        doc.text(`Tanggal: ${formatTanggal(new Date().toISOString().split('T')[0])}`, 105, 79, { align: 'center' });
-        
-        doc.setFontSize(11);
-        doc.text(`Kepada Yth.`, 14, 95);
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text(`Bapak/Ibu ${titipan.penerima}`, 14, 103);
-        doc.setFont(undefined, 'normal');
-        
-        doc.autoTable({
-            startY: 115,
-            body: [
-                ['Penitip', titipan.penitip],
-                ['Nominal Titipan', formatRupiah(titipan.nominal)],
-                ['Tanggal Titip', formatTanggal(titipan.tgl)],
-                ['Keterangan', titipan.ket || '-'],
-                ['Status', titipan.status === 'aktif' ? 'Belum Diambil' : 'Sudah Diambil'],
-            ],
-            theme: 'plain',
-            styles: { fontSize: 11, cellPadding: 6 },
-            columnStyles: { 0: { fontStyle: 'bold', textColor: [51,51,51] }, 1: { halign: 'right' } },
-            margin: { left: 14, right: 14 }
-        });
-        
-        const finalY = doc.lastAutoTable.finalY + 25;
-        doc.setFontSize(10);
-        doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, 150, finalY, { align: 'right' });
-        doc.text(pimpinanInstansi, 150, finalY + 12, { align: 'right' });
-        doc.text(jabatanInstansi, 150, finalY + 18, { align: 'right' });
-        
-        if (cfg.settings.ttd_mode === 'both' && cfg.instansi2.aktif && !pakaiPT) {
-            doc.text(cfg.instansi1.pimpinan, 150, finalY + 32, { align: 'right' });
-            doc.text(cfg.instansi1.jabatan, 150, finalY + 38, { align: 'right' });
-        } else if (cfg.settings.ttd_mode === 'both' && pakaiPT && cfg.instansi2.aktif) {
-            doc.text(cfg.instansi2.pimpinan, 150, finalY + 32, { align: 'right' });
-            doc.text(cfg.instansi2.jabatan, 150, finalY + 38, { align: 'right' });
-        }
-        
-        if (cfg.qr.enabled) {
-            try {
-                const canvas = document.createElement('canvas');
-                const qrText = `${cfg.qr.text}\nNo: ${nomorKwitansi}\nPenerima: ${titipan.penerima}\nNominal: ${formatRupiah(titipan.nominal)}`;
-                await QRCode.toCanvas(canvas, qrText, { width: cfg.qr.size || 80, margin: 1 });
-                doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-30, pageHeight-35, 22, 22);
-            } catch(e) {}
-        }
-        
-        doc.save(`Kwitansi_Titipan_${titipan.penerima.replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
-        showToast('📄 PDF Kwitansi berhasil didownload!');
     }
-
-    function downloadLaporanExcel() {
-        const wb = XLSX.utils.book_new();
-        const wsKas = kasKantor.map(k=>({ Tanggal: k.tgl, Tipe: k.tipe.toUpperCase(), Kategori: k.kategori, Keterangan: k.keterangan, Nominal: k.nominal }));
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wsKas), 'Kas Kantor');
-        const wsCicilan = cicilanList.map(c=>({ Nama: c.nama, Total: c.total, Tenor: c.tenor, 'Cicilan Ke': c.ke, Nominal: c.nominal, Dibayar: c.dibayar, Sisa: c.total-c.dibayar, Status: c.status, 'Jatuh Tempo': c.jatuh, Logo: c.logo_pilih==='pt'?'PT Auva':'KBIH' }));
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wsCicilan), 'Cicilan');
-        const wsTitipan = titipanList.map(t=>({ Penitip: t.penitip, Penerima: t.penerima, Nominal: t.nominal, Tanggal: t.tgl, Status: t.status, Keterangan: t.ket, Logo: t.logo_pilih==='pt'?'PT Auva':'KBIH' }));
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wsTitipan), 'Titipan');
-        XLSX.writeFile(wb, `Laporan_Keuangan_${new Date().toISOString().split('T')[0]}.xlsx`);
-        showToast('📊 Excel berhasil didownload!');
+    
+    doc.setFillColor(13,93,78);
+    doc.rect(0,0,210,50,'F');
+    doc.setTextColor(255,255,255);
+    if (logoInstansi) {
+        try { doc.addImage(logoInstansi, 'PNG', 10, 8, 20, 20); } catch(e) {}
     }
+    doc.setFontSize(16);
+    doc.text(namaInstansi, 105, 22, { align: 'center' });
+    doc.setFontSize(9);
+    doc.text(alamatInstansi, 105, 38, { align: 'center' });
+    doc.text(`Telp: ${teleponInstansi}`, 105, 44, { align: 'center' });
+    
+    doc.setTextColor(0,0,0);
+    doc.setFontSize(14);
+    doc.text('BUKTI TITIPAN', 105, 65, { align: 'center' });
+    
+    const nomorKwitansi = `TTP/${cfg.settings.invoice_prefix || 'AUVA'}/${titipan.id}/${new Date().toISOString().slice(0,10).replace(/-/g,'')}`;
+    doc.setFontSize(10);
+    doc.text(`Nomor: ${nomorKwitansi}`, 105, 73, { align: 'center' });
+    doc.text(`Tanggal: ${formatTanggal(new Date().toISOString().split('T')[0])}`, 105, 79, { align: 'center' });
+    
+    doc.setFontSize(11);
+    doc.text(`Kepada Yth.`, 14, 95);
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'bold');
+    doc.text(`Bapak/Ibu ${titipan.penerima}`, 14, 103);
+    doc.setFont(undefined, 'normal');
+    
+    const statusText = titipan.status === 'aktif' ? 'Belum Dipakai' : 'Sudah Dipakai';
+    
+    doc.autoTable({
+        startY: 115,
+        body: [
+            ['Penitip', titipan.penitip],
+            ['Nominal Titipan', formatRupiah(titipan.nominal)],
+            ['Tanggal Titip', formatTanggal(titipan.tgl)],
+            ['Keterangan', titipan.ket || '-'],
+            ['Status', statusText],
+        ],
+        theme: 'plain',
+        styles: { fontSize: 11, cellPadding: 6 },
+        columnStyles: { 0: { fontStyle: 'bold', textColor: [51,51,51] }, 1: { halign: 'right' } },
+        margin: { left: 14, right: 14 }
+    });
+    
+    const finalY = doc.lastAutoTable.finalY + 25;
+    doc.setFontSize(10);
+    doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, 150, finalY, { align: 'right' });
+    doc.text(pimpinanInstansi, 150, finalY + 12, { align: 'right' });
+    doc.text(jabatanInstansi, 150, finalY + 18, { align: 'right' });
+    
+    if (cfg.settings.ttd_mode === 'both' && cfg.instansi2.aktif && !pakaiPT) {
+        doc.text(cfg.instansi1.pimpinan, 150, finalY + 32, { align: 'right' });
+        doc.text(cfg.instansi1.jabatan, 150, finalY + 38, { align: 'right' });
+    } else if (cfg.settings.ttd_mode === 'both' && pakaiPT && cfg.instansi2.aktif) {
+        doc.text(cfg.instansi2.pimpinan, 150, finalY + 32, { align: 'right' });
+        doc.text(cfg.instansi2.jabatan, 150, finalY + 38, { align: 'right' });
+    }
+    
+    if (cfg.qr.enabled) {
+        try {
+            const canvas = document.createElement('canvas');
+            const qrText = `${cfg.qr.text}\nNo: ${nomorKwitansi}\nPenerima: ${titipan.penerima}\nNominal: ${formatRupiah(titipan.nominal)}`;
+            await QRCode.toCanvas(canvas, qrText, { width: cfg.qr.size || 80, margin: 1 });
+            doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-30, pageHeight-35, 22, 22);
+        } catch(e) {}
+    }
+    
+    doc.save(`Kwitansi_Titipan_${titipan.penerima.replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+    showToast('📄 PDF Kwitansi berhasil didownload!');
+}
 
-    function formatRupiah(n) { return 'Rp ' + (n||0).toLocaleString('id-ID'); }
-    function formatTanggal(t) { return t && t!=='-' ? t.split('-').reverse().join('/') : '-'; }
-    function escapeHtml(t) { if(!t) return ''; const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
-    function showToast(m) { let t=document.querySelector('.toast-msg'); if(t) t.remove(); t=document.createElement('div'); t.className='toast-msg'; t.innerText=m; document.body.appendChild(t); setTimeout(()=>t?.remove(),2800); }
+function downloadLaporanExcel() {
+    const wb = XLSX.utils.book_new();
+    const wsKas = kasKantor.map(k=>({ Tanggal: k.tgl, Tipe: k.tipe.toUpperCase(), Kategori: k.kategori, Keterangan: k.keterangan, Nominal: k.nominal }));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wsKas), 'Kas Kantor');
+    const wsCicilan = cicilanList.map(c=>({ Nama: c.nama, Total: c.total, Tenor: c.tenor, 'Cicilan Ke': c.ke, Nominal: c.nominal, Dibayar: c.dibayar, Sisa: c.total-c.dibayar, Status: c.status, 'Jatuh Tempo': c.jatuh, Logo: c.logo_pilih==='pt'?'PT Auva':'KBIH' }));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wsCicilan), 'Cicilan');
+    const wsTitipan = titipanList.map(t=>({ Penitip: t.penitip, Penerima: t.penerima, Nominal: t.nominal, Tanggal: t.tgl, Status: t.status === 'aktif' ? 'Belum Dipakai' : 'Sudah Dipakai', Keterangan: t.ket, Logo: t.logo_pilih==='pt'?'PT Auva':'KBIH' }));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wsTitipan), 'Titipan');
+    const wsKontrol = kontrolTagihanList.map(x=>({ Nama: x.nama, TotalTagihan: x.totalTagihan, Terbayar: x.terbayar||0, Sisa: x.totalTagihan-(x.terbayar||0), Keterangan: x.keterangan, TanggalBuat: x.tglBuat }));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wsKontrol), 'KontrolBayar');
+    XLSX.writeFile(wb, `Laporan_Keuangan_${new Date().toISOString().split('T')[0]}.xlsx`);
+    showToast('📊 Excel berhasil didownload!');
+}
 
-    window.onload = initApp;
+// ==================== INIT ====================
+function initApp() {
+    setTimeout(() => {
+        const splash = document.getElementById('splashScreen');
+        if (splash) {
+            splash.style.opacity = '0';
+            setTimeout(() => splash.style.display = 'none', 400);
+        }
+    }, 800);
+    
+    const oldKas = localStorage.getItem('auva_kas_kantor_v1');
+    const oldCicilan = localStorage.getItem('auva_cicilan_v1');
+    const oldTitipan = localStorage.getItem('auva_titipan_v1');
+    
+    kasKantor = oldKas ? JSON.parse(oldKas) : JSON.parse(JSON.stringify(DEFAULT_KAS));
+    cicilanList = oldCicilan ? JSON.parse(oldCicilan) : JSON.parse(JSON.stringify(DEFAULT_CICILAN));
+    titipanList = oldTitipan ? JSON.parse(oldTitipan) : JSON.parse(JSON.stringify(DEFAULT_TITIPAN));
+    
+    localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
+    localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList));
+    localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList));
+    
+    loadKontrolTagihan();
+    loadConfig();
+    
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('kasTanggal').value = today;
+    document.getElementById('cicilanTanggal').value = today;
+    document.getElementById('titipanTanggalTitip').value = today;
+    document.getElementById('bayarTanggal').value = today;
+    document.getElementById('konversiTanggal').value = today;
+    
+    refreshAllUI();
+    mintaIzinNotifikasi();
+    
+    const slider = document.getElementById('cfg_watermark_opacity');
+    if (slider) slider.addEventListener('input', e => document.getElementById('opacityValue').textContent = parseFloat(e.target.value).toFixed(2));
+    
+    if (!isAppInstalled() && shouldShowInstallBanner()) setTimeout(() => document.getElementById('installBanner').classList.add('show'), 5000);
+}
+
+window.onload = initApp;
 </script>
 </body>
     </html>
