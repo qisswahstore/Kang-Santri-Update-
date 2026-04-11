@@ -309,16 +309,16 @@
     </div>
 
     <div class="quick-actions">
-        <div class="action-btn" onclick="openKasModal('masuk')"><i class="fas fa-plus-circle"></i><span>Masuk</span></div>
-        <div class="action-btn" onclick="openKasModal('keluar')"><i class="fas fa-minus-circle"></i><span>Keluar</span></div>
-        <div class="action-btn" onclick="openCicilanModal()"><i class="fas fa-calendar"></i><span>Cicilan</span></div>
-        <div class="action-btn" onclick="openTitipanModal()"><i class="fas fa-hand-holding-heart"></i><span>Titipan</span></div>
+        <div class="action-btn" ontouchstart="openKasModal('masuk')" onclick="openKasModal('masuk')"><i class="fas fa-plus-circle"></i><span>Masuk</span></div>
+        <div class="action-btn" ontouchstart="openKasModal('keluar')" onclick="openKasModal('keluar')"><i class="fas fa-minus-circle"></i><span>Keluar</span></div>
+        <div class="action-btn" ontouchstart="openCicilanModal()" onclick="openCicilanModal()"><i class="fas fa-calendar"></i><span>Cicilan</span></div>
+        <div class="action-btn" ontouchstart="openTitipanModal()" onclick="openTitipanModal()"><i class="fas fa-hand-holding-heart"></i><span>Titipan</span></div>
     </div>
 
     <div class="laporan-bar">
-        <div class="laporan-btn wa" onclick="kirimLaporanWA()"><i class="fab fa-whatsapp"></i> WA</div>
-        <div class="laporan-btn pdf" onclick="downloadLaporanPDF(event)"><i class="fas fa-file-pdf"></i> PDF</div>
-        <div class="laporan-btn excel" onclick="downloadLaporanExcel()"><i class="fas fa-file-excel"></i> Excel</div>
+        <div class="laporan-btn wa" ontouchstart="kirimLaporanWA()" onclick="kirimLaporanWA()"><i class="fab fa-whatsapp"></i> WA</div>
+        <div class="laporan-btn pdf" ontouchstart="downloadLaporanPDF(event)" onclick="downloadLaporanPDF(event)"><i class="fas fa-file-pdf"></i> PDF</div>
+        <div class="laporan-btn excel" ontouchstart="downloadLaporanExcel()" onclick="downloadLaporanExcel()"><i class="fas fa-file-excel"></i> Excel</div>
     </div>
 
     <div class="tabs">
@@ -335,7 +335,7 @@
         </div>
         <div class="filter-row">
             <select id="filterStatusCicilan" onchange="renderCicilanList()"><option value="all">Semua</option><option value="belum">Belum Lunas</option><option value="lunas">Lunas</option></select>
-            <input type="text" id="searchCicilan" placeholder="🔍 Cari nama..." oninput="renderCicilanList()">
+            <input type="text" id="searchCicilan" placeholder="🔍 Cari nama..." oninput="debouncedRenderCicilan()">
         </div>
         <div class="card-list" id="cicilanList"></div>
     </div>
@@ -346,14 +346,14 @@
         </div>
         <div class="filter-row">
             <select id="filterStatusTitipan" onchange="renderTitipanList()"><option value="all">Semua</option><option value="aktif">Belum Dipakai</option><option value="diambil">Sudah Dipakai</option></select>
-            <input type="text" id="searchTitipan" placeholder="🔍 Cari nama..." oninput="renderTitipanList()">
+            <input type="text" id="searchTitipan" placeholder="🔍 Cari nama..." oninput="debouncedRenderTitipan()">
         </div>
         <div class="card-list" id="titipanList"></div>
     </div>
     <div id="tab-transaksi" class="hidden">
         <div class="filter-row">
             <select id="filterKategori" onchange="renderTransaksiList()"></select>
-            <input type="text" id="searchTransaksi" placeholder="🔍 Cari..." oninput="renderTransaksiList()">
+            <input type="text" id="searchTransaksi" placeholder="🔍 Cari..." oninput="debouncedRenderTransaksi()">
         </div>
         <div class="card-list" id="transaksiList"></div>
     </div>
@@ -366,15 +366,15 @@
             <div class="kontrol-summary-card"><div class="label">💰 Total Tagihan</div><div class="value" id="totalTagihanKontrol">Rp 0</div></div>
             <div class="kontrol-summary-card"><div class="label">✅ Total Terbayar</div><div class="value" id="totalTerbayarKontrol">Rp 0</div></div>
         </div>
-        <button class="btn-save" onclick="openKontrolTagihanModal()" style="width:100%; margin-bottom:16px; padding:14px;"><i class="fas fa-plus-circle"></i> + Buat Tagihan Baru</button>
+        <button class="btn-save" ontouchstart="openKontrolTagihanModal()" onclick="openKontrolTagihanModal()" style="width:100%; margin-bottom:16px; padding:14px;"><i class="fas fa-plus-circle"></i> + Buat Tagihan Baru</button>
         <div class="filter-row">
             <select id="filterStatusKontrol" onchange="renderKontrolTagihanList()"><option value="all">Semua</option><option value="belum">Belum Lunas</option><option value="lunas">Lunas</option></select>
-            <input type="text" id="searchKontrol" placeholder="🔍 Cari nama..." oninput="renderKontrolTagihanList()">
+            <input type="text" id="searchKontrol" placeholder="🔍 Cari nama..." oninput="debouncedRenderKontrol()">
         </div>
         <div class="card-list" id="kontrolTagihanList"></div>
     </div>
 
-    <button class="fab" onclick="handleFabClick()"><i class="fas fa-plus"></i></button>
+    <button class="fab" ontouchstart="handleFabClick()" onclick="handleFabClick()"><i class="fas fa-plus"></i></button>
 </div>
 
 <!-- PAGE PENGATURAN -->
@@ -633,6 +633,17 @@ let kasKantor = [], cicilanList = [], titipanList = [], kategoriList = [], kontr
 let currentTab = 'cicilan', currentTipeKas = 'masuk';
 let deferredPrompt = null;
 
+// ==================== DEBOUNCE HELPER ====================
+let debounceTimeout;
+function debounce(func, delay = 300) {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(func, delay);
+}
+function debouncedRenderCicilan() { debounce(() => renderCicilanList(), 300); }
+function debouncedRenderTitipan() { debounce(() => renderTitipanList(), 300); }
+function debouncedRenderTransaksi() { debounce(() => renderTransaksiList(), 300); }
+function debouncedRenderKontrol() { debounce(() => renderKontrolTagihanList(), 300); }
+
 // ==================== HELPER PDF (STABIL & KONSISTEN) ====================
 
 /**
@@ -641,11 +652,14 @@ let deferredPrompt = null;
 function applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight) {
     if (!cfg?.watermark?.enabled) return;
     
+    // Optimasi: jika mode tile, ubah ke diagonal untuk meringankan proses
+    let position = cfg.watermark.position || 'diagonal';
+    if (position === 'tile') position = 'diagonal';
+    
     try {
         const opacity = parseFloat(cfg.watermark.opacity) || 0.15;
         const text = cfg.watermark.text || 'DOKUMEN RESMI';
         const fontSize = parseInt(cfg.watermark.fontsize) || 60;
-        const position = cfg.watermark.position || 'diagonal';
         
         doc.saveGraphicsState();
         doc.setTextColor(150, 150, 150);
@@ -654,21 +668,12 @@ function applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight) {
         try {
             const gState = doc.GState({ opacity: opacity });
             doc.setGState(gState);
-        } catch(e) {
-            // Fallback untuk jsPDF lama
-        }
+        } catch(e) {}
         
         if (position === 'diagonal') {
             doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
         } else if (position === 'center') {
             doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
-        } else if (position === 'tile') {
-            doc.setFontSize(fontSize * 0.6);
-            for (let y = 30; y < pageHeight - 30; y += 70) {
-                for (let x = 30; x < pageWidth - 30; x += 90) {
-                    doc.text(text, x, y, { angle: -30 });
-                }
-            }
         }
         
         doc.restoreGraphicsState();
@@ -711,16 +716,13 @@ function renderPDFHeader(doc, cfg, pageWidth) {
     
     const headerHeight = (showInstansi1 && showInstansi2) ? 60 : 50;
     
-    // Background
     doc.setFillColor(13, 93, 78);
     doc.rect(0, 0, pageWidth, headerHeight, 'F');
     
-    // Logo 1
     if (showInstansi1 && cfg?.instansi1?.logo) {
         try { doc.addImage(cfg.instansi1.logo, 'PNG', 10, 8, 18, 18); } catch(e) {}
     }
     
-    // Logo 2 (kanan, hanya mode both)
     if (hm === 'both' && cfg?.instansi2?.aktif && cfg?.instansi2?.logo) {
         try { doc.addImage(cfg.instansi2.logo, 'PNG', pageWidth - 28, 8, 18, 18); } catch(e) {}
     }
@@ -728,7 +730,6 @@ function renderPDFHeader(doc, cfg, pageWidth) {
     doc.setTextColor(255, 255, 255);
     let currentY = 20;
     
-    // Instansi 1
     if (showInstansi1) {
         doc.setFontSize(14);
         doc.setFont(undefined, 'bold');
@@ -745,7 +746,6 @@ function renderPDFHeader(doc, cfg, pageWidth) {
         currentY += 22;
     }
     
-    // Instansi 2
     if (showInstansi2) {
         doc.setFontSize(13);
         doc.setFont(undefined, 'bold');
@@ -871,7 +871,6 @@ function catatKasMasukDariCicilan(nama, nominal, tgl) {
 
 // ==================== REKAP PEMBAYARAN ====================
 function updateAllRekap() {
-    // Cicilan
     const cicilanLunas = cicilanList.filter(c => c.status === 'lunas');
     const cicilanBelum = cicilanList.filter(c => c.status === 'belum');
     const cicilanBelumSisa = cicilanBelum.reduce((s,c) => s + (c.total - c.dibayar), 0);
@@ -882,7 +881,6 @@ function updateAllRekap() {
     document.getElementById('cicilanBelumCountTab').innerText = cicilanBelum.length;
     document.getElementById('cicilanSisaTotalTab').innerText = formatRupiah(cicilanBelumSisa).replace('Rp ','');
     
-    // Titipan
     const titipanAktif = titipanList.filter(t => t.status === 'aktif');
     const titipanDiambil = titipanList.filter(t => t.status === 'diambil');
     const titipanAktifTotal = titipanAktif.reduce((s,t) => s + t.nominal, 0);
@@ -893,7 +891,6 @@ function updateAllRekap() {
     document.getElementById('titipanAktifTotalTab').innerText = formatRupiah(titipanAktifTotal).replace('Rp ','');
     document.getElementById('titipanDiambilCountTab').innerText = titipanDiambil.length;
     
-    // Kontrol Bayar
     const kontrolLunas = kontrolTagihanList.filter(x => (x.totalTagihan - (x.terbayar||0)) <= 0);
     const kontrolBelum = kontrolTagihanList.filter(x => (x.totalTagihan - (x.terbayar||0)) > 0);
     const kontrolBelumSisa = kontrolBelum.reduce((s,x) => s + (x.totalTagihan - (x.terbayar||0)), 0);
@@ -904,7 +901,6 @@ function updateAllRekap() {
     document.getElementById('kontrolBelumCountTab').innerText = kontrolBelum.length;
     document.getElementById('kontrolSisaTotalTab').innerText = formatRupiah(kontrolBelumSisa).replace('Rp ','');
     
-    // Total keseluruhan
     const totalTertagih = cicilanList.reduce((s,c) => s + c.total, 0) + titipanAktifTotal + kontrolTagihanList.reduce((s,x) => s + x.totalTagihan, 0);
     const totalTerbayar = cicilanList.reduce((s,c) => s + c.dibayar, 0) + titipanDiambil.reduce((s,t) => s + t.nominal, 0) + kontrolTagihanList.reduce((s,x) => s + (x.terbayar||0), 0);
     const persen = totalTertagih > 0 ? (totalTerbayar / totalTertagih * 100) : 0;
@@ -1737,11 +1733,10 @@ function kirimLaporanWA() {
     showToast('📤 Laporan WA siap dikirim!'); 
 }
 
-// ==================== PDF LAPORAN KESELURUHAN (VERSI STABIL) ====================
+// ==================== PDF LAPORAN KESELURUHAN (VERSI STABIL DENGAN compress: false & slice limit) ====================
 async function downloadLaporanPDF(event) {
     const btn = event?.target?.closest('.laporan-btn');
     
-    // Validasi library
     if (!window.jspdf?.jsPDF) {
         showToast('❌ Library PDF belum siap. Refresh halaman...');
         return;
@@ -1752,18 +1747,15 @@ async function downloadLaporanPDF(event) {
     try {
         const cfg = getConfig();
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: false });
         
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         
-        // Watermark
         applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight);
         
-        // Header
         let currentY = renderPDFHeader(doc, cfg, pageWidth);
         
-        // Judul
         doc.setFontSize(14);
         doc.setFont(undefined, 'bold');
         doc.text('LAPORAN KEUANGAN KANTOR', pageWidth/2, currentY + 10, { align: 'center' });
@@ -1774,7 +1766,6 @@ async function downloadLaporanPDF(event) {
                  pageWidth/2, currentY + 18, { align: 'center' });
         currentY += 28;
         
-        // Ringkasan Saldo
         let saldo = 0, masuk = 0, keluar = 0;
         kasKantor.forEach(k => {
             if (k.tipe === 'masuk') { saldo += k.nominal; masuk += k.nominal; }
@@ -1798,7 +1789,6 @@ async function downloadLaporanPDF(event) {
         doc.setTextColor(0, 0, 0);
         currentY += 28;
         
-        // Tabel Transaksi
         try {
             const tableData = kasKantor
                 .sort((a, b) => (b.tgl || '').localeCompare(a.tgl || ''))
@@ -1841,7 +1831,7 @@ async function downloadLaporanPDF(event) {
             console.error('Table error:', e);
         }
         
-        // Ringkasan Cicilan
+        // Ringkasan Cicilan - Batasi maksimal 10 data
         if (currentY < pageHeight - 50 && cicilanList.length > 0) {
             try {
                 doc.setFontSize(11);
@@ -1850,7 +1840,7 @@ async function downloadLaporanPDF(event) {
                 doc.text('RINGKASAN CICILAN', 14, currentY);
                 doc.setTextColor(0, 0, 0);
                 
-                const cicilanBody = cicilanList.slice(0, 8).map(c => [
+                const cicilanBody = cicilanList.slice(0, 10).map(c => [
                     (c.nama || '-').substring(0, 22),
                     formatRupiah(c.total),
                     formatRupiah(c.dibayar),
@@ -1858,16 +1848,18 @@ async function downloadLaporanPDF(event) {
                     c.status === 'lunas' ? 'Lunas' : 'Belum'
                 ]);
                 
-                doc.autoTable({
-                    startY: currentY + 5,
-                    head: [['Nama', 'Total', 'Dibayar', 'Sisa', 'Status']],
-                    body: cicilanBody,
-                    theme: 'grid',
-                    headStyles: { fillColor: [13, 93, 78], textColor: [255, 255, 255], fontSize: 8 },
-                    styles: { fontSize: 7.5 },
-                    margin: { left: 14, right: 14 }
-                });
-                currentY = doc.lastAutoTable.finalY + 10;
+                if (cicilanBody.length > 0) {
+                    doc.autoTable({
+                        startY: currentY + 5,
+                        head: [['Nama', 'Total', 'Dibayar', 'Sisa', 'Status']],
+                        body: cicilanBody,
+                        theme: 'grid',
+                        headStyles: { fillColor: [13, 93, 78], textColor: [255, 255, 255], fontSize: 8 },
+                        styles: { fontSize: 7.5 },
+                        margin: { left: 14, right: 14 }
+                    });
+                    currentY = doc.lastAutoTable.finalY + 10;
+                }
             } catch (e) {}
         }
         
@@ -1895,18 +1887,15 @@ async function downloadLaporanPDF(event) {
             doc.text(cfg?.instansi2?.jabatan || 'Jabatan', pageWidth - 20, signY + 5, { align: 'right' });
         }
         
-        // QR Code
         if (cfg?.qr?.enabled) {
             const qrText = `${cfg.qr.text || 'Dokumen Resmi'}\nTgl: ${new Date().toISOString()}`;
             await generateQRForPDF(doc, qrText, 50, pageWidth - 30, pageHeight - 30);
         }
         
-        // Footer
         doc.setFontSize(7);
         doc.setTextColor(100, 100, 100);
         doc.text(`No. Dok: LAP/${new Date().getFullYear()}/${String(kasKantor.length).padStart(4,'0')}`, 14, pageHeight - 8);
         
-        // Save
         doc.save(`Laporan_Keuangan_${new Date().toISOString().split('T')[0]}.pdf`);
         showToast('✅ PDF berhasil didownload!');
         
@@ -1918,7 +1907,7 @@ async function downloadLaporanPDF(event) {
     }
 }
 
-// ==================== PDF TAGIHAN CICILAN (STABIL) ====================
+// ==================== PDF TAGIHAN CICILAN (STABIL dengan compress: false) ====================
 async function downloadTagihanPDF(cicilanId, event) {
     const btn = event?.target?.closest('.pdf-btn');
     setPDFButtonLoading(btn, true);
@@ -1929,22 +1918,19 @@ async function downloadTagihanPDF(cicilanId, event) {
         
         const cfg = getConfig();
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: false });
         
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         
-        // Watermark
         applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight);
         
-        // Header dengan instansi yang dipilih
         const pakaiPT = cicilan.logo_pilih === 'pt';
         const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
         
         doc.setFillColor(13, 93, 78);
         doc.rect(0, 0, pageWidth, 50, 'F');
         
-        // Logo
         if (instansi?.logo) {
             try { doc.addImage(instansi.logo, 'PNG', 10, 8, 18, 18); } catch(e) {}
         }
@@ -1966,7 +1952,6 @@ async function downloadTagihanPDF(cicilanId, event) {
         
         doc.setTextColor(0, 0, 0);
         
-        // Judul
         doc.setFontSize(14);
         doc.setFont(undefined, 'bold');
         doc.text('TAGIHAN CICILAN', pageWidth/2, 65, { align: 'center' });
@@ -2026,7 +2011,7 @@ async function downloadTagihanPDF(cicilanId, event) {
     }
 }
 
-// ==================== PDF KWITANSI TITIPAN (STABIL) ====================
+// ==================== PDF KWITANSI TITIPAN (STABIL dengan compress: false) ====================
 async function downloadKwitansiPDF(titipanId, event) {
     const btn = event?.target?.closest('.pdf-btn');
     setPDFButtonLoading(btn, true);
@@ -2037,7 +2022,7 @@ async function downloadKwitansiPDF(titipanId, event) {
         
         const cfg = getConfig();
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: false });
         
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
@@ -2122,7 +2107,7 @@ async function downloadKwitansiPDF(titipanId, event) {
     }
 }
 
-// ==================== PDF KONTROL BAYAR (STABIL) ====================
+// ==================== PDF KONTROL BAYAR (STABIL dengan compress: false & slice limit) ====================
 async function downloadKontrolTagihanPDF(id, event) {
     const btn = event?.target?.closest('.pdf-btn');
     setPDFButtonLoading(btn, true);
@@ -2133,17 +2118,15 @@ async function downloadKontrolTagihanPDF(id, event) {
         
         const cfg = getConfig();
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: false });
         
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         
         applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight);
         
-        // Header menggunakan renderPDFHeader (konsisten dengan konfigurasi)
         let currentY = renderPDFHeader(doc, cfg, pageWidth);
         
-        // Judul
         doc.setFontSize(14);
         doc.setFont(undefined, 'bold');
         doc.text('TAGIHAN KONTROL BAYAR', pageWidth/2, currentY + 10, { align: 'center' });
