@@ -282,7 +282,7 @@
         </div>
     </div>
 
-    <!-- REKAP PEMBAYARAN (BARU) -->
+    <!-- REKAP PEMBAYARAN -->
     <div class="rekap-card" id="rekapUtama">
         <div class="rekap-title"><i class="fas fa-users"></i> 👥 REKAP PEMBAYARAN</div>
         <div class="rekap-row">
@@ -317,7 +317,7 @@
 
     <div class="laporan-bar">
         <div class="laporan-btn wa" onclick="kirimLaporanWA()"><i class="fab fa-whatsapp"></i> WA</div>
-        <div class="laporan-btn pdf" onclick="downloadLaporanPDF()"><i class="fas fa-file-pdf"></i> PDF</div>
+        <div class="laporan-btn pdf" onclick="downloadLaporanPDF(event)"><i class="fas fa-file-pdf"></i> PDF</div>
         <div class="laporan-btn excel" onclick="downloadLaporanExcel()"><i class="fas fa-file-excel"></i> Excel</div>
     </div>
 
@@ -589,28 +589,10 @@
 </div>
 
 <script>
-// ==================== DEFAULT DATA ====================
-const DEFAULT_KAS = [
-    { id: 1, tgl: '2026-04-01', tipe: 'masuk', nominal: 5000000, kategori: 'operasional', keterangan: 'Setoran awal bulan' },
-    { id: 2, tgl: '2026-04-03', tipe: 'keluar', nominal: 350000, kategori: 'listrik', keterangan: 'Pembayaran token listrik' },
-    { id: 3, tgl: '2026-04-05', tipe: 'masuk', nominal: 2500000, kategori: 'operasional', keterangan: 'Setoran harian' },
-    { id: 4, tgl: '2026-04-07', tipe: 'keluar', nominal: 400000, kategori: 'atk', keterangan: 'Pembelian kertas dan tinta' },
-    { id: 5, tgl: '2026-04-08', tipe: 'masuk', nominal: 8000000, kategori: 'operasional', keterangan: 'Setoran mingguan' },
-    { id: 6, tgl: '2026-04-08', tipe: 'keluar', nominal: 2500000, kategori: 'gaji', keterangan: 'Gaji staff administrasi' },
-];
-
-const DEFAULT_CICILAN = [
-    { id: 1, nama: 'Budi Santoso', total: 35000000, tenor: 7, ke: 3, nominal: 5000000, tgl: '2026-04-01', jatuh: '2026-05-01', status: 'belum', dibayar: 15000000, logo_pilih: 'pt' },
-    { id: 2, nama: 'Siti Aminah', total: 28500000, tenor: 3, ke: 3, nominal: 9500000, tgl: '2026-04-05', jatuh: '-', status: 'lunas', dibayar: 28500000, logo_pilih: 'kbih' },
-    { id: 3, nama: 'Keluarga Hadi', total: 82000000, tenor: 10, ke: 4, nominal: 8000000, tgl: '2026-03-15', jatuh: '2026-04-15', status: 'belum', dibayar: 32000000, logo_pilih: 'pt' },
-    { id: 4, nama: 'Ahmad Fauzan', total: 42500000, tenor: 5, ke: 2, nominal: 8500000, tgl: '2026-03-20', jatuh: '2026-04-20', status: 'belum', dibayar: 17000000, logo_pilih: 'kbih' },
-];
-
-const DEFAULT_TITIPAN = [
-    { id: 1, penitip: 'Haji Ahmad', penerima: 'Budi Santoso', nominal: 2000000, tgl: '2026-04-01', status: 'aktif', ket: 'Oleh-oleh dari Mekkah', logo_pilih: 'kbih' },
-    { id: 2, penitip: 'Ibu Fatimah', penerima: 'Siti Aminah', nominal: 500000, tgl: '2026-03-20', status: 'diambil', ket: 'Titipan keluarga', logo_pilih: 'pt' },
-    { id: 3, penitip: 'Pak Rahman', penerima: 'Keluarga Hadi', nominal: 1500000, tgl: '2026-04-07', status: 'aktif', ket: 'Uang saku tambahan', logo_pilih: 'pt' },
-];
+// ==================== DEFAULT DATA (KOSONGKAN AGAR TIDAK ADA DATA CONTOH) ====================
+const DEFAULT_KAS = [];
+const DEFAULT_CICILAN = [];
+const DEFAULT_TITIPAN = [];
 
 const DEFAULT_CONFIG = {
     instansi1: {
@@ -650,6 +632,163 @@ const DEFAULT_CONFIG = {
 let kasKantor = [], cicilanList = [], titipanList = [], kategoriList = [], kontrolTagihanList = [];
 let currentTab = 'cicilan', currentTipeKas = 'masuk';
 let deferredPrompt = null;
+
+// ==================== HELPER PDF (STABIL & KONSISTEN) ====================
+
+/**
+ * Helper: Apply Watermark ke PDF
+ */
+function applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight) {
+    if (!cfg?.watermark?.enabled) return;
+    
+    try {
+        const opacity = parseFloat(cfg.watermark.opacity) || 0.15;
+        const text = cfg.watermark.text || 'DOKUMEN RESMI';
+        const fontSize = parseInt(cfg.watermark.fontsize) || 60;
+        const position = cfg.watermark.position || 'diagonal';
+        
+        doc.saveGraphicsState();
+        doc.setTextColor(150, 150, 150);
+        doc.setFontSize(fontSize);
+        
+        try {
+            const gState = doc.GState({ opacity: opacity });
+            doc.setGState(gState);
+        } catch(e) {
+            // Fallback untuk jsPDF lama
+        }
+        
+        if (position === 'diagonal') {
+            doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+        } else if (position === 'center') {
+            doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
+        } else if (position === 'tile') {
+            doc.setFontSize(fontSize * 0.6);
+            for (let y = 30; y < pageHeight - 30; y += 70) {
+                for (let x = 30; x < pageWidth - 30; x += 90) {
+                    doc.text(text, x, y, { angle: -30 });
+                }
+            }
+        }
+        
+        doc.restoreGraphicsState();
+        doc.setTextColor(0, 0, 0);
+    } catch (e) {
+        console.warn('Watermark error:', e);
+    }
+}
+
+/**
+ * Helper: Generate QR Code untuk PDF
+ */
+async function generateQRForPDF(doc, text, size, x, y) {
+    try {
+        if (!text || !size || !window.QRCode) return false;
+        
+        const canvas = document.createElement('canvas');
+        await QRCode.toCanvas(canvas, String(text).substring(0, 500), {
+            width: size,
+            margin: 2,
+            color: { dark: '#000000', light: '#ffffff' }
+        });
+        
+        const dataUrl = canvas.toDataURL('image/png');
+        doc.addImage(dataUrl, 'PNG', x, y, size/3, size/3);
+        return true;
+    } catch (e) {
+        console.warn('QR generation failed:', e);
+        return false;
+    }
+}
+
+/**
+ * Helper: Render Header PDF (KONSISTEN DENGAN KONFIGURASI)
+ */
+function renderPDFHeader(doc, cfg, pageWidth) {
+    const hm = cfg?.settings?.header_mode || 'both';
+    const showInstansi1 = hm === 'both' || hm === 'instansi1';
+    const showInstansi2 = (hm === 'both' || hm === 'instansi2') && cfg?.instansi2?.aktif;
+    
+    const headerHeight = (showInstansi1 && showInstansi2) ? 60 : 50;
+    
+    // Background
+    doc.setFillColor(13, 93, 78);
+    doc.rect(0, 0, pageWidth, headerHeight, 'F');
+    
+    // Logo 1
+    if (showInstansi1 && cfg?.instansi1?.logo) {
+        try { doc.addImage(cfg.instansi1.logo, 'PNG', 10, 8, 18, 18); } catch(e) {}
+    }
+    
+    // Logo 2 (kanan, hanya mode both)
+    if (hm === 'both' && cfg?.instansi2?.aktif && cfg?.instansi2?.logo) {
+        try { doc.addImage(cfg.instansi2.logo, 'PNG', pageWidth - 28, 8, 18, 18); } catch(e) {}
+    }
+    
+    doc.setTextColor(255, 255, 255);
+    let currentY = 20;
+    
+    // Instansi 1
+    if (showInstansi1) {
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text(cfg?.instansi1?.nama || 'PT AUVA EQTENA NAHDHA', pageWidth/2, currentY, { align: 'center' });
+        
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'normal');
+        if (cfg?.instansi1?.alamat) {
+            doc.text(cfg.instansi1.alamat, pageWidth/2, currentY + 8, { align: 'center' });
+        }
+        if (cfg?.instansi1?.telepon) {
+            doc.text(`Telp: ${cfg.instansi1.telepon}`, pageWidth/2, currentY + 14, { align: 'center' });
+        }
+        currentY += 22;
+    }
+    
+    // Instansi 2
+    if (showInstansi2) {
+        doc.setFontSize(13);
+        doc.setFont(undefined, 'bold');
+        doc.text(cfg?.instansi2?.nama || 'KBIH AMANATUL UMMAH', pageWidth/2, currentY, { align: 'center' });
+        
+        if (hm === 'instansi2') {
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'normal');
+            if (cfg?.instansi2?.alamat) {
+                doc.text(cfg.instansi2.alamat, pageWidth/2, currentY + 8, { align: 'center' });
+            }
+            if (cfg?.instansi2?.telepon) {
+                doc.text(`Telp: ${cfg.instansi2.telepon}`, pageWidth/2, currentY + 14, { align: 'center' });
+            }
+            if (cfg?.instansi2?.izin) {
+                doc.text(`No. Izin: ${cfg.instansi2.izin}`, pageWidth/2, currentY + 20, { align: 'center' });
+            }
+            currentY += 26;
+        } else {
+            currentY += 10;
+        }
+    }
+    
+    doc.setTextColor(0, 0, 0);
+    return headerHeight + 10;
+}
+
+/**
+ * Helper: Loading State Button PDF
+ */
+function setPDFButtonLoading(btn, isLoading) {
+    if (!btn) return;
+    if (isLoading) {
+        btn.dataset.originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Membuat PDF...';
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+    } else {
+        btn.innerHTML = btn.dataset.originalHTML || '<i class="fas fa-file-pdf"></i> PDF';
+        btn.disabled = false;
+        btn.style.opacity = '1';
+    }
+}
 
 // ==================== PWA & INSTALL BANNER ====================
 window.addEventListener('beforeinstallprompt', (e) => { 
@@ -710,7 +849,7 @@ function showToast(m) { let t=document.querySelector('.toast-msg'); if(t) t.remo
 function hitungTotalTitipan() { return titipanList.filter(t => t.status === 'aktif').reduce((sum, t) => sum + t.nominal, 0); }
 function hitungTotalPiutang() { return cicilanList.filter(c => c.status === 'belum').reduce((sum, c) => sum + (c.total - c.dibayar), 0); }
 
-// Hapus kas terkait cicilan (untuk keperluan hapus/edit)
+// Hapus kas terkait cicilan
 function hapusKasCicilan(cicilanNama, cicilanId) {
     kasKantor = kasKantor.filter(k => !(k.kategori === 'cicilan' && k.keterangan && k.keterangan.includes(cicilanNama)));
     localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
@@ -730,7 +869,7 @@ function catatKasMasukDariCicilan(nama, nominal, tgl) {
     showToast(`💰 Kas masuk: Pembayaran cicilan dari ${nama} sebesar ${formatRupiah(nominal)}`);
 }
 
-// ==================== REKAP PEMBAYARAN (BARU) ====================
+// ==================== REKAP PEMBAYARAN ====================
 function updateAllRekap() {
     // Cicilan
     const cicilanLunas = cicilanList.filter(c => c.status === 'lunas');
@@ -900,86 +1039,6 @@ function waKontrolTagihan(id) {
     window.open(`https://wa.me/?text=${encodeURIComponent(tpl)}`, '_blank');
 }
 
-async function downloadKontrolTagihanPDF(id) {
-    const item = kontrolTagihanList.find(x=>x.id===id);
-    if(!item) return;
-    const cfg = getConfig();
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    
-    // Watermark multi-page (fungsi reusable)
-    const applyWatermark = (doc, cfg) => {
-        if(cfg.watermark?.enabled) {
-            const opacity = cfg.watermark.opacity || 0.15;
-            const text = cfg.watermark.text || 'DOKUMEN RESMI';
-            const fontSize = parseInt(cfg.watermark.fontsize) || 60;
-            const position = cfg.watermark.position || 'diagonal';
-            doc.setTextColor(150,150,150);
-            doc.setFontSize(fontSize);
-            doc.setGState(new doc.GState({ opacity: opacity }));
-            if (position === 'diagonal') {
-                doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
-            } else if (position === 'center') {
-                doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
-            } else if (position === 'tile') {
-                for (let y = 20; y < pageHeight; y += 80) {
-                    for (let x = 20; x < pageWidth; x += 100) {
-                        doc.text(text, x, y, { angle: -30 });
-                    }
-                }
-            }
-            doc.setGState(new doc.GState({ opacity: 1 }));
-            doc.setTextColor(0,0,0);
-        }
-    };
-    
-    applyWatermark(doc, cfg);
-    
-    doc.setFillColor(13,93,78);
-    doc.rect(0,0,210,45,'F');
-    doc.setTextColor(255,255,255);
-    doc.setFontSize(16);
-    doc.text('TAGIHAN', 105, 22, { align: 'center' });
-    doc.setTextColor(0,0,0);
-    
-    const sisa = item.totalTagihan - (item.terbayar||0);
-    doc.setFontSize(12);
-    doc.text(`Kepada: ${item.nama}`, 14, 60);
-    doc.autoTable({
-        startY: 70,
-        body: [
-            ['Total Tagihan', formatRupiah(item.totalTagihan)],
-            ['Sudah Dibayar', formatRupiah(item.terbayar||0)],
-            ['Sisa Tagihan', formatRupiah(sisa)],
-            ['Keterangan', item.keterangan||'-']
-        ],
-        theme: 'plain',
-        styles: { fontSize: 11 },
-        columnStyles: { 0: { fontStyle: 'bold' }, 1: { halign: 'right' } },
-        margin: { left: 14, right: 14 }
-    });
-    
-    const finalY = doc.lastAutoTable.finalY + 25;
-    doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, 150, finalY, { align: 'right' });
-    doc.text(cfg.instansi1.pimpinan, 150, finalY+12, { align: 'right' });
-    doc.text(cfg.instansi1.jabatan, 150, finalY+18, { align: 'right' });
-    
-    if (cfg.qr?.enabled) {
-        try {
-            const canvas = document.createElement('canvas');
-            const qrText = `${cfg.qr.text}\nNo: TGH/${item.id}\nNama: ${item.nama}\nSisa: ${formatRupiah(sisa)}`;
-            const qrSize = parseInt(cfg.qr.size) || 80;
-            await QRCode.toCanvas(canvas, qrText, { width: qrSize });
-            doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-25, pageHeight-30, 20, 20);
-        } catch(e) {}
-    }
-    
-    doc.save(`Tagihan_${item.nama.replace(/\s/g,'_')}.pdf`);
-    showToast('📄 PDF Tagihan berhasil didownload!');
-}
-
 function renderKontrolTagihanList() {
     const container = document.getElementById('kontrolTagihanList');
     const filter = document.getElementById('filterStatusKontrol')?.value || 'all';
@@ -1015,7 +1074,7 @@ function renderKontrolTagihanList() {
             <button class="wa" onclick="waKontrolTagihan(${x.id})"><i class="fab fa-whatsapp"></i> WA</button>
             <button class="primary" onclick="editKontrolTagihan(${x.id})"><i class="fas fa-edit"></i> Edit</button>
             ${status==='belum' ? `<button onclick="openBayarTagihan(${x.id})"><i class="fas fa-credit-card"></i> Bayar</button>` : ''}
-            <button class="pdf-btn" onclick="downloadKontrolTagihanPDF(${x.id})"><i class="fas fa-file-pdf"></i> PDF</button>
+            <button class="pdf-btn" onclick="downloadKontrolTagihanPDF(${x.id}, event)"><i class="fas fa-file-pdf"></i> PDF</button>
             <button onclick="hapusKontrolTagihan(${x.id})" style="color:#ef4444;"><i class="fas fa-trash"></i> Hapus</button>
         </div></div>`;
     });
@@ -1101,6 +1160,8 @@ function updateKategoriSelect() {
 }
 
 // ==================== KONFIGURASI ====================
+function getConfig() { return JSON.parse(localStorage.getItem('auva_config_v2')) || DEFAULT_CONFIG; }
+
 function loadConfig() {
     let config = localStorage.getItem('auva_config_v2');
     if (!config) {
@@ -1424,7 +1485,7 @@ function renderCicilanList() {
                 <button class="wa" onclick="waTagihan('${c.nama}', ${sisa}, '${c.jatuh}', ${c.nominal})"><i class="fab fa-whatsapp"></i> WA</button>
                 <button class="primary" onclick="editCicilan(${c.id})"><i class="fas fa-edit"></i> Edit</button>
                 ${c.status === 'belum' ? `<button onclick="tandaiLunas(${c.id})"><i class="fas fa-check"></i> Lunas</button>` : ''}
-                <button class="pdf-btn" onclick="downloadTagihanPDF(${c.id})"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="pdf-btn" onclick="downloadTagihanPDF(${c.id}, event)"><i class="fas fa-file-pdf"></i> PDF</button>
                 <button onclick="hapusCicilan(${c.id})" style="color:#ef4444;"><i class="fas fa-trash"></i></button>
             </div>
         </div>`;
@@ -1455,7 +1516,7 @@ function renderTitipanList() {
                 <button class="primary" onclick="editTitipan(${t.id})"><i class="fas fa-edit"></i> Edit</button>
                 ${t.status === 'aktif' ? `<button onclick="tandaiDiambil(${t.id})"><i class="fas fa-check"></i> Pakai</button>` : ''}
                 ${t.status === 'aktif' ? `<button class="konversi-btn" onclick="openKonversiModal(${t.id})"><i class="fas fa-exchange-alt"></i> Jadi Cicilan</button>` : ''}
-                <button class="pdf-btn" onclick="downloadKwitansiPDF(${t.id})"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="pdf-btn" onclick="downloadKwitansiPDF(${t.id}, event)"><i class="fas fa-file-pdf"></i> PDF</button>
                 <button onclick="hapusTitipan(${t.id})" style="color:#ef4444;"><i class="fas fa-trash"></i></button>
             </div>
         </div>`;
@@ -1515,9 +1576,6 @@ function simpanCicilan() {
             const nominalTambahan = dibayar - oldDibayar;
             if (nominalTambahan > 0) {
                 catatKasMasukDariCicilan(nama, nominalTambahan, tgl);
-            } else if (nominalTambahan < 0) {
-                // Jika pengurangan pembayaran, hapus kelebihan kas (sederhananya diabaikan agar tidak double negative)
-                showToast('⚠️ Pengurangan nominal tidak mempengaruhi kas otomatis, periksa manual jika perlu');
             }
         }
         showToast('✅ Cicilan diupdate!'); 
@@ -1652,8 +1710,6 @@ function prosesKonversiKeCicilan() {
 }
 
 // ==================== WA ====================
-function getConfig() { return JSON.parse(localStorage.getItem('auva_config_v2')) || DEFAULT_CONFIG; }
-
 function waTagihan(nama, sisa, jatuh, nominal) { 
     const cfg = getConfig(); 
     let tpl = cfg.wa_template.cicilan; 
@@ -1681,451 +1737,485 @@ function kirimLaporanWA() {
     showToast('📤 Laporan WA siap dikirim!'); 
 }
 
-// ==================== PDF LAPORAN KESELURUHAN ====================
-async function downloadLaporanPDF() {
-    const cfg = getConfig();
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
+// ==================== PDF LAPORAN KESELURUHAN (VERSI STABIL) ====================
+async function downloadLaporanPDF(event) {
+    const btn = event?.target?.closest('.laporan-btn');
     
-    const applyWatermark = (doc, cfg, pageWidth, pageHeight) => {
-        if (cfg.watermark?.enabled) {
-            const opacity = cfg.watermark.opacity || 0.15;
-            const text = cfg.watermark.text || 'DOKUMEN RESMI';
-            const fontSize = parseInt(cfg.watermark.fontsize) || 60;
-            const position = cfg.watermark.position || 'diagonal';
-            doc.setTextColor(150, 150, 150);
-            doc.setFontSize(fontSize);
-            doc.setGState(new doc.GState({ opacity: opacity }));
-            if (position === 'diagonal') {
-                doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
-            } else if (position === 'center') {
-                doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
-            } else if (position === 'tile') {
-                for (let y = 20; y < pageHeight; y += 80) {
-                    for (let x = 20; x < pageWidth; x += 100) {
-                        doc.text(text, x, y, { angle: -30 });
-                    }
-                }
-            }
-            doc.setGState(new doc.GState({ opacity: 1 }));
-            doc.setTextColor(0,0,0);
-        }
-    };
-    
-    applyWatermark(doc, cfg, pageWidth, pageHeight);
-    
-    doc.setFillColor(13, 93, 78);
-    doc.rect(0, 0, 210, 55, 'F');
-    doc.setTextColor(255, 255, 255);
-    
-    if (cfg.instansi1?.logo) {
-        try { doc.addImage(cfg.instansi1.logo, 'PNG', 12, 10, 22, 22); } catch(e) {}
-    }
-    if (cfg.instansi2?.aktif && cfg.instansi2?.logo) {
-        try { doc.addImage(cfg.instansi2.logo, 'PNG', pageWidth - 34, 10, 22, 22); } catch(e) {}
+    // Validasi library
+    if (!window.jspdf?.jsPDF) {
+        showToast('❌ Library PDF belum siap. Refresh halaman...');
+        return;
     }
     
-    const hm = cfg.settings?.header_mode || 'both';
+    setPDFButtonLoading(btn, true);
     
-    if (hm === 'both' || hm === 'instansi1') {
-        doc.setFontSize(16);
-        doc.text(cfg.instansi1.nama, 105, 22, { align: 'center' });
+    try {
+        const cfg = getConfig();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+        
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        
+        // Watermark
+        applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight);
+        
+        // Header
+        let currentY = renderPDFHeader(doc, cfg, pageWidth);
+        
+        // Judul
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('LAPORAN KEUANGAN KANTOR', pageWidth/2, currentY + 10, { align: 'center' });
+        
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Periode: ${new Date().toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}`, 
+                 pageWidth/2, currentY + 18, { align: 'center' });
+        currentY += 28;
+        
+        // Ringkasan Saldo
+        let saldo = 0, masuk = 0, keluar = 0;
+        kasKantor.forEach(k => {
+            if (k.tipe === 'masuk') { saldo += k.nominal; masuk += k.nominal; }
+            else { saldo -= k.nominal; keluar += k.nominal; }
+        });
+        
+        doc.setFillColor(240, 249, 244);
+        doc.rect(14, currentY, pageWidth - 28, 22, 'F');
+        doc.setDrawColor(13, 93, 78);
+        doc.setLineWidth(0.5);
+        doc.rect(14, currentY, pageWidth - 28, 22, 'S');
+        
+        doc.setFontSize(11);
+        doc.setTextColor(13, 93, 78);
+        doc.setFont(undefined, 'bold');
+        doc.text(`Saldo: ${formatRupiah(saldo)}`, 18, currentY + 9);
+        doc.setFont(undefined, 'normal');
         doc.setFontSize(9);
-        doc.text(cfg.instansi1.alamat, 105, 42, { align: 'center' });
-        doc.text(`Telp: ${cfg.instansi1.telepon}`, 105, 48, { align: 'center' });
-    }
-    
-    if (hm === 'both' && cfg.instansi2?.aktif) {
-        doc.setFontSize(13);
-        doc.text(cfg.instansi2.nama, 105, 32, { align: 'center' });
-    } else if (hm === 'instansi2' && cfg.instansi2?.aktif) {
-        doc.setFontSize(16);
-        doc.text(cfg.instansi2.nama, 105, 22, { align: 'center' });
-        doc.setFontSize(9);
-        doc.text(cfg.instansi2.alamat, 105, 42, { align: 'center' });
-        doc.text(`Telp: ${cfg.instansi2.telepon}`, 105, 48, { align: 'center' });
-        if (cfg.instansi2.izin) {
-            doc.text(`No. Izin: ${cfg.instansi2.izin}`, 105, 54, { align: 'center' });
-        }
-    }
-    
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(14);
-    doc.text('LAPORAN KEUANGAN KANTOR', 105, 68, { align: 'center' });
-    doc.setFontSize(10);
-    doc.text(`Periode: ${new Date().toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}`, 105, 78, { align: 'center' });
-    
-    if (cfg.qr?.enabled) {
+        doc.text(`Masuk: ${formatRupiah(masuk)}`, 18, currentY + 17);
+        doc.text(`Keluar: ${formatRupiah(keluar)}`, pageWidth/2 + 5, currentY + 17);
+        doc.setTextColor(0, 0, 0);
+        currentY += 28;
+        
+        // Tabel Transaksi
         try {
-            const canvas = document.createElement('canvas');
-            const qrText = cfg.qr.text || 'Dokumen Resmi';
-            const qrSize = parseInt(cfg.qr.size) || 80;
-            await QRCode.toCanvas(canvas, qrText, { width: qrSize });
-            const qrX = pageWidth - qrSize/3 - 15;
-            const qrY = pageHeight - qrSize/3 - 15;
-            doc.addImage(canvas.toDataURL(), 'PNG', qrX, qrY, qrSize/3, qrSize/3);
-            doc.setFontSize(6);
-            doc.setTextColor(100, 100, 100);
-            doc.text('Scan untuk verifikasi', pageWidth - 20, pageHeight - 8, { align: 'right' });
-        } catch(e) {}
-    }
-    
-    let saldo = 0, masuk = 0, keluar = 0;
-    kasKantor.forEach(k => {
-        if (k.tipe === 'masuk') { saldo += k.nominal; masuk += k.nominal; }
-        else { saldo -= k.nominal; keluar += k.nominal; }
-    });
-    
-    doc.setFontSize(11);
-    doc.setTextColor(0, 0, 0);
-    doc.text(`Saldo Kantor: ${formatRupiah(saldo)}`, 14, 95);
-    doc.text(`Total Pemasukan: ${formatRupiah(masuk)}`, 14, 104);
-    doc.text(`Total Pengeluaran: ${formatRupiah(keluar)}`, 14, 113);
-    
-    const tableData = kasKantor.slice(0, 25).map(k => [
-        formatTanggal(k.tgl),
-        k.keterangan.length > 25 ? k.keterangan.substring(0, 22) + '...' : k.keterangan,
-        k.kategori,
-        k.tipe === 'masuk' ? formatRupiah(k.nominal) : '-',
-        k.tipe === 'keluar' ? formatRupiah(k.nominal) : '-'
-    ]);
-    
-    doc.autoTable({
-        startY: 122,
-        head: [['Tanggal', 'Keterangan', 'Kategori', 'Masuk', 'Keluar']],
-        body: tableData,
-        theme: 'striped',
-        headStyles: { fillColor: [13, 93, 78], textColor: [255, 255, 255] },
-        styles: { fontSize: 9 },
-        columnStyles: {
-            0: { cellWidth: 25 },
-            1: { cellWidth: 'auto' },
-            2: { cellWidth: 25 },
-            3: { cellWidth: 35, halign: 'right' },
-            4: { cellWidth: 35, halign: 'right' }
+            const tableData = kasKantor
+                .sort((a, b) => (b.tgl || '').localeCompare(a.tgl || ''))
+                .slice(0, 25)
+                .map(k => [
+                    formatTanggal(k.tgl),
+                    (k.keterangan || '-').substring(0, 28),
+                    (k.kategori || '-').toUpperCase(),
+                    k.tipe === 'masuk' ? formatRupiah(k.nominal) : '-',
+                    k.tipe === 'keluar' ? formatRupiah(k.nominal) : '-'
+                ]);
+            
+            if (tableData.length > 0) {
+                doc.autoTable({
+                    startY: currentY,
+                    head: [['Tanggal', 'Keterangan', 'Kategori', 'Masuk', 'Keluar']],
+                    body: tableData,
+                    theme: 'striped',
+                    headStyles: { 
+                        fillColor: [13, 93, 78], 
+                        textColor: [255, 255, 255],
+                        fontSize: 9 
+                    },
+                    styles: { fontSize: 8, cellPadding: 2 },
+                    columnStyles: {
+                        0: { cellWidth: 22, halign: 'center' },
+                        1: { cellWidth: 'auto' },
+                        2: { cellWidth: 28, halign: 'center' },
+                        3: { cellWidth: 32, halign: 'right' },
+                        4: { cellWidth: 32, halign: 'right' }
+                    },
+                    margin: { left: 14, right: 14 },
+                    didDrawPage: (data) => {
+                        applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight);
+                    }
+                });
+                currentY = doc.lastAutoTable.finalY + 8;
+            }
+        } catch (e) {
+            console.error('Table error:', e);
         }
-    });
-    
-    // Ringkasan Cicilan
-    let finalY = doc.lastAutoTable.finalY + 15;
-    doc.setFontSize(11);
-    doc.text('📋 RINGKASAN CICILAN', 14, finalY);
-    const cicilanBody = cicilanList.slice(0,15).map(c => [c.nama, formatRupiah(c.total), formatRupiah(c.dibayar), formatRupiah(c.total-c.dibayar), c.status==='lunas'?'Lunas':'Belum']);
-    doc.autoTable({
-        startY: finalY+5,
-        head: [['Nama', 'Total', 'Dibayar', 'Sisa', 'Status']],
-        body: cicilanBody,
-        theme: 'striped',
-        headStyles: { fillColor: [13, 93, 78], textColor: [255, 255, 255] },
-        styles: { fontSize: 8 },
-        margin: { left: 14, right: 14 }
-    });
-    
-    // Ringkasan Titipan
-    finalY = doc.lastAutoTable.finalY + 15;
-    doc.text('💼 RINGKASAN TITIPAN', 14, finalY);
-    const titipanBody = titipanList.slice(0,15).map(t => [t.penerima, t.penitip, formatRupiah(t.nominal), formatTanggal(t.tgl), t.status==='aktif'?'Belum Diambil':'Sudah Diambil']);
-    doc.autoTable({
-        startY: finalY+5,
-        head: [['Penerima', 'Penitip', 'Nominal', 'Tanggal', 'Status']],
-        body: titipanBody,
-        theme: 'striped',
-        headStyles: { fillColor: [13, 93, 78], textColor: [255, 255, 255] },
-        styles: { fontSize: 8 },
-        margin: { left: 14, right: 14 }
-    });
-    
-    // Ringkasan Kontrol Bayar
-    finalY = doc.lastAutoTable.finalY + 15;
-    doc.text('💰 RINGKASAN KONTROL BAYAR', 14, finalY);
-    const kontrolBody = kontrolTagihanList.slice(0,15).map(x => {
-        const sisa = x.totalTagihan - (x.terbayar||0);
-        return [x.nama, formatRupiah(x.totalTagihan), formatRupiah(x.terbayar||0), formatRupiah(sisa), sisa<=0?'Lunas':'Belum'];
-    });
-    doc.autoTable({
-        startY: finalY+5,
-        head: [['Nama', 'Total', 'Terbayar', 'Sisa', 'Status']],
-        body: kontrolBody,
-        theme: 'striped',
-        headStyles: { fillColor: [13, 93, 78], textColor: [255, 255, 255] },
-        styles: { fontSize: 8 },
-        margin: { left: 14, right: 14 }
-    });
-    
-    const tandaTanganY = doc.lastAutoTable.finalY + 25;
-    doc.setFontSize(10);
-    const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-    const ttdMode = cfg.settings?.ttd_mode || 'both';
-    
-    doc.text(`Surabaya, ${today}`, pageWidth - 20, tandaTanganY, { align: 'right' });
-    
-    const namaPimpinan = cfg.instansi1.pimpinan || 'Dr. Mauhibur Rokhman, Lc., MIRKH';
-    const jabatanPimpinan = cfg.instansi1.jabatan || 'Pembimbing';
-    
-    if (ttdMode === 'both' || ttdMode === 'single') {
-        doc.text(namaPimpinan, pageWidth - 20, tandaTanganY + 12, { align: 'right' });
-        doc.text(jabatanPimpinan, pageWidth - 20, tandaTanganY + 18, { align: 'right' });
+        
+        // Ringkasan Cicilan
+        if (currentY < pageHeight - 50 && cicilanList.length > 0) {
+            try {
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(13, 93, 78);
+                doc.text('RINGKASAN CICILAN', 14, currentY);
+                doc.setTextColor(0, 0, 0);
+                
+                const cicilanBody = cicilanList.slice(0, 8).map(c => [
+                    (c.nama || '-').substring(0, 22),
+                    formatRupiah(c.total),
+                    formatRupiah(c.dibayar),
+                    formatRupiah(c.total - c.dibayar),
+                    c.status === 'lunas' ? 'Lunas' : 'Belum'
+                ]);
+                
+                doc.autoTable({
+                    startY: currentY + 5,
+                    head: [['Nama', 'Total', 'Dibayar', 'Sisa', 'Status']],
+                    body: cicilanBody,
+                    theme: 'grid',
+                    headStyles: { fillColor: [13, 93, 78], textColor: [255, 255, 255], fontSize: 8 },
+                    styles: { fontSize: 7.5 },
+                    margin: { left: 14, right: 14 }
+                });
+                currentY = doc.lastAutoTable.finalY + 10;
+            } catch (e) {}
+        }
+        
+        // Tanda Tangan
+        const ttdY = Math.min(currentY + 15, pageHeight - 35);
+        doc.setFontSize(10);
+        doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`, 
+                 pageWidth - 20, ttdY, { align: 'right' });
+        
+        const ttdMode = cfg?.settings?.ttd_mode || 'both';
+        let signY = ttdY + 12;
+        
+        if (ttdMode === 'both' || ttdMode === 'single') {
+            doc.setFont(undefined, 'bold');
+            doc.text(cfg?.instansi1?.pimpinan || 'Pimpinan', pageWidth - 20, signY, { align: 'right' });
+            doc.setFont(undefined, 'normal');
+            doc.text(cfg?.instansi1?.jabatan || 'Jabatan', pageWidth - 20, signY + 5, { align: 'right' });
+            signY += 15;
+        }
+        
+        if (ttdMode === 'both' && cfg?.instansi2?.aktif) {
+            doc.setFont(undefined, 'bold');
+            doc.text(cfg?.instansi2?.pimpinan || 'Pimpinan', pageWidth - 20, signY, { align: 'right' });
+            doc.setFont(undefined, 'normal');
+            doc.text(cfg?.instansi2?.jabatan || 'Jabatan', pageWidth - 20, signY + 5, { align: 'right' });
+        }
+        
+        // QR Code
+        if (cfg?.qr?.enabled) {
+            const qrText = `${cfg.qr.text || 'Dokumen Resmi'}\nTgl: ${new Date().toISOString()}`;
+            await generateQRForPDF(doc, qrText, 50, pageWidth - 30, pageHeight - 30);
+        }
+        
+        // Footer
+        doc.setFontSize(7);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`No. Dok: LAP/${new Date().getFullYear()}/${String(kasKantor.length).padStart(4,'0')}`, 14, pageHeight - 8);
+        
+        // Save
+        doc.save(`Laporan_Keuangan_${new Date().toISOString().split('T')[0]}.pdf`);
+        showToast('✅ PDF berhasil didownload!');
+        
+    } catch (error) {
+        console.error('PDF Error:', error);
+        showToast(`❌ Gagal: ${error.message}`);
+    } finally {
+        setPDFButtonLoading(btn, false);
     }
-    
-    if (cfg.instansi2?.aktif && ttdMode === 'both') {
-        const namaPimpinan2 = cfg.instansi2.pimpinan || 'Dr. Mauhibur Rokhman, Lc., MIRKH';
-        const jabatanPimpinan2 = cfg.instansi2.jabatan || 'Pembimbing';
-        doc.text(namaPimpinan2, pageWidth - 20, tandaTanganY + 32, { align: 'right' });
-        doc.text(jabatanPimpinan2, pageWidth - 20, tandaTanganY + 38, { align: 'right' });
-    }
-    
-    const docNo = `LAP-KEU/${new Date().getMonth()+1}${new Date().getFullYear().toString().slice(-2)}/${String(kasKantor.length).padStart(3,'0')}`;
-    doc.setFontSize(8);
-    doc.setTextColor(100, 100, 100);
-    doc.text(`No. Dokumen: ${docNo}`, 14, pageHeight - 10);
-    doc.text('Digenerate oleh Sistem Auva Mobile', 105, pageHeight - 10, { align: 'center' });
-    
-    doc.save(`Laporan_Keuangan_${new Date().toISOString().split('T')[0]}.pdf`);
-    showToast('📄 PDF Profesional berhasil didownload!');
 }
 
-// ==================== PDF TAGIHAN PER CICILAN ====================
-async function downloadTagihanPDF(cicilanId) {
-    const cicilan = cicilanList.find(c => c.id === cicilanId);
-    if (!cicilan) { showToast('❌ Data cicilan tidak ditemukan'); return; }
-    const cfg = getConfig();
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
+// ==================== PDF TAGIHAN CICILAN (STABIL) ====================
+async function downloadTagihanPDF(cicilanId, event) {
+    const btn = event?.target?.closest('.pdf-btn');
+    setPDFButtonLoading(btn, true);
     
-    const applyWatermark = (doc, cfg, pageWidth, pageHeight) => {
-        if (cfg.watermark?.enabled) {
-            const opacity = cfg.watermark.opacity || 0.15;
-            const text = cfg.watermark.text || 'DOKUMEN RESMI';
-            const fontSize = parseInt(cfg.watermark.fontsize) || 60;
-            const position = cfg.watermark.position || 'diagonal';
-            doc.setTextColor(150,150,150);
-            doc.setFontSize(fontSize);
-            doc.setGState(new doc.GState({ opacity: opacity }));
-            if (position === 'diagonal') {
-                doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
-            } else if (position === 'center') {
-                doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
-            } else if (position === 'tile') {
-                for (let y = 20; y < pageHeight; y += 80) {
-                    for (let x = 20; x < pageWidth; x += 100) {
-                        doc.text(text, x, y, { angle: -30 });
-                    }
-                }
-            }
-            doc.setGState(new doc.GState({ opacity: 1 }));
-            doc.setTextColor(0,0,0);
+    try {
+        const cicilan = cicilanList.find(c => c.id === cicilanId);
+        if (!cicilan) { showToast('❌ Data tidak ditemukan'); return; }
+        
+        const cfg = getConfig();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+        
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        
+        // Watermark
+        applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight);
+        
+        // Header dengan instansi yang dipilih
+        const pakaiPT = cicilan.logo_pilih === 'pt';
+        const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
+        
+        doc.setFillColor(13, 93, 78);
+        doc.rect(0, 0, pageWidth, 50, 'F');
+        
+        // Logo
+        if (instansi?.logo) {
+            try { doc.addImage(instansi.logo, 'PNG', 10, 8, 18, 18); } catch(e) {}
         }
-    };
-    
-    applyWatermark(doc, cfg, pageWidth, pageHeight);
-    
-    const pakaiPT = cicilan.logo_pilih === 'pt';
-    const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
-    const namaInstansi = instansi.nama;
-    const alamatInstansi = instansi.alamat;
-    const teleponInstansi = instansi.telepon;
-    const pimpinanInstansi = instansi.pimpinan;
-    const jabatanInstansi = instansi.jabatan;
-    const logoInstansi = instansi.logo;
-    
-    doc.setFillColor(13,93,78);
-    doc.rect(0,0,210,50,'F');
-    doc.setTextColor(255,255,255);
-    if (logoInstansi) {
-        try { doc.addImage(logoInstansi, 'PNG', 10, 8, 20, 20); } catch(e) {}
-    }
-    doc.setFontSize(16);
-    doc.text(namaInstansi, 105, 22, { align: 'center' });
-    doc.setFontSize(9);
-    doc.text(alamatInstansi, 105, 38, { align: 'center' });
-    doc.text(`Telp: ${teleponInstansi}`, 105, 44, { align: 'center' });
-    
-    doc.setTextColor(0,0,0);
-    doc.setFontSize(14);
-    doc.text('TAGIHAN CICILAN', 105, 65, { align: 'center' });
-    
-    const nomorInvoice = `${cfg.settings.invoice_prefix || 'INV/AUVA'}/${cicilan.id}/${new Date().toISOString().slice(0,10).replace(/-/g,'')}`;
-    doc.setFontSize(10);
-    doc.text(`Nomor: ${nomorInvoice}`, 105, 73, { align: 'center' });
-    doc.text(`Tanggal: ${formatTanggal(new Date().toISOString().split('T')[0])}`, 105, 79, { align: 'center' });
-    
-    const sisa = cicilan.total - cicilan.dibayar;
-    const jatuhTempo = cicilan.jatuh !== '-' ? formatTanggal(cicilan.jatuh) : '-';
-    
-    doc.setFontSize(11);
-    doc.text(`Kepada Yth.`, 14, 95);
-    doc.setFontSize(12);
-    doc.setFont(undefined, 'bold');
-    doc.text(`Bapak/Ibu ${cicilan.nama}`, 14, 103);
-    doc.setFont(undefined, 'normal');
-    
-    doc.autoTable({
-        startY: 115,
-        body: [
-            ['Total Paket', formatRupiah(cicilan.total)],
-            ['Total Dibayar', formatRupiah(cicilan.dibayar)],
-            ['Sisa Tagihan', formatRupiah(sisa)],
-            ['Cicilan Ke-', `${cicilan.ke} / ${cicilan.tenor}`],
-            ['Nominal Cicilan Ini', formatRupiah(cicilan.nominal)],
-            ['Jatuh Tempo', jatuhTempo],
-        ],
-        theme: 'plain',
-        styles: { fontSize: 11, cellPadding: 6 },
-        columnStyles: { 0: { fontStyle: 'bold', textColor: [51,51,51] }, 1: { halign: 'right' } },
-        margin: { left: 14, right: 14 }
-    });
-    
-    const finalY = doc.lastAutoTable.finalY + 25;
-    doc.setFontSize(10);
-    doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, 150, finalY, { align: 'right' });
-    doc.text(pimpinanInstansi, 150, finalY + 12, { align: 'right' });
-    doc.text(jabatanInstansi, 150, finalY + 18, { align: 'right' });
-    
-    if (cfg.settings.ttd_mode === 'both' && cfg.instansi2.aktif && !pakaiPT) {
-        doc.text(cfg.instansi1.pimpinan, 150, finalY + 32, { align: 'right' });
-        doc.text(cfg.instansi1.jabatan, 150, finalY + 38, { align: 'right' });
-    } else if (cfg.settings.ttd_mode === 'both' && pakaiPT && cfg.instansi2.aktif) {
-        doc.text(cfg.instansi2.pimpinan, 150, finalY + 32, { align: 'right' });
-        doc.text(cfg.instansi2.jabatan, 150, finalY + 38, { align: 'right' });
-    }
-    
-    if (cfg.qr.enabled) {
-        try {
-            const canvas = document.createElement('canvas');
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(15);
+        doc.setFont(undefined, 'bold');
+        doc.text(instansi?.nama || (pakaiPT ? 'PT AUVA EQTENA NAHDHA' : 'KBIH AMANATUL UMMAH'), 
+                 pageWidth/2, 22, { align: 'center' });
+        
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'normal');
+        if (instansi?.alamat) {
+            doc.text(instansi.alamat, pageWidth/2, 35, { align: 'center' });
+        }
+        if (instansi?.telepon) {
+            doc.text(`Telp: ${instansi.telepon}`, pageWidth/2, 41, { align: 'center' });
+        }
+        
+        doc.setTextColor(0, 0, 0);
+        
+        // Judul
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('TAGIHAN CICILAN', pageWidth/2, 65, { align: 'center' });
+        
+        const nomorInvoice = `${cfg.settings.invoice_prefix || 'INV/AUVA'}/${cicilan.id}/${new Date().toISOString().slice(0,10).replace(/-/g,'')}`;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Nomor: ${nomorInvoice}`, pageWidth/2, 73, { align: 'center' });
+        doc.text(`Tanggal: ${formatTanggal(new Date().toISOString().split('T')[0])}`, pageWidth/2, 79, { align: 'center' });
+        
+        const sisa = cicilan.total - cicilan.dibayar;
+        const jatuhTempo = cicilan.jatuh !== '-' ? formatTanggal(cicilan.jatuh) : '-';
+        
+        doc.setFontSize(11);
+        doc.text(`Kepada Yth.`, 14, 95);
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text(`Bapak/Ibu ${cicilan.nama}`, 14, 103);
+        doc.setFont(undefined, 'normal');
+        
+        doc.autoTable({
+            startY: 115,
+            body: [
+                ['Total Paket', formatRupiah(cicilan.total)],
+                ['Total Dibayar', formatRupiah(cicilan.dibayar)],
+                ['Sisa Tagihan', formatRupiah(sisa)],
+                ['Cicilan Ke-', `${cicilan.ke} / ${cicilan.tenor}`],
+                ['Nominal Cicilan Ini', formatRupiah(cicilan.nominal)],
+                ['Jatuh Tempo', jatuhTempo],
+            ],
+            theme: 'plain',
+            styles: { fontSize: 11, cellPadding: 6 },
+            columnStyles: { 0: { fontStyle: 'bold', textColor: [51,51,51] }, 1: { halign: 'right' } },
+            margin: { left: 14, right: 14 }
+        });
+        
+        const finalY = doc.lastAutoTable.finalY + 25;
+        doc.setFontSize(10);
+        doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, pageWidth - 20, finalY, { align: 'right' });
+        doc.setFont(undefined, 'bold');
+        doc.text(instansi?.pimpinan || 'Pimpinan', pageWidth - 20, finalY + 12, { align: 'right' });
+        doc.setFont(undefined, 'normal');
+        doc.text(instansi?.jabatan || 'Jabatan', pageWidth - 20, finalY + 18, { align: 'right' });
+        
+        if (cfg?.qr?.enabled) {
             const qrText = `${cfg.qr.text}\nNo: ${nomorInvoice}\nJamaah: ${cicilan.nama}\nSisa: ${formatRupiah(sisa)}`;
-            const qrSize = parseInt(cfg.qr.size) || 80;
-            await QRCode.toCanvas(canvas, qrText, { width: qrSize });
-            doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-30, pageHeight-35, 22, 22);
-        } catch(e) {}
-    }
-    
-    doc.save(`Tagihan_${cicilan.nama.replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
-    showToast('📄 PDF Tagihan berhasil didownload!');
-}
-
-// ==================== PDF KWITANSI PER TITIPAN ====================
-async function downloadKwitansiPDF(titipanId) {
-    const titipan = titipanList.find(t => t.id === titipanId);
-    if (!titipan) { showToast('❌ Data titipan tidak ditemukan'); return; }
-    const cfg = getConfig();
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    
-    const applyWatermark = (doc, cfg, pageWidth, pageHeight) => {
-        if (cfg.watermark?.enabled) {
-            const opacity = cfg.watermark.opacity || 0.15;
-            const text = cfg.watermark.text || 'DOKUMEN RESMI';
-            const fontSize = parseInt(cfg.watermark.fontsize) || 60;
-            const position = cfg.watermark.position || 'diagonal';
-            doc.setTextColor(150,150,150);
-            doc.setFontSize(fontSize);
-            doc.setGState(new doc.GState({ opacity: opacity }));
-            if (position === 'diagonal') {
-                doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
-            } else if (position === 'center') {
-                doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
-            } else if (position === 'tile') {
-                for (let y = 20; y < pageHeight; y += 80) {
-                    for (let x = 20; x < pageWidth; x += 100) {
-                        doc.text(text, x, y, { angle: -30 });
-                    }
-                }
-            }
-            doc.setGState(new doc.GState({ opacity: 1 }));
-            doc.setTextColor(0,0,0);
+            await generateQRForPDF(doc, qrText, 50, pageWidth - 30, pageHeight - 30);
         }
-    };
-    
-    applyWatermark(doc, cfg, pageWidth, pageHeight);
-    
-    const pakaiPT = titipan.logo_pilih === 'pt';
-    const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
-    const namaInstansi = instansi.nama;
-    const alamatInstansi = instansi.alamat;
-    const teleponInstansi = instansi.telepon;
-    const pimpinanInstansi = instansi.pimpinan;
-    const jabatanInstansi = instansi.jabatan;
-    const logoInstansi = instansi.logo;
-    
-    doc.setFillColor(13,93,78);
-    doc.rect(0,0,210,50,'F');
-    doc.setTextColor(255,255,255);
-    if (logoInstansi) {
-        try { doc.addImage(logoInstansi, 'PNG', 10, 8, 20, 20); } catch(e) {}
+        
+        doc.save(`Tagihan_${cicilan.nama.replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+        showToast('✅ PDF Tagihan berhasil didownload!');
+    } catch (error) {
+        console.error('PDF Error:', error);
+        showToast(`❌ Gagal: ${error.message}`);
+    } finally {
+        setPDFButtonLoading(btn, false);
     }
-    doc.setFontSize(16);
-    doc.text(namaInstansi, 105, 22, { align: 'center' });
-    doc.setFontSize(9);
-    doc.text(alamatInstansi, 105, 38, { align: 'center' });
-    doc.text(`Telp: ${teleponInstansi}`, 105, 44, { align: 'center' });
-    
-    doc.setTextColor(0,0,0);
-    doc.setFontSize(14);
-    doc.text('BUKTI TITIPAN', 105, 65, { align: 'center' });
-    
-    const nomorKwitansi = `TTP/${cfg.settings.invoice_prefix || 'AUVA'}/${titipan.id}/${new Date().toISOString().slice(0,10).replace(/-/g,'')}`;
-    doc.setFontSize(10);
-    doc.text(`Nomor: ${nomorKwitansi}`, 105, 73, { align: 'center' });
-    doc.text(`Tanggal: ${formatTanggal(new Date().toISOString().split('T')[0])}`, 105, 79, { align: 'center' });
-    
-    doc.setFontSize(11);
-    doc.text(`Kepada Yth.`, 14, 95);
-    doc.setFontSize(12);
-    doc.setFont(undefined, 'bold');
-    doc.text(`Bapak/Ibu ${titipan.penerima}`, 14, 103);
-    doc.setFont(undefined, 'normal');
-    
-    const statusText = titipan.status === 'aktif' ? 'Belum Dipakai' : 'Sudah Dipakai';
-    
-    doc.autoTable({
-        startY: 115,
-        body: [
-            ['Penitip', titipan.penitip],
-            ['Nominal Titipan', formatRupiah(titipan.nominal)],
-            ['Tanggal Titip', formatTanggal(titipan.tgl)],
-            ['Keterangan', titipan.ket || '-'],
-            ['Status', statusText],
-        ],
-        theme: 'plain',
-        styles: { fontSize: 11, cellPadding: 6 },
-        columnStyles: { 0: { fontStyle: 'bold', textColor: [51,51,51] }, 1: { halign: 'right' } },
-        margin: { left: 14, right: 14 }
-    });
-    
-    const finalY = doc.lastAutoTable.finalY + 25;
-    doc.setFontSize(10);
-    doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, 150, finalY, { align: 'right' });
-    doc.text(pimpinanInstansi, 150, finalY + 12, { align: 'right' });
-    doc.text(jabatanInstansi, 150, finalY + 18, { align: 'right' });
-    
-    if (cfg.settings.ttd_mode === 'both' && cfg.instansi2.aktif && !pakaiPT) {
-        doc.text(cfg.instansi1.pimpinan, 150, finalY + 32, { align: 'right' });
-        doc.text(cfg.instansi1.jabatan, 150, finalY + 38, { align: 'right' });
-    } else if (cfg.settings.ttd_mode === 'both' && pakaiPT && cfg.instansi2.aktif) {
-        doc.text(cfg.instansi2.pimpinan, 150, finalY + 32, { align: 'right' });
-        doc.text(cfg.instansi2.jabatan, 150, finalY + 38, { align: 'right' });
-    }
-    
-    if (cfg.qr.enabled) {
-        try {
-            const canvas = document.createElement('canvas');
-            const qrText = `${cfg.qr.text}\nNo: ${nomorKwitansi}\nPenerima: ${titipan.penerima}\nNominal: ${formatRupiah(titipan.nominal)}`;
-            const qrSize = parseInt(cfg.qr.size) || 80;
-            await QRCode.toCanvas(canvas, qrText, { width: qrSize });
-            doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-30, pageHeight-35, 22, 22);
-        } catch(e) {}
-    }
-    
-    doc.save(`Kwitansi_Titipan_${titipan.penerima.replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
-    showToast('📄 PDF Kwitansi berhasil didownload!');
 }
 
+// ==================== PDF KWITANSI TITIPAN (STABIL) ====================
+async function downloadKwitansiPDF(titipanId, event) {
+    const btn = event?.target?.closest('.pdf-btn');
+    setPDFButtonLoading(btn, true);
+    
+    try {
+        const titipan = titipanList.find(t => t.id === titipanId);
+        if (!titipan) { showToast('❌ Data tidak ditemukan'); return; }
+        
+        const cfg = getConfig();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+        
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        
+        applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight);
+        
+        const pakaiPT = titipan.logo_pilih === 'pt';
+        const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
+        
+        doc.setFillColor(13, 93, 78);
+        doc.rect(0, 0, pageWidth, 50, 'F');
+        
+        if (instansi?.logo) {
+            try { doc.addImage(instansi.logo, 'PNG', 10, 8, 18, 18); } catch(e) {}
+        }
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(15);
+        doc.setFont(undefined, 'bold');
+        doc.text(instansi?.nama || (pakaiPT ? 'PT AUVA EQTENA NAHDHA' : 'KBIH AMANATUL UMMAH'), 
+                 pageWidth/2, 22, { align: 'center' });
+        
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'normal');
+        if (instansi?.alamat) {
+            doc.text(instansi.alamat, pageWidth/2, 35, { align: 'center' });
+        }
+        if (instansi?.telepon) {
+            doc.text(`Telp: ${instansi.telepon}`, pageWidth/2, 41, { align: 'center' });
+        }
+        
+        doc.setTextColor(0, 0, 0);
+        
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('BUKTI TITIPAN', pageWidth/2, 65, { align: 'center' });
+        
+        const nomorKwitansi = `TTP/${cfg.settings.invoice_prefix || 'AUVA'}/${titipan.id}/${new Date().toISOString().slice(0,10).replace(/-/g,'')}`;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Nomor: ${nomorKwitansi}`, pageWidth/2, 73, { align: 'center' });
+        doc.text(`Tanggal: ${formatTanggal(new Date().toISOString().split('T')[0])}`, pageWidth/2, 79, { align: 'center' });
+        
+        const statusText = titipan.status === 'aktif' ? 'Belum Dipakai' : 'Sudah Dipakai';
+        
+        doc.autoTable({
+            startY: 95,
+            body: [
+                ['Penitip', titipan.penitip],
+                ['Penerima', titipan.penerima],
+                ['Nominal', formatRupiah(titipan.nominal)],
+                ['Tanggal Titip', formatTanggal(titipan.tgl)],
+                ['Keterangan', titipan.ket || '-'],
+                ['Status', statusText],
+            ],
+            theme: 'plain',
+            styles: { fontSize: 11, cellPadding: 6 },
+            columnStyles: { 0: { fontStyle: 'bold', textColor: [51,51,51] }, 1: { halign: 'right' } },
+            margin: { left: 14, right: 14 }
+        });
+        
+        const finalY = doc.lastAutoTable.finalY + 25;
+        doc.setFontSize(10);
+        doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, pageWidth - 20, finalY, { align: 'right' });
+        doc.setFont(undefined, 'bold');
+        doc.text(instansi?.pimpinan || 'Pimpinan', pageWidth - 20, finalY + 12, { align: 'right' });
+        doc.setFont(undefined, 'normal');
+        doc.text(instansi?.jabatan || 'Jabatan', pageWidth - 20, finalY + 18, { align: 'right' });
+        
+        if (cfg?.qr?.enabled) {
+            const qrText = `${cfg.qr.text}\nNo: ${nomorKwitansi}\nPenerima: ${titipan.penerima}\nNominal: ${formatRupiah(titipan.nominal)}`;
+            await generateQRForPDF(doc, qrText, 50, pageWidth - 30, pageHeight - 30);
+        }
+        
+        doc.save(`Kwitansi_${titipan.penerima.replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+        showToast('✅ PDF Kwitansi berhasil didownload!');
+    } catch (error) {
+        console.error('PDF Error:', error);
+        showToast(`❌ Gagal: ${error.message}`);
+    } finally {
+        setPDFButtonLoading(btn, false);
+    }
+}
+
+// ==================== PDF KONTROL BAYAR (STABIL) ====================
+async function downloadKontrolTagihanPDF(id, event) {
+    const btn = event?.target?.closest('.pdf-btn');
+    setPDFButtonLoading(btn, true);
+    
+    try {
+        const item = kontrolTagihanList.find(x => x.id === id);
+        if (!item) { showToast('❌ Data tidak ditemukan'); return; }
+        
+        const cfg = getConfig();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+        
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        
+        applyWatermarkToPDF(doc, cfg, pageWidth, pageHeight);
+        
+        // Header menggunakan renderPDFHeader (konsisten dengan konfigurasi)
+        let currentY = renderPDFHeader(doc, cfg, pageWidth);
+        
+        // Judul
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('TAGIHAN KONTROL BAYAR', pageWidth/2, currentY + 10, { align: 'center' });
+        
+        const nomorTagihan = `KTB/${cfg.settings.invoice_prefix || 'AUVA'}/${item.id}/${new Date().toISOString().slice(0,10).replace(/-/g,'')}`;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Nomor: ${nomorTagihan}`, pageWidth/2, currentY + 18, { align: 'center' });
+        doc.text(`Tanggal: ${formatTanggal(new Date().toISOString().split('T')[0])}`, pageWidth/2, currentY + 24, { align: 'center' });
+        currentY += 34;
+        
+        const sisa = item.totalTagihan - (item.terbayar||0);
+        
+        doc.setFontSize(11);
+        doc.text(`Kepada Yth.`, 14, currentY);
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text(`Bapak/Ibu ${item.nama}`, 14, currentY + 8);
+        doc.setFont(undefined, 'normal');
+        
+        doc.autoTable({
+            startY: currentY + 18,
+            body: [
+                ['Keterangan', item.keterangan || '-'],
+                ['Total Tagihan', formatRupiah(item.totalTagihan)],
+                ['Sudah Dibayar', formatRupiah(item.terbayar||0)],
+                ['Sisa Tagihan', formatRupiah(sisa)],
+            ],
+            theme: 'plain',
+            styles: { fontSize: 11, cellPadding: 6 },
+            columnStyles: { 0: { fontStyle: 'bold', textColor: [51,51,51] }, 1: { halign: 'right' } },
+            margin: { left: 14, right: 14 }
+        });
+        
+        const finalY = doc.lastAutoTable.finalY + 25;
+        doc.setFontSize(10);
+        doc.text(`Surabaya, ${new Date().toLocaleDateString('id-ID')}`, pageWidth - 20, finalY, { align: 'right' });
+        
+        const ttdMode = cfg?.settings?.ttd_mode || 'both';
+        let signY = finalY + 12;
+        
+        if (ttdMode === 'both' || ttdMode === 'single') {
+            doc.setFont(undefined, 'bold');
+            doc.text(cfg?.instansi1?.pimpinan || 'Pimpinan', pageWidth - 20, signY, { align: 'right' });
+            doc.setFont(undefined, 'normal');
+            doc.text(cfg?.instansi1?.jabatan || 'Jabatan', pageWidth - 20, signY + 5, { align: 'right' });
+            signY += 15;
+        }
+        
+        if (ttdMode === 'both' && cfg?.instansi2?.aktif) {
+            doc.setFont(undefined, 'bold');
+            doc.text(cfg?.instansi2?.pimpinan || 'Pimpinan', pageWidth - 20, signY, { align: 'right' });
+            doc.setFont(undefined, 'normal');
+            doc.text(cfg?.instansi2?.jabatan || 'Jabatan', pageWidth - 20, signY + 5, { align: 'right' });
+        }
+        
+        if (cfg?.qr?.enabled) {
+            const qrText = `${cfg.qr.text}\nNo: ${nomorTagihan}\nNama: ${item.nama}\nSisa: ${formatRupiah(sisa)}`;
+            await generateQRForPDF(doc, qrText, 50, pageWidth - 30, pageHeight - 30);
+        }
+        
+        doc.save(`Tagihan_Kontrol_${item.nama.replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+        showToast('✅ PDF Tagihan Kontrol berhasil didownload!');
+    } catch (error) {
+        console.error('PDF Error:', error);
+        showToast(`❌ Gagal: ${error.message}`);
+    } finally {
+        setPDFButtonLoading(btn, false);
+    }
+}
+
+// ==================== EXCEL ====================
 function downloadLaporanExcel() {
     const wb = XLSX.utils.book_new();
     const wsKas = kasKantor.map(k=>({ Tanggal: k.tgl, Tipe: k.tipe.toUpperCase(), Kategori: k.kategori, Keterangan: k.keterangan, Nominal: k.nominal }));
@@ -2137,7 +2227,6 @@ function downloadLaporanExcel() {
     const wsKontrol = kontrolTagihanList.map(x=>({ Nama: x.nama, TotalTagihan: x.totalTagihan, Terbayar: x.terbayar||0, Sisa: x.totalTagihan-(x.terbayar||0), Keterangan: x.keterangan, TanggalBuat: x.tglBuat }));
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wsKontrol), 'KontrolBayar');
     
-    // Sheet Rekap
     const totalTertagih = cicilanList.reduce((s,c) => s + c.total, 0) + titipanList.filter(t=>t.status==='aktif').reduce((s,t)=>s+t.nominal,0) + kontrolTagihanList.reduce((s,x)=>s+x.totalTagihan,0);
     const totalTerbayar = cicilanList.reduce((s,c) => s + c.dibayar, 0) + titipanList.filter(t=>t.status==='diambil').reduce((s,t)=>s+t.nominal,0) + kontrolTagihanList.reduce((s,x)=>s+(x.terbayar||0),0);
     const rekapData = [
