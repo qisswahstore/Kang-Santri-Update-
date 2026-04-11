@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Auva Kantor">
-    <title>Auva Pro - Keuangan Kantor + Kontrol Bayar</title>
+    <title>Auva Pro - Keuangan Kantor + Kontrol Bayar + Rekap</title>
     
     <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Auva%20Pro%20Keuangan%22,%22short_name%22:%22Auva%22,%22description%22:%22Aplikasi%20Keuangan%20Kantor%20dengan%20Kontrol%20Bayar%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22theme_color%22:%22%230d5d4e%22,%22background_color%22:%22%230d5d4e%22,%22icons%22:[{%22src%22:%22https://placehold.co/192x192/0d5d4e/white?text=AUVA%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22},{%22src%22:%22https://placehold.co/512x512/0d5d4e/white?text=AUVA%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
     <link rel="apple-touch-icon" href="https://placehold.co/192x192/0d5d4e/white?text=AUVA">
@@ -59,6 +59,17 @@
         .stat-item { background: rgba(255,255,255,0.12); padding: 14px 10px; border-radius: 18px; backdrop-filter: blur(4px); text-align: center; }
         .stat-item .label { font-size: 11px; opacity: 0.9; margin-bottom: 6px; }
         .stat-item .value { font-size: 20px; font-weight: 800; }
+        
+        .rekap-card {
+            background: white; border-radius: 20px; padding: 16px; margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .rekap-title { font-weight: 700; margin-bottom: 12px; color: var(--primary); font-size: 14px; }
+        .rekap-row { display: flex; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+        .rekap-badge-lunas { background: #10b98115; color: #059669; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; }
+        .rekap-badge-belum { background: #ef444415; color: #dc2626; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; }
+        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 10px; margin: 12px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; }
         
         .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
         .action-btn {
@@ -202,7 +213,7 @@
         .switch { position: relative; display: inline-block; width: 52px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; inset: 0; background-color: #cbd5e1; transition: .3s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
         .logo-preview { max-width: 100px; max-height: 60px; margin-top: 8px; border-radius: 8px; object-fit: contain; }
@@ -223,6 +234,8 @@
         .qr-preview canvas { border: 1px solid var(--gray-border); border-radius: 12px; padding: 8px; background: white; }
         .template-variables { font-size: 11px; color: #64748b; margin-top: 5px; }
         .template-variables code { background: var(--gray-light); padding: 2px 6px; border-radius: 6px; margin: 0 3px; }
+        
+        .tab-rekap { background: var(--gray-light); padding: 10px 12px; border-radius: 16px; margin-bottom: 16px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
     </style>
 </head>
 <body>
@@ -233,7 +246,7 @@
         <i class="fas fa-mosque" style="font-size:56px; color:var(--primary);"></i>
     </div>
     <div style="color:white; font-size:28px; font-weight:bold;">Auva Pro</div>
-    <div style="color:rgba(255,255,255,0.8); font-size:14px; margin-top:8px;">Keuangan + Kontrol Bayar</div>
+    <div style="color:rgba(255,255,255,0.8); font-size:14px; margin-top:8px;">Keuangan + Kontrol Bayar + Rekap</div>
 </div>
 
 <!-- Install Banner PWA -->
@@ -269,6 +282,32 @@
         </div>
     </div>
 
+    <!-- REKAP PEMBAYARAN (BARU) -->
+    <div class="rekap-card" id="rekapUtama">
+        <div class="rekap-title"><i class="fas fa-users"></i> 👥 REKAP PEMBAYARAN</div>
+        <div class="rekap-row">
+            <span><i class="fas fa-check-circle" style="color:#10b981;"></i> <strong>LUNAS</strong></span>
+            <span><i class="fas fa-clock" style="color:#ef4444;"></i> <strong>BELUM LUNAS</strong></span>
+        </div>
+        <div class="rekap-row" id="rekapCicilanRow">
+            <span>Cicilan: <span id="cicilanLunasCount">0</span> org</span>
+            <span>Cicilan: <span id="cicilanBelumCount">0</span> org (Rp <span id="cicilanBelumTotal">0</span>)</span>
+        </div>
+        <div class="rekap-row" id="rekapTitipanRow">
+            <span>Titipan: <span id="titipanDiambilCount">0</span> org</span>
+            <span>Titipan: <span id="titipanAktifCount">0</span> org (Rp <span id="titipanAktifTotal">0</span>)</span>
+        </div>
+        <div class="rekap-row" id="rekapKontrolRow">
+            <span>Kontrol: <span id="kontrolLunasCount">0</span> org</span>
+            <span>Kontrol: <span id="kontrolBelumCount">0</span> org (Rp <span id="kontrolBelumTotal">0</span>)</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="rekap-row">
+            <span><strong>Total Tertagih:</strong> <span id="totalTertagihSemua">Rp 0</span></span>
+            <span><strong>Total Terbayar:</strong> <span id="totalTerbayarSemua">Rp 0</span> (<span id="persenProgress">0</span>%)</span>
+        </div>
+    </div>
+
     <div class="quick-actions">
         <div class="action-btn" onclick="openKasModal('masuk')"><i class="fas fa-plus-circle"></i><span>Masuk</span></div>
         <div class="action-btn" onclick="openKasModal('keluar')"><i class="fas fa-minus-circle"></i><span>Keluar</span></div>
@@ -290,6 +329,10 @@
     </div>
 
     <div id="tab-cicilan">
+        <div class="tab-rekap" id="cicilanRekapTab">
+            <span>✅ Lunas: <strong id="cicilanLunasCountTab">0</strong> orang</span>
+            <span>⏳ Belum: <strong id="cicilanBelumCountTab">0</strong> orang (Sisa Rp <span id="cicilanSisaTotalTab">0</span>)</span>
+        </div>
         <div class="filter-row">
             <select id="filterStatusCicilan" onchange="renderCicilanList()"><option value="all">Semua</option><option value="belum">Belum Lunas</option><option value="lunas">Lunas</option></select>
             <input type="text" id="searchCicilan" placeholder="🔍 Cari nama..." oninput="renderCicilanList()">
@@ -297,6 +340,10 @@
         <div class="card-list" id="cicilanList"></div>
     </div>
     <div id="tab-titipan" class="hidden">
+        <div class="tab-rekap" id="titipanRekapTab">
+            <span>📦 Belum Diambil: <strong id="titipanAktifCountTab">0</strong> orang (Rp <span id="titipanAktifTotalTab">0</span>)</span>
+            <span>✅ Sudah Diambil: <strong id="titipanDiambilCountTab">0</strong> orang</span>
+        </div>
         <div class="filter-row">
             <select id="filterStatusTitipan" onchange="renderTitipanList()"><option value="all">Semua</option><option value="aktif">Belum Dipakai</option><option value="diambil">Sudah Dipakai</option></select>
             <input type="text" id="searchTitipan" placeholder="🔍 Cari nama..." oninput="renderTitipanList()">
@@ -311,6 +358,10 @@
         <div class="card-list" id="transaksiList"></div>
     </div>
     <div id="tab-kontrolbayar" class="hidden">
+        <div class="tab-rekap" id="kontrolRekapTab">
+            <span>✅ Lunas: <strong id="kontrolLunasCountTab">0</strong> orang</span>
+            <span>⏳ Belum: <strong id="kontrolBelumCountTab">0</strong> orang (Sisa Rp <span id="kontrolSisaTotalTab">0</span>)</span>
+        </div>
         <div class="kontrol-summary">
             <div class="kontrol-summary-card"><div class="label">💰 Total Tagihan</div><div class="value" id="totalTagihanKontrol">Rp 0</div></div>
             <div class="kontrol-summary-card"><div class="label">✅ Total Terbayar</div><div class="value" id="totalTerbayarKontrol">Rp 0</div></div>
@@ -655,8 +706,15 @@ function formatRupiah(n) { return 'Rp ' + (n||0).toLocaleString('id-ID'); }
 function formatTanggal(t) { return t && t!=='-' ? t.split('-').reverse().join('/') : '-'; }
 function escapeHtml(t) { if(!t) return ''; const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
 function showToast(m) { let t=document.querySelector('.toast-msg'); if(t) t.remove(); t=document.createElement('div'); t.className='toast-msg'; t.innerText=m; document.body.appendChild(t); setTimeout(()=>t?.remove(),2800); }
+
 function hitungTotalTitipan() { return titipanList.filter(t => t.status === 'aktif').reduce((sum, t) => sum + t.nominal, 0); }
 function hitungTotalPiutang() { return cicilanList.filter(c => c.status === 'belum').reduce((sum, c) => sum + (c.total - c.dibayar), 0); }
+
+// Hapus kas terkait cicilan (untuk keperluan hapus/edit)
+function hapusKasCicilan(cicilanNama, cicilanId) {
+    kasKantor = kasKantor.filter(k => !(k.kategori === 'cicilan' && k.keterangan && k.keterangan.includes(cicilanNama)));
+    localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
+}
 
 function catatKasMasukDariCicilan(nama, nominal, tgl) {
     if (!nominal || nominal <= 0) return;
@@ -670,6 +728,51 @@ function catatKasMasukDariCicilan(nama, nominal, tgl) {
     });
     localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor));
     showToast(`💰 Kas masuk: Pembayaran cicilan dari ${nama} sebesar ${formatRupiah(nominal)}`);
+}
+
+// ==================== REKAP PEMBAYARAN (BARU) ====================
+function updateAllRekap() {
+    // Cicilan
+    const cicilanLunas = cicilanList.filter(c => c.status === 'lunas');
+    const cicilanBelum = cicilanList.filter(c => c.status === 'belum');
+    const cicilanBelumSisa = cicilanBelum.reduce((s,c) => s + (c.total - c.dibayar), 0);
+    document.getElementById('cicilanLunasCount').innerText = cicilanLunas.length;
+    document.getElementById('cicilanBelumCount').innerText = cicilanBelum.length;
+    document.getElementById('cicilanBelumTotal').innerText = formatRupiah(cicilanBelumSisa).replace('Rp ','');
+    document.getElementById('cicilanLunasCountTab').innerText = cicilanLunas.length;
+    document.getElementById('cicilanBelumCountTab').innerText = cicilanBelum.length;
+    document.getElementById('cicilanSisaTotalTab').innerText = formatRupiah(cicilanBelumSisa).replace('Rp ','');
+    
+    // Titipan
+    const titipanAktif = titipanList.filter(t => t.status === 'aktif');
+    const titipanDiambil = titipanList.filter(t => t.status === 'diambil');
+    const titipanAktifTotal = titipanAktif.reduce((s,t) => s + t.nominal, 0);
+    document.getElementById('titipanDiambilCount').innerText = titipanDiambil.length;
+    document.getElementById('titipanAktifCount').innerText = titipanAktif.length;
+    document.getElementById('titipanAktifTotal').innerText = formatRupiah(titipanAktifTotal).replace('Rp ','');
+    document.getElementById('titipanAktifCountTab').innerText = titipanAktif.length;
+    document.getElementById('titipanAktifTotalTab').innerText = formatRupiah(titipanAktifTotal).replace('Rp ','');
+    document.getElementById('titipanDiambilCountTab').innerText = titipanDiambil.length;
+    
+    // Kontrol Bayar
+    const kontrolLunas = kontrolTagihanList.filter(x => (x.totalTagihan - (x.terbayar||0)) <= 0);
+    const kontrolBelum = kontrolTagihanList.filter(x => (x.totalTagihan - (x.terbayar||0)) > 0);
+    const kontrolBelumSisa = kontrolBelum.reduce((s,x) => s + (x.totalTagihan - (x.terbayar||0)), 0);
+    document.getElementById('kontrolLunasCount').innerText = kontrolLunas.length;
+    document.getElementById('kontrolBelumCount').innerText = kontrolBelum.length;
+    document.getElementById('kontrolBelumTotal').innerText = formatRupiah(kontrolBelumSisa).replace('Rp ','');
+    document.getElementById('kontrolLunasCountTab').innerText = kontrolLunas.length;
+    document.getElementById('kontrolBelumCountTab').innerText = kontrolBelum.length;
+    document.getElementById('kontrolSisaTotalTab').innerText = formatRupiah(kontrolBelumSisa).replace('Rp ','');
+    
+    // Total keseluruhan
+    const totalTertagih = cicilanList.reduce((s,c) => s + c.total, 0) + titipanAktifTotal + kontrolTagihanList.reduce((s,x) => s + x.totalTagihan, 0);
+    const totalTerbayar = cicilanList.reduce((s,c) => s + c.dibayar, 0) + titipanDiambil.reduce((s,t) => s + t.nominal, 0) + kontrolTagihanList.reduce((s,x) => s + (x.terbayar||0), 0);
+    const persen = totalTertagih > 0 ? (totalTerbayar / totalTertagih * 100) : 0;
+    document.getElementById('totalTertagihSemua').innerHTML = formatRupiah(totalTertagih);
+    document.getElementById('totalTerbayarSemua').innerHTML = formatRupiah(totalTerbayar);
+    document.getElementById('persenProgress').innerHTML = persen.toFixed(1);
+    document.getElementById('progressFill').style.width = persen + '%';
 }
 
 // ==================== KONTROL TAGIHAN ====================
@@ -714,6 +817,7 @@ function simpanKontrolTagihan() {
     closeModal('modalKontrolTagihan');
     renderKontrolTagihanList();
     updateKontrolSummary();
+    updateAllRekap();
 }
 
 function openBayarTagihan(id) {
@@ -748,6 +852,7 @@ function prosesBayarTagihan() {
     closeModal('modalBayarTagihan');
     renderKontrolTagihanList();
     updateKontrolSummary();
+    updateAllRekap();
     showToast(`✅ Pembayaran Rp ${nominal.toLocaleString()} untuk ${item.nama} berhasil!`);
 }
 
@@ -757,6 +862,7 @@ function hapusKontrolTagihan(id) {
         saveKontrolTagihan();
         renderKontrolTagihanList();
         updateKontrolSummary();
+        updateAllRekap();
         showToast('🗑️ Tagihan dihapus');
     }
 }
@@ -771,6 +877,7 @@ function hapusRiwayatBayar(tagihanId, riwayatIdx) {
             saveKontrolTagihan();
             renderKontrolTagihanList();
             updateKontrolSummary();
+            updateAllRekap();
             showToast('🗑️ Riwayat pembayaran dihapus');
         }
     }
@@ -802,25 +909,33 @@ async function downloadKontrolTagihanPDF(id) {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     
-    if(cfg.watermark?.enabled) {
-        doc.setTextColor(150,150,150);
-        doc.setFontSize(cfg.watermark.fontsize||60);
-        doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity||0.15 }));
-        const pos = cfg.watermark.position || 'diagonal';
-        if (pos === 'diagonal') {
-            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
-        } else if (pos === 'center') {
-            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
-        } else if (pos === 'tile') {
-            for (let y = 20; y < pageHeight; y += 80) {
-                for (let x = 20; x < pageWidth; x += 100) {
-                    doc.text(cfg.watermark.text, x, y, { angle: -30 });
+    // Watermark multi-page (fungsi reusable)
+    const applyWatermark = (doc, cfg) => {
+        if(cfg.watermark?.enabled) {
+            const opacity = cfg.watermark.opacity || 0.15;
+            const text = cfg.watermark.text || 'DOKUMEN RESMI';
+            const fontSize = parseInt(cfg.watermark.fontsize) || 60;
+            const position = cfg.watermark.position || 'diagonal';
+            doc.setTextColor(150,150,150);
+            doc.setFontSize(fontSize);
+            doc.setGState(new doc.GState({ opacity: opacity }));
+            if (position === 'diagonal') {
+                doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+            } else if (position === 'center') {
+                doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
+            } else if (position === 'tile') {
+                for (let y = 20; y < pageHeight; y += 80) {
+                    for (let x = 20; x < pageWidth; x += 100) {
+                        doc.text(text, x, y, { angle: -30 });
+                    }
                 }
             }
+            doc.setGState(new doc.GState({ opacity: 1 }));
+            doc.setTextColor(0,0,0);
         }
-        doc.setGState(new doc.GState({ opacity: 1 }));
-        doc.setTextColor(0,0,0);
-    }
+    };
+    
+    applyWatermark(doc, cfg);
     
     doc.setFillColor(13,93,78);
     doc.rect(0,0,210,45,'F');
@@ -851,12 +966,12 @@ async function downloadKontrolTagihanPDF(id) {
     doc.text(cfg.instansi1.pimpinan, 150, finalY+12, { align: 'right' });
     doc.text(cfg.instansi1.jabatan, 150, finalY+18, { align: 'right' });
     
-    // QR Code
     if (cfg.qr?.enabled) {
         try {
             const canvas = document.createElement('canvas');
             const qrText = `${cfg.qr.text}\nNo: TGH/${item.id}\nNama: ${item.nama}\nSisa: ${formatRupiah(sisa)}`;
-            await QRCode.toCanvas(canvas, qrText, { width: 60 });
+            const qrSize = parseInt(cfg.qr.size) || 80;
+            await QRCode.toCanvas(canvas, qrText, { width: qrSize });
             doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-25, pageHeight-30, 20, 20);
         } catch(e) {}
     }
@@ -1264,7 +1379,7 @@ function handleFabClick() {
     else openKontrolTagihanModal(); 
 }
 
-function refreshAllUI() { hitungSaldo(); renderCicilanList(); renderTitipanList(); renderTransaksiList(); renderKontrolTagihanList(); updateKontrolSummary(); }
+function refreshAllUI() { hitungSaldo(); renderCicilanList(); renderTitipanList(); renderTransaksiList(); renderKontrolTagihanList(); updateKontrolSummary(); updateAllRekap(); }
 
 function hitungSaldo() { 
     let s=0,m=0,k=0; 
@@ -1392,7 +1507,6 @@ function simpanCicilan() {
     if(!nama) return showToast('❌ Nama harus diisi!'); if(!total||total<1000) return showToast('❌ Total minimal Rp 1.000!'); if(!tenor||tenor<1) return showToast('❌ Tenor minimal 1!'); if(!nominal||nominal<1000) return showToast('❌ Nominal minimal Rp 1.000!'); if(!ke||ke<1) return showToast('❌ Cicilan ke- minimal 1!'); if(!tgl) return showToast('❌ Tanggal harus diisi!');
     const dibayar = nominal * ke, status = (dibayar >= total) ? 'lunas' : 'belum', jatuhFinal = status === 'lunas' ? '-' : (jatuh || '');
     
-    let isNew = false;
     if(id) { 
         const idx = cicilanList.findIndex(c=>c.id==id); 
         if(idx!==-1) {
@@ -1401,13 +1515,15 @@ function simpanCicilan() {
             const nominalTambahan = dibayar - oldDibayar;
             if (nominalTambahan > 0) {
                 catatKasMasukDariCicilan(nama, nominalTambahan, tgl);
+            } else if (nominalTambahan < 0) {
+                // Jika pengurangan pembayaran, hapus kelebihan kas (sederhananya diabaikan agar tidak double negative)
+                showToast('⚠️ Pengurangan nominal tidak mempengaruhi kas otomatis, periksa manual jika perlu');
             }
         }
         showToast('✅ Cicilan diupdate!'); 
     } else { 
         cicilanList.push({ id: Date.now(), nama, total, tenor, nominal, ke, tgl, jatuh:jatuhFinal, status, dibayar, logo_pilih });
         catatKasMasukDariCicilan(nama, nominal, tgl);
-        isNew = true;
         showToast('✅ Cicilan ditambahkan!'); 
     }
     localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList));
@@ -1460,7 +1576,16 @@ function tandaiDiambil(id) {
 }
 
 function hapusTransaksi(id) { if(confirm('Hapus transaksi?')) { kasKantor = kasKantor.filter(k=>k.id!==id); localStorage.setItem('auva_kas_kantor_v1', JSON.stringify(kasKantor)); refreshAllUI(); showToast('🗑️ Transaksi dihapus'); } }
-function hapusCicilan(id) { if(confirm('Hapus cicilan?')) { cicilanList = cicilanList.filter(c=>c.id!==id); localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList)); refreshAllUI(); showToast('🗑️ Cicilan dihapus'); } }
+function hapusCicilan(id) { 
+    if(confirm('⚠️ Hapus cicilan? Data kas terkait juga akan dihapus!')) { 
+        const cicilan = cicilanList.find(c=>c.id===id);
+        if(cicilan) hapusKasCicilan(cicilan.nama, id);
+        cicilanList = cicilanList.filter(c=>c.id!==id); 
+        localStorage.setItem('auva_cicilan_v1', JSON.stringify(cicilanList)); 
+        refreshAllUI(); 
+        showToast('🗑️ Cicilan dihapus'); 
+    } 
+}
 function hapusTitipan(id) { if(confirm('Hapus titipan?')) { titipanList = titipanList.filter(t=>t.id!==id); localStorage.setItem('auva_titipan_v1', JSON.stringify(titipanList)); refreshAllUI(); showToast('🗑️ Titipan dihapus'); } }
 
 // ==================== KONVERSI TITIPAN KE CICILAN ====================
@@ -1564,29 +1689,32 @@ async function downloadLaporanPDF() {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     
-    if (cfg.watermark?.enabled) {
-        const opacity = cfg.watermark.opacity || 0.15;
-        const text = cfg.watermark.text || 'DOKUMEN RESMI';
-        const fontSize = parseInt(cfg.watermark.fontsize) || 60;
-        const position = cfg.watermark.position || 'diagonal';
-        
-        doc.setTextColor(150, 150, 150);
-        doc.setFontSize(fontSize);
-        doc.setGState(new doc.GState({ opacity: opacity }));
-        
-        if (position === 'diagonal') {
-            doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
-        } else if (position === 'center') {
-            doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
-        } else if (position === 'tile') {
-            for (let y = 20; y < pageHeight; y += 80) {
-                for (let x = 20; x < pageWidth; x += 100) {
-                    doc.text(text, x, y, { angle: -30 });
+    const applyWatermark = (doc, cfg, pageWidth, pageHeight) => {
+        if (cfg.watermark?.enabled) {
+            const opacity = cfg.watermark.opacity || 0.15;
+            const text = cfg.watermark.text || 'DOKUMEN RESMI';
+            const fontSize = parseInt(cfg.watermark.fontsize) || 60;
+            const position = cfg.watermark.position || 'diagonal';
+            doc.setTextColor(150, 150, 150);
+            doc.setFontSize(fontSize);
+            doc.setGState(new doc.GState({ opacity: opacity }));
+            if (position === 'diagonal') {
+                doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+            } else if (position === 'center') {
+                doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
+            } else if (position === 'tile') {
+                for (let y = 20; y < pageHeight; y += 80) {
+                    for (let x = 20; x < pageWidth; x += 100) {
+                        doc.text(text, x, y, { angle: -30 });
+                    }
                 }
             }
+            doc.setGState(new doc.GState({ opacity: 1 }));
+            doc.setTextColor(0,0,0);
         }
-        doc.setGState(new doc.GState({ opacity: 1 }));
-    }
+    };
+    
+    applyWatermark(doc, cfg, pageWidth, pageHeight);
     
     doc.setFillColor(13, 93, 78);
     doc.rect(0, 0, 210, 55, 'F');
@@ -1680,28 +1808,72 @@ async function downloadLaporanPDF() {
         }
     });
     
-    const finalY = doc.lastAutoTable.finalY + 25;
+    // Ringkasan Cicilan
+    let finalY = doc.lastAutoTable.finalY + 15;
+    doc.setFontSize(11);
+    doc.text('📋 RINGKASAN CICILAN', 14, finalY);
+    const cicilanBody = cicilanList.slice(0,15).map(c => [c.nama, formatRupiah(c.total), formatRupiah(c.dibayar), formatRupiah(c.total-c.dibayar), c.status==='lunas'?'Lunas':'Belum']);
+    doc.autoTable({
+        startY: finalY+5,
+        head: [['Nama', 'Total', 'Dibayar', 'Sisa', 'Status']],
+        body: cicilanBody,
+        theme: 'striped',
+        headStyles: { fillColor: [13, 93, 78], textColor: [255, 255, 255] },
+        styles: { fontSize: 8 },
+        margin: { left: 14, right: 14 }
+    });
     
+    // Ringkasan Titipan
+    finalY = doc.lastAutoTable.finalY + 15;
+    doc.text('💼 RINGKASAN TITIPAN', 14, finalY);
+    const titipanBody = titipanList.slice(0,15).map(t => [t.penerima, t.penitip, formatRupiah(t.nominal), formatTanggal(t.tgl), t.status==='aktif'?'Belum Diambil':'Sudah Diambil']);
+    doc.autoTable({
+        startY: finalY+5,
+        head: [['Penerima', 'Penitip', 'Nominal', 'Tanggal', 'Status']],
+        body: titipanBody,
+        theme: 'striped',
+        headStyles: { fillColor: [13, 93, 78], textColor: [255, 255, 255] },
+        styles: { fontSize: 8 },
+        margin: { left: 14, right: 14 }
+    });
+    
+    // Ringkasan Kontrol Bayar
+    finalY = doc.lastAutoTable.finalY + 15;
+    doc.text('💰 RINGKASAN KONTROL BAYAR', 14, finalY);
+    const kontrolBody = kontrolTagihanList.slice(0,15).map(x => {
+        const sisa = x.totalTagihan - (x.terbayar||0);
+        return [x.nama, formatRupiah(x.totalTagihan), formatRupiah(x.terbayar||0), formatRupiah(sisa), sisa<=0?'Lunas':'Belum'];
+    });
+    doc.autoTable({
+        startY: finalY+5,
+        head: [['Nama', 'Total', 'Terbayar', 'Sisa', 'Status']],
+        body: kontrolBody,
+        theme: 'striped',
+        headStyles: { fillColor: [13, 93, 78], textColor: [255, 255, 255] },
+        styles: { fontSize: 8 },
+        margin: { left: 14, right: 14 }
+    });
+    
+    const tandaTanganY = doc.lastAutoTable.finalY + 25;
     doc.setFontSize(10);
     const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
     const ttdMode = cfg.settings?.ttd_mode || 'both';
     
-    doc.text(`Surabaya, ${today}`, pageWidth - 20, finalY, { align: 'right' });
+    doc.text(`Surabaya, ${today}`, pageWidth - 20, tandaTanganY, { align: 'right' });
     
     const namaPimpinan = cfg.instansi1.pimpinan || 'Dr. Mauhibur Rokhman, Lc., MIRKH';
     const jabatanPimpinan = cfg.instansi1.jabatan || 'Pembimbing';
     
     if (ttdMode === 'both' || ttdMode === 'single') {
-        doc.text(namaPimpinan, pageWidth - 20, finalY + 12, { align: 'right' });
-        doc.text(jabatanPimpinan, pageWidth - 20, finalY + 18, { align: 'right' });
+        doc.text(namaPimpinan, pageWidth - 20, tandaTanganY + 12, { align: 'right' });
+        doc.text(jabatanPimpinan, pageWidth - 20, tandaTanganY + 18, { align: 'right' });
     }
     
     if (cfg.instansi2?.aktif && ttdMode === 'both') {
         const namaPimpinan2 = cfg.instansi2.pimpinan || 'Dr. Mauhibur Rokhman, Lc., MIRKH';
         const jabatanPimpinan2 = cfg.instansi2.jabatan || 'Pembimbing';
-        
-        doc.text(namaPimpinan2, pageWidth - 20, finalY + 32, { align: 'right' });
-        doc.text(jabatanPimpinan2, pageWidth - 20, finalY + 38, { align: 'right' });
+        doc.text(namaPimpinan2, pageWidth - 20, tandaTanganY + 32, { align: 'right' });
+        doc.text(jabatanPimpinan2, pageWidth - 20, tandaTanganY + 38, { align: 'right' });
     }
     
     const docNo = `LAP-KEU/${new Date().getMonth()+1}${new Date().getFullYear().toString().slice(-2)}/${String(kasKantor.length).padStart(3,'0')}`;
@@ -1724,6 +1896,33 @@ async function downloadTagihanPDF(cicilanId) {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     
+    const applyWatermark = (doc, cfg, pageWidth, pageHeight) => {
+        if (cfg.watermark?.enabled) {
+            const opacity = cfg.watermark.opacity || 0.15;
+            const text = cfg.watermark.text || 'DOKUMEN RESMI';
+            const fontSize = parseInt(cfg.watermark.fontsize) || 60;
+            const position = cfg.watermark.position || 'diagonal';
+            doc.setTextColor(150,150,150);
+            doc.setFontSize(fontSize);
+            doc.setGState(new doc.GState({ opacity: opacity }));
+            if (position === 'diagonal') {
+                doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+            } else if (position === 'center') {
+                doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
+            } else if (position === 'tile') {
+                for (let y = 20; y < pageHeight; y += 80) {
+                    for (let x = 20; x < pageWidth; x += 100) {
+                        doc.text(text, x, y, { angle: -30 });
+                    }
+                }
+            }
+            doc.setGState(new doc.GState({ opacity: 1 }));
+            doc.setTextColor(0,0,0);
+        }
+    };
+    
+    applyWatermark(doc, cfg, pageWidth, pageHeight);
+    
     const pakaiPT = cicilan.logo_pilih === 'pt';
     const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
     const namaInstansi = instansi.nama;
@@ -1732,26 +1931,6 @@ async function downloadTagihanPDF(cicilanId) {
     const pimpinanInstansi = instansi.pimpinan;
     const jabatanInstansi = instansi.jabatan;
     const logoInstansi = instansi.logo;
-    
-    if (cfg.watermark.enabled) {
-        doc.setTextColor(150,150,150);
-        doc.setFontSize(cfg.watermark.fontsize || 60);
-        doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 }));
-        const pos = cfg.watermark.position || 'diagonal';
-        if (pos === 'diagonal') {
-            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
-        } else if (pos === 'center') {
-            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
-        } else if (pos === 'tile') {
-            for (let y = 20; y < pageHeight; y += 80) {
-                for (let x = 20; x < pageWidth; x += 100) {
-                    doc.text(cfg.watermark.text, x, y, { angle: -30 });
-                }
-            }
-        }
-        doc.setGState(new doc.GState({ opacity: 1 }));
-        doc.setTextColor(0,0,0);
-    }
     
     doc.setFillColor(13,93,78);
     doc.rect(0,0,210,50,'F');
@@ -1818,7 +1997,8 @@ async function downloadTagihanPDF(cicilanId) {
         try {
             const canvas = document.createElement('canvas');
             const qrText = `${cfg.qr.text}\nNo: ${nomorInvoice}\nJamaah: ${cicilan.nama}\nSisa: ${formatRupiah(sisa)}`;
-            await QRCode.toCanvas(canvas, qrText, { width: cfg.qr.size || 80, margin: 1 });
+            const qrSize = parseInt(cfg.qr.size) || 80;
+            await QRCode.toCanvas(canvas, qrText, { width: qrSize });
             doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-30, pageHeight-35, 22, 22);
         } catch(e) {}
     }
@@ -1837,6 +2017,33 @@ async function downloadKwitansiPDF(titipanId) {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     
+    const applyWatermark = (doc, cfg, pageWidth, pageHeight) => {
+        if (cfg.watermark?.enabled) {
+            const opacity = cfg.watermark.opacity || 0.15;
+            const text = cfg.watermark.text || 'DOKUMEN RESMI';
+            const fontSize = parseInt(cfg.watermark.fontsize) || 60;
+            const position = cfg.watermark.position || 'diagonal';
+            doc.setTextColor(150,150,150);
+            doc.setFontSize(fontSize);
+            doc.setGState(new doc.GState({ opacity: opacity }));
+            if (position === 'diagonal') {
+                doc.text(text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
+            } else if (position === 'center') {
+                doc.text(text, pageWidth/2, pageHeight/2, { align: 'center' });
+            } else if (position === 'tile') {
+                for (let y = 20; y < pageHeight; y += 80) {
+                    for (let x = 20; x < pageWidth; x += 100) {
+                        doc.text(text, x, y, { angle: -30 });
+                    }
+                }
+            }
+            doc.setGState(new doc.GState({ opacity: 1 }));
+            doc.setTextColor(0,0,0);
+        }
+    };
+    
+    applyWatermark(doc, cfg, pageWidth, pageHeight);
+    
     const pakaiPT = titipan.logo_pilih === 'pt';
     const instansi = pakaiPT ? cfg.instansi1 : cfg.instansi2;
     const namaInstansi = instansi.nama;
@@ -1845,26 +2052,6 @@ async function downloadKwitansiPDF(titipanId) {
     const pimpinanInstansi = instansi.pimpinan;
     const jabatanInstansi = instansi.jabatan;
     const logoInstansi = instansi.logo;
-    
-    if (cfg.watermark.enabled) {
-        doc.setTextColor(150,150,150);
-        doc.setFontSize(cfg.watermark.fontsize || 60);
-        doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 }));
-        const pos = cfg.watermark.position || 'diagonal';
-        if (pos === 'diagonal') {
-            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { angle: -45, align: 'center' });
-        } else if (pos === 'center') {
-            doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
-        } else if (pos === 'tile') {
-            for (let y = 20; y < pageHeight; y += 80) {
-                for (let x = 20; x < pageWidth; x += 100) {
-                    doc.text(cfg.watermark.text, x, y, { angle: -30 });
-                }
-            }
-        }
-        doc.setGState(new doc.GState({ opacity: 1 }));
-        doc.setTextColor(0,0,0);
-    }
     
     doc.setFillColor(13,93,78);
     doc.rect(0,0,210,50,'F');
@@ -1929,7 +2116,8 @@ async function downloadKwitansiPDF(titipanId) {
         try {
             const canvas = document.createElement('canvas');
             const qrText = `${cfg.qr.text}\nNo: ${nomorKwitansi}\nPenerima: ${titipan.penerima}\nNominal: ${formatRupiah(titipan.nominal)}`;
-            await QRCode.toCanvas(canvas, qrText, { width: cfg.qr.size || 80, margin: 1 });
+            const qrSize = parseInt(cfg.qr.size) || 80;
+            await QRCode.toCanvas(canvas, qrText, { width: qrSize });
             doc.addImage(canvas.toDataURL(), 'PNG', pageWidth-30, pageHeight-35, 22, 22);
         } catch(e) {}
     }
@@ -1948,6 +2136,19 @@ function downloadLaporanExcel() {
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wsTitipan), 'Titipan');
     const wsKontrol = kontrolTagihanList.map(x=>({ Nama: x.nama, TotalTagihan: x.totalTagihan, Terbayar: x.terbayar||0, Sisa: x.totalTagihan-(x.terbayar||0), Keterangan: x.keterangan, TanggalBuat: x.tglBuat }));
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(wsKontrol), 'KontrolBayar');
+    
+    // Sheet Rekap
+    const totalTertagih = cicilanList.reduce((s,c) => s + c.total, 0) + titipanList.filter(t=>t.status==='aktif').reduce((s,t)=>s+t.nominal,0) + kontrolTagihanList.reduce((s,x)=>s+x.totalTagihan,0);
+    const totalTerbayar = cicilanList.reduce((s,c) => s + c.dibayar, 0) + titipanList.filter(t=>t.status==='diambil').reduce((s,t)=>s+t.nominal,0) + kontrolTagihanList.reduce((s,x)=>s+(x.terbayar||0),0);
+    const rekapData = [
+        ['Modul', 'Jumlah Lunas', 'Jumlah Belum', 'Total Tertagih', 'Total Terbayar', 'Sisa'],
+        ['Cicilan', cicilanList.filter(c=>c.status==='lunas').length, cicilanList.filter(c=>c.status==='belum').length, cicilanList.reduce((s,c)=>s+c.total,0), cicilanList.reduce((s,c)=>s+c.dibayar,0), cicilanList.reduce((s,c)=>s+(c.total-c.dibayar),0)],
+        ['Titipan (Aktif)', '-', titipanList.filter(t=>t.status==='aktif').length, titipanList.filter(t=>t.status==='aktif').reduce((s,t)=>s+t.nominal,0), '-', titipanList.filter(t=>t.status==='aktif').reduce((s,t)=>s+t.nominal,0)],
+        ['Kontrol Bayar', kontrolTagihanList.filter(x=>(x.totalTagihan-(x.terbayar||0))<=0).length, kontrolTagihanList.filter(x=>(x.totalTagihan-(x.terbayar||0))>0).length, kontrolTagihanList.reduce((s,x)=>s+x.totalTagihan,0), kontrolTagihanList.reduce((s,x)=>s+(x.terbayar||0),0), kontrolTagihanList.reduce((s,x)=>s+(x.totalTagihan-(x.terbayar||0)),0)],
+        ['TOTAL KESELURUHAN', '', '', totalTertagih, totalTerbayar, totalTertagih - totalTerbayar]
+    ];
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rekapData.map(r => ({ 'Rekap': r[0], 'Lunas': r[1], 'Belum': r[2], 'Tertagih': r[3], 'Terbayar': r[4], 'Sisa': r[5] }))), 'Rekap');
+    
     XLSX.writeFile(wb, `Laporan_Keuangan_${new Date().toISOString().split('T')[0]}.xlsx`);
     showToast('📊 Excel berhasil didownload!');
 }
