@@ -3,19 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Haji & Umroh - Database Manager</title>
+    <title>Haji & Umroh - Multi Database Dinamis</title>
     
-    <!-- PWA Meta Tags -->
     <link rel="manifest" href="data:application/manifest+json,{
         %22name%22:%22Haji%20%26%20Umroh%22,
         %22short_name%22:%22HajiUmroh%22,
         %22start_url%22:%22.%22,
         %22display%22:%22standalone%22,
         %22background_color%22:%22#1b5e20%22,
-        %22theme_color%22:%22#1b5e20%22,
-        %22icons%22:[
-            {%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%231b5e20'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='white'%3E🕋%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22any%22,%22type%22:%22image/svg+xml%22%7D
-        ]
+        %22theme_color%22:%22#1b5e20%22
     }">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -31,11 +27,11 @@
         body { background: var(--bg-body); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         .app { max-width: 450px; width: 100%; margin: 0 auto; background: var(--bg-app); min-height: 100vh; box-shadow: 0 0 20px rgba(0,0,0,0.1); position: relative; }
         
-        /* Login Page - Tanpa Password */
+        /* Login Page */
         .login-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; background: linear-gradient(135deg, #1b5e20, #2e7d32); }
         .login-box { background: white; border-radius: 28px; padding: 30px 25px; width: 100%; max-width: 350px; text-align: center; }
         .login-box h2 { color: #1b5e20; margin-bottom: 20px; }
-        .login-box select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 40px; font-size: 1rem; }
+        .login-box select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 40px; font-size: 1rem; background: white; }
         .btn-login { background: #1b5e20; color: white; border: none; padding: 14px; border-radius: 40px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
         
         .main-app { display: none; }
@@ -61,27 +57,41 @@
         .menu-icon { font-size: 1.8rem; margin-bottom: 6px; }
         .menu-label { font-weight: 700; font-size: 0.75rem; color: var(--text-primary); }
         
-        /* Database Styles */
+        /* Multi Database Styles */
+        .db-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .db-select { flex: 2; padding: 10px; border: 1px solid var(--border); border-radius: 30px; background: var(--bg-app); color: var(--text-primary); font-weight: bold; }
+        .db-actions-mini { display: flex; gap: 8px; }
+        .db-actions-mini button { background: #1b5e20; color: white; border: none; padding: 8px 12px; border-radius: 30px; font-size: 0.7rem; cursor: pointer; }
+        .db-actions-mini button.danger { background: #c62828; }
+        .db-actions-mini button.warning { background: #ff9800; }
+        .db-stats { font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 10px; }
+        
         .db-tab { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--border); }
         .db-tab button { flex: 1; background: none; border: none; padding: 10px; font-weight: bold; cursor: pointer; color: var(--text-primary); }
         .db-tab button.active { color: #1b5e20; border-bottom: 2px solid #1b5e20; }
+        
         .db-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .db-actions button { background: #1b5e20; color: white; border: none; padding: 8px 12px; border-radius: 30px; font-size: 0.75rem; cursor: pointer; }
         .db-actions button.danger { background: #c62828; }
         .db-actions button.warning { background: #ff9800; }
+        .db-actions button.copy-btn { background: #2196f3; }
+        
         .search-bar { margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
         .search-bar input { flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 30px; background: var(--bg-app); color: var(--text-primary); }
         .search-bar select { padding: 10px; border: 1px solid var(--border); border-radius: 30px; background: var(--bg-app); color: var(--text-primary); }
+        
         .table-container { overflow-x: auto; margin-bottom: 15px; }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
         .data-table th, .data-table td { border: 1px solid var(--border); padding: 8px; text-align: left; }
-        .data-table th { background: var(--bg-card); font-weight: bold; }
+        .data-table th { background: var(--bg-card); font-weight: bold; cursor: pointer; }
         .data-table tr:nth-child(even) { background: var(--bg-card); }
+        
         .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
         .pagination button { background: var(--bg-card); border: 1px solid var(--border); padding: 5px 10px; border-radius: 20px; cursor: pointer; }
         .pagination button.active { background: #1b5e20; color: white; }
+        
         .field-manager { margin-bottom: 20px; padding: 15px; background: var(--bg-card); border-radius: 16px; }
-        .field-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; }
+        .field-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; flex-wrap: wrap; }
         .field-item input { flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-app); color: var(--text-primary); }
         
         /* Akomodasi */
@@ -91,9 +101,6 @@
         .list-akomodasi { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; max-height: 400px; overflow-y: auto; }
         .akomodasi-item-card { background: var(--bg-card); border-radius: 16px; padding: 12px; border: 1px solid var(--border); }
         .akomodasi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
-        .akomodasi-nama { font-weight: bold; font-size: 1rem; }
-        .akomodasi-stats { font-size: 0.7rem; color: var(--text-secondary); }
-        .akomodasi-actions { display: flex; gap: 8px; }
         .btn-edit { background: #ff9800; color: white; border: none; padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; }
         .btn-hapus-item { background: #c62828; color: white; border: none; padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; }
         .btn-akomodasi { background: #1b5e20; color: white; border: none; padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; }
@@ -107,65 +114,50 @@
         .status-lunas-badge { background: #2e7d32; color: white; }
         .status-dp-badge { background: #f9a825; color: white; }
         
+        /* Other existing styles */
         .grafik-container { background: var(--bg-card); border-radius: 20px; padding: 15px; margin: 15px 0; border: 1px solid var(--border); }
         .grafik-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
-        .grafik-header select { padding: 8px 12px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg-app); color: var(--text-primary); }
         canvas { max-height: 250px; width: 100%; }
         .stat-tertinggi { background: #e8f5e9; padding: 10px; border-radius: 16px; text-align: center; margin-top: 10px; }
         body.dark .stat-tertinggi { background: #1b5e20; color: white; }
         
-        .notif-card { background: #fff3e0; border-left: 5px solid #f9a825; border-radius: 16px; padding: 12px; margin-bottom: 12px; }
-        body.dark .notif-card { background: #3a2a1a; color: white; }
-        .notif-card.danger { background: #ffebee; border-left-color: #c62828; }
-        body.dark .notif-card.danger { background: #3a1a1a; }
-        .notif-card.warning { background: #fff8e1; border-left-color: #ff8f00; }
-        body.dark .notif-card.warning { background: #3a2a10; }
-        .btn-wa-reminder { background: #25D366; color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; margin-top: 8px; }
-        
         .dashboard-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
         .card-dash { background: var(--card-dash); color: white; padding: 15px; border-radius: 20px; text-align: center; }
         .card-dash h3 { font-size: 1.5rem; }
-        .card-dash p { font-size: 0.7rem; opacity: 0.9; }
         
         .rekap-bulanan { background: var(--bg-card); border-radius: 20px; padding: 15px; margin: 15px 0; border: 1px solid var(--border); }
         .rekap-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .rekap-header select { padding: 8px 12px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg-app); color: var(--text-primary); }
-        .rekap-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); color: var(--text-primary); }
-        .rekap-total { display: flex; justify-content: space-between; padding: 15px 0; margin-top: 10px; border-top: 2px solid #1b5e20; font-weight: bold; color: var(--text-primary); }
+        .rekap-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .rekap-total { display: flex; justify-content: space-between; padding: 15px 0; margin-top: 10px; border-top: 2px solid #1b5e20; font-weight: bold; }
         .btn-cetak { background: #1b5e20; color: white; border: none; padding: 12px; border-radius: 40px; width: 100%; margin-top: 15px; font-weight: bold; cursor: pointer; }
         
-        /* Overlay Styles */
-        .sheet-overlay, .admin-overlay, .jamaah-overlay, .dashboard-overlay, .invoice-overlay, .rekap-overlay, .dokumen-overlay, .backup-overlay, .akomodasi-overlay, .preview-overlay, .wabroadcast-overlay, .scan-overlay, .pindah-overlay, .edit-overlay, .payment-overlay, .db-overlay, .field-overlay {
+        /* Overlay */
+        .sheet-overlay, .admin-overlay, .jamaah-overlay, .dashboard-overlay, .invoice-overlay, .rekap-overlay, .dokumen-overlay, .backup-overlay, .akomodasi-overlay, .preview-overlay, .wabroadcast-overlay, .scan-overlay, .pindah-overlay, .edit-overlay, .payment-overlay, .db-overlay, .field-overlay, .input-overlay, .copy-target-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 1000; display: flex; align-items: flex-end; visibility: hidden; opacity: 0; transition: 0.2s;
         }
-        .sheet-overlay.active, .admin-overlay.active, .jamaah-overlay.active, .dashboard-overlay.active, .invoice-overlay.active, .rekap-overlay.active, .dokumen-overlay.active, .backup-overlay.active, .akomodasi-overlay.active, .preview-overlay.active, .wabroadcast-overlay.active, .scan-overlay.active, .pindah-overlay.active, .edit-overlay.active, .payment-overlay.active, .db-overlay.active, .field-overlay.active { visibility: visible; opacity: 1; }
-        .sheet, .admin-panel, .jamaah-panel, .dashboard-panel, .invoice-panel, .rekap-panel, .dokumen-panel, .backup-panel, .akomodasi-panel, .preview-panel, .wabroadcast-panel, .scan-panel, .pindah-panel, .edit-panel, .payment-panel, .db-panel, .field-panel {
+        .sheet-overlay.active, .admin-overlay.active, .jamaah-overlay.active, .dashboard-overlay.active, .invoice-overlay.active, .rekap-overlay.active, .dokumen-overlay.active, .backup-overlay.active, .akomodasi-overlay.active, .preview-overlay.active, .wabroadcast-overlay.active, .scan-overlay.active, .pindah-overlay.active, .edit-overlay.active, .payment-overlay.active, .db-overlay.active, .field-overlay.active, .input-overlay.active, .copy-target-overlay.active { visibility: visible; opacity: 1; }
+        .sheet, .admin-panel, .jamaah-panel, .dashboard-panel, .invoice-panel, .rekap-panel, .dokumen-panel, .backup-panel, .akomodasi-panel, .preview-panel, .wabroadcast-panel, .scan-panel, .pindah-panel, .edit-panel, .payment-panel, .db-panel, .field-panel, .input-panel, .copy-target-panel {
             background: var(--bg-sheet); width: 100%; max-width: 450px; border-radius: 28px 28px 0 0; padding: 18px 16px 25px; transform: translateY(100%); transition: transform 0.3s; max-height: 85vh; overflow-y: auto;
         }
-        .active .sheet, .active .admin-panel, .active .jamaah-panel, .active .dashboard-panel, .active .invoice-panel, .active .rekap-panel, .active .dokumen-panel, .active .backup-panel, .active .akomodasi-panel, .active .preview-panel, .active .wabroadcast-panel, .active .scan-panel, .active .pindah-panel, .active .edit-panel, .active .payment-panel, .active .db-panel, .active .field-panel { transform: translateY(0); }
+        .active .sheet, .active .admin-panel, .active .jamaah-panel, .active .dashboard-panel, .active .invoice-panel, .active .rekap-panel, .active .dokumen-panel, .active .backup-panel, .active .akomodasi-panel, .active .preview-panel, .active .wabroadcast-panel, .active .scan-panel, .active .pindah-panel, .active .edit-panel, .active .payment-panel, .active .db-panel, .active .field-panel, .active .input-panel, .active .copy-target-panel { transform: translateY(0); }
         
-        .sheet-header, .admin-header, .jamaah-header, .dashboard-header, .invoice-header, .rekap-header-panel, .dokumen-header, .backup-header, .akomodasi-header, .preview-header, .wabroadcast-header, .scan-header, .pindah-header, .edit-header, .payment-header, .db-header, .field-header {
+        .sheet-header, .admin-header, .jamaah-header, .dashboard-header, .invoice-header, .rekap-header-panel, .dokumen-header, .backup-header, .akomodasi-header, .preview-header, .wabroadcast-header, .scan-header, .pindah-header, .edit-header, .payment-header, .db-header, .field-header, .input-header, .copy-target-header {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid var(--border);
         }
-        .sheet-judul, .admin-judul, .jamaah-judul, .dashboard-judul, .invoice-judul, .rekap-judul, .dokumen-judul, .backup-judul, .akomodasi-judul, .preview-judul, .wabroadcast-judul, .scan-judul, .pindah-judul, .edit-judul, .payment-judul, .db-judul, .field-judul { font-size: 1.1rem; font-weight: 800; color: #1b5e20; }
+        .sheet-judul, .admin-judul, .jamaah-judul, .dashboard-judul, .invoice-judul, .rekap-judul, .dokumen-judul, .backup-judul, .akomodasi-judul, .preview-judul, .wabroadcast-judul, .scan-judul, .pindah-judul, .edit-judul, .payment-judul, .db-judul, .field-judul, .input-judul, .copy-target-judul { font-size: 1.1rem; font-weight: 800; color: #1b5e20; }
         .btn-kembali, .btn-tutup { background: #ecf3fa; border: none; padding: 6px 16px; border-radius: 40px; font-weight: 600; cursor: pointer; }
         body.dark .btn-kembali, body.dark .btn-tutup { background: #3a3a3a; color: white; }
         
         .sub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 6px; }
         .sub-item { background: var(--bg-card); border-radius: 14px; padding: 10px 4px; text-align: center; cursor: pointer; border: 1px solid var(--border); }
         .sub-icon { font-size: 1.3rem; }
-        .sub-nama { font-size: 0.65rem; font-weight: 600; color: var(--text-primary); }
+        .sub-nama { font-size: 0.65rem; font-weight: 600; }
         
         .list-jamaah { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; max-height: 400px; overflow-y: auto; }
         .jamaah-card { background: var(--bg-card); padding: 12px; border-radius: 16px; border-left: 5px solid #1b5e20; border: 1px solid var(--border); display: flex; align-items: flex-start; gap: 10px; }
         .jamaah-info { flex: 1; }
-        .jamaah-card h4 { font-size: 0.9rem; color: var(--text-primary); }
-        .jamaah-card p { font-size: 0.7rem; color: var(--text-secondary); }
-        .status-lunas { color: #2e7d32; font-weight: bold; }
-        .status-dp { color: #f9a825; }
         .btn-aksi { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
         .btn-aksi button { background: #eef2fa; border: none; padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; }
-        body.dark .btn-aksi button { background: #3a3a3a; color: white; }
         .btn-wa { background: #25D366; color: white; }
         .btn-invoice { background: #1b5e20; color: white; }
         .btn-hapus { background: #ffebee; color: #c62828; }
@@ -186,7 +178,6 @@
         .btn-tambah { background: #1b5e20; color: white; border: none; padding: 10px; border-radius: 40px; font-weight: bold; cursor: pointer; }
         .filter-status { display: flex; gap: 8px; margin: 10px 0; }
         .filter-status button { flex: 1; background: #ecf3fa; border: none; padding: 6px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; }
-        body.dark .filter-status button { background: #3a3a3a; color: white; }
         .btn-impexp { display: flex; gap: 10px; margin: 10px 0; }
         .btn-impexp button, .btn-impexp label { flex: 1; background: #1b5e20; color: white; border: none; padding: 10px; border-radius: 40px; font-weight: 600; text-align: center; cursor: pointer; }
         .admin-form { display: flex; flex-direction: column; gap: 12px; }
@@ -195,8 +186,8 @@
         .btn-simpan { background: #1b5e20; color: white; border: none; padding: 12px; border-radius: 40px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         
         .invoice-box { padding: 15px; background: var(--bg-sheet); }
-        .invoice-header-invoice { text-align: center; border-bottom: 2px dashed var(--border); padding-bottom: 10px; margin-bottom: 15px; color: var(--text-primary); }
-        .invoice-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--text-primary); }
+        .invoice-header-invoice { text-align: center; border-bottom: 2px dashed var(--border); padding-bottom: 10px; margin-bottom: 15px; }
+        .invoice-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
         .btn-print { background: #1b5e20; color: white; border: none; padding: 12px; border-radius: 40px; width: 100%; margin-top: 15px; font-weight: bold; cursor: pointer; }
         
         .payment-list { margin-top: 15px; max-height: 200px; overflow-y: auto; }
@@ -208,6 +199,7 @@
 <body>
 <div id="installPopup" class="install-popup"><span>📱 Install Aplikasi Haji & Umroh</span><button id="installBtn">Install</button></div>
 
+<!-- LOGIN PAGE (Tanpa Password) -->
 <div id="loginPage" class="login-container">
     <div class="login-box">
         <h2>🕋 PT Auva Eqtena</h2>
@@ -217,10 +209,11 @@
             <option value="karyawan">👤 Karyawan</option>
             <option value="pimpinan">📊 Pimpinan (Lihat saja)</option>
         </select>
-        <button class="btn-login" id="loginBtn">🔐 Login</button>
+        <button class="btn-login" id="loginBtn">🔐 Masuk</button>
     </div>
 </div>
 
+<!-- MAIN APP -->
 <div id="mainApp" class="main-app">
     <div class="app">
         <div class="header">
@@ -243,83 +236,124 @@
     </div>
 </div>
 
-<!-- Panel Database -->
+<!-- ======================== MULTI DATABASE DINAMIS PANEL ======================== -->
 <div id="dbPanel" class="db-overlay">
     <div class="db-panel">
         <div class="db-header">
-            <span class="db-judul">📁 Database Haji & Umroh</span>
+            <span class="db-judul">📁 Multi Database Dinamis</span>
             <button class="btn-tutup" id="tutupDb">Tutup</button>
         </div>
+        
+        <!-- Tab Haji / Umroh -->
         <div class="db-tab">
             <button id="dbTabHaji" class="active">🕋 Database HAJI</button>
             <button id="dbTabUmroh">🕌 Database UMROH</button>
         </div>
-        <div class="db-actions">
-            <button id="tambahDatabaseBtn">➕ Tambah database</button>
-            <button id="kelolaFieldBtn">⚙️ Kelola Field Dinamis</button>
-            <button id="exportExcelBtn">📎 Export ke Excel</button>
-            <label for="importExcelInput" style="background:#1b5e20; color:white; padding:8px 12px; border-radius:30px; font-size:0.75rem; cursor:pointer;">📂 IMPORT EXCEL</label>
-            <input type="file" id="importExcelInput" accept=".csv,.xlsx" style="display:none">
-            <button id="hapusSemuaBtn" class="danger">🗑️ HAPUS SEMUA database</button>
+        
+        <!-- Header dengan Pilih Database -->
+        <div class="db-header-bar">
+            <select id="dbSelect" class="db-select"></select>
+            <div class="db-actions-mini">
+                <button id="tambahDbBtn" title="Tambah Database">➕</button>
+                <button id="editDbBtn" class="warning" title="Edit Nama Database">✏️</button>
+                <button id="hapusDbBtn" class="danger" title="Hapus Database">🗑️</button>
+            </div>
         </div>
+        <div id="dbStats" class="db-stats"></div>
+        
+        <!-- Aksi Tombol Database -->
+        <div class="db-actions">
+            <button id="kelolaFieldBtn">⚙️ Kelola Field</button>
+            <button id="exportExcelBtn">📎 Export Excel</button>
+            <label for="importExcelInput" style="background:#1b5e20; color:white; padding:8px 12px; border-radius:30px; font-size:0.75rem; cursor:pointer;">📂 IMPORT</label>
+            <input type="file" id="importExcelInput" accept=".csv,.xlsx" style="display:none">
+            <button id="hapusSemuaBtn" class="danger">🗑️ Hapus Semua</button>
+        </div>
+        
+        <!-- Tombol Copy ke Akomodasi -->
+        <div class="db-actions">
+            <button id="pilihSemuaBtn" style="background:#607d8b;">☑️ Pilih Semua</button>
+            <button id="hapusPilihanBtn" style="background:#607d8b;">◻️ Hapus Pilihan</button>
+            <button id="copyYangDipilihBtn" class="copy-btn">📋 Copy yang Dipilih</button>
+            <button id="copySemuaBtn" class="copy-btn">📋 Copy Semua</button>
+        </div>
+        
+        <!-- Tambah Data Baru -->
+        <div class="db-actions">
+            <button id="tambahDataBtn">➕ Tambah Data Baru</button>
+        </div>
+        
+        <!-- Pencarian -->
         <div class="search-bar">
-            <input type="text" id="dbSearchInput" placeholder="🔍 Cari nama jamaah...">
-            <select id="dbPerPageSelect">
-                <option value="10">10 per halaman</option>
-                <option value="20">20 per halaman</option>
-                <option value="50">50 per halaman</option>
-            </select>
+            <input type="text" id="dbSearchInput" placeholder="🔍 Cari...">
+            <select id="dbPerPageSelect"><option value="10">10 per halaman</option><option value="20">20</option><option value="50">50</option></select>
             <button id="resetUrutanBtn">🔄 Reset</button>
         </div>
+        
+        <!-- Tabel Data -->
         <div class="table-container" id="dbTableContainer"></div>
         <div class="pagination" id="dbPagination"></div>
-        <div class="db-actions" style="margin-top:15px;">
-            <button id="shareSemuaWaBtn">📱 SHARE SEMUA JAMAAH KE WA</button>
-            <button id="backupDatabaseBtn">☁️ BACKUP DATABASE</button>
-            <label for="restoreDatabaseInput" style="background:#ff9800; color:white; padding:8px 12px; border-radius:30px; font-size:0.75rem; cursor:pointer;">📥 RESTORE DATABASE</label>
+        
+        <!-- Tombol Bawah -->
+        <div class="db-actions">
+            <button id="shareSemuaWaBtn">📱 SHARE SEMUA KE WA</button>
+            <button id="backupDatabaseBtn">☁️ BACKUP</button>
+            <label for="restoreDatabaseInput" style="background:#ff9800; color:white; padding:8px 12px; border-radius:30px; font-size:0.75rem; cursor:pointer;">📥 RESTORE</label>
             <input type="file" id="restoreDatabaseInput" accept=".json" style="display:none">
         </div>
     </div>
 </div>
 
-<!-- Panel Kelola Field Dinamis -->
+<!-- Panel Pilih Target Akomodasi -->
+<div id="copyTargetPanel" class="copy-target-overlay">
+    <div class="copy-target-panel">
+        <div class="copy-target-header">
+            <span class="copy-target-judul">📋 Pilih Target Akomodasi</span>
+            <button class="btn-tutup" id="tutupCopyTarget">Tutup</button>
+        </div>
+        <div id="copyTargetForm" class="input-jamaah">
+            <select id="targetBusSelect">
+                <option value="">-- Pilih Bus (Opsional) --</option>
+            </select>
+            <select id="targetHotelSelect">
+                <option value="">-- Pilih Hotel (Opsional) --</option>
+            </select>
+            <input type="text" id="targetKamarInput" placeholder="Nomor Kamar (Opsional)">
+            <div class="db-actions" style="margin-top:15px;">
+                <button id="konfirmasiCopyBtn" class="btn-tambah">✅ Copy ke Akomodasi</button>
+            </div>
+        </div>
+        <div id="copyStatusMsg" style="margin-top:15px; font-size:0.8rem; color:green;"></div>
+    </div>
+</div>
+
+<!-- Panel Input Data Baru -->
+<div id="inputDataPanel" class="input-overlay">
+    <div class="input-panel">
+        <div class="input-header">
+            <span class="input-judul" id="inputJudul">➕ Tambah Data</span>
+            <button class="btn-tutup" id="tutupInputData">Tutup</button>
+        </div>
+        <div id="inputDataForm" class="input-jamaah"></div>
+        <button class="btn-tambah" id="simpanDataBtn">💾 Simpan Data</button>
+    </div>
+</div>
+
+<!-- Panel Kelola Field -->
 <div id="fieldPanel" class="field-overlay">
     <div class="field-panel">
-        <div class="field-header">
-            <span class="field-judul">⚙️ Kelola Field Dinamis</span>
-            <button class="btn-tutup" id="tutupField">Tutup</button>
-        </div>
+        <div class="field-header"><span class="field-judul">⚙️ Kelola Field Dinamis</span><button class="btn-tutup" id="tutupField">Tutup</button></div>
         <div id="fieldListContainer" class="field-manager"></div>
-        <div class="db-actions" style="margin-top:15px;">
-            <button id="tambahFieldBtn">➕ Tambah Field Baru</button>
-            <button id="simpanFieldBtn" style="background:#1b5e20;">💾 Simpan Perubahan</button>
-        </div>
+        <div class="db-actions"><button id="tambahFieldBtn">➕ Tambah Field Baru</button><button id="simpanFieldBtn" style="background:#1b5e20;">💾 Simpan Perubahan</button></div>
     </div>
 </div>
 
-<!-- Panel Akomodasi dengan Tombol Hapus Semua -->
-<div id="akomodasiPanel" class="akomodasi-overlay">
-    <div class="akomodasi-panel">
-        <div class="akomodasi-header">
-            <span class="akomodasi-judul">🏨 Manajemen Akomodasi</span>
-            <button class="btn-tutup" id="tutupAkomodasi">Tutup</button>
-        </div>
-        <div class="akomodasi-tab">
-            <button id="tabBus" class="active">🚌 BUS</button>
-            <button id="tabHotel">🏨 HOTEL</button>
-            <button id="tabKamar">🛏️ KAMAR</button>
-        </div>
-        <div id="akomodasiContent"></div>
-        <button class="btn-tambah-akomodasi" id="tambahAkomodasiBtn">+ Tambah Baru</button>
-        <button class="btn-hapus-semua-akomodasi" id="hapusSemuaAkomodasiBtn">🗑️ HAPUS SEMUA AKOMODASI</button>
-    </div>
-</div>
-
-<!-- Panel Lainnya -->
-<div id="editPanel" class="edit-overlay"><div class="edit-panel"><div class="edit-header"><span class="edit-judul" id="editJudul">✏️ Edit Data</span><button class="btn-tutup" id="tutupEdit">Tutup</button></div><div class="input-jamaah"><input type="text" id="editNama" placeholder="Nama Lengkap"><input type="text" id="editHP" placeholder="No. HP"><select id="editPaket"></select><input type="date" id="editJatuhTempo"><select id="editStatus"><option value="DP">DP</option><option value="LUNAS">Lunas</option></select><input type="text" id="editNomorKamar" placeholder="Nomor Kamar"><button class="btn-tambah" id="simpanEditDataBtn">💾 Simpan Perubahan</button></div></div></div>
+<!-- ======================== PANEL LAINNYA ======================== -->
+<div id="editPanel" class="edit-overlay"><div class="edit-panel"><div class="edit-header"><span class="edit-judul" id="editJudul">✏️ Edit Data</span><button class="btn-tutup" id="tutupEdit">Tutup</button></div><div class="input-jamaah" id="editForm"></div><button class="btn-tambah" id="simpanEditDataBtn">💾 Simpan</button></div></div>
 <div id="paymentPanel" class="payment-overlay"><div class="payment-panel"><div class="payment-header"><span class="payment-judul" id="paymentJudul">💰 Pembayaran</span><button class="btn-tutup" id="tutupPayment">Tutup</button></div><div id="paymentContent"></div></div></div>
 <div id="pindahPanel" class="pindah-overlay"><div class="pindah-panel"><div class="pindah-header"><span class="pindah-judul" id="pindahJudul">Pindah</span><button class="btn-tutup" id="tutupPindah">Tutup</button></div><div id="pindahContent"></div></div></div>
-<div id="scanPanel" class="scan-overlay"><div class="scan-panel"><div class="scan-header"><span class="scan-judul">📸 Scan KTP</span><button class="btn-tutup" id="tutupScan">Tutup</button></div><div class="scan-area"><video id="video" autoplay playsinline style="width:100%; border-radius:20px;"></video><button class="btn-scan" id="captureBtn">📸 Ambil Foto & Scan</button><canvas id="canvas" style="display:none;"></canvas><div id="scanResult" class="scan-result" style="display:none;"></div><button class="btn-tambah" id="useScanResultBtn" style="display:none;">✅ Gunakan Data Ini</button></div></div></div>
+<div id="scanPanel" class="scan-overlay"><div class="scan-panel"><div class="scan-header"><span class="scan-judul">📸 Scan KTP</span><button class="btn-tutup" id="tutupScan">Tutup</button></div><div class="scan-area"><video id="video" autoplay playsinline style="width:100%; border-radius:20px;"></video><button class="btn-scan" id="captureBtn">📸 Ambil Foto & Scan</button><canvas id="canvas" style="display:none;"></canvas><div id="scanResult"></div><button class="btn-tambah" id="useScanResultBtn" style="display:none;">✅ Gunakan</button></div></div></div>
+<div id="akomodasiPanel" class="akomodasi-overlay"><div class="akomodasi-panel"><div class="akomodasi-header"><span class="akomodasi-judul">🏨 Manajemen Akomodasi</span><button class="btn-tutup" id="tutupAkomodasi">Tutup</button></div><div class="akomodasi-tab"><button id="tabBus" class="active">🚌 BUS</button><button id="tabHotel">🏨 HOTEL</button><button id="tabKamar">🛏️ KAMAR</button></div><div id="akomodasiContent"></div><button class="btn-tambah-akomodasi" id="tambahAkomodasiBtn">+ Tambah Baru</button><button class="btn-hapus-semua-akomodasi" id="hapusSemuaAkomodasiBtn">🗑️ HAPUS SEMUA AKOMODASI</button></div></div>
 <div id="previewPanel" class="preview-overlay"><div class="preview-panel"><div class="preview-header"><span class="preview-judul" id="previewJudul">📄 Preview</span><button class="btn-tutup" id="tutupPreview">Tutup</button></div><div id="previewContent"></div></div></div>
 <div id="wabroadcastPanel" class="wabroadcast-overlay"><div class="wabroadcast-panel"><div class="wabroadcast-header"><span class="wabroadcast-judul">📱 WA Broadcast</span><button class="btn-tutup" id="tutupWABroadcast">Tutup</button></div><div id="wabroadcastContent"></div></div></div>
 <div id="backupPanel" class="backup-overlay"><div class="backup-panel"><div class="backup-header"><span class="backup-judul">☁️ Backup</span><button class="btn-tutup" id="tutupBackup">Tutup</button></div><div id="backupContent"></div></div></div>
@@ -328,7 +362,7 @@
 <div id="rekapPanel" class="rekap-overlay"><div class="rekap-panel"><div class="rekap-header-panel"><span class="rekap-judul">📋 Rekap Keuangan</span><button class="btn-tutup" id="tutupRekap">Tutup</button></div><div id="rekapFullContent"></div><button class="btn-cetak" id="cetakRekap">🖨️ Cetak PDF</button></div></div>
 <div id="invoicePanel" class="invoice-overlay"><div class="invoice-panel"><div class="invoice-header"><span class="invoice-judul">🧾 Invoice</span><button class="btn-tutup" id="tutupInvoice">Tutup</button></div><div id="invoiceContent"></div></div></div>
 <div id="dokumenPanel" class="dokumen-overlay"><div class="dokumen-panel"><div class="dokumen-header"><span class="dokumen-judul" id="dokumenJudul">📎 Dokumen</span><button class="btn-tutup" id="tutupDokumen">Tutup</button></div><div id="dokumenContent"></div><input type="file" id="uploadFile" accept="image/*,application/pdf" style="display:none"><button class="btn-upload" id="btnUploadDokumen">📤 Upload</button></div></div>
-<div id="jamaahPanel" class="jamaah-overlay"><div class="jamaah-panel"><div class="jamaah-header"><span class="jamaah-judul" id="jamaahJudul">📋 Daftar Jamaah</span><button class="btn-tutup" id="tutupJamaah">Tutup</button></div><div class="search-bar"><input type="text" id="searchJamaah" placeholder="🔍 Cari nama atau no HP..."></div><div class="input-jamaah"><div class="foto-container" id="fotoContainer" style="display:none;"><img id="fotoPreview" class="foto-profil" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ccc'/%3E%3Ctext x='50' y='67' font-size='40' text-anchor='middle' fill='white'%3E📷%3C/text%3E%3C/svg%3E"><button class="btn-foto" id="ambilFotoBtn">📸 Ambil/Upload Foto</button><input type="file" id="fotoInput" accept="image/*" style="display:none"></div><input type="text" id="inputNama" placeholder="Nama Lengkap"><input type="text" id="inputHP" placeholder="No. HP"><select id="inputPaket"><option value="">Pilih Paket</option></select><input type="date" id="inputJatuhTempo"><select id="inputStatus"><option value="DP">DP</option><option value="LUNAS">Lunas</option></select><input type="text" id="inputNomorKamar" placeholder="Nomor Kamar (opsional)"><button class="btn-scan-ktp" id="btnScanKTP">📸 Scan KTP</button><button class="btn-tambah" id="tambahJamaah">➕ Tambah</button></div><div class="filter-status"><button id="filterSemua">Semua</button><button id="filterDP">DP</button><button id="filterLunas">Lunas</button></div><div class="btn-impexp"><button id="exportData">📎 Export CSV</button><label for="importFile">📂 Import CSV</label><input type="file" id="importFile" accept=".csv" style="display:none"></div><div id="daftarJamaah" class="list-jamaah"></div></div></div>
+<div id="jamaahPanel" class="jamaah-overlay"><div class="jamaah-panel"><div class="jamaah-header"><span class="jamaah-judul" id="jamaahJudul">📋 Daftar Jamaah</span><button class="btn-tutup" id="tutupJamaah">Tutup</button></div><div class="search-bar"><input type="text" id="searchJamaah" placeholder="🔍 Cari..."></div><div class="input-jamaah"><div class="foto-container" id="fotoContainer" style="display:none;"><img id="fotoPreview" class="foto-profil" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ccc'/%3E%3Ctext x='50' y='67' font-size='40' text-anchor='middle' fill='white'%3E📷%3C/text%3E%3C/svg%3E"><button class="btn-foto" id="ambilFotoBtn">📸 Ambil/Upload Foto</button><input type="file" id="fotoInput" accept="image/*" style="display:none"></div><input type="text" id="inputNama" placeholder="Nama"><input type="text" id="inputHP" placeholder="No HP"><select id="inputPaket"><option value="">Pilih Paket</option></select><input type="date" id="inputJatuhTempo"><select id="inputStatus"><option value="DP">DP</option><option value="LUNAS">Lunas</option></select><input type="text" id="inputNomorKamar" placeholder="Nomor Kamar"><button class="btn-scan-ktp" id="btnScanKTP">📸 Scan KTP</button><button class="btn-tambah" id="tambahJamaah">➕ Tambah</button></div><div class="filter-status"><button id="filterSemua">Semua</button><button id="filterDP">DP</button><button id="filterLunas">Lunas</button></div><div class="btn-impexp"><button id="exportData">📎 Export CSV</button><label for="importFile">📂 Import CSV</label><input type="file" id="importFile" accept=".csv" style="display:none"></div><div id="daftarJamaah" class="list-jamaah"></div></div></div>
 <div id="sheetLayer" class="sheet-overlay"><div class="sheet"><div class="sheet-header"><span class="sheet-judul" id="sheetJudul">Menu</span><button class="btn-kembali" id="tombolKembali">◀ Kembali</button></div><div id="sheetKonten" class="sub-grid"></div></div></div>
 
 <script>
@@ -341,28 +375,21 @@ function applyDarkMode() { if (isDarkMode) { document.body.classList.add('dark')
 document.getElementById('darkModeBtn')?.addEventListener('click', () => { isDarkMode = !isDarkMode; applyDarkMode(); });
 applyDarkMode();
 
-// ======================== USERS (Tanpa Password) ========================
-let USERS = {
-    admin: { role: "admin", name: "Admin", wa: "6281234567890" },
-    karyawan: { role: "karyawan", name: "Karyawan", wa: "6281234567890" },
-    pimpinan: { role: "pimpinan", name: "Pimpinan", wa: "6281234567890" }
-};
+// ======================== LOGIN (Tanpa Password) ========================
+let currentUser = null, currentRole = null, chartInstance = null;
+function checkAccess(allowedRoles) { return allowedRoles.includes(currentRole); }
 
 // ======================== SCAN KTP ========================
 let stream = null;
 async function startCamera() { try { stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); document.getElementById('video').srcObject = stream; } catch(err) { alert('Tidak bisa akses kamera'); } }
 function stopCamera() { if(stream) { stream.getTracks().forEach(track => track.stop()); stream = null; } }
-async function captureAndScan() { let video = document.getElementById('video'); let canvas = document.getElementById('canvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight; let ctx = canvas.getContext('2d'); ctx.drawImage(video, 0, 0); document.getElementById('scanResult').innerHTML = '<p>⏳ Memproses...</p>'; document.getElementById('scanResult').style.display = 'block'; try { let result = await Tesseract.recognize(canvas, 'ind'); let text = result.data.text; let namaMatch = text.match(/Nama\s*:\s*([^\n]+)/i); let nama = namaMatch ? namaMatch[1].trim() : ''; if(!nama) nama = text.match(/([A-Z][a-z]+\s+[A-Z][a-z]+)/)?.[0] || ''; document.getElementById('scanResult').innerHTML = `<p>✅ Nama: ${nama || 'Tidak terbaca'}</p>`; document.getElementById('useScanResultBtn').style.display = 'block'; if(nama) document.getElementById('inputNama').value = nama; } catch(err) { document.getElementById('scanResult').innerHTML = '<p>❌ Gagal scan</p>'; } }
+async function captureAndScan() { let video = document.getElementById('video'); let canvas = document.getElementById('canvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight; let ctx = canvas.getContext('2d'); ctx.drawImage(video, 0, 0); document.getElementById('scanResult').innerHTML = '<p>⏳ Memproses...</p>'; try { let result = await Tesseract.recognize(canvas, 'ind'); let text = result.data.text; let namaMatch = text.match(/Nama\s*:\s*([^\n]+)/i); let nama = namaMatch ? namaMatch[1].trim() : ''; if(!nama) nama = text.match(/([A-Z][a-z]+\s+[A-Z][a-z]+)/)?.[0] || ''; document.getElementById('scanResult').innerHTML = `<p>✅ Nama: ${nama || 'Tidak terbaca'}</p>`; document.getElementById('useScanResultBtn').style.display = 'block'; if(nama) document.getElementById('inputNama').value = nama; } catch(err) { document.getElementById('scanResult').innerHTML = '<p>❌ Gagal scan</p>'; } }
 function openScanKTP() { startCamera(); document.getElementById('scanPanel').classList.add('active'); }
 document.getElementById('captureBtn')?.addEventListener('click', captureAndScan);
 document.getElementById('useScanResultBtn')?.addEventListener('click', () => { stopCamera(); document.getElementById('scanPanel').classList.remove('active'); alert('Data terisi!'); });
 document.getElementById('tutupScan')?.addEventListener('click', () => { stopCamera(); document.getElementById('scanPanel').classList.remove('active'); });
 
-// ======================== LOGIN (Tanpa Password) ========================
-let currentUser = null, currentRole = null, chartInstance = null;
-function checkAccess(allowedRoles) { return allowedRoles.includes(currentRole); }
-
-// ======================== DATA ========================
+// ======================== DATA HARGA ========================
 const DEFAULT_HARGA = { haji_ekonomi: 39500000, haji_plus: 98000000, haji_vip: 165000000, umroh_silver: 21000000, umroh_gold: 28000000, umroh_platinum: 49000000, umroh_plus_turki: 32000000 };
 const NAMA_PAKET = { haji_ekonomi: "Haji Ekonomi", haji_plus: "Haji Plus", haji_vip: "Haji VIP", umroh_silver: "Umroh Silver", umroh_gold: "Umroh Gold", umroh_platinum: "Umroh Platinum", umroh_plus_turki: "Umroh + Turki" };
 let HARGA = {};
@@ -371,9 +398,10 @@ function saveHarga() { localStorage.setItem('hargaPaket', JSON.stringify(HARGA))
 loadHarga();
 function formatRupiah(angka) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka); }
 
+// ======================== DATA JAMAAH LAMA ========================
 let dataHaji = [], dataUmroh = [], currentJamaahType = 'haji', currentFilter = 'SEMUA', searchQuery = '';
-let daftarBus = [];
-let daftarHotel = [];
+let daftarBus = [{ id: 1, nama: "Bus A", kapasitas: 40 }, { id: 2, nama: "Bus B", kapasitas: 38 }];
+let daftarHotel = [{ id: 1, nama: "Makkah Tower", lokasi: "Makkah" }, { id: 2, nama: "Azizia Palace", lokasi: "Azizia" }];
 
 function loadAkomodasi() { let b = localStorage.getItem('daftarBus'); let h = localStorage.getItem('daftarHotel'); if(b) daftarBus = JSON.parse(b); if(h) daftarHotel = JSON.parse(h); }
 function saveAkomodasi() { localStorage.setItem('daftarBus', JSON.stringify(daftarBus)); localStorage.setItem('daftarHotel', JSON.stringify(daftarHotel)); }
@@ -384,8 +412,8 @@ function addDateToJamaah(data) { return data.map(j => ({ ...j, tglDaftar: j.tglD
 function loadJamaah() {
     let h = localStorage.getItem('jamaahHaji');
     let u = localStorage.getItem('jamaahUmroh');
-    dataHaji = h ? JSON.parse(h) : [{ id: 1, nama: "Ahmad Fauzi", hp: "08123456789", paket: "Haji Ekonomi", status: "DP", tglDaftar: "2025-03-15", jatuhTempo: "2025-04-20", dokumen: [], busId: null, hotelId: null, nomorKamar: "", foto: null, pembayaran: [], totalDibayar: 0 }];
-    dataUmroh = u ? JSON.parse(u) : [{ id: 3, nama: "Budi Santoso", hp: "08345678901", paket: "Umroh Silver", status: "LUNAS", tglDaftar: "2025-03-20", jatuhTempo: "2025-04-15", dokumen: [], busId: null, hotelId: null, nomorKamar: "", foto: null, pembayaran: [], totalDibayar: 0 }];
+    dataHaji = h ? JSON.parse(h) : [{ id: 1, nama: "Ahmad Fauzi", hp: "08123456789", paket: "Haji Ekonomi", status: "DP", tglDaftar: "2025-03-15", jatuhTempo: "2025-04-20", dokumen: [], busId: 1, hotelId: 1, nomorKamar: "204A", foto: null, pembayaran: [], totalDibayar: 0 }];
+    dataUmroh = u ? JSON.parse(u) : [{ id: 3, nama: "Budi Santoso", hp: "08345678901", paket: "Umroh Silver", status: "LUNAS", tglDaftar: "2025-03-20", jatuhTempo: "2025-04-15", dokumen: [], busId: 2, hotelId: 2, nomorKamar: "102", foto: null, pembayaran: [], totalDibayar: 0 }];
     dataHaji = addDateToJamaah(dataHaji);
     dataUmroh = addDateToJamaah(dataUmroh);
 }
@@ -395,8 +423,14 @@ loadJamaah();
 function getPaketListByType(type) { return type === 'haji' ? ['Haji Ekonomi', 'Haji Plus', 'Haji VIP'] : ['Umroh Silver', 'Umroh Gold', 'Umroh Platinum', 'Umroh + Turki']; }
 function getHargaPaket(namaPaket) { if(namaPaket === "Haji Ekonomi") return HARGA.haji_ekonomi; if(namaPaket === "Haji Plus") return HARGA.haji_plus; if(namaPaket === "Haji VIP") return HARGA.haji_vip; if(namaPaket === "Umroh Silver") return HARGA.umroh_silver; if(namaPaket === "Umroh Gold") return HARGA.umroh_gold; if(namaPaket === "Umroh Platinum") return HARGA.umroh_platinum; if(namaPaket === "Umroh + Turki") return HARGA.umroh_plus_turki; return 0; }
 
-// ======================== DATABASE BARU ========================
-const DEFAULT_FIELDS = [
+// ======================== MULTI DATABASE DINAMIS ========================
+let dbHajiData = { databases: {}, currentDb: "" };
+let dbUmrohData = { databases: {}, currentDb: "" };
+let currentDbTypeMulti = 'haji';
+let currentDbPageMulti = 1, currentDbPerPageMulti = 10, currentDbSearchMulti = '', currentDbSortFieldMulti = null, currentDbSortOrderMulti = 'asc';
+let selectedRows = new Set(); // Untuk menyimpan id yang dicentang
+
+const DEFAULT_FIELDS_MULTI = [
     { name: "Nama", type: "text", required: true },
     { name: "No HP", type: "tel", required: true },
     { name: "Alamat", type: "text", required: false },
@@ -405,191 +439,488 @@ const DEFAULT_FIELDS = [
     { name: "Keterangan", type: "text", required: false }
 ];
 
-let dbHaji = { fields: [...DEFAULT_FIELDS], data: [] };
-let dbUmroh = { fields: [...DEFAULT_FIELDS], data: [] };
-let currentDbType = 'haji';
-let currentDbPage = 1;
-let currentDbPerPage = 10;
-let currentDbSearch = '';
-let currentDbSortField = null;
-let currentDbSortOrder = 'asc';
-
-function loadDatabases() {
-    let h = localStorage.getItem('dbHaji');
-    let u = localStorage.getItem('dbUmroh');
-    if(h) { let parsed = JSON.parse(h); dbHaji = parsed; }
-    if(u) { let parsed = JSON.parse(u); dbUmroh = parsed; }
-    if(dbHaji.data.length === 0) {
-        dbHaji.data = [
-            { id: 1, "Nama": "Abdullah Bin Adam", "No HP": "081234567890", "Alamat": "Jakarta", "KTP": "3171010101010001", "Paspor": "A1234567", "Keterangan": "Haji Reguler" },
-            { id: 2, "Nama": "Fatimah Azzahra", "No HP": "082345678901", "Alamat": "Bandung", "KTP": "3273010101010002", "Paspor": "B1234567", "Keterangan": "Haji Plus" }
-        ];
+function initMultiDatabases() {
+    let savedHaji = localStorage.getItem('dbHajiMulti');
+    let savedUmroh = localStorage.getItem('dbUmrohMulti');
+    
+    if(savedHaji) {
+        dbHajiData = JSON.parse(savedHaji);
+    } else {
+        dbHajiData = {
+            databases: {
+                "Database Haji Utama": {
+                    fields: [...DEFAULT_FIELDS_MULTI],
+                    data: [
+                        { id: 1, "Nama": "Abdullah Bin Adam", "No HP": "081234567890", "Alamat": "Jakarta", "KTP": "3171010101010001", "Paspor": "A1234567", "Keterangan": "Haji Reguler" }
+                    ]
+                }
+            },
+            currentDb: "Database Haji Utama"
+        };
     }
-    if(dbUmroh.data.length === 0) {
-        dbUmroh.data = [
-            { id: 1, "Nama": "Muhammad Rizki", "No HP": "083456789012", "Alamat": "Surabaya", "KTP": "3578010101010003", "Paspor": "C1234567", "Keterangan": "Umroh Reguler" },
-            { id: 2, "Nama": "Aisyah Putri", "No HP": "084567890123", "Alamat": "Medan", "KTP": "1271010101010004", "Paspor": "D1234567", "Keterangan": "Umroh Plus" }
-        ];
+    
+    if(savedUmroh) {
+        dbUmrohData = JSON.parse(savedUmroh);
+    } else {
+        dbUmrohData = {
+            databases: {
+                "Database Umroh Utama": {
+                    fields: [...DEFAULT_FIELDS_MULTI],
+                    data: [
+                        { id: 1, "Nama": "Muhammad Rizki", "No HP": "083456789012", "Alamat": "Surabaya", "KTP": "3578010101010003", "Paspor": "C1234567", "Keterangan": "Umroh Reguler" },
+                        { id: 2, "Nama": "Aisyah Putri", "No HP": "084567890123", "Alamat": "Medan", "KTP": "1271010101010004", "Paspor": "D1234567", "Keterangan": "Umroh Plus" }
+                    ]
+                }
+            },
+            currentDb: "Database Umroh Utama"
+        };
     }
-    saveDatabases();
+    
+    saveMultiDatabases();
 }
-function saveDatabases() {
-    localStorage.setItem('dbHaji', JSON.stringify(dbHaji));
-    localStorage.setItem('dbUmroh', JSON.stringify(dbUmroh));
-}
-loadDatabases();
 
-function renderDatabaseTable() {
-    let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
+function saveMultiDatabases() {
+    localStorage.setItem('dbHajiMulti', JSON.stringify(dbHajiData));
+    localStorage.setItem('dbUmrohMulti', JSON.stringify(dbUmrohData));
+}
+
+function getCurrentMultiDb() {
+    let data = currentDbTypeMulti === 'haji' ? dbHajiData : dbUmrohData;
+    return data.databases[data.currentDb] || { fields: [], data: [] };
+}
+
+function refreshDbSelect() {
+    let data = currentDbTypeMulti === 'haji' ? dbHajiData : dbUmrohData;
+    let select = document.getElementById('dbSelect');
+    if(!select) return;
+    select.innerHTML = '';
+    for(let dbName in data.databases) {
+        let option = document.createElement('option');
+        option.value = dbName;
+        option.textContent = dbName + ` (${data.databases[dbName].data.length} data)`;
+        if(dbName === data.currentDb) option.selected = true;
+        select.appendChild(option);
+    }
+    let stats = document.getElementById('dbStats');
+    let current = data.databases[data.currentDb];
+    stats.innerHTML = `📊 ${data.currentDb} - ${current.data.length} data, ${current.fields.length} field`;
+}
+
+function renderMultiDatabaseTable() {
+    let data = currentDbTypeMulti === 'haji' ? dbHajiData : dbUmrohData;
+    let db = data.databases[data.currentDb];
+    if(!db) return;
+    
     let fields = db.fields;
-    let data = [...db.data];
-    if(currentDbSearch) {
-        let searchLower = currentDbSearch.toLowerCase();
-        data = data.filter(row => Object.values(row).some(val => String(val).toLowerCase().includes(searchLower)));
-    }
-    if(currentDbSortField) {
-        data.sort((a, b) => {
-            let valA = a[currentDbSortField] || '';
-            let valB = b[currentDbSortField] || '';
-            if(currentDbSortOrder === 'asc') return String(valA).localeCompare(String(valB));
-            else return String(valB).localeCompare(String(valA));
+    let allData = [...db.data];
+    
+    if(currentDbSearchMulti) {
+        let q = currentDbSearchMulti.toLowerCase();
+        allData = allData.filter(row => {
+            return Object.values(row).some(v => String(v).toLowerCase().includes(q));
         });
     }
-    let totalItems = data.length;
-    let totalPages = Math.ceil(totalItems / currentDbPerPage);
-    let startIdx = (currentDbPage - 1) * currentDbPerPage;
-    let pageData = data.slice(startIdx, startIdx + currentDbPerPage);
+    
+    if(currentDbSortFieldMulti) {
+        allData.sort((a,b) => {
+            let va = a[currentDbSortFieldMulti] || '';
+            let vb = b[currentDbSortFieldMulti] || '';
+            return currentDbSortOrderMulti === 'asc' ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+        });
+    }
+    
+    let totalPages = Math.ceil(allData.length / currentDbPerPageMulti);
+    let startIdx = (currentDbPageMulti - 1) * currentDbPerPageMulti;
+    let pageData = allData.slice(startIdx, startIdx + currentDbPerPageMulti);
+    
     let container = document.getElementById('dbTableContainer');
     if(pageData.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:40px; color:gray;">📭 Tidak ada database</div>';
+        container.innerHTML = '<div style="text-align:center; padding:40px;">📭 Tidak ada data</div>';
     } else {
-        let html = '<table class="data-table"><thead></tr>';
-        fields.forEach(field => {
-            let sortIcon = currentDbSortField === field.name ? (currentDbSortOrder === 'asc' ? ' ▲' : ' ▼') : '';
-            html += `<th style="cursor:pointer;" onclick="sortDatabase('${field.name}')">${field.name}${sortIcon}</th>`;
+        let html = '<table class="data-table"><thead><tr><th style="width:30px;"><input type="checkbox" id="checkAllHeader"></th>';
+        fields.forEach(f => {
+            html += `<th onclick="sortMultiDatabase('${f.name}')">${f.name}${currentDbSortFieldMulti === f.name ? (currentDbSortOrderMulti === 'asc' ? ' ▲' : ' ▼') : ''}</th>`;
         });
         html += '<th>Aksi</th></thead><tbody>';
         pageData.forEach(row => {
-            html += '<tr>';
-            fields.forEach(field => { html += `<td>${row[field.name] || '-'}</td>`; });
-            html += `<td><button class="btn-hapus-item" onclick="hapusDataRow(${row.id})" style="padding:2px 8px;">🗑️</button></td>`;
-            html += '</tr>';
+            let isChecked = selectedRows.has(row.id);
+            html += `<tr>
+                <td style="text-align:center;"><input type="checkbox" class="rowCheckbox" data-id="${row.id}" ${isChecked ? 'checked' : ''}></td>`;
+            fields.forEach(f => {
+                html += `<td>${row[f.name] || '-'}</td>`;
+            });
+            html += `<td>
+                <button class="btn-hapus-item" onclick="hapusDataMulti(${row.id})">🗑️</button>
+                <button class="btn-akomodasi" style="background:#2196f3;" onclick="copySingleToAkomodasi(${row.id})">📋 Copy</button>
+            </td></tr>`;
         });
         html += '</tbody></table>';
         container.innerHTML = html;
+        
+        // Event listener untuk checkbox
+        document.querySelectorAll('.rowCheckbox').forEach(cb => {
+            cb.addEventListener('change', (e) => {
+                let id = parseInt(e.target.dataset.id);
+                if(e.target.checked) selectedRows.add(id);
+                else selectedRows.delete(id);
+                updateCheckAllHeader();
+            });
+        });
+        
+        let checkAllHeader = document.getElementById('checkAllHeader');
+        if(checkAllHeader) {
+            checkAllHeader.addEventListener('change', (e) => {
+                let allCheckboxes = document.querySelectorAll('.rowCheckbox');
+                allCheckboxes.forEach(cb => {
+                    let id = parseInt(cb.dataset.id);
+                    if(e.target.checked) {
+                        cb.checked = true;
+                        selectedRows.add(id);
+                    } else {
+                        cb.checked = false;
+                        selectedRows.delete(id);
+                    }
+                });
+            });
+        }
     }
-    let paginationDiv = document.getElementById('dbPagination');
-    let paginationHtml = '';
+    
+    let pg = document.getElementById('dbPagination');
+    let pgHtml = '';
     for(let i = 1; i <= totalPages; i++) {
-        paginationHtml += `<button class="${i === currentDbPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+        pgHtml += `<button class="${i === currentDbPageMulti ? 'active' : ''}" onclick="goToPageMulti(${i})">${i}</button>`;
     }
-    paginationDiv.innerHTML = paginationHtml || '<span style="color:gray;">Tidak ada data</span>';
+    pg.innerHTML = pgHtml;
 }
 
-window.sortDatabase = (field) => {
-    if(currentDbSortField === field) currentDbSortOrder = currentDbSortOrder === 'asc' ? 'desc' : 'asc';
-    else { currentDbSortField = field; currentDbSortOrder = 'asc'; }
-    renderDatabaseTable();
+function updateCheckAllHeader() {
+    let allCheckboxes = document.querySelectorAll('.rowCheckbox');
+    let checkAllHeader = document.getElementById('checkAllHeader');
+    if(checkAllHeader && allCheckboxes.length > 0) {
+        let allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
+        checkAllHeader.checked = allChecked;
+    }
+}
+
+window.sortMultiDatabase = (field) => {
+    if(currentDbSortFieldMulti === field) {
+        currentDbSortOrderMulti = currentDbSortOrderMulti === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentDbSortFieldMulti = field;
+        currentDbSortOrderMulti = 'asc';
+    }
+    renderMultiDatabaseTable();
 };
-window.goToPage = (page) => { currentDbPage = page; renderDatabaseTable(); };
-window.hapusDataRow = (id) => {
+
+window.goToPageMulti = (page) => {
+    currentDbPageMulti = page;
+    renderMultiDatabaseTable();
+};
+
+window.hapusDataMulti = (id) => {
     if(confirm('Hapus data ini?')) {
-        let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
+        let data = currentDbTypeMulti === 'haji' ? dbHajiData : dbUmrohData;
+        let db = data.databases[data.currentDb];
         db.data = db.data.filter(row => row.id !== id);
-        saveDatabases();
-        renderDatabaseTable();
+        selectedRows.delete(id);
+        saveMultiDatabases();
+        refreshDbSelect();
+        renderMultiDatabaseTable();
     }
 };
+
+function resetMultiDatabase() {
+    currentDbSearchMulti = '';
+    currentDbSortFieldMulti = null;
+    currentDbPageMulti = 1;
+    document.getElementById('dbSearchInput').value = '';
+    renderMultiDatabaseTable();
+}
 
 function tambahDatabaseBaru() {
-    let namaDb = prompt("Nama database baru (contoh: Haji 2026, Umroh Ramadhan):");
-    if(!namaDb) return;
-    let newDb = { fields: [...DEFAULT_FIELDS], data: [], nama: namaDb };
-    if(currentDbType === 'haji') {
-        let listDbHaji = localStorage.getItem('listDbHaji');
-        let list = listDbHaji ? JSON.parse(listDbHaji) : [];
-        list.push(newDb);
-        localStorage.setItem('listDbHaji', JSON.stringify(list));
-        alert(`Database "${namaDb}" berhasil ditambahkan!`);
-    } else {
-        let listDbUmroh = localStorage.getItem('listDbUmroh');
-        let list = listDbUmroh ? JSON.parse(listDbUmroh) : [];
-        list.push(newDb);
-        localStorage.setItem('listDbUmroh', JSON.stringify(list));
-        alert(`Database "${namaDb}" berhasil ditambahkan!`);
+    let nama = prompt("Masukkan nama database baru:", "Database Baru");
+    if(!nama || nama.trim() === "") return;
+    let data = currentDbTypeMulti === 'haji' ? dbHajiData : dbUmrohData;
+    if(data.databases[nama]) {
+        alert("Database dengan nama tersebut sudah ada!");
+        return;
+    }
+    data.databases[nama] = {
+        fields: [...DEFAULT_FIELDS_MULTI],
+        data: []
+    };
+    data.currentDb = nama;
+    saveMultiDatabases();
+    refreshDbSelect();
+    renderMultiDatabaseTable();
+    alert(`Database "${nama}" berhasil ditambahkan!`);
+}
+
+function editDatabaseName() {
+    let data = currentDbTypeMulti === 'haji' ? dbHajiData : dbUmrohData;
+    let oldName = data.currentDb;
+    let newName = prompt("Edit nama database:", oldName);
+    if(!newName || newName.trim() === "") return;
+    if(newName === oldName) return;
+    if(data.databases[newName]) {
+        alert("Nama database sudah ada!");
+        return;
+    }
+    data.databases[newName] = data.databases[oldName];
+    delete data.databases[oldName];
+    data.currentDb = newName;
+    saveMultiDatabases();
+    refreshDbSelect();
+    renderMultiDatabaseTable();
+    alert("Nama database berhasil diubah!");
+}
+
+function hapusDatabase() {
+    let data = currentDbTypeMulti === 'haji' ? dbHajiData : dbUmrohData;
+    let dbName = data.currentDb;
+    let totalDb = Object.keys(data.databases).length;
+    if(totalDb <= 1) {
+        alert("Minimal harus ada 1 database!");
+        return;
+    }
+    if(confirm(`Hapus database "${dbName}" beserta semua datanya?`)) {
+        delete data.databases[dbName];
+        let firstDb = Object.keys(data.databases)[0];
+        data.currentDb = firstDb;
+        saveMultiDatabases();
+        refreshDbSelect();
+        renderMultiDatabaseTable();
+        alert(`Database "${dbName}" berhasil dihapus!`);
     }
 }
 
-function openFieldManager() {
-    let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
-    let container = document.getElementById('fieldListContainer');
+// ======================== COPY KE AKOMODASI ========================
+let pendingCopyData = []; // Menyimpan data yang akan di-copy
+
+function refreshTargetSelects() {
+    let busSelect = document.getElementById('targetBusSelect');
+    let hotelSelect = document.getElementById('targetHotelSelect');
+    if(busSelect) {
+        busSelect.innerHTML = '<option value="">-- Pilih Bus (Opsional) --</option>';
+        daftarBus.forEach(bus => {
+            busSelect.innerHTML += `<option value="${bus.id}">🚌 ${bus.nama}</option>`;
+        });
+    }
+    if(hotelSelect) {
+        hotelSelect.innerHTML = '<option value="">-- Pilih Hotel (Opsional) --</option>';
+        daftarHotel.forEach(hotel => {
+            hotelSelect.innerHTML += `<option value="${hotel.id}">🏨 ${hotel.nama}</option>`;
+        });
+    }
+}
+
+function openCopyTargetPanel(jamaahList) {
+    pendingCopyData = jamaahList;
+    refreshTargetSelects();
+    document.getElementById('copyTargetPanel').classList.add('active');
+    document.getElementById('copyStatusMsg').innerHTML = '';
+}
+
+function executeCopyToAkomodasi() {
+    let targetBusId = document.getElementById('targetBusSelect').value;
+    let targetHotelId = document.getElementById('targetHotelSelect').value;
+    let targetKamar = document.getElementById('targetKamarInput').value.trim();
+    
+    if(pendingCopyData.length === 0) {
+        alert("Tidak ada data untuk di-copy!");
+        return;
+    }
+    
+    let paketDefault = currentDbTypeMulti === 'haji' ? "Haji Ekonomi" : "Umroh Silver";
+    let targetArray = currentJamaahType === 'haji' ? dataHaji : dataUmroh;
+    
+    for(let item of pendingCopyData) {
+        let newId = Date.now() + Math.random();
+        let newJamaah = {
+            id: newId,
+            nama: item.Nama || item.nama || "No Name",
+            hp: item["No HP"] || item.hp || "",
+            paket: paketDefault,
+            status: "DP",
+            tglDaftar: new Date().toISOString().slice(0,7),
+            jatuhTempo: new Date(Date.now() + 30*24*60*60*1000).toISOString().slice(0,10),
+            dokumen: [],
+            busId: targetBusId ? parseInt(targetBusId) : null,
+            hotelId: targetHotelId ? parseInt(targetHotelId) : null,
+            nomorKamar: targetKamar,
+            foto: null,
+            pembayaran: [],
+            totalDibayar: 0
+        };
+        targetArray.push(newJamaah);
+    }
+    
+    saveJamaah();
+    document.getElementById('copyStatusMsg').innerHTML = `✅ Berhasil menyalin ${pendingCopyData.length} data ke akomodasi!`;
+    setTimeout(() => {
+        document.getElementById('copyTargetPanel').classList.remove('active');
+        renderAkomodasi();
+        renderDaftarJamaah();
+        updateDashboard();
+    }, 1500);
+}
+
+function copySingleToAkomodasi(id) {
+    let db = getCurrentMultiDb();
+    let jamaah = db.data.find(row => row.id === id);
+    if(jamaah) {
+        openCopyTargetPanel([jamaah]);
+    } else {
+        alert("Data tidak ditemukan!");
+    }
+}
+
+function copySelectedToAkomodasi() {
+    if(selectedRows.size === 0) {
+        alert("Pilih data yang akan di-copy terlebih dahulu!");
+        return;
+    }
+    let db = getCurrentMultiDb();
+    let selectedData = db.data.filter(row => selectedRows.has(row.id));
+    if(selectedData.length > 0) {
+        openCopyTargetPanel(selectedData);
+    } else {
+        alert("Data yang dipilih tidak ditemukan!");
+    }
+}
+
+function copyAllToAkomodasi() {
+    let db = getCurrentMultiDb();
+    if(db.data.length === 0) {
+        alert("Tidak ada data untuk di-copy!");
+        return;
+    }
+    openCopyTargetPanel([...db.data]);
+}
+
+function pilihSemua() {
+    let db = getCurrentMultiDb();
+    db.data.forEach(row => selectedRows.add(row.id));
+    renderMultiDatabaseTable();
+}
+
+function hapusPilihan() {
+    selectedRows.clear();
+    renderMultiDatabaseTable();
+}
+
+// ======================== FUNGSI LAIN MULTI DATABASE ========================
+function openTambahDataForm() {
+    let db = getCurrentMultiDb();
+    let fields = db.fields;
+    let formHtml = '';
+    fields.forEach(field => {
+        let required = field.required ? 'required' : '';
+        formHtml += `<input type="${field.type === 'number' ? 'number' : (field.type === 'date' ? 'date' : 'text')}" id="input_${field.name.replace(/\s/g, '_')}" placeholder="${field.name}" ${required}>`;
+    });
+    document.getElementById('inputDataForm').innerHTML = formHtml;
+    document.getElementById('inputJudul').innerHTML = `➕ Tambah Data - ${currentDbTypeMulti === 'haji' ? 'Haji' : 'Umroh'}`;
+    document.getElementById('inputDataPanel').classList.add('active');
+}
+
+document.getElementById('simpanDataBtn')?.addEventListener('click', () => {
+    let db = getCurrentMultiDb();
+    let fields = db.fields;
+    let newRow = { id: Date.now() };
+    let valid = true;
+    fields.forEach(field => {
+        let val = document.getElementById(`input_${field.name.replace(/\s/g, '_')}`)?.value || '';
+        if(field.required && !val) {
+            alert(`Field "${field.name}" wajib diisi!`);
+            valid = false;
+        }
+        newRow[field.name] = val;
+    });
+    if(!valid) return;
+    db.data.push(newRow);
+    saveMultiDatabases();
+    refreshDbSelect();
+    renderMultiDatabaseTable();
+    document.getElementById('inputDataPanel').classList.remove('active');
+    alert("Data berhasil ditambahkan!");
+});
+
+document.getElementById('tutupInputData')?.addEventListener('click', () => document.getElementById('inputDataPanel').classList.remove('active'));
+document.getElementById('tambahDataBtn')?.addEventListener('click', openTambahDataForm);
+
+function openFieldManagerMulti() {
+    let db = getCurrentMultiDb();
+    let fields = db.fields;
     let html = '<h4>Field saat ini:</h4>';
-    db.fields.forEach((field, idx) => {
+    fields.forEach((f, i) => {
         html += `<div class="field-item">
-            <input type="text" value="${field.name}" id="fieldName_${idx}" placeholder="Nama field">
-            <select id="fieldType_${idx}">
-                <option value="text" ${field.type === 'text' ? 'selected' : ''}>Teks</option>
-                <option value="number" ${field.type === 'number' ? 'selected' : ''}>Angka</option>
-                <option value="date" ${field.type === 'date' ? 'selected' : ''}>Tanggal</option>
+            <input type="text" id="fn_${i}" value="${f.name}" placeholder="Nama field">
+            <select id="ft_${i}">
+                <option value="text" ${f.type === 'text' ? 'selected' : ''}>Teks</option>
+                <option value="number" ${f.type === 'number' ? 'selected' : ''}>Angka</option>
+                <option value="date" ${f.type === 'date' ? 'selected' : ''}>Tanggal</option>
             </select>
-            <input type="checkbox" id="fieldRequired_${idx}" ${field.required ? 'checked' : ''}> <span style="font-size:0.7rem;">Wajib</span>
-            <button class="btn-hapus-item" onclick="hapusField(${idx})">🗑️</button>
+            <input type="checkbox" id="fr_${i}" ${f.required ? 'checked' : ''}> <span style="font-size:0.7rem;">Wajib</span>
+            <button class="btn-hapus-item" onclick="hapusFieldMulti(${i})">🗑️</button>
         </div>`;
     });
-    html += '<p style="margin-top:10px; font-size:0.7rem; color:gray;">💡 Field "id" otomatis ada, tidak perlu ditambahkan</p>';
-    container.innerHTML = html;
+    document.getElementById('fieldListContainer').innerHTML = html;
     document.getElementById('fieldPanel').classList.add('active');
 }
 
-window.hapusField = (idx) => {
-    let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
-    if(db.fields.length <= 1) { alert("Minimal harus ada 1 field!"); return; }
+window.hapusFieldMulti = (idx) => {
+    let db = getCurrentMultiDb();
+    if(db.fields.length <= 1) {
+        alert("Minimal harus ada 1 field!");
+        return;
+    }
     db.fields.splice(idx, 1);
-    saveDatabases();
-    openFieldManager();
-    renderDatabaseTable();
+    saveMultiDatabases();
+    openFieldManagerMulti();
+    renderMultiDatabaseTable();
 };
 
 document.getElementById('tambahFieldBtn')?.addEventListener('click', () => {
-    let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
+    let db = getCurrentMultiDb();
     db.fields.push({ name: "Field Baru", type: "text", required: false });
-    openFieldManager();
+    openFieldManagerMulti();
 });
 
 document.getElementById('simpanFieldBtn')?.addEventListener('click', () => {
-    let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
+    let db = getCurrentMultiDb();
     for(let i = 0; i < db.fields.length; i++) {
-        let newName = document.getElementById(`fieldName_${i}`)?.value;
-        let newType = document.getElementById(`fieldType_${i}`)?.value;
-        let newRequired = document.getElementById(`fieldRequired_${i}`)?.checked;
+        let newName = document.getElementById(`fn_${i}`)?.value;
+        let newType = document.getElementById(`ft_${i}`)?.value;
+        let newRequired = document.getElementById(`fr_${i}`)?.checked;
         if(newName && newName.trim()) {
             db.fields[i].name = newName.trim();
             db.fields[i].type = newType;
             db.fields[i].required = newRequired || false;
         }
     }
-    saveDatabases();
+    saveMultiDatabases();
     document.getElementById('fieldPanel').classList.remove('active');
-    renderDatabaseTable();
+    renderMultiDatabaseTable();
     alert("Field berhasil disimpan!");
 });
 
-function exportToExcel() {
-    let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
+function exportMultiToExcel() {
+    let db = getCurrentMultiDb();
     let fields = db.fields;
     let headers = fields.map(f => f.name).join(',');
-    let rows = db.data.map(row => fields.map(f => `"${(row[f.name] || '').replace(/"/g, '""')}"`).join(',')).join('\n');
+    let rows = db.data.map(row => {
+        return fields.map(f => `"${(row[f.name] || '').replace(/"/g, '""')}"`).join(',');
+    }).join('\n');
     let csv = headers + '\n' + rows;
     let blob = new Blob([csv], {type: 'text/csv'});
     let a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `database_${currentDbType}_${new Date().toISOString().slice(0,19)}.csv`;
+    a.download = `${currentDbTypeMulti}_${new Date().toISOString().slice(0,19)}.csv`;
     a.click();
-    URL.revokeObjectURL(blob);
     alert("Export berhasil!");
 }
 
-function importExcel(file) {
+function importMultiExcel(file) {
     let reader = new FileReader();
     reader.onload = (e) => {
         let text = e.target.result;
@@ -598,164 +929,1262 @@ function importExcel(file) {
         let newData = [];
         for(let i = 1; i < lines.length; i++) {
             if(!lines[i].trim()) continue;
-            let values = lines[i].match(/(".*?"|[^,]+)/g).map(v => v.replace(/"/g, '').trim());
+            let vals = lines[i].match(/(".*?"|[^,]+)/g).map(v => v.replace(/"/g, '').trim());
             let row = { id: Date.now() + i };
-            headers.forEach((h, idx) => { row[h] = values[idx] || ''; });
+            headers.forEach((h, idx) => {
+                row[h] = vals[idx] || '';
+            });
             newData.push(row);
         }
         if(newData.length > 0) {
-            let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
+            let db = getCurrentMultiDb();
             db.data.push(...newData);
-            saveDatabases();
-            renderDatabaseTable();
+            saveMultiDatabases();
+            refreshDbSelect();
+            renderMultiDatabaseTable();
             alert(`Import ${newData.length} data berhasil!`);
-        } else { alert("Tidak ada data yang diimport"); }
+        } else {
+            alert("Tidak ada data yang diimport");
+        }
     };
     reader.readAsText(file);
 }
 
-function hapusSemuaDatabase() {
-    if(confirm('⚠️ PERINGATAN: Ini akan menghapus SEMUA data di database ini! Lanjutkan?')) {
-        let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
+function hapusSemuaMulti() {
+    if(confirm('⚠️ PERINGATAN: Hapus SEMUA data di database ini?')) {
+        let db = getCurrentMultiDb();
         db.data = [];
-        saveDatabases();
-        renderDatabaseTable();
+        selectedRows.clear();
+        saveMultiDatabases();
+        refreshDbSelect();
+        renderMultiDatabaseTable();
         alert("Semua data telah dihapus!");
     }
 }
 
-function shareSemuaKeWA() {
-    let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
+function shareMultiToWA() {
+    let db = getCurrentMultiDb();
     let data = db.data;
-    if(data.length === 0) { alert("Tidak ada data untuk dishare!"); return; }
-    let pesan = `*DATA ${currentDbType.toUpperCase()} - PT Auva Eqtena*\n\n`;
-    data.forEach((row, i) => { pesan += `${i+1}. ${row.Nama || '-'} - ${row['No HP'] || '-'}\n`; });
-    pesan += `\nTotal: ${data.length} jamaah\n\nDikirim dari Aplikasi Haji & Umroh`;
-    navigator.clipboard.writeText(pesan).then(() => alert("Data telah disalin ke clipboard! Bisa paste ke WhatsApp."));
+    if(data.length === 0) {
+        alert("Tidak ada data untuk dishare!");
+        return;
+    }
+    let pesan = `*DATA ${currentDbTypeMulti.toUpperCase()}*\n\n`;
+    data.forEach((row, i) => {
+        pesan += `${i+1}. ${row.Nama || '-'} - ${row['No HP'] || '-'}\n`;
+    });
+    pesan += `\nTotal: ${data.length} data\n\nDikirim dari Aplikasi Haji & Umroh`;
+    navigator.clipboard.writeText(pesan).then(() => {
+        alert("Data telah disalin ke clipboard! Bisa paste ke WhatsApp.");
+    });
 }
 
-function backupDatabase() {
-    let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
-    let backupData = { fields: db.fields, data: db.data, backupDate: new Date().toISOString() };
-    let dataStr = JSON.stringify(backupData, null, 2);
-    let blob = new Blob([dataStr], {type: 'application/json'});
+function backupMultiDatabase() {
+    let data = currentDbTypeMulti === 'haji' ? dbHajiData : dbUmrohData;
+    let backupData = { databases: data.databases, currentDb: data.currentDb, backupDate: new Date().toISOString() };
+    let blob = new Blob([JSON.stringify(backupData, null, 2)], {type: 'application/json'});
     let a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `backup_${currentDbType}_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
+    a.download = `backup_${currentDbTypeMulti}_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
     a.click();
-    URL.revokeObjectURL(blob);
     alert("Backup berhasil!");
 }
 
-function restoreDatabase(file) {
+function restoreMultiDatabase(file) {
     let reader = new FileReader();
     reader.onload = (e) => {
         try {
             let data = JSON.parse(e.target.result);
-            if(data.fields && data.data) {
+            if(data.databases && data.currentDb) {
                 if(confirm('⚠️ Restore akan MENIMPA data yang ada. Lanjutkan?')) {
-                    let db = currentDbType === 'haji' ? dbHaji : dbUmroh;
-                    db.fields = data.fields;
-                    db.data = data.data;
-                    saveDatabases();
-                    renderDatabaseTable();
+                    if(currentDbTypeMulti === 'haji') {
+                        dbHajiData = { databases: data.databases, currentDb: data.currentDb };
+                    } else {
+                        dbUmrohData = { databases: data.databases, currentDb: data.currentDb };
+                    }
+                    saveMultiDatabases();
+                    refreshDbSelect();
+                    renderMultiDatabaseTable();
                     alert("Restore berhasil!");
                 }
-            } else { alert("File backup tidak valid!"); }
-        } catch(err) { alert("Gagal membaca file backup!"); }
+            } else {
+                alert("File backup tidak valid!");
+            }
+        } catch(err) {
+            alert("Gagal membaca file backup!");
+        }
     };
     reader.readAsText(file);
 }
 
-function resetDatabase() {
-    currentDbSearch = '';
-    currentDbSortField = null;
-    currentDbSortOrder = 'asc';
-    currentDbPage = 1;
-    document.getElementById('dbSearchInput').value = '';
-    renderDatabaseTable();
+function openMultiDatabase() {
+    refreshDbSelect();
+    renderMultiDatabaseTable();
+    document.getElementById('dbPanel').classList.add('active');
 }
 
-// Event listeners database
-document.getElementById('dbTabHaji')?.addEventListener('click', () => {
-    currentDbType = 'haji';
-    document.getElementById('dbTabHaji').classList.add('active');
-    document.getElementById('dbTabUmroh').classList.remove('active');
-    resetDatabase();
+// Event listeners Multi Database
+document.getElementById('dbSelect')?.addEventListener('change', (e) => {
+    let data = currentDbTypeMulti === 'haji' ? dbHajiData : dbUmrohData;
+    data.currentDb = e.target.value;
+    selectedRows.clear();
+    saveMultiDatabases();
+    refreshDbSelect();
+    renderMultiDatabaseTable();
 });
-document.getElementById('dbTabUmroh')?.addEventListener('click', () => {
-    currentDbType = 'umroh';
-    document.getElementById('dbTabUmroh').classList.add('active');
-    document.getElementById('dbTabHaji').classList.remove('active');
-    resetDatabase();
-});
-document.getElementById('tambahDatabaseBtn')?.addEventListener('click', tambahDatabaseBaru);
-document.getElementById('kelolaFieldBtn')?.addEventListener('click', openFieldManager);
-document.getElementById('exportExcelBtn')?.addEventListener('click', exportToExcel);
-document.getElementById('importExcelInput')?.addEventListener('change', (e) => { if(e.target.files[0]) importExcel(e.target.files[0]); e.target.value = ''; });
-document.getElementById('hapusSemuaBtn')?.addEventListener('click', hapusSemuaDatabase);
-document.getElementById('shareSemuaWaBtn')?.addEventListener('click', shareSemuaKeWA);
-document.getElementById('backupDatabaseBtn')?.addEventListener('click', backupDatabase);
-document.getElementById('restoreDatabaseInput')?.addEventListener('change', (e) => { if(e.target.files[0]) restoreDatabase(e.target.files[0]); e.target.value = ''; });
-document.getElementById('resetUrutanBtn')?.addEventListener('click', resetDatabase);
-document.getElementById('dbSearchInput')?.addEventListener('input', (e) => { currentDbSearch = e.target.value; currentDbPage = 1; renderDatabaseTable(); });
-document.getElementById('dbPerPageSelect')?.addEventListener('change', (e) => { currentDbPerPage = parseInt(e.target.value); currentDbPage = 1; renderDatabaseTable(); });
+document.getElementById('dbSearchInput')?.addEventListener('input', (e) => { currentDbSearchMulti = e.target.value; currentDbPageMulti = 1; renderMultiDatabaseTable(); });
+document.getElementById('dbPerPageSelect')?.addEventListener('change', (e) => { currentDbPerPageMulti = parseInt(e.target.value); currentDbPageMulti = 1; renderMultiDatabaseTable(); });
+document.getElementById('resetUrutanBtn')?.addEventListener('click', resetMultiDatabase);
+document.getElementById('tambahDbBtn')?.addEventListener('click', tambahDatabaseBaru);
+document.getElementById('editDbBtn')?.addEventListener('click', editDatabaseName);
+document.getElementById('hapusDbBtn')?.addEventListener('click', hapusDatabase);
+document.getElementById('kelolaFieldBtn')?.addEventListener('click', openFieldManagerMulti);
+document.getElementById('exportExcelBtn')?.addEventListener('click', exportMultiToExcel);
+document.getElementById('importExcelInput')?.addEventListener('change', (e) => { if(e.target.files[0]) importMultiExcel(e.target.files[0]); e.target.value = ''; });
+document.getElementById('hapusSemuaBtn')?.addEventListener('click', hapusSemuaMulti);
+document.getElementById('shareSemuaWaBtn')?.addEventListener('click', shareMultiToWA);
+document.getElementById('backupDatabaseBtn')?.addEventListener('click', backupMultiDatabase);
+document.getElementById('restoreDatabaseInput')?.addEventListener('change', (e) => { if(e.target.files[0]) restoreMultiDatabase(e.target.files[0]); e.target.value = ''; });
 document.getElementById('tutupDb')?.addEventListener('click', () => document.getElementById('dbPanel').classList.remove('active'));
 document.getElementById('tutupField')?.addEventListener('click', () => document.getElementById('fieldPanel').classList.remove('active'));
+document.getElementById('tutupCopyTarget')?.addEventListener('click', () => document.getElementById('copyTargetPanel').classList.remove('active'));
+document.getElementById('konfirmasiCopyBtn')?.addEventListener('click', executeCopyToAkomodasi);
+document.getElementById('pilihSemuaBtn')?.addEventListener('click', pilihSemua);
+document.getElementById('hapusPilihanBtn')?.addEventListener('click', hapusPilihan);
+document.getElementById('copyYangDipilihBtn')?.addEventListener('click', copySelectedToAkomodasi);
+document.getElementById('copySemuaBtn')?.addEventListener('click', copyAllToAkomodasi);
 
-function openDatabase() { resetDatabase(); document.getElementById('dbPanel').classList.add('active'); }
+document.getElementById('dbTabHaji')?.addEventListener('click', () => {
+    currentDbTypeMulti = 'haji';
+    selectedRows.clear();
+    document.getElementById('dbTabHaji').classList.add('active');
+    document.getElementById('dbTabUmroh').classList.remove('active');
+    refreshDbSelect();
+    renderMultiDatabaseTable();
+});
+document.getElementById('dbTabUmroh')?.addEventListener('click', () => {
+    currentDbTypeMulti = 'umroh';
+    selectedRows.clear();
+    document.getElementById('dbTabUmroh').classList.add('active');
+    document.getElementById('dbTabHaji').classList.remove('active');
+    refreshDbSelect();
+    renderMultiDatabaseTable();
+});
+
+initMultiDatabases();
 
 // ======================== FUNGSI HAPUS SEMUA AKOMODASI ========================
 function hapusSemuaAkomodasi() {
     if(confirm('⚠️ PERINGATAN: Ini akan menghapus SEMUA data Bus, Hotel, dan relasi kamar dari semua jamaah!\n\nData jamaah tetap ada, hanya akomodasi yang dihapus. Lanjutkan?')) {
-        // Kosongkan daftar bus dan hotel
         daftarBus = [];
         daftarHotel = [];
-        
-        // Hapus relasi dari semua jamaah
-        dataHaji.forEach(j => {
-            j.busId = null;
-            j.hotelId = null;
-            j.nomorKamar = '';
-        });
-        dataUmroh.forEach(j => {
-            j.busId = null;
-            j.hotelId = null;
-            j.nomorKamar = '';
-        });
-        
-        // Simpan perubahan
+        dataHaji.forEach(j => { j.busId = null; j.hotelId = null; j.nomorKamar = ''; });
+        dataUmroh.forEach(j => { j.busId = null; j.hotelId = null; j.nomorKamar = ''; });
         saveAkomodasi();
         saveJamaah();
-        
-        // Refresh tampilan
         renderAkomodasi();
         renderDaftarJamaah();
-        
         alert('✅ Semua data akomodasi (Bus, Hotel, Kamar) telah dihapus!');
     }
 }
 
-// ======================== FUNGSI LAMA ========================
+// ======================== FUNGSI AKOMODASI LAINNYA ========================
+function renderAkomodasi() {
+    let all = [...dataHaji, ...dataUmroh];
+    let container = document.getElementById('akomodasiContent');
+    let html = '';
+    if(currentAkomodasiTab === 'bus') {
+        if(daftarBus.length === 0) {
+            html = '<div style="text-align:center; padding:20px;">🚌 Belum ada bus. Tekan tombol "+ Tambah Baru"</div>';
+        } else {
+            daftarBus.forEach(b => {
+                let jb = all.filter(j => j.busId === b.id);
+                html += `<div class="akomodasi-item-card">
+                    <div class="akomodasi-header">
+                        <span class="akomodasi-nama">🚌 ${b.nama}</span>
+                        <span class="akomodasi-stats">${jb.length}/${b.kapasitas}</span>
+                        <div class="akomodasi-actions">
+                            <button class="btn-edit" onclick="openEditDialogBus('bus',${b.id},'${b.nama}')">✏️</button>
+                            <button class="btn-hapus-item" onclick="hapusItemBus(${b.id},'${b.nama}')">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="akomodasi-header">
+                        <button class="btn-akomodasi" onclick="waBroadcastBus(${b.id})">📱 WA</button>
+                        <button class="btn-akomodasi" onclick="cetakBus(${b.id})">🖨️ Cetak</button>
+                    </div>`;
+                jb.forEach(j => {
+                    let statusBadge = j.status === 'LUNAS' ? '<span class="status-badge status-lunas-badge">Lunas</span>' : '<span class="status-badge status-dp-badge">DP</span>';
+                    html += `<div class="jamaah-list-item">
+                        <span>👤 ${j.nama} ${statusBadge}</span>
+                        <div>
+                            <button class="btn-pindah" onclick='openPindahJamaah(${JSON.stringify(j).replace(/"/g, '&quot;')}, "bus", ${b.id}, "${b.nama}")'>🔄 Pindah</button>
+                            <button class="btn-lepas" onclick="lepasJamaah(${j.id}, 'bus')">❌ Lepas</button>
+                        </div>
+                    </div>`;
+                });
+                if(jb.length === 0) html += `<div class="jamaah-list-item" style="color:gray;">Belum ada jamaah</div>`;
+                html += `</div>`;
+            });
+        }
+    } else if(currentAkomodasiTab === 'hotel') {
+        if(daftarHotel.length === 0) {
+            html = '<div style="text-align:center; padding:20px;">🏨 Belum ada hotel. Tekan tombol "+ Tambah Baru"</div>';
+        } else {
+            daftarHotel.forEach(h => {
+                let jh = all.filter(j => j.hotelId === h.id);
+                html += `<div class="akomodasi-item-card">
+                    <div class="akomodasi-header">
+                        <span class="akomodasi-nama">🏨 ${h.nama}</span>
+                        <span class="akomodasi-stats">${jh.length} jamaah</span>
+                        <div class="akomodasi-actions">
+                            <button class="btn-edit" onclick="openEditDialogHotel('hotel',${h.id},'${h.nama}')">✏️</button>
+                            <button class="btn-hapus-item" onclick="hapusItemHotel(${h.id},'${h.nama}')">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="akomodasi-header">
+                        <button class="btn-akomodasi" onclick="waBroadcastHotel(${h.id})">📱 WA</button>
+                        <button class="btn-akomodasi" onclick="cetakHotel(${h.id})">🖨️ Cetak</button>
+                    </div>`;
+                jh.forEach(j => {
+                    let statusBadge = j.status === 'LUNAS' ? '<span class="status-badge status-lunas-badge">Lunas</span>' : '<span class="status-badge status-dp-badge">DP</span>';
+                    html += `<div class="jamaah-list-item">
+                        <span>👤 ${j.nama} - Kamar: ${j.nomorKamar || '-'} ${statusBadge}</span>
+                        <div>
+                            <button class="btn-pindah" onclick='openPindahJamaah(${JSON.stringify(j).replace(/"/g, '&quot;')}, "hotel", ${h.id}, "${h.nama}")'>🔄 Pindah</button>
+                            <button class="btn-lepas" onclick="lepasJamaah(${j.id}, 'hotel')">❌ Lepas</button>
+                        </div>
+                    </div>`;
+                });
+                if(jh.length === 0) html += `<div class="jamaah-list-item" style="color:gray;">Belum ada jamaah</div>`;
+                html += `</div>`;
+            });
+        }
+    } else {
+        let kamar = {};
+        all.forEach(j => { if(j.nomorKamar && j.nomorKamar.trim()) { if(!kamar[j.nomorKamar]) kamar[j.nomorKamar] = []; kamar[j.nomorKamar].push(j); } });
+        if(Object.keys(kamar).length === 0) {
+            html = '<div style="text-align:center; padding:20px;">🛏️ Belum ada data kamar</div>';
+        } else {
+            for(let [k, list] of Object.entries(kamar)) {
+                html += `<div class="akomodasi-item-card">
+                    <div class="akomodasi-header">
+                        <span class="akomodasi-nama">🛏️ Kamar ${k}</span>
+                        <span class="akomodasi-stats">${list.length} orang</span>
+                    </div>
+                    <div class="akomodasi-header">
+                        <button class="btn-akomodasi" onclick="waBroadcastKamar('${k}')">📱 WA</button>
+                        <button class="btn-akomodasi" onclick="cetakKamar('${k}')">🖨️ Cetak</button>
+                    </div>`;
+                list.forEach(j => { html += `<div class="jamaah-list-item"><span>👤 ${j.nama} (${j.paket})</span></div>`; });
+                html += `</div>`;
+            }
+        }
+    }
+    container.innerHTML = html;
+}
+
+function openEditDialogBus(type, id, nama) {
+    let newNama = prompt("Edit nama bus:", nama);
+    if(newNama && newNama.trim()) {
+        let idx = daftarBus.findIndex(b => b.id === id);
+        if(idx !== -1) daftarBus[idx].nama = newNama.trim();
+        saveAkomodasi();
+        renderAkomodasi();
+        renderDaftarJamaah();
+    }
+}
+
+function openEditDialogHotel(type, id, nama) {
+    let newNama = prompt("Edit nama hotel:", nama);
+    if(newNama && newNama.trim()) {
+        let idx = daftarHotel.findIndex(h => h.id === id);
+        if(idx !== -1) daftarHotel[idx].nama = newNama.trim();
+        saveAkomodasi();
+        renderAkomodasi();
+        renderDaftarJamaah();
+    }
+}
+
+function hapusItemBus(id, nama) {
+    if(confirm(`Hapus bus "${nama}"?`)) {
+        daftarBus = daftarBus.filter(b => b.id !== id);
+        [...dataHaji, ...dataUmroh].forEach(j => { if(j.busId === id) j.busId = null; });
+        saveAkomodasi();
+        saveJamaah();
+        renderAkomodasi();
+        renderDaftarJamaah();
+        alert(`Bus "${nama}" berhasil dihapus!`);
+    }
+}
+
+function hapusItemHotel(id, nama) {
+    if(confirm(`Hapus hotel "${nama}"?`)) {
+        daftarHotel = daftarHotel.filter(h => h.id !== id);
+        [...dataHaji, ...dataUmroh].forEach(j => { if(j.hotelId === id) j.hotelId = null; });
+        saveAkomodasi();
+        saveJamaah();
+        renderAkomodasi();
+        renderDaftarJamaah();
+        alert(`Hotel "${nama}" berhasil dihapus!`);
+    }
+}
+
+function openPindahJamaah(j, type, targetId, targetNama) {
+    currentPindahJamaah = j;
+    currentPindahType = type;
+    document.getElementById('pindahJudul').innerHTML = `Pindah: ${j.nama}`;
+    let html = `<p>Pindah ke ${targetNama}:</p><select id="pindahSelect" class="input-jamaah" style="width:100%;">`;
+    if(type === 'bus') {
+        daftarBus.forEach(b => { html += `<option value="${b.id}" ${b.id === targetId ? 'selected' : ''}>${b.nama}</option>`; });
+    } else {
+        daftarHotel.forEach(h => { html += `<option value="${h.id}" ${h.id === targetId ? 'selected' : ''}>${h.nama}</option>`; });
+    }
+    html += `</select><button class="btn-tambah" id="konfirmasiPindah" style="margin-top:15px;">✅ Pindahkan</button>`;
+    document.getElementById('pindahContent').innerHTML = html;
+    document.getElementById('konfirmasiPindah')?.addEventListener('click', () => {
+        let newId = parseInt(document.getElementById('pindahSelect').value);
+        if(type === 'bus') {
+            if(currentJamaahType === 'haji') {
+                let idx = dataHaji.findIndex(jj => jj.id === j.id);
+                if(idx !== -1) dataHaji[idx].busId = newId;
+            } else {
+                let idx = dataUmroh.findIndex(jj => jj.id === j.id);
+                if(idx !== -1) dataUmroh[idx].busId = newId;
+            }
+        } else {
+            if(currentJamaahType === 'haji') {
+                let idx = dataHaji.findIndex(jj => jj.id === j.id);
+                if(idx !== -1) dataHaji[idx].hotelId = newId;
+            } else {
+                let idx = dataUmroh.findIndex(jj => jj.id === j.id);
+                if(idx !== -1) dataUmroh[idx].hotelId = newId;
+            }
+        }
+        saveJamaah();
+        renderAkomodasi();
+        renderDaftarJamaah();
+        document.getElementById('pindahPanel').classList.remove('active');
+        alert(`${j.nama} dipindahkan!`);
+    });
+    document.getElementById('pindahPanel').classList.add('active');
+}
+
+function lepasJamaah(id, type) {
+    if(confirm('Lepas jamaah dari grup ini?')) {
+        if(type === 'bus') {
+            if(currentJamaahType === 'haji') {
+                let idx = dataHaji.findIndex(j => j.id === id);
+                if(idx !== -1) dataHaji[idx].busId = null;
+            } else {
+                let idx = dataUmroh.findIndex(j => j.id === id);
+                if(idx !== -1) dataUmroh[idx].busId = null;
+            }
+        } else {
+            if(currentJamaahType === 'haji') {
+                let idx = dataHaji.findIndex(j => j.id === id);
+                if(idx !== -1) dataHaji[idx].hotelId = null;
+            } else {
+                let idx = dataUmroh.findIndex(j => j.id === id);
+                if(idx !== -1) dataUmroh[idx].hotelId = null;
+            }
+        }
+        saveJamaah();
+        renderAkomodasi();
+        renderDaftarJamaah();
+    }
+}
+
+function tambahBus() {
+    let nama = prompt("Nama Bus Baru:");
+    if(nama && nama.trim()) {
+        daftarBus.push({ id: Date.now(), nama: nama.trim(), kapasitas: 40 });
+        saveAkomodasi();
+        renderAkomodasi();
+    }
+}
+
+function tambahHotel() {
+    let nama = prompt("Nama Hotel Baru:");
+    if(nama && nama.trim()) {
+        daftarHotel.push({ id: Date.now(), nama: nama.trim(), lokasi: "" });
+        saveAkomodasi();
+        renderAkomodasi();
+    }
+}
+
+function waBroadcastBus(id) {
+    let bus = daftarBus.find(b => b.id === id);
+    let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.busId === id);
+    let pesan = `Info bus ${bus.nama}.`;
+    jamaah.forEach(j => window.open(`https://wa.me/${j.hp}?text=${encodeURIComponent(pesan)}`, '_blank'));
+    alert(`WA untuk ${jamaah.length} jamaah`);
+}
+
+function waBroadcastHotel(id) {
+    let hotel = daftarHotel.find(h => h.id === id);
+    let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.hotelId === id);
+    let pesan = `Info hotel ${hotel.nama}.`;
+    jamaah.forEach(j => window.open(`https://wa.me/${j.hp}?text=${encodeURIComponent(pesan)}`, '_blank'));
+    alert(`WA untuk ${jamaah.length} jamaah`);
+}
+
+function waBroadcastKamar(k) {
+    let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.nomorKamar === k);
+    let pesan = `Info kamar ${k}.`;
+    jamaah.forEach(j => window.open(`https://wa.me/${j.hp}?text=${encodeURIComponent(pesan)}`, '_blank'));
+    alert(`WA untuk ${jamaah.length} jamaah`);
+}
+
+function cetakBus(id) {
+    let bus = daftarBus.find(b => b.id === id);
+    let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.busId === id);
+    let teks = `DAFTAR ${bus.nama}\n${jamaah.map((j,i) => `${i+1}. ${j.nama} - ${j.hp}`).join('\n')}`;
+    alert(teks);
+}
+
+function cetakHotel(id) {
+    let hotel = daftarHotel.find(h => h.id === id);
+    let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.hotelId === id);
+    let teks = `DAFTAR ${hotel.nama}\n${jamaah.map((j,i) => `${i+1}. ${j.nama} - Kamar ${j.nomorKamar}`).join('\n')}`;
+    alert(teks);
+}
+
+function cetakKamar(k) {
+    let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.nomorKamar === k);
+    let teks = `DAFTAR KAMAR ${k}\n${jamaah.map((j,i) => `${i+1}. ${j.nama}`).join('\n')}`;
+    alert(teks);
+}
+
+function openAkomodasi() {
+    renderAkomodasi();
+    document.getElementById('akomodasiPanel').classList.add('active');
+}
+
+// Event listeners Akomodasi
+document.getElementById('tabBus')?.addEventListener('click', () => {
+    currentAkomodasiTab = 'bus';
+    document.getElementById('tabBus').classList.add('active');
+    document.getElementById('tabHotel').classList.remove('active');
+    document.getElementById('tabKamar').classList.remove('active');
+    renderAkomodasi();
+});
+document.getElementById('tabHotel')?.addEventListener('click', () => {
+    currentAkomodasiTab = 'hotel';
+    document.getElementById('tabHotel').classList.add('active');
+    document.getElementById('tabBus').classList.remove('active');
+    document.getElementById('tabKamar').classList.remove('active');
+    renderAkomodasi();
+});
+document.getElementById('tabKamar')?.addEventListener('click', () => {
+    currentAkomodasiTab = 'kamar';
+    document.getElementById('tabKamar').classList.add('active');
+    document.getElementById('tabBus').classList.remove('active');
+    document.getElementById('tabHotel').classList.remove('active');
+    renderAkomodasi();
+});
+document.getElementById('tambahAkomodasiBtn')?.addEventListener('click', () => {
+    if(currentAkomodasiTab === 'bus') tambahBus();
+    else if(currentAkomodasiTab === 'hotel') tambahHotel();
+    else alert('Kamar diatur saat edit data jamaah');
+});
+document.getElementById('hapusSemuaAkomodasiBtn')?.addEventListener('click', hapusSemuaAkomodasi);
+document.getElementById('tutupPindah')?.addEventListener('click', () => document.getElementById('pindahPanel').classList.remove('active'));
+document.getElementById('tutupAkomodasi')?.addEventListener('click', () => document.getElementById('akomodasiPanel').classList.remove('active'));
+
+// ======================== GRAFIK & REKAP ========================
+function getPendapatanPerBulan(tahun) {
+    let b = Array(12).fill(0);
+    [...dataHaji.map(j=>({...j,jenis:'Haji'})), ...dataUmroh.map(j=>({...j,jenis:'Umroh'}))].forEach(j => {
+        if(j.tglDaftar && j.tglDaftar.startsWith(tahun)) {
+            let bulan = parseInt(j.tglDaftar.split('-')[1]) - 1;
+            let harga = getHargaPaket(j.paket);
+            let nominal = j.status === 'LUNAS' ? harga : (j.totalDibayar || harga * 0.15);
+            b[bulan] += nominal;
+        }
+    });
+    return b;
+}
+
+function renderGrafik() {
+    let tahun = document.getElementById('tahunGrafik').value;
+    let data = getPendapatanPerBulan(tahun);
+    let bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+    if(chartInstance) chartInstance.destroy();
+    let ctx = document.getElementById('pendapatanChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: { labels: bulan, datasets: [{ label: `Pendapatan ${tahun}`, data: data, backgroundColor: 'rgba(46,125,50,0.7)', borderColor: '#1b5e20', borderRadius: 8 }] },
+        options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => formatRupiah(ctx.raw) } } }, scales: { y: { ticks: { callback: (val) => formatRupiah(val) }, beginAtZero: true } } }
+    });
+    let total = data.reduce((a,b)=>a+b,0);
+    let max = Math.max(...data);
+    let maxIdx = data.indexOf(max);
+    document.getElementById('statGrafik').innerHTML = `<div class="stat-tertinggi"><strong>📊 Total ${tahun}: ${formatRupiah(total)}</strong><br>🏆 Tertinggi: ${bulan[maxIdx]} (${formatRupiah(max)})</div>`;
+}
+
+function getRekapBulanan(bln) {
+    let all = [...dataHaji.map(j=>({...j,jenis:'Haji'})), ...dataUmroh.map(j=>({...j,jenis:'Umroh'}))].filter(j => j.tglDaftar && j.tglDaftar.startsWith(bln));
+    let th = 0, tu = 0;
+    all.forEach(j => {
+        let h = getHargaPaket(j.paket);
+        let n = j.status === 'LUNAS' ? h : (j.totalDibayar || 0);
+        if(j.jenis === 'Haji') th += n;
+        else tu += n;
+    });
+    return { totalHaji: th, totalUmroh: tu, total: th + tu };
+}
+
+function renderRekapBulanan(containerId, isFull = false) {
+    let now = new Date();
+    let bulanIni = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    let selected = document.getElementById('bulanSelect') ? document.getElementById('bulanSelect').value : bulanIni;
+    let r = getRekapBulanan(selected);
+    let nama = new Date(selected + '-01').toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
+    let html = `<div class="rekap-header"><span>📅 ${nama}</span>${!isFull ? `<select id="bulanSelect">${getBulanOptions(selected)}</select>` : ''}</div>
+                <div class="rekap-item"><span>Haji</span><span>${formatRupiah(r.totalHaji)}</span></div>
+                <div class="rekap-item"><span>Umroh</span><span>${formatRupiah(r.totalUmroh)}</span></div>
+                <div class="rekap-total"><span>TOTAL</span><span>${formatRupiah(r.total)}</span></div>`;
+    document.getElementById(containerId).innerHTML = html;
+    if(!isFull && document.getElementById('bulanSelect')) {
+        document.getElementById('bulanSelect').addEventListener('change', () => renderRekapBulanan(containerId, false));
+    }
+}
+
+function getBulanOptions(selected) {
+    let opts = '';
+    for(let i = 0; i < 12; i++) {
+        let d = new Date();
+        d.setMonth(d.getMonth() - i);
+        let v = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        let n = d.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
+        opts += `<option value="${v}" ${v === selected ? 'selected' : ''}>${n}</option>`;
+    }
+    return opts;
+}
+
+function updateDashboard() {
+    let th = dataHaji.length, tu = dataUmroh.length;
+    let tl = [...dataHaji, ...dataUmroh].filter(j => j.status === 'LUNAS').length;
+    let td = [...dataHaji, ...dataUmroh].filter(j => j.status === 'DP').length;
+    let tp = [...dataHaji, ...dataUmroh].reduce((s,j) => s + (j.status === 'LUNAS' ? getHargaPaket(j.paket) : (j.totalDibayar || 0)), 0);
+    document.getElementById('dashboardContent').innerHTML = `
+        <div class="dashboard-cards">
+            <div class="card-dash"><h3>${th}</h3><p>Haji</p></div>
+            <div class="card-dash"><h3>${tu}</h3><p>Umroh</p></div>
+            <div class="card-dash"><h3>${tl}</h3><p>Lunas</p></div>
+            <div class="card-dash"><h3>${td}</h3><p>DP</p></div>
+        </div>
+        <div class="card-dash" style="background:#f9a825;"><h3>${formatRupiah(tp)}</h3><p>Total Pendapatan</p></div>`;
+    renderRekapBulanan('rekapBulananContent', false);
+    renderNotifikasiJatuhTempo();
+    renderGrafik();
+}
+
+function openFullRekap() {
+    document.getElementById('rekapFullContent').innerHTML = `
+        <div class="rekap-header"><span>Pilih Bulan</span><select id="bulanSelectFull">${getBulanOptions(new Date().toISOString().slice(0,7))}</select></div>
+        <div id="rekapFullDetail"></div>`;
+    function load() {
+        let s = document.getElementById('bulanSelectFull').value;
+        let r = getRekapBulanan(s);
+        let n = new Date(s + '-01').toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
+        document.getElementById('rekapFullDetail').innerHTML = `
+            <div class="rekap-item"><span>Haji</span><span>${formatRupiah(r.totalHaji)}</span></div>
+            <div class="rekap-item"><span>Umroh</span><span>${formatRupiah(r.totalUmroh)}</span></div>
+            <div class="rekap-total"><span>TOTAL ${n}</span><span>${formatRupiah(r.total)}</span></div>`;
+    }
+    load();
+    document.getElementById('bulanSelectFull').addEventListener('change', load);
+    document.getElementById('rekapPanel').classList.add('active');
+}
+
+document.getElementById('tutupRekap')?.addEventListener('click', () => document.getElementById('rekapPanel').classList.remove('active'));
+document.getElementById('cetakRekap')?.addEventListener('click', () => window.print());
+
+// ======================== DOKUMEN ========================
+function openPreview(doc) {
+    document.getElementById('previewJudul').innerText = `📄 ${doc.nama}`;
+    let container = document.getElementById('previewContent');
+    if(doc.type === 'image') container.innerHTML = `<img src="${doc.data}" style="max-width:100%; border-radius:16px;">`;
+    else container.innerHTML = `<embed src="${doc.data}" type="application/pdf" width="100%" height="400px">`;
+    document.getElementById('previewPanel').classList.add('active');
+}
+
+function openDokumen(j) {
+    currentDokumenJamaah = j;
+    document.getElementById('dokumenJudul').innerText = `📎 Dokumen: ${j.nama}`;
+    renderDokumenList();
+    document.getElementById('dokumenPanel').classList.add('active');
+}
+
+function renderDokumenList() {
+    if(!currentDokumenJamaah) return;
+    let dok = currentDokumenJamaah.dokumen || [];
+    let c = document.getElementById('dokumenContent');
+    if(dok.length === 0) {
+        c.innerHTML = '<p style="text-align:center; padding:20px;">Belum ada dokumen</p>';
+        return;
+    }
+    let html = '<div class="dokumen-list">';
+    dok.forEach((d, i) => {
+        html += `<div class="dokumen-item"><div><strong>${d.nama}</strong><br><small>${d.tgl}</small></div><div><button class="btn-lihat" data-idx="${i}">👁️ Lihat</button><button class="btn-hapus-dokumen" data-idx="${i}">🗑️</button></div></div>`;
+    });
+    html += '</div>';
+    c.innerHTML = html;
+    document.querySelectorAll('.btn-lihat').forEach(btn => btn.addEventListener('click', () => {
+        let idx = parseInt(btn.dataset.idx);
+        openPreview(dok[idx]);
+    }));
+    document.querySelectorAll('.btn-hapus-dokumen').forEach(btn => btn.addEventListener('click', () => {
+        if(confirm('Hapus dokumen?')) {
+            let idx = parseInt(btn.dataset.idx);
+            currentDokumenJamaah.dokumen.splice(idx, 1);
+            saveJamaah();
+            renderDokumenList();
+            renderDaftarJamaah();
+        }
+    }));
+}
+
+function uploadDokumen() {
+    let fileInput = document.getElementById('uploadFile');
+    fileInput.click();
+    fileInput.onchange = (e) => {
+        let file = e.target.files[0];
+        if(!file) return;
+        let reader = new FileReader();
+        reader.onload = (ev) => {
+            let doc = {
+                id: Date.now(),
+                nama: file.name,
+                tgl: new Date().toLocaleDateString('id-ID'),
+                type: file.type.startsWith('image/') ? 'image' : 'pdf',
+                data: ev.target.result
+            };
+            if(!currentDokumenJamaah.dokumen) currentDokumenJamaah.dokumen = [];
+            currentDokumenJamaah.dokumen.push(doc);
+            saveJamaah();
+            renderDokumenList();
+            renderDaftarJamaah();
+            alert('Dokumen terupload!');
+        };
+        reader.readAsDataURL(file);
+    };
+}
+
+document.getElementById('btnUploadDokumen')?.addEventListener('click', uploadDokumen);
+document.getElementById('tutupPreview')?.addEventListener('click', () => document.getElementById('previewPanel').classList.remove('active'));
+document.getElementById('tutupDokumen')?.addEventListener('click', () => document.getElementById('dokumenPanel').classList.remove('active'));
+
+// ======================== WA BROADCAST ========================
+function openWABroadcast() {
+    let all = [...dataHaji, ...dataUmroh];
+    let html = `<div class="input-jamaah">
+        <textarea id="waPesanBroadcast" rows="4" placeholder="Tulis pesan..."></textarea>
+        <select id="waFilterBroadcast">
+            <option value="semua">Semua (${all.length})</option>
+            <option value="haji">Haji (${dataHaji.length})</option>
+            <option value="umroh">Umroh (${dataUmroh.length})</option>
+            <option value="dp">DP (${all.filter(j=>j.status==='DP').length})</option>
+            <option value="lunas">Lunas (${all.filter(j=>j.status==='LUNAS').length})</option>
+        </select>
+        <button class="btn-tambah" id="btnKirimBroadcast">📱 Kirim</button>
+    </div>`;
+    document.getElementById('wabroadcastContent').innerHTML = html;
+    document.getElementById('btnKirimBroadcast')?.addEventListener('click', () => {
+        let pesan = document.getElementById('waPesanBroadcast').value.trim();
+        if(!pesan) { alert("Tulis pesan!"); return; }
+        let filter = document.getElementById('waFilterBroadcast').value;
+        let target = filter === 'semua' ? all : filter === 'haji' ? dataHaji : filter === 'umroh' ? dataUmroh : filter === 'dp' ? all.filter(j=>j.status==='DP') : all.filter(j=>j.status==='LUNAS');
+        target.forEach(j => window.open(`https://wa.me/${j.hp}?text=${encodeURIComponent(pesan)}`, '_blank'));
+        alert(`WA untuk ${target.length} jamaah`);
+    });
+    document.getElementById('wabroadcastPanel').classList.add('active');
+}
+
+document.getElementById('tutupWABroadcast')?.addEventListener('click', () => document.getElementById('wabroadcastPanel').classList.remove('active'));
+
+// ======================== NOTIFIKASI ========================
+function hitungSelisih(tgl) {
+    let today = new Date();
+    today.setHours(0,0,0,0);
+    let due = new Date(tgl);
+    due.setHours(0,0,0,0);
+    return Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+}
+
+function getJatuhTempo() {
+    let all = [...dataHaji.map(j=>({...j,jenis:'Haji'})), ...dataUmroh.map(j=>({...j,jenis:'Umroh'}))].filter(j => j.status === 'DP');
+    let lewat = [], dekat = [];
+    all.forEach(j => {
+        if(!j.jatuhTempo) return;
+        let s = hitungSelisih(j.jatuhTempo);
+        if(s < 0) lewat.push({...j, selisih: Math.abs(s)});
+        else if(s <= 7) dekat.push({...j, selisih: s});
+    });
+    return { lewat, dekat };
+}
+
+function renderNotifikasiJatuhTempo() {
+    let {lewat, dekat} = getJatuhTempo();
+    let c = document.getElementById('notifikasiJatuhTempo');
+    if(!c) return;
+    if(lewat.length === 0 && dekat.length === 0) {
+        c.innerHTML = '<div style="background:#e8f5e9; padding:15px; border-radius:16px; text-align:center;">✅ Semua aman!</div>';
+        return;
+    }
+    let html = '<h4>⚠️ Peringatan Jatuh Tempo</h4>';
+    if(lewat.length) {
+        html += `<div><strong style="color:#c62828;">🔴 TERLEWAT (${lewat.length})</strong>`;
+        lewat.forEach(j => {
+            let sisa = getHargaPaket(j.paket) - (j.totalDibayar || 0);
+            html += `<div class="notif-card danger">
+                <div>${j.nama} - ${j.paket} (terlambat ${j.selisih} hari)</div>
+                <div>Sisa: ${formatRupiah(sisa)}</div>
+                <button class="btn-wa-reminder" data-hp="${j.hp}" data-pesan="Jatuh tempo TERLEWAT ${j.selisih} hari. Sisa: ${formatRupiah(sisa)}">📱 WA</button>
+            </div>`;
+        });
+        html += `</div>`;
+    }
+    if(dekat.length) {
+        html += `<div><strong style="color:#ff8f00;">🟡 SEGERA (${dekat.length})</strong>`;
+        dekat.forEach(j => {
+            let sisa = getHargaPaket(j.paket) - (j.totalDibayar || 0);
+            html += `<div class="notif-card warning">
+                <div>${j.nama} - ${j.paket} (${j.selisih} hari lagi)</div>
+                <div>Sisa: ${formatRupiah(sisa)}</div>
+                <button class="btn-wa-reminder" data-hp="${j.hp}" data-pesan="Jatuh tempo ${j.selisih} hari lagi. Sisa: ${formatRupiah(sisa)}">📱 WA</button>
+            </div>`;
+        });
+        html += `</div>`;
+    }
+    c.innerHTML = html;
+    document.querySelectorAll('.btn-wa-reminder').forEach(btn => btn.addEventListener('click', () => {
+        window.open(`https://wa.me/${btn.dataset.hp}?text=${encodeURIComponent(btn.dataset.pesan)}`, '_blank');
+    }));
+}
+
+// ======================== FOTO PROFIL ========================
+function openAmbilFoto() { document.getElementById('fotoInput').click(); }
+document.getElementById('fotoInput')?.addEventListener('change', (e) => {
+    let f = e.target.files[0];
+    if(f) {
+        let r = new FileReader();
+        r.onload = (ev) => {
+            currentFotoData = ev.target.result;
+            document.getElementById('fotoPreview').src = currentFotoData;
+        };
+        r.readAsDataURL(f);
+    }
+});
+
+function openFotoProfil(id) {
+    currentEditJamaahId = id;
+    let all = [...dataHaji, ...dataUmroh];
+    let j = all.find(j => j.id === id);
+    if(j && j.foto) document.getElementById('fotoPreview').src = j.foto;
+    else document.getElementById('fotoPreview').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ccc'/%3E%3Ctext x='50' y='67' font-size='40' text-anchor='middle' fill='white'%3E📷%3C/text%3E%3C/svg%3E";
+    document.getElementById('fotoContainer').style.display = 'flex';
+    document.getElementById('ambilFotoBtn').onclick = openAmbilFoto;
+    document.getElementById('tambahJamaah').innerText = '💾 Simpan Foto';
+    document.getElementById('tambahJamaah').onclick = () => {
+        if(currentEditJamaahId && currentFotoData) {
+            if(currentJamaahType === 'haji') {
+                let idx = dataHaji.findIndex(j => j.id === currentEditJamaahId);
+                if(idx !== -1) dataHaji[idx].foto = currentFotoData;
+            } else {
+                let idx = dataUmroh.findIndex(j => j.id === currentEditJamaahId);
+                if(idx !== -1) dataUmroh[idx].foto = currentFotoData;
+            }
+            saveJamaah();
+            renderDaftarJamaah();
+            alert('Foto tersimpan!');
+        }
+        document.getElementById('fotoContainer').style.display = 'none';
+        document.getElementById('tambahJamaah').innerText = '➕ Tambah';
+        currentEditJamaahId = null;
+        currentFotoData = null;
+    };
+}
+
+document.getElementById('ambilFotoBtn')?.addEventListener('click', openAmbilFoto);
+
+// ======================== COPY JAMAAH ========================
+function copyJamaah(j) {
+    let baru = {
+        ...j,
+        id: Date.now(),
+        nama: `${j.nama} (salinan)`,
+        status: "DP",
+        dokumen: [],
+        foto: null,
+        pembayaran: [],
+        totalDibayar: 0
+    };
+    if(currentJamaahType === 'haji') dataHaji.push(baru);
+    else dataUmroh.push(baru);
+    saveJamaah();
+    renderDaftarJamaah();
+    updateDashboard();
+    alert(`Data ${j.nama} berhasil diduplikasi!`);
+}
+
+// ======================== RENDER JAMAAH ========================
+function renderDaftarJamaah() {
+    let c = document.getElementById('daftarJamaah');
+    let data = currentJamaahType === 'haji' ? dataHaji : dataUmroh;
+    let filtered = data;
+    if(currentFilter === 'DP') filtered = data.filter(j => j.status === 'DP');
+    if(currentFilter === 'LUNAS') filtered = data.filter(j => j.status === 'LUNAS');
+    if(searchQuery) {
+        let q = searchQuery.toLowerCase();
+        filtered = filtered.filter(j => j.nama.toLowerCase().includes(q) || j.hp.includes(q));
+    }
+    if(filtered.length === 0) {
+        c.innerHTML = '<p style="text-align:center; padding:20px;">Belum ada data jamaah</p>';
+        return;
+    }
+    c.innerHTML = '';
+    filtered.forEach(j => {
+        let bus = daftarBus.find(b => b.id === j.busId);
+        let hotel = daftarHotel.find(h => h.id === j.hotelId);
+        let akom = '';
+        if(bus) akom += `🚌 ${bus.nama} `;
+        if(hotel) akom += `🏨 ${hotel.nama} `;
+        if(j.nomorKamar) akom += `🛏️ ${j.nomorKamar}`;
+        let fotoHtml = j.foto ? `<img src="${j.foto}" class="foto-kecil">` : `<div class="foto-kecil" style="background:#ccc; border-radius:50%; display:flex; align-items:center; justify-content:center;">📷</div>`;
+        let total = getHargaPaket(j.paket);
+        let sisa = total - (j.totalDibayar || 0);
+        let paymentHtml = `<div class="payment-info">
+            <div class="payment-progress"><div class="payment-progress-fill" style="width:${((j.totalDibayar||0)/total)*100}%; height:6px; background:#1b5e20; border-radius:10px;"></div></div>
+            <span style="font-size:0.7rem;">${formatRupiah(j.totalDibayar||0)} / ${formatRupiah(total)}</span>
+        </div>`;
+        let div = document.createElement('div');
+        div.className = 'jamaah-card';
+        div.innerHTML = `${fotoHtml}
+            <div class="jamaah-info">
+                <h4>${j.nama}</h4>
+                <p>📞 ${j.hp} | ${j.paket} | JT: ${j.jatuhTempo}</p>
+                <p class="${j.status === 'LUNAS' ? 'status-lunas' : 'status-dp'}">${j.status === 'LUNAS' ? '✅ LUNAS' : '🟡 DP'}</p>
+                <p style="font-size:0.7rem;">${akom || 'Belum diatur'}</p>
+                ${paymentHtml}
+                <div class="btn-aksi">
+                    ${checkAccess(['admin','karyawan']) ? `
+                        <button class="btn-wa" data-hp="${j.hp}" data-pesan="Assalamualaikum ${j.nama}, status ${j.paket}: ${j.status}. Total: ${formatRupiah(total)}, Dibayar: ${formatRupiah(j.totalDibayar||0)}, Sisa: ${formatRupiah(sisa)}">📱 WA</button>
+                        <button class="btn-invoice" data-id="${j.id}">🧾 Invoice</button>
+                        <button class="btn-dokumen" data-id="${j.id}">📎 ${(j.dokumen||[]).length}</button>
+                        <button class="btn-foto-profil" data-id="${j.id}">📸 Foto</button>
+                        <button class="btn-copy" data-id="${j.id}">📋 Copy</button>
+                        <button class="btn-edit-data" data-id="${j.id}">✏️ Edit</button>
+                        <button class="btn-payment" data-id="${j.id}">💰 Bayar</button>
+                    ` : ''}
+                    ${checkAccess(['admin']) ? `<button class="btn-hapus" data-id="${j.id}">🗑️ Hapus</button>` : ''}
+                </div>
+            </div>`;
+        c.appendChild(div);
+    });
+    if(checkAccess(['admin','karyawan'])) {
+        document.querySelectorAll('.btn-wa').forEach(btn => btn.addEventListener('click', () => window.open(`https://wa.me/${btn.dataset.hp}?text=${encodeURIComponent(btn.dataset.pesan)}`, '_blank')));
+        document.querySelectorAll('.btn-invoice').forEach(btn => btn.addEventListener('click', () => {
+            let id = parseInt(btn.dataset.id);
+            let j = [...dataHaji, ...dataUmroh].find(j => j.id === id);
+            if(j) showInvoice(j);
+        }));
+        document.querySelectorAll('.btn-dokumen').forEach(btn => btn.addEventListener('click', () => {
+            let id = parseInt(btn.dataset.id);
+            let j = [...dataHaji, ...dataUmroh].find(j => j.id === id);
+            if(j) openDokumen(j);
+        }));
+        document.querySelectorAll('.btn-foto-profil').forEach(btn => btn.addEventListener('click', () => {
+            let id = parseInt(btn.dataset.id);
+            openFotoProfil(id);
+        }));
+        document.querySelectorAll('.btn-copy').forEach(btn => btn.addEventListener('click', () => {
+            let id = parseInt(btn.dataset.id);
+            let j = [...dataHaji, ...dataUmroh].find(j => j.id === id);
+            if(j) copyJamaah(j);
+        }));
+        document.querySelectorAll('.btn-edit-data').forEach(btn => btn.addEventListener('click', () => {
+            let id = parseInt(btn.dataset.id);
+            let j = [...dataHaji, ...dataUmroh].find(j => j.id === id);
+            if(j) openEditData(j);
+        }));
+        document.querySelectorAll('.btn-payment').forEach(btn => btn.addEventListener('click', () => {
+            let id = parseInt(btn.dataset.id);
+            let j = [...dataHaji, ...dataUmroh].find(j => j.id === id);
+            if(j) openPayment(j);
+        }));
+    }
+    if(checkAccess(['admin'])) {
+        document.querySelectorAll('.btn-hapus').forEach(btn => btn.addEventListener('click', () => {
+            let id = parseInt(btn.dataset.id);
+            if(confirm('Hapus jamaah ini?')) {
+                if(currentJamaahType === 'haji') dataHaji = dataHaji.filter(j => j.id !== id);
+                else dataUmroh = dataUmroh.filter(j => j.id !== id);
+                saveJamaah();
+                renderDaftarJamaah();
+                updateDashboard();
+            }
+        }));
+    }
+}
+
+document.getElementById('searchJamaah')?.addEventListener('input', (e) => {
+    searchQuery = e.target.value;
+    renderDaftarJamaah();
+});
+
+function showInvoice(j) {
+    let h = getHargaPaket(j.paket);
+    let sisa = h - (j.totalDibayar || 0);
+    document.getElementById('invoiceContent').innerHTML = `
+        <div class="invoice-box">
+            <div class="invoice-header-invoice"><h3>PT Auva Eqtena Nahdha</h3><p>Invoice Pembayaran</p></div>
+            <div class="invoice-row"><strong>Invoice:</strong> INV/${j.id}</div>
+            <div class="invoice-row"><strong>Tanggal:</strong> ${new Date().toLocaleDateString('id-ID')}</div>
+            <div class="invoice-row"><strong>Nama:</strong> ${j.nama}</div>
+            <div class="invoice-row"><strong>Paket:</strong> ${j.paket}</div>
+            <div class="invoice-row"><strong>Status:</strong> ${j.status}</div>
+            <div class="invoice-row"><strong>Total Harga:</strong> ${formatRupiah(h)}</div>
+            <div class="invoice-row"><strong>Total Dibayar:</strong> ${formatRupiah(j.totalDibayar || 0)}</div>
+            <div class="invoice-row"><strong>Sisa:</strong> ${formatRupiah(sisa)}</div>
+            <button class="btn-print" onclick="window.print()">🖨️ Cetak Invoice</button>
+        </div>`;
+    document.getElementById('invoicePanel').classList.add('active');
+}
+
+function openJamaahList(type, title) {
+    currentJamaahType = type;
+    document.getElementById('jamaahJudul').innerText = title;
+    let p = document.getElementById('inputPaket');
+    p.innerHTML = '<option value="">Pilih Paket</option>';
+    getPaketListByType(type).forEach(pk => p.innerHTML += `<option value="${pk}">${pk}</option>`);
+    document.getElementById('fotoContainer').style.display = 'none';
+    document.getElementById('tambahJamaah').innerText = '➕ Tambah';
+    currentEditJamaahId = null;
+    currentFotoData = null;
+    searchQuery = '';
+    document.getElementById('searchJamaah').value = '';
+    renderDaftarJamaah();
+    document.getElementById('jamaahPanel').classList.add('active');
+}
+
+document.getElementById('tambahJamaah')?.addEventListener('click', () => {
+    if(!checkAccess(['admin','karyawan'])) { alert("Tidak punya akses!"); return; }
+    let nama = document.getElementById('inputNama').value.trim();
+    let hp = document.getElementById('inputHP').value.trim();
+    let paket = document.getElementById('inputPaket').value;
+    let status = document.getElementById('inputStatus').value;
+    let jatuhTempo = document.getElementById('inputJatuhTempo').value;
+    let nomorKamar = document.getElementById('inputNomorKamar').value;
+    if(!nama || !hp || !paket) { alert("Isi semua field yang wajib!"); return; }
+    let baru = {
+        id: Date.now(),
+        nama, hp, paket, status,
+        tglDaftar: new Date().toISOString().slice(0,7),
+        jatuhTempo: jatuhTempo || new Date(Date.now() + 30*24*60*60*1000).toISOString().slice(0,10),
+        dokumen: [],
+        busId: null,
+        hotelId: null,
+        nomorKamar: nomorKamar || '',
+        foto: currentFotoData || null,
+        pembayaran: [],
+        totalDibayar: 0
+    };
+    if(currentJamaahType === 'haji') dataHaji.push(baru);
+    else dataUmroh.push(baru);
+    saveJamaah();
+    document.getElementById('inputNama').value = '';
+    document.getElementById('inputHP').value = '';
+    document.getElementById('inputJatuhTempo').value = '';
+    document.getElementById('inputNomorKamar').value = '';
+    currentFotoData = null;
+    document.getElementById('fotoPreview').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ccc'/%3E%3Ctext x='50' y='67' font-size='40' text-anchor='middle' fill='white'%3E📷%3C/text%3E%3C/svg%3E";
+    renderDaftarJamaah();
+    updateDashboard();
+    alert("Jamaah berhasil ditambahkan!");
+});
+
+document.getElementById('filterSemua')?.addEventListener('click', () => { currentFilter = 'SEMUA'; renderDaftarJamaah(); });
+document.getElementById('filterDP')?.addEventListener('click', () => { currentFilter = 'DP'; renderDaftarJamaah(); });
+document.getElementById('filterLunas')?.addEventListener('click', () => { currentFilter = 'LUNAS'; renderDaftarJamaah(); });
+
+document.getElementById('exportData')?.addEventListener('click', () => {
+    let d = currentJamaahType === 'haji' ? dataHaji : dataUmroh;
+    let csv = "Nama,HP,Paket,Status,Tanggal Daftar,Jatuh Tempo,Bus,Hotel,Kamar,Total Dibayar\n" +
+        d.map(j => `"${j.nama}","${j.hp}","${j.paket}","${j.status}","${j.tglDaftar}","${j.jatuhTempo}","${daftarBus.find(b=>b.id===j.busId)?.nama||''}","${daftarHotel.find(h=>h.id===j.hotelId)?.nama||''}","${j.nomorKamar||''}","${j.totalDibayar||0}"`).join("\n");
+    let blob = new Blob([csv], {type: 'text/csv'});
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `jamaah_${currentJamaahType}.csv`;
+    a.click();
+});
+
+document.getElementById('importFile')?.addEventListener('change', (e) => {
+    if(!checkAccess(['admin'])) { alert("Hanya admin yang bisa import!"); return; }
+    let f = e.target.files[0];
+    if(!f) return;
+    let r = new FileReader();
+    r.onload = (ev) => {
+        let text = ev.target.result;
+        let lines = text.split("\n").slice(1);
+        let baru = [];
+        for(let line of lines) {
+            if(!line.trim()) continue;
+            let cols = line.match(/(".*?"|[^,]+)/g).map(c => c.replace(/"/g, '').trim());
+            if(cols.length >= 5) {
+                baru.push({
+                    id: Date.now() + Math.random(),
+                    nama: cols[0],
+                    hp: cols[1],
+                    paket: cols[2],
+                    status: cols[3],
+                    tglDaftar: cols[4] || new Date().toISOString().slice(0,7),
+                    jatuhTempo: cols[5] || new Date(Date.now() + 30*24*60*60*1000).toISOString().slice(0,10),
+                    dokumen: [],
+                    busId: null,
+                    hotelId: null,
+                    nomorKamar: '',
+                    foto: null,
+                    pembayaran: [],
+                    totalDibayar: 0
+                });
+            }
+        }
+        if(baru.length > 0) {
+            if(currentJamaahType === 'haji') dataHaji.push(...baru);
+            else dataUmroh.push(...baru);
+            saveJamaah();
+            renderDaftarJamaah();
+            updateDashboard();
+            alert(`Import ${baru.length} jamaah berhasil!`);
+        } else {
+            alert("Format file tidak sesuai!");
+        }
+    };
+    r.readAsText(f);
+    e.target.value = '';
+});
+
+document.getElementById('tutupJamaah')?.addEventListener('click', () => document.getElementById('jamaahPanel').classList.remove('active'));
+document.getElementById('tutupInvoice')?.addEventListener('click', () => document.getElementById('invoicePanel').classList.remove('active'));
+
+// ======================== BACKUP & RESTORE ========================
+function backupToFile() {
+    let data = { dataHaji, dataUmroh, hargaPaket: HARGA, daftarBus, daftarHotel, backupDate: new Date().toISOString() };
+    let blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `backup_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
+    a.click();
+    alert("Backup berhasil!");
+}
+
+function restoreFromFile() {
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = (e) => {
+        let file = e.target.files[0];
+        if(!file) return;
+        let r = new FileReader();
+        r.onload = (ev) => {
+            try {
+                let data = JSON.parse(ev.target.result);
+                if(data.dataHaji) dataHaji = data.dataHaji;
+                if(data.dataUmroh) dataUmroh = data.dataUmroh;
+                if(data.hargaPaket) { HARGA = data.hargaPaket; saveHarga(); }
+                if(data.daftarBus) { daftarBus = data.daftarBus; saveAkomodasi(); }
+                if(data.daftarHotel) { daftarHotel = data.daftarHotel; saveAkomodasi(); }
+                saveJamaah();
+                loadJamaah();
+                updateDashboard();
+                renderDaftarJamaah();
+                alert("Restore berhasil!");
+            } catch(err) {
+                alert("Gagal restore file backup!");
+            }
+        };
+        r.readAsText(file);
+    };
+    input.click();
+}
+
+function openBackupPanel() {
+    if(!checkAccess(['admin'])) { alert("Hanya admin yang bisa backup!"); return; }
+    document.getElementById('backupContent').innerHTML = `
+        <div class="backup-status"><span>📁 Backup & Restore Data</span></div>
+        <div class="db-actions"><button id="backupToFileBtn">💾 Backup ke File</button></div>
+        <div class="db-actions"><button id="restoreFromFileBtn">📥 Restore dari File</button></div>
+        <div class="backup-info"><p style="font-size:0.7rem; color:gray; margin-top:15px;">Backup mencakup: Data Haji, Data Umroh, Harga Paket, Bus, Hotel</p></div>`;
+    document.getElementById('backupToFileBtn')?.addEventListener('click', backupToFile);
+    document.getElementById('restoreFromFileBtn')?.addEventListener('click', restoreFromFile);
+    document.getElementById('backupPanel').classList.add('active');
+}
+
+document.getElementById('tutupBackup')?.addEventListener('click', () => document.getElementById('backupPanel').classList.remove('active'));
+document.getElementById('googleDriveBtn')?.addEventListener('click', () => openBackupPanel());
+
+// ======================== ADMIN PANEL ========================
+const adminPanel = document.getElementById('adminPanel');
+const adminForm = document.getElementById('adminForm');
+const tombolSetting = document.getElementById('tombolSetting');
+const tutupAdmin = document.getElementById('tutupAdmin');
+const simpanHargaBtn = document.getElementById('simpanHarga');
+
+function buatFormAdmin() {
+    adminForm.innerHTML = '';
+    for(let key of Object.keys(DEFAULT_HARGA)) {
+        let div = document.createElement('div');
+        div.className = 'paket-row';
+        div.innerHTML = `<label>${NAMA_PAKET[key]}</label><input type="number" id="input_${key}" value="${HARGA[key]}"><div>${formatRupiah(HARGA[key])}</div>`;
+        adminForm.appendChild(div);
+    }
+}
+
+if(tombolSetting) {
+    tombolSetting.addEventListener('click', () => {
+        if(!checkAccess(['admin'])) { alert("Hanya admin!"); return; }
+        buatFormAdmin();
+        adminPanel.classList.add('active');
+    });
+}
+if(tutupAdmin) tutupAdmin.addEventListener('click', () => adminPanel.classList.remove('active'));
+if(simpanHargaBtn) {
+    simpanHargaBtn.addEventListener('click', () => {
+        for(let key of Object.keys(DEFAULT_HARGA)) {
+            let inp = document.getElementById(`input_${key}`);
+            if(inp) {
+                let val = parseInt(inp.value);
+                if(!isNaN(val) && val > 0) HARGA[key] = val;
+            }
+        }
+        saveHarga();
+        adminPanel.classList.remove('active');
+        alert("Harga paket berhasil disimpan!");
+        buildMainGrid();
+    });
+}
+
+document.getElementById('tutupDashboard')?.addEventListener('click', () => document.getElementById('dashboardPanel').classList.remove('active'));
+document.getElementById('tahunGrafik')?.addEventListener('change', () => renderGrafik());
+
+// ======================== MENU UTAMA ========================
+const semuaMenu = [
+    { nama: "📊 DASHBOARD", icon: "📊", action: () => { updateDashboard(); document.getElementById('dashboardPanel').classList.add('active'); }, allowed: ['admin','karyawan','pimpinan'] },
+    { nama: "📋 REKAP", icon: "📋", action: () => openFullRekap(), allowed: ['admin','pimpinan'] },
+    { nama: "🏨 AKOMODASI", icon: "🏨", action: () => openAkomodasi(), allowed: ['admin'] },
+    { nama: "📱 BROADCAST", icon: "📱", action: () => openWABroadcast(), allowed: ['admin','karyawan'] },
+    { nama: "🕋 HAJI", icon: "🕋", action: () => openJamaahList('haji', '📋 Daftar Jamaah Haji'), allowed: ['admin','karyawan'] },
+    { nama: "🕌 UMROH", icon: "🕌", action: () => openJamaahList('umroh', '📋 Daftar Jamaah Umroh'), allowed: ['admin','karyawan'] },
+    { nama: "📁 DATABASE", icon: "📁", action: () => openMultiDatabase(), allowed: ['admin'] },
+    { nama: "📅 JADWAL", icon: "📅", sub: [{ nama: "Haji 2025", icon: "🕋", pesan: "5-10 Juli 2025" }, { nama: "Umroh", icon: "🕌", pesan: "Setiap bulan" }], allowed: ['admin','karyawan','pimpinan'] },
+    { nama: "🎁 PAKET", icon: "🎁", sub: [{ nama: "Haji Ekonomi", icon: "🏨", pesan: formatRupiah(HARGA.haji_ekonomi) }, { nama: "Haji Plus", icon: "✨", pesan: formatRupiah(HARGA.haji_plus) }, { nama: "Umroh Silver", icon: "🥈", pesan: formatRupiah(HARGA.umroh_silver) }, { nama: "Umroh Gold", icon: "🥇", pesan: formatRupiah(HARGA.umroh_gold) }], allowed: ['admin','karyawan','pimpinan'] },
+    { nama: "💰 PEMBAYARAN", icon: "💰", sub: [{ nama: "Bayar Haji", icon: "🕌", pesan: "BSI 1234567890" }, { nama: "Bayar Umroh", icon: "🕋", pesan: "Mandiri 9876543210" }], allowed: ['admin','karyawan','pimpinan'] },
+    { nama: "🔍 CEK STATUS", icon: "🔍", sub: [{ nama: "Status Haji", icon: "✅", pesan: "Porsi 2026" }, { nama: "Status Umroh", icon: "✅", pesan: "Visa aktif" }], allowed: ['admin','karyawan','pimpinan'] }
+];
+
+function buildMainGrid() {
+    let grid = document.getElementById('mainGrid');
+    grid.innerHTML = '';
+    let menuTampil = semuaMenu.filter(m => m.allowed.includes(currentRole));
+    menuTampil.forEach(menu => {
+        let kartu = document.createElement('div');
+        kartu.className = 'menu-item';
+        kartu.innerHTML = `<div class="menu-icon">${menu.icon}</div><div class="menu-label">${menu.nama}</div>`;
+        kartu.addEventListener('click', () => {
+            if(menu.action) menu.action();
+            else if(menu.sub) pushSheet(menu.nama, menu.sub);
+        });
+        grid.appendChild(kartu);
+    });
+}
+
+// ======================== BOTTOM SHEET ========================
+const overlaySheet = document.getElementById('sheetLayer');
+const judulSheet = document.getElementById('sheetJudul');
+const kontenSheet = document.getElementById('sheetKonten');
+const tombolKembali = document.getElementById('tombolKembali');
+let stack = [], sheetAktif = false;
+
+function tutupSheet() {
+    overlaySheet.classList.remove('active');
+    sheetAktif = false;
+    setTimeout(() => { if(!sheetAktif) stack = []; }, 200);
+}
+
+function renderSheet() {
+    if(stack.length === 0) { tutupSheet(); return; }
+    let cur = stack[stack.length - 1];
+    judulSheet.innerText = cur.judul;
+    kontenSheet.innerHTML = '';
+    kontenSheet.className = 'sub-grid';
+    cur.items.forEach(item => {
+        let el = document.createElement('div');
+        el.className = 'sub-item';
+        el.innerHTML = `<div class="sub-icon">${item.icon}</div><div class="sub-nama">${item.nama}</div>`;
+        el.addEventListener('click', () => alert(item.pesan));
+        kontenSheet.appendChild(el);
+    });
+}
+
+function pushSheet(judul, items) {
+    stack.push({ judul, items });
+    if(!sheetAktif) {
+        overlaySheet.classList.add('active');
+        sheetAktif = true;
+    }
+    renderSheet();
+}
+
+function kembali() {
+    if(stack.length <= 1) tutupSheet();
+    else { stack.pop(); renderSheet(); }
+}
+
+tombolKembali.addEventListener('click', kembali);
+overlaySheet.addEventListener('click', (e) => { if(e.target === overlaySheet) tutupSheet(); });
+
+// ======================== LOGIN ========================
+const loginPage = document.getElementById('loginPage');
+const mainApp = document.getElementById('mainApp');
+const userRoleDisplay = document.getElementById('userRoleDisplay');
+const logoutBtn = document.getElementById('logoutBtn');
+
+document.getElementById('loginBtn').addEventListener('click', () => {
+    let role = document.getElementById('roleSelect').value;
+    currentRole = role;
+    currentUser = role === 'admin' ? 'Admin' : (role === 'karyawan' ? 'Karyawan' : 'Pimpinan');
+    userRoleDisplay.innerText = role === 'admin' ? '👑 Admin' : (role === 'karyawan' ? '👤 Karyawan' : '📊 Pimpinan');
+    loginPage.style.display = 'none';
+    mainApp.style.display = 'block';
+    buildMainGrid();
+    updateDashboard();
+    if(tombolSetting) tombolSetting.style.display = role === 'admin' ? 'block' : 'none';
+    if(document.getElementById('googleDriveBtn')) document.getElementById('googleDriveBtn').style.display = role === 'admin' ? 'block' : 'none';
+});
+
+logoutBtn.addEventListener('click', () => {
+    currentRole = null;
+    loginPage.style.display = 'flex';
+    mainApp.style.display = 'none';
+});
+
+// ======================== FUNGSI EDIT & PAYMENT ========================
 let currentEditJamaah = null;
 let currentPaymentJamaah = null;
-let currentPindahJamaah = null, currentPindahType = null;
-let currentAkomodasiTab = 'bus';
-let currentDokumenJamaah = null;
-let currentFotoData = null, currentEditJamaahId = null;
-let currentEditType = null, currentEditId = null;
 
-function openEditData(jamaah) {
-    currentEditJamaah = jamaah;
-    document.getElementById('editJudul').innerHTML = `✏️ Edit: ${jamaah.nama}`;
-    document.getElementById('editNama').value = jamaah.nama;
-    document.getElementById('editHP').value = jamaah.hp;
-    document.getElementById('editJatuhTempo').value = jamaah.jatuhTempo;
-    document.getElementById('editStatus').value = jamaah.status;
-    document.getElementById('editNomorKamar').value = jamaah.nomorKamar || '';
-    let paketSelect = document.getElementById('editPaket');
-    paketSelect.innerHTML = '';
-    getPaketListByType(currentJamaahType).forEach(p => { paketSelect.innerHTML += `<option value="${p}" ${p === jamaah.paket ? 'selected' : ''}>${p}</option>`; });
+function openEditData(j) {
+    currentEditJamaah = j;
+    document.getElementById('editJudul').innerHTML = `✏️ Edit: ${j.nama}`;
+    document.getElementById('editForm').innerHTML = `
+        <input type="text" id="editNama" value="${j.nama}" placeholder="Nama Lengkap">
+        <input type="text" id="editHP" value="${j.hp}" placeholder="No HP">
+        <select id="editPaket">${getPaketListByType(currentJamaahType).map(p => `<option value="${p}" ${p === j.paket ? 'selected' : ''}>${p}</option>`).join('')}</select>
+        <input type="date" id="editJatuhTempo" value="${j.jatuhTempo}">
+        <select id="editStatus"><option value="DP" ${j.status === 'DP' ? 'selected' : ''}>DP</option><option value="LUNAS" ${j.status === 'LUNAS' ? 'selected' : ''}>Lunas</option></select>
+        <input type="text" id="editNomorKamar" value="${j.nomorKamar || ''}" placeholder="Nomor Kamar">
+    `;
     document.getElementById('editPanel').classList.add('active');
 }
 
@@ -773,377 +2202,59 @@ document.getElementById('simpanEditDataBtn')?.addEventListener('click', () => {
     document.getElementById('editPanel').classList.remove('active');
     alert("Data jamaah berhasil diupdate!");
 });
+
 document.getElementById('tutupEdit')?.addEventListener('click', () => document.getElementById('editPanel').classList.remove('active'));
 
-function openPayment(jamaah) {
-    currentPaymentJamaah = jamaah;
-    let totalHarga = getHargaPaket(jamaah.paket);
-    let sisa = totalHarga - (jamaah.totalDibayar || 0);
-    document.getElementById('paymentJudul').innerHTML = `💰 Pembayaran: ${jamaah.nama}`;
-    let pembayaranList = '';
-    if(jamaah.pembayaran && jamaah.pembayaran.length > 0) {
-        pembayaranList = '<div class="payment-list"><h4>Riwayat Pembayaran</h4>';
-        jamaah.pembayaran.forEach(p => { pembayaranList += `<div class="payment-item"><span>${p.tgl}</span><span>${formatRupiah(p.jumlah)}</span><span>${p.metode}</span></div>`; });
-        pembayaranList += '</div>';
-    } else { pembayaranList = '<p style="color:gray;">Belum ada pembayaran</p>'; }
-    let html = `<div class="payment-info"><p><strong>Paket:</strong> ${jamaah.paket}</p><p><strong>Total:</strong> ${formatRupiah(totalHarga)}</p><p><strong>Dibayar:</strong> ${formatRupiah(jamaah.totalDibayar || 0)}</p><p><strong>Sisa:</strong> ${formatRupiah(sisa)}</p><div class="payment-progress"><div class="payment-progress-fill" style="width:${((jamaah.totalDibayar||0)/totalHarga)*100}%"></div></div></div>${pembayaranList}<div class="input-jamaah" style="margin-top:15px;"><input type="number" id="paymentJumlah" placeholder="Jumlah bayar" value="${sisa > 0 ? sisa : 0}"><select id="paymentMetode"><option value="Tunai">Tunai</option><option value="Transfer Bank">Transfer Bank</option><option value="QRIS">QRIS</option></select><button class="btn-tambah" id="tambahPaymentBtn">➕ Catat Pembayaran</button></div>`;
+function openPayment(j) {
+    currentPaymentJamaah = j;
+    let total = getHargaPaket(j.paket);
+    let sisa = total - (j.totalDibayar || 0);
+    let paymentList = '';
+    if(j.pembayaran && j.pembayaran.length > 0) {
+        paymentList = '<div class="payment-list"><h4>Riwayat Pembayaran</h4>';
+        j.pembayaran.forEach(p => {
+            paymentList += `<div class="payment-item"><span>${p.tgl}</span><span>${formatRupiah(p.jumlah)}</span><span>${p.metode}</span></div>`;
+        });
+        paymentList += '</div>';
+    } else {
+        paymentList = '<p style="color:gray;">Belum ada pembayaran</p>';
+    }
+    let html = `
+        <div class="payment-info">
+            <p><strong>Paket:</strong> ${j.paket}</p>
+            <p><strong>Total Harga:</strong> ${formatRupiah(total)}</p>
+            <p><strong>Total Dibayar:</strong> ${formatRupiah(j.totalDibayar || 0)}</p>
+            <p><strong>Sisa:</strong> ${formatRupiah(sisa)}</p>
+            <div class="payment-progress"><div class="payment-progress-fill" style="width:${((j.totalDibayar||0)/total)*100}%; height:8px; background:#1b5e20; border-radius:10px;"></div></div>
+        </div>
+        ${paymentList}
+        <div class="input-jamaah" style="margin-top:15px;">
+            <input type="number" id="paymentJumlah" placeholder="Jumlah bayar" value="${sisa > 0 ? sisa : 0}">
+            <select id="paymentMetode"><option value="Tunai">Tunai</option><option value="Transfer Bank">Transfer Bank</option><option value="QRIS">QRIS</option></select>
+            <button class="btn-tambah" id="tambahPaymentBtn">➕ Catat Pembayaran</button>
+        </div>
+    `;
     document.getElementById('paymentContent').innerHTML = html;
     document.getElementById('tambahPaymentBtn')?.addEventListener('click', () => {
         let jumlah = parseInt(document.getElementById('paymentJumlah').value);
         let metode = document.getElementById('paymentMetode').value;
         if(isNaN(jumlah) || jumlah <= 0) { alert("Masukkan jumlah yang valid!"); return; }
         let newPayment = { tgl: new Date().toLocaleDateString('id-ID'), jumlah: jumlah, metode: metode };
-        if(!jamaah.pembayaran) jamaah.pembayaran = [];
-        jamaah.pembayaran.push(newPayment);
-        jamaah.totalDibayar = (jamaah.totalDibayar || 0) + jumlah;
-        if(jamaah.totalDibayar >= totalHarga) jamaah.status = "LUNAS";
-        else jamaah.status = "DP";
+        if(!j.pembayaran) j.pembayaran = [];
+        j.pembayaran.push(newPayment);
+        j.totalDibayar = (j.totalDibayar || 0) + jumlah;
+        if(j.totalDibayar >= total) j.status = "LUNAS";
+        else j.status = "DP";
         saveJamaah();
         renderDaftarJamaah();
         updateDashboard();
-        openPayment(jamaah);
+        openPayment(j);
         alert("Pembayaran berhasil dicatat!");
     });
     document.getElementById('paymentPanel').classList.add('active');
 }
+
 document.getElementById('tutupPayment')?.addEventListener('click', () => document.getElementById('paymentPanel').classList.remove('active'));
-
-function openAkomodasi() { renderAkomodasi(); document.getElementById('akomodasiPanel').classList.add('active'); }
-
-function renderAkomodasi() {
-    let container = document.getElementById('akomodasiContent');
-    let allJamaah = [...dataHaji, ...dataUmroh];
-    if(currentAkomodasiTab === 'bus') {
-        let html = `<div class="list-akomodasi">`;
-        if(daftarBus.length === 0) {
-            html += `<div style="text-align:center; padding:20px;">🚌 Belum ada bus. Tekan tombol "+ Tambah Baru"</div>`;
-        } else {
-            daftarBus.forEach(bus => {
-                let jamaahDiBus = allJamaah.filter(j => j.busId === bus.id);
-                html += `<div class="akomodasi-item-card"><div class="akomodasi-header"><span class="akomodasi-nama">🚌 ${bus.nama}</span><span class="akomodasi-stats">${jamaahDiBus.length}/${bus.kapasitas}</span><div class="akomodasi-actions"><button class="btn-edit" onclick="openEditDialog('bus', ${bus.id}, '${bus.nama}')">✏️</button><button class="btn-hapus-item" onclick="hapusItem('bus', ${bus.id}, '${bus.nama}')">🗑️</button></div></div><div class="akomodasi-header"><button class="btn-akomodasi" onclick="waBroadcastBus(${bus.id})">📱 WA</button><button class="btn-akomodasi" onclick="cetakBus(${bus.id})">🖨️ Cetak</button></div>`;
-                jamaahDiBus.forEach(j => { let statusBadge = j.status === 'LUNAS' ? '<span class="status-badge status-lunas-badge">Lunas</span>' : '<span class="status-badge status-dp-badge">DP</span>'; html += `<div class="jamaah-list-item"><span>👤 ${j.nama} ${statusBadge}</span><div><button class="btn-pindah" onclick='openPindahJamaah(${JSON.stringify(j).replace(/"/g, '&quot;')}, "bus", ${bus.id}, "${bus.nama}")'>🔄 Pindah</button><button class="btn-lepas" onclick="lepasJamaah(${j.id}, 'bus')">❌ Lepas</button></div></div>`; });
-                if(jamaahDiBus.length === 0) html += `<div class="jamaah-list-item" style="color:gray;">Belum ada jamaah</div>`;
-                html += `</div>`;
-            });
-        }
-        html += `</div>`; container.innerHTML = html;
-    } else if(currentAkomodasiTab === 'hotel') {
-        let html = `<div class="list-akomodasi">`;
-        if(daftarHotel.length === 0) {
-            html += `<div style="text-align:center; padding:20px;">🏨 Belum ada hotel. Tekan tombol "+ Tambah Baru"</div>`;
-        } else {
-            daftarHotel.forEach(hotel => {
-                let jamaahDiHotel = allJamaah.filter(j => j.hotelId === hotel.id);
-                html += `<div class="akomodasi-item-card"><div class="akomodasi-header"><span class="akomodasi-nama">🏨 ${hotel.nama}</span><span class="akomodasi-stats">${jamaahDiHotel.length} jamaah</span><div class="akomodasi-actions"><button class="btn-edit" onclick="openEditDialog('hotel', ${hotel.id}, '${hotel.nama}')">✏️</button><button class="btn-hapus-item" onclick="hapusItem('hotel', ${hotel.id}, '${hotel.nama}')">🗑️</button></div></div><div class="akomodasi-header"><button class="btn-akomodasi" onclick="waBroadcastHotel(${hotel.id})">📱 WA</button><button class="btn-akomodasi" onclick="cetakHotel(${hotel.id})">🖨️ Cetak</button></div>`;
-                jamaahDiHotel.forEach(j => { let statusBadge = j.status === 'LUNAS' ? '<span class="status-badge status-lunas-badge">Lunas</span>' : '<span class="status-badge status-dp-badge">DP</span>'; html += `<div class="jamaah-list-item"><span>👤 ${j.nama} - Kamar: ${j.nomorKamar || '-'} ${statusBadge}</span><div><button class="btn-pindah" onclick='openPindahJamaah(${JSON.stringify(j).replace(/"/g, '&quot;')}, "hotel", ${hotel.id}, "${hotel.nama}")'>🔄 Pindah</button><button class="btn-lepas" onclick="lepasJamaah(${j.id}, 'hotel')">❌ Lepas</button></div></div>`; });
-                if(jamaahDiHotel.length === 0) html += `<div class="jamaah-list-item" style="color:gray;">Belum ada jamaah</div>`;
-                html += `</div>`;
-            });
-        }
-        html += `</div>`; container.innerHTML = html;
-    } else {
-        let semuaKamar = {};
-        allJamaah.forEach(j => { if(j.nomorKamar && j.nomorKamar.trim()) { if(!semuaKamar[j.nomorKamar]) semuaKamar[j.nomorKamar] = []; semuaKamar[j.nomorKamar].push(j); } });
-        let html = `<div class="list-akomodasi">`;
-        if(Object.keys(semuaKamar).length === 0) {
-            html += `<div style="text-align:center; padding:20px;">🛏️ Belum ada data kamar</div>`;
-        } else {
-            for(let [kamar, jamaahList] of Object.entries(semuaKamar)) {
-                html += `<div class="akomodasi-item-card"><div class="akomodasi-header"><span class="akomodasi-nama">🛏️ Kamar ${kamar}</span><span class="akomodasi-stats">${jamaahList.length} orang</span></div><div class="akomodasi-header"><button class="btn-akomodasi" onclick="waBroadcastKamar('${kamar}')">📱 WA</button><button class="btn-akomodasi" onclick="cetakKamar('${kamar}')">🖨️ Cetak</button></div>`;
-                jamaahList.forEach(j => { html += `<div class="jamaah-list-item"><span>👤 ${j.nama} (${j.paket})</span></div>`; });
-                html += `</div>`;
-            }
-        }
-        html += `</div>`; container.innerHTML = html;
-    }
-}
-
-function openEditDialog(type, id, nama) {
-    currentEditType = type; currentEditId = id;
-    document.getElementById('editJudul').innerText = `✏️ Edit ${type === 'bus' ? 'Bus' : 'Hotel'}`;
-    document.getElementById('editNama').value = nama;
-    document.getElementById('editPanel').classList.add('active');
-    document.getElementById('simpanEditDataBtn').onclick = () => {
-        let newNama = document.getElementById('editNama').value.trim();
-        if(!newNama) { alert("Nama tidak boleh kosong!"); return; }
-        if(currentEditType === 'bus') { let idx = daftarBus.findIndex(b => b.id === currentEditId); if(idx !== -1) daftarBus[idx].nama = newNama; }
-        else { let idx = daftarHotel.findIndex(h => h.id === currentEditId); if(idx !== -1) daftarHotel[idx].nama = newNama; }
-        saveAkomodasi(); renderAkomodasi(); renderDaftarJamaah();
-        document.getElementById('editPanel').classList.remove('active');
-        alert("Nama berhasil diubah!");
-    };
-}
-
-function hapusItem(type, id, nama) {
-    if(confirm(`Hapus ${nama}?`)) {
-        if(type === 'bus') {
-            daftarBus = daftarBus.filter(b => b.id !== id);
-            [...dataHaji, ...dataUmroh].forEach(j => { if(j.busId === id) { if(currentJamaahType === 'haji') { let idx = dataHaji.findIndex(jj => jj.id === j.id); if(idx !== -1) dataHaji[idx].busId = null; } else { let idx = dataUmroh.findIndex(jj => jj.id === j.id); if(idx !== -1) dataUmroh[idx].busId = null; } } });
-        } else {
-            daftarHotel = daftarHotel.filter(h => h.id !== id);
-            [...dataHaji, ...dataUmroh].forEach(j => { if(j.hotelId === id) { if(currentJamaahType === 'haji') { let idx = dataHaji.findIndex(jj => jj.id === j.id); if(idx !== -1) dataHaji[idx].hotelId = null; } else { let idx = dataUmroh.findIndex(jj => jj.id === j.id); if(idx !== -1) dataUmroh[idx].hotelId = null; } } });
-        }
-        saveAkomodasi(); saveJamaah(); renderAkomodasi(); renderDaftarJamaah();
-        alert(`${nama} berhasil dihapus!`);
-    }
-}
-
-function openPindahJamaah(jamaah, type, targetId, targetNama) {
-    currentPindahJamaah = jamaah; currentPindahType = type;
-    document.getElementById('pindahJudul').innerText = `Pindah: ${jamaah.nama}`;
-    let html = `<p>Pindah ke ${targetNama}:</p><select id="pindahSelect" class="input-jamaah" style="width:100%;">`;
-    if(type === 'bus') { daftarBus.forEach(b => { html += `<option value="${b.id}" ${b.id === targetId ? 'selected' : ''}>${b.nama}</option>`; }); }
-    else { daftarHotel.forEach(h => { html += `<option value="${h.id}" ${h.id === targetId ? 'selected' : ''}>${h.nama}</option>`; }); }
-    html += `</select><button class="btn-tambah" id="konfirmasiPindah" style="margin-top:15px;">✅ Pindahkan</button>`;
-    document.getElementById('pindahContent').innerHTML = html;
-    document.getElementById('konfirmasiPindah')?.addEventListener('click', () => {
-        let newId = parseInt(document.getElementById('pindahSelect').value);
-        if(type === 'bus') { if(currentJamaahType === 'haji') { let idx = dataHaji.findIndex(j => j.id === jamaah.id); if(idx !== -1) dataHaji[idx].busId = newId; } else { let idx = dataUmroh.findIndex(j => j.id === jamaah.id); if(idx !== -1) dataUmroh[idx].busId = newId; } }
-        else { if(currentJamaahType === 'haji') { let idx = dataHaji.findIndex(j => j.id === jamaah.id); if(idx !== -1) dataHaji[idx].hotelId = newId; } else { let idx = dataUmroh.findIndex(j => j.id === jamaah.id); if(idx !== -1) dataUmroh[idx].hotelId = newId; } }
-        saveJamaah(); renderAkomodasi(); renderDaftarJamaah();
-        document.getElementById('pindahPanel').classList.remove('active');
-        alert(`${jamaah.nama} dipindahkan!`);
-    });
-    document.getElementById('pindahPanel').classList.add('active');
-}
-
-function lepasJamaah(jamaahId, type) {
-    if(confirm('Lepas jamaah dari grup ini?')) {
-        if(type === 'bus') { if(currentJamaahType === 'haji') { let idx = dataHaji.findIndex(j => j.id === jamaahId); if(idx !== -1) dataHaji[idx].busId = null; } else { let idx = dataUmroh.findIndex(j => j.id === jamaahId); if(idx !== -1) dataUmroh[idx].busId = null; } }
-        else { if(currentJamaahType === 'haji') { let idx = dataHaji.findIndex(j => j.id === jamaahId); if(idx !== -1) dataHaji[idx].hotelId = null; } else { let idx = dataUmroh.findIndex(j => j.id === jamaahId); if(idx !== -1) dataUmroh[idx].hotelId = null; } }
-        saveJamaah(); renderAkomodasi(); renderDaftarJamaah();
-    }
-}
-
-function tambahBus() { let nama = prompt("Nama Bus Baru:"); if(nama) { daftarBus.push({ id: Date.now(), nama, kapasitas: 40 }); saveAkomodasi(); renderAkomodasi(); } }
-function tambahHotel() { let nama = prompt("Nama Hotel Baru:"); if(nama) { daftarHotel.push({ id: Date.now(), nama, lokasi: "" }); saveAkomodasi(); renderAkomodasi(); } }
-
-function waBroadcastBus(busId) { let bus = daftarBus.find(b => b.id === busId); let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.busId === busId); let pesan = `Info bus ${bus.nama}.`; jamaah.forEach(j => window.open(`https://wa.me/${j.hp}?text=${encodeURIComponent(pesan)}`, '_blank')); alert(`WA untuk ${jamaah.length} jamaah`); }
-function waBroadcastHotel(hotelId) { let hotel = daftarHotel.find(h => h.id === hotelId); let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.hotelId === hotelId); let pesan = `Info hotel ${hotel.nama}.`; jamaah.forEach(j => window.open(`https://wa.me/${j.hp}?text=${encodeURIComponent(pesan)}`, '_blank')); alert(`WA untuk ${jamaah.length} jamaah`); }
-function waBroadcastKamar(kamar) { let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.nomorKamar === kamar); let pesan = `Info kamar ${kamar}.`; jamaah.forEach(j => window.open(`https://wa.me/${j.hp}?text=${encodeURIComponent(pesan)}`, '_blank')); alert(`WA untuk ${jamaah.length} jamaah`); }
-function cetakBus(busId) { let bus = daftarBus.find(b => b.id === busId); let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.busId === busId); let teks = `DAFTAR ${bus.nama}\n`; jamaah.forEach((j,i) => teks += `${i+1}. ${j.nama} - ${j.hp}\n`); alert(teks); }
-function cetakHotel(hotelId) { let hotel = daftarHotel.find(h => h.id === hotelId); let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.hotelId === hotelId); let teks = `DAFTAR ${hotel.nama}\n`; jamaah.forEach((j,i) => teks += `${i+1}. ${j.nama} - Kamar ${j.nomorKamar}\n`); alert(teks); }
-function cetakKamar(kamar) { let jamaah = [...dataHaji, ...dataUmroh].filter(j => j.nomorKamar === kamar); let teks = `DAFTAR KAMAR ${kamar}\n`; jamaah.forEach((j,i) => teks += `${i+1}. ${j.nama}\n`); alert(teks); }
-
-document.getElementById('tabBus')?.addEventListener('click', () => { currentAkomodasiTab = 'bus'; document.getElementById('tabBus').classList.add('active'); document.getElementById('tabHotel').classList.remove('active'); document.getElementById('tabKamar').classList.remove('active'); renderAkomodasi(); });
-document.getElementById('tabHotel')?.addEventListener('click', () => { currentAkomodasiTab = 'hotel'; document.getElementById('tabHotel').classList.add('active'); document.getElementById('tabBus').classList.remove('active'); document.getElementById('tabKamar').classList.remove('active'); renderAkomodasi(); });
-document.getElementById('tabKamar')?.addEventListener('click', () => { currentAkomodasiTab = 'kamar'; document.getElementById('tabKamar').classList.add('active'); document.getElementById('tabBus').classList.remove('active'); document.getElementById('tabHotel').classList.remove('active'); renderAkomodasi(); });
-document.getElementById('tambahAkomodasiBtn')?.addEventListener('click', () => { if(currentAkomodasiTab === 'bus') tambahBus(); else if(currentAkomodasiTab === 'hotel') tambahHotel(); else alert('Kamar diatur saat edit data jamaah'); });
-document.getElementById('hapusSemuaAkomodasiBtn')?.addEventListener('click', hapusSemuaAkomodasi);
-document.getElementById('tutupPindah')?.addEventListener('click', () => document.getElementById('pindahPanel').classList.remove('active'));
-document.getElementById('tutupAkomodasi')?.addEventListener('click', () => document.getElementById('akomodasiPanel').classList.remove('active'));
-
-// Grafik
-function getPendapatanPerBulan(tahun) {
-    let bulanan = Array(12).fill(0);
-    let allJamaah = [...dataHaji.map(j => ({ ...j, jenis: 'Haji' })), ...dataUmroh.map(j => ({ ...j, jenis: 'Umroh' }))];
-    allJamaah.forEach(j => { if(j.tglDaftar && j.tglDaftar.startsWith(tahun)) { let bulan = parseInt(j.tglDaftar.split('-')[1]) - 1; let harga = getHargaPaket(j.paket); let nominal = j.status === 'LUNAS' ? harga : j.totalDibayar || harga * 0.15; bulanan[bulan] += nominal; } });
-    return bulanan;
-}
-
-function renderGrafik() {
-    let tahun = document.getElementById('tahunGrafik').value;
-    let dataBulanan = getPendapatanPerBulan(tahun);
-    let bulanLabels = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
-    if(chartInstance) chartInstance.destroy();
-    let ctx = document.getElementById('pendapatanChart').getContext('2d');
-    chartInstance = new Chart(ctx, { type: 'bar', data: { labels: bulanLabels, datasets: [{ label: `Pendapatan ${tahun}`, data: dataBulanan, backgroundColor: 'rgba(46,125,50,0.7)', borderColor: '#1b5e20', borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => formatRupiah(ctx.raw) } } }, scales: { y: { ticks: { callback: (val) => formatRupiah(val) }, beginAtZero: true } } } });
-    let totalTahun = dataBulanan.reduce((a,b)=>a+b,0);
-    let maxBulan = Math.max(...dataBulanan);
-    let maxIndex = dataBulanan.indexOf(maxBulan);
-    document.getElementById('statGrafik').innerHTML = `<div class="stat-tertinggi"><strong>📊 Total ${tahun}: ${formatRupiah(totalTahun)}</strong><br>🏆 Tertinggi: ${bulanLabels[maxIndex]} (${formatRupiah(maxBulan)})</div>`;
-}
-
-// Dokumen
-function openPreview(doc) { document.getElementById('previewJudul').innerText = `📄 ${doc.nama}`; let container = document.getElementById('previewContent'); if(doc.type === 'image') container.innerHTML = `<img src="${doc.data}" style="max-width:100%; border-radius:16px;">`; else container.innerHTML = `<embed src="${doc.data}" type="application/pdf" width="100%" height="400px">`; document.getElementById('previewPanel').classList.add('active'); }
-function openDokumen(jamaah) { currentDokumenJamaah = jamaah; document.getElementById('dokumenJudul').innerText = `📎 Dokumen: ${jamaah.nama}`; renderDokumenList(); document.getElementById('dokumenPanel').classList.add('active'); }
-function renderDokumenList() { if(!currentDokumenJamaah) return; let dokumen = currentDokumenJamaah.dokumen || []; let container = document.getElementById('dokumenContent'); if(dokumen.length === 0) { container.innerHTML = '<p style="text-align:center; padding:20px;">Belum ada dokumen</p>'; return; } let html = '<div class="dokumen-list">'; dokumen.forEach((doc, idx) => { html += `<div class="dokumen-item"><div><strong>${doc.nama}</strong><br><small>${doc.tgl}</small></div><div><button class="btn-lihat" data-idx="${idx}">👁️ Lihat</button><button class="btn-hapus-dokumen" data-idx="${idx}">🗑️</button></div></div>`; }); html += '</div>'; container.innerHTML = html; document.querySelectorAll('.btn-lihat').forEach(btn => { btn.addEventListener('click', () => { let idx = parseInt(btn.dataset.idx); openPreview(dokumen[idx]); }); }); document.querySelectorAll('.btn-hapus-dokumen').forEach(btn => { btn.addEventListener('click', () => { if(confirm('Hapus dokumen?')) { let idx = parseInt(btn.dataset.idx); currentDokumenJamaah.dokumen.splice(idx,1); saveJamaah(); renderDokumenList(); renderDaftarJamaah(); } }); }); }
-function uploadDokumen() { let fileInput = document.getElementById('uploadFile'); fileInput.click(); fileInput.onchange = (e) => { let file = e.target.files[0]; if(!file) return; let reader = new FileReader(); reader.onload = (ev) => { let docData = { id: Date.now(), nama: file.name, tgl: new Date().toLocaleDateString('id-ID'), type: file.type.startsWith('image/') ? 'image' : 'pdf', data: ev.target.result }; if(!currentDokumenJamaah.dokumen) currentDokumenJamaah.dokumen = []; currentDokumenJamaah.dokumen.push(docData); saveJamaah(); renderDokumenList(); renderDaftarJamaah(); alert('Dokumen terupload!'); }; reader.readAsDataURL(file); }; }
-document.getElementById('btnUploadDokumen')?.addEventListener('click', uploadDokumen);
-document.getElementById('tutupPreview')?.addEventListener('click', () => document.getElementById('previewPanel').classList.remove('active'));
-document.getElementById('tutupDokumen')?.addEventListener('click', () => document.getElementById('dokumenPanel').classList.remove('active'));
-
-// WA Broadcast
-function openWABroadcast() {
-    let allJamaah = [...dataHaji, ...dataUmroh];
-    let html = `<div class="input-jamaah"><textarea id="waPesanBroadcast" rows="4" placeholder="Tulis pesan..."></textarea><select id="waFilterBroadcast"><option value="semua">Semua (${allJamaah.length})</option><option value="haji">Haji (${dataHaji.length})</option><option value="umroh">Umroh (${dataUmroh.length})</option><option value="dp">DP (${allJamaah.filter(j=>j.status==='DP').length})</option><option value="lunas">Lunas (${allJamaah.filter(j=>j.status==='LUNAS').length})</option></select><button class="btn-tambah" id="btnKirimBroadcast">📱 Kirim</button></div>`;
-    document.getElementById('wabroadcastContent').innerHTML = html;
-    document.getElementById('btnKirimBroadcast')?.addEventListener('click', () => {
-        let pesan = document.getElementById('waPesanBroadcast').value.trim();
-        if(!pesan) { alert("Tulis pesan!"); return; }
-        let filter = document.getElementById('waFilterBroadcast').value;
-        let target = filter === 'semua' ? allJamaah : filter === 'haji' ? dataHaji : filter === 'umroh' ? dataUmroh : filter === 'dp' ? allJamaah.filter(j=>j.status==='DP') : allJamaah.filter(j=>j.status==='LUNAS');
-        target.forEach(j => window.open(`https://wa.me/${j.hp}?text=${encodeURIComponent(pesan)}`, '_blank'));
-        alert(`WA untuk ${target.length} jamaah`);
-    });
-    document.getElementById('wabroadcastPanel').classList.add('active');
-}
-document.getElementById('tutupWABroadcast')?.addEventListener('click', () => document.getElementById('wabroadcastPanel').classList.remove('active'));
-
-// Notifikasi
-function hitungSelisihHari(tgl) { let today = new Date(); today.setHours(0,0,0,0); let due = new Date(tgl); due.setHours(0,0,0,0); return Math.ceil((due - today) / (1000 * 60 * 60 * 24)); }
-function getJamaahJatuhTempo() { let allJamaah = [...dataHaji.map(j=>({...j,jenis:'Haji'})), ...dataUmroh.map(j=>({...j,jenis:'Umroh'}))]; let dpJamaah = allJamaah.filter(j=>j.status==='DP'); let lewat=[], dekat=[]; dpJamaah.forEach(j=>{ if(!j.jatuhTempo) return; let s = hitungSelisihHari(j.jatuhTempo); if(s<0) lewat.push({...j,selisih:Math.abs(s)}); else if(s<=7) dekat.push({...j,selisih:s}); }); return {lewat,dekat}; }
-function renderNotifikasiJatuhTempo() {
-    let {lewat,dekat} = getJamaahJatuhTempo();
-    let container = document.getElementById('notifikasiJatuhTempo');
-    if(!container) return;
-    if(lewat.length===0 && dekat.length===0) { container.innerHTML = '<div style="background:#e8f5e9; padding:15px; border-radius:16px; text-align:center;">✅ Semua aman!</div>'; return; }
-    let html = '<h4>⚠️ Peringatan</h4>';
-    if(lewat.length) { html += `<div><strong style="color:#c62828;">🔴 TERLEWAT (${lewat.length})</strong>`; lewat.forEach(j=>{ let sisa = getHargaPaket(j.paket) - (j.totalDibayar||0); html += `<div class="notif-card danger"><div>${j.nama} - ${j.paket} (${j.selisih} hari)</div><div>Sisa: ${formatRupiah(sisa)}</div><button class="btn-wa-reminder" data-hp="${j.hp}" data-pesan="Jatuh tempo TERLEWAT ${j.selisih} hari. Sisa: ${formatRupiah(sisa)}">📱 WA</button></div>`; }); html += `</div>`; }
-    if(dekat.length) { html += `<div><strong style="color:#ff8f00;">🟡 SEGERA (${dekat.length})</strong>`; dekat.forEach(j=>{ let sisa = getHargaPaket(j.paket) - (j.totalDibayar||0); html += `<div class="notif-card warning"><div>${j.nama} - ${j.paket} (${j.selisih} hari)</div><div>Sisa: ${formatRupiah(sisa)}</div><button class="btn-wa-reminder" data-hp="${j.hp}" data-pesan="Jatuh tempo ${j.selisih} hari lagi. Sisa: ${formatRupiah(sisa)}">📱 WA</button></div>`; }); html += `</div>`; }
-    container.innerHTML = html;
-    document.querySelectorAll('.btn-wa-reminder').forEach(btn => { btn.addEventListener('click', () => { window.open(`https://wa.me/${btn.dataset.hp}?text=${encodeURIComponent(btn.dataset.pesan)}`, '_blank'); }); });
-}
-
-// Rekap
-function getRekapBulanan(bulanTahun) { let allJamaah = [...dataHaji.map(j=>({...j,jenis:'Haji'})), ...dataUmroh.map(j=>({...j,jenis:'Umroh'}))]; let filtered = allJamaah.filter(j=>j.tglDaftar && j.tglDaftar.startsWith(bulanTahun)); let totalHaji=0, totalUmroh=0; filtered.forEach(j=>{ let harga=getHargaPaket(j.paket); let nominal = j.status==='LUNAS' ? harga : (j.totalDibayar||0); if(j.jenis==='Haji') totalHaji += nominal; else totalUmroh += nominal; }); return { totalHaji, totalUmroh, total: totalHaji+totalUmroh }; }
-function renderRekapBulanan(containerId, isFull=false) { let now=new Date(); let bulanIni=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`; let selected=document.getElementById('bulanSelect')?document.getElementById('bulanSelect').value:bulanIni; let r=getRekapBulanan(selected); let nama=new Date(selected+'-01').toLocaleDateString('id-ID',{year:'numeric',month:'long'}); let html=`<div class="rekap-header"><span>📅 ${nama}</span>${!isFull?`<select id="bulanSelect">${getBulanOptions(selected)}</select>`:''}</div><div class="rekap-item"><span>Haji</span><span>${formatRupiah(r.totalHaji)}</span></div><div class="rekap-item"><span>Umroh</span><span>${formatRupiah(r.totalUmroh)}</span></div><div class="rekap-total"><span>TOTAL</span><span>${formatRupiah(r.total)}</span></div>`; document.getElementById(containerId).innerHTML=html; if(!isFull && document.getElementById('bulanSelect')) document.getElementById('bulanSelect').addEventListener('change',()=>renderRekapBulanan(containerId,false)); }
-function getBulanOptions(selected) { let opts=''; for(let i=0;i<12;i++){ let d=new Date(); d.setMonth(d.getMonth()-i); let v=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; let n=d.toLocaleDateString('id-ID',{year:'numeric',month:'long'}); opts+=`<option value="${v}" ${v===selected?'selected':''}>${n}</option>`; } return opts; }
-function updateDashboard() { let totalHaji=dataHaji.length, totalUmroh=dataUmroh.length, totalLunas=[...dataHaji,...dataUmroh].filter(j=>j.status==='LUNAS').length, totalDP=[...dataHaji,...dataUmroh].filter(j=>j.status==='DP').length, totalPendapatan=[...dataHaji,...dataUmroh].reduce((s,j)=>s+(j.status==='LUNAS'?getHargaPaket(j.paket):(j.totalDibayar||0)),0); document.getElementById('dashboardContent').innerHTML=`<div class="dashboard-cards"><div class="card-dash"><h3>${totalHaji}</h3><p>Haji</p></div><div class="card-dash"><h3>${totalUmroh}</h3><p>Umroh</p></div><div class="card-dash"><h3>${totalLunas}</h3><p>Lunas</p></div><div class="card-dash"><h3>${totalDP}</h3><p>DP</p></div></div><div class="card-dash" style="background:#f9a825;"><h3>${formatRupiah(totalPendapatan)}</h3><p>Total</p></div>`; renderRekapBulanan('rekapBulananContent',false); renderNotifikasiJatuhTempo(); renderGrafik(); }
-function openFullRekap() { document.getElementById('rekapFullContent').innerHTML=`<div class="rekap-header"><span>Pilih Bulan</span><select id="bulanSelectFull">${getBulanOptions(new Date().toISOString().slice(0,7))}</select></div><div id="rekapFullDetail"></div>`; function load(){ let s=document.getElementById('bulanSelectFull').value; let r=getRekapBulanan(s); let n=new Date(s+'-01').toLocaleDateString('id-ID',{year:'numeric',month:'long'}); document.getElementById('rekapFullDetail').innerHTML=`<div class="rekap-item"><span>Haji</span><span>${formatRupiah(r.totalHaji)}</span></div><div class="rekap-item"><span>Umroh</span><span>${formatRupiah(r.totalUmroh)}</span></div><div class="rekap-total"><span>TOTAL ${n}</span><span>${formatRupiah(r.total)}</span></div>`; } load(); document.getElementById('bulanSelectFull').addEventListener('change',load); document.getElementById('rekapPanel').classList.add('active'); }
-document.getElementById('tutupRekap')?.addEventListener('click', () => document.getElementById('rekapPanel').classList.remove('active'));
-document.getElementById('cetakRekap')?.addEventListener('click', () => window.print());
-
-// Foto Profil
-function openAmbilFoto() { document.getElementById('fotoInput').click(); }
-document.getElementById('fotoInput')?.addEventListener('change', (e) => { let file=e.target.files[0]; if(file){ let reader=new FileReader(); reader.onload=(ev)=>{ currentFotoData=ev.target.result; document.getElementById('fotoPreview').src=currentFotoData; }; reader.readAsDataURL(file); } });
-function openFotoProfil(jamaahId) {
-    currentEditJamaahId=jamaahId;
-    let allJamaah=[...dataHaji,...dataUmroh];
-    let jamaah=allJamaah.find(j=>j.id===jamaahId);
-    if(jamaah&&jamaah.foto) document.getElementById('fotoPreview').src=jamaah.foto;
-    else document.getElementById('fotoPreview').src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ccc'/%3E%3Ctext x='50' y='67' font-size='40' text-anchor='middle' fill='white'%3E📷%3C/text%3E%3C/svg%3E";
-    document.getElementById('fotoContainer').style.display='flex';
-    document.getElementById('ambilFotoBtn').onclick=openAmbilFoto;
-    document.getElementById('tambahJamaah').innerText='💾 Simpan Foto';
-    document.getElementById('tambahJamaah').onclick=()=>{
-        if(currentEditJamaahId && currentFotoData){
-            if(currentJamaahType==='haji'){ let idx=dataHaji.findIndex(j=>j.id===currentEditJamaahId); if(idx!==-1) dataHaji[idx].foto=currentFotoData; }
-            else { let idx=dataUmroh.findIndex(j=>j.id===currentEditJamaahId); if(idx!==-1) dataUmroh[idx].foto=currentFotoData; }
-            saveJamaah(); renderDaftarJamaah(); alert('Foto tersimpan!');
-        }
-        document.getElementById('fotoContainer').style.display='none';
-        document.getElementById('tambahJamaah').innerText='➕ Tambah';
-        currentEditJamaahId=null; currentFotoData=null;
-    };
-}
-document.getElementById('ambilFotoBtn')?.addEventListener('click', openAmbilFoto);
-
-// Copy Jamaah
-function copyJamaah(jamaah) {
-    let newJamaah = { ...jamaah, id: Date.now(), nama: `${jamaah.nama} (salinan)`, status: "DP", dokumen: [], foto: null, pembayaran: [], totalDibayar: 0 };
-    if(currentJamaahType === 'haji') dataHaji.push(newJamaah);
-    else dataUmroh.push(newJamaah);
-    saveJamaah();
-    renderDaftarJamaah();
-    updateDashboard();
-    alert(`Data ${jamaah.nama} berhasil diduplikasi!`);
-}
-
-// Render Daftar Jamaah
-function renderDaftarJamaah() {
-    let container = document.getElementById('daftarJamaah');
-    let data = currentJamaahType === 'haji' ? dataHaji : dataUmroh;
-    let filtered = data;
-    if(currentFilter === 'DP') filtered = data.filter(j => j.status === 'DP');
-    if(currentFilter === 'LUNAS') filtered = data.filter(j => j.status === 'LUNAS');
-    if(searchQuery) { let q = searchQuery.toLowerCase(); filtered = filtered.filter(j => j.nama.toLowerCase().includes(q) || j.hp.includes(q)); }
-    if(filtered.length === 0) { container.innerHTML = '<p style="text-align:center;">Belum ada data</p>'; return; }
-    container.innerHTML = '';
-    filtered.forEach(j => {
-        let bus = daftarBus.find(b => b.id === j.busId);
-        let hotel = daftarHotel.find(h => h.id === j.hotelId);
-        let akom = ''; if(bus) akom += `🚌 ${bus.nama} `; if(hotel) akom += `🏨 ${hotel.nama} `; if(j.nomorKamar) akom += `🛏️ ${j.nomorKamar}`;
-        let fotoHtml = j.foto ? `<img src="${j.foto}" class="foto-kecil">` : `<div class="foto-kecil" style="background:#ccc; border-radius:50%; display:flex; align-items:center; justify-content:center;">📷</div>`;
-        let totalHarga = getHargaPaket(j.paket);
-        let sisa = totalHarga - (j.totalDibayar || 0);
-        let paymentHtml = `<div class="payment-info"><div class="payment-progress"><div class="payment-progress-fill" style="width:${((j.totalDibayar||0)/totalHarga)*100}%"></div></div><span>${formatRupiah(j.totalDibayar||0)} / ${formatRupiah(totalHarga)}</span></div>`;
-        let div = document.createElement('div');
-        div.className = 'jamaah-card';
-        div.innerHTML = `${fotoHtml}<div class="jamaah-info"><h4>${j.nama}</h4><p>📞 ${j.hp} | ${j.paket} | JT: ${j.jatuhTempo}</p><p class="${j.status === 'LUNAS' ? 'status-lunas' : 'status-dp'}">${j.status === 'LUNAS' ? '✅ LUNAS' : '🟡 DP'}</p><p style="font-size:0.7rem;">${akom || 'Belum diatur'}</p>${paymentHtml}<div class="btn-aksi">${checkAccess(['admin','karyawan']) ? `<button class="btn-wa" data-hp="${j.hp}" data-pesan="Assalamualaikum ${j.nama}, status ${j.paket}: ${j.status}. Total: ${formatRupiah(totalHarga)}, Dibayar: ${formatRupiah(j.totalDibayar||0)}, Sisa: ${formatRupiah(sisa)}">📱 WA</button><button class="btn-invoice" data-id="${j.id}">🧾 Invoice</button><button class="btn-dokumen" data-id="${j.id}">📎 ${(j.dokumen||[]).length}</button><button class="btn-foto-profil" data-id="${j.id}">📸 Foto</button><button class="btn-copy" data-id="${j.id}">📋 Copy</button><button class="btn-edit-data" data-id="${j.id}">✏️ Edit</button><button class="btn-payment" data-id="${j.id}">💰 Bayar</button>` : ''}${checkAccess(['admin']) ? `<button class="btn-hapus" data-id="${j.id}">🗑️ Hapus</button>` : ''}</div></div>`;
-        container.appendChild(div);
-    });
-    if(checkAccess(['admin','karyawan'])) {
-        document.querySelectorAll('.btn-wa').forEach(btn => btn.addEventListener('click', () => window.open(`https://wa.me/${btn.dataset.hp}?text=${encodeURIComponent(btn.dataset.pesan)}`, '_blank')));
-        document.querySelectorAll('.btn-invoice').forEach(btn => btn.addEventListener('click', () => { let id=parseInt(btn.dataset.id); let j=[...dataHaji,...dataUmroh].find(j=>j.id===id); if(j) showInvoice(j); }));
-        document.querySelectorAll('.btn-dokumen').forEach(btn => btn.addEventListener('click', () => { let id=parseInt(btn.dataset.id); let j=[...dataHaji,...dataUmroh].find(j=>j.id===id); if(j) openDokumen(j); }));
-        document.querySelectorAll('.btn-foto-profil').forEach(btn => btn.addEventListener('click', () => { let id=parseInt(btn.dataset.id); openFotoProfil(id); }));
-        document.querySelectorAll('.btn-copy').forEach(btn => btn.addEventListener('click', () => { let id=parseInt(btn.dataset.id); let j=[...dataHaji,...dataUmroh].find(j=>j.id===id); if(j) copyJamaah(j); }));
-        document.querySelectorAll('.btn-edit-data').forEach(btn => btn.addEventListener('click', () => { let id=parseInt(btn.dataset.id); let j=[...dataHaji,...dataUmroh].find(j=>j.id===id); if(j) openEditData(j); }));
-        document.querySelectorAll('.btn-payment').forEach(btn => btn.addEventListener('click', () => { let id=parseInt(btn.dataset.id); let j=[...dataHaji,...dataUmroh].find(j=>j.id===id); if(j) openPayment(j); }));
-    }
-    if(checkAccess(['admin'])) document.querySelectorAll('.btn-hapus').forEach(btn => btn.addEventListener('click', () => { let id=parseInt(btn.dataset.id); if(confirm('Hapus jamaah?')){ if(currentJamaahType==='haji') dataHaji=dataHaji.filter(j=>j.id!==id); else dataUmroh=dataUmroh.filter(j=>j.id!==id); saveJamaah(); renderDaftarJamaah(); updateDashboard(); } }));
-}
-document.getElementById('searchJamaah')?.addEventListener('input', (e) => { searchQuery = e.target.value; renderDaftarJamaah(); });
-function showInvoice(j) { let h=getHargaPaket(j.paket); let sisa = h - (j.totalDibayar||0); document.getElementById('invoiceContent').innerHTML=`<div class="invoice-box"><div class="invoice-header-invoice"><h3>PT Auva Eqtena</h3></div><div class="invoice-row"><strong>Invoice:</strong> INV/${j.id}</div><div class="invoice-row"><strong>Nama:</strong> ${j.nama}</div><div class="invoice-row"><strong>Paket:</strong> ${j.paket}</div><div class="invoice-row"><strong>Status:</strong> ${j.status}</div><div class="invoice-row"><strong>Total:</strong> ${formatRupiah(h)}</div><div class="invoice-row"><strong>Dibayar:</strong> ${formatRupiah(j.totalDibayar||0)}</div><div class="invoice-row"><strong>Sisa:</strong> ${formatRupiah(sisa)}</div><button class="btn-print" onclick="window.print()">🖨️ Cetak</button></div>`; document.getElementById('invoicePanel').classList.add('active'); }
-function openJamaahList(type, title) { currentJamaahType=type; document.getElementById('jamaahJudul').innerText=title; let p=document.getElementById('inputPaket'); p.innerHTML='<option value="">Pilih Paket</option>'; getPaketListByType(type).forEach(pk=>p.innerHTML+=`<option value="${pk}">${pk}</option>`); document.getElementById('fotoContainer').style.display='none'; document.getElementById('tambahJamaah').innerText='➕ Tambah'; currentEditJamaahId=null; currentFotoData=null; searchQuery=''; document.getElementById('searchJamaah').value=''; renderDaftarJamaah(); document.getElementById('jamaahPanel').classList.add('active'); }
-document.getElementById('tambahJamaah')?.addEventListener('click',()=>{ if(!checkAccess(['admin','karyawan'])){alert("Tidak punya akses!");return;} let nama=document.getElementById('inputNama').value.trim(), hp=document.getElementById('inputHP').value.trim(), paket=document.getElementById('inputPaket').value, status=document.getElementById('inputStatus').value, jatuhTempo=document.getElementById('inputJatuhTempo').value, nomorKamar=document.getElementById('inputNomorKamar').value; if(!nama||!hp||!paket){alert("Isi semua!");return;} let baru={id:Date.now(),nama,hp,paket,status,tglDaftar:new Date().toISOString().slice(0,7),jatuhTempo:jatuhTempo||new Date(Date.now()+30*24*60*60*1000).toISOString().slice(0,10),dokumen:[],busId:null,hotelId:null,nomorKamar:nomorKamar||'',foto:currentFotoData||null,pembayaran:[],totalDibayar:0}; if(currentJamaahType==='haji') dataHaji.push(baru); else dataUmroh.push(baru); saveJamaah(); document.getElementById('inputNama').value=''; document.getElementById('inputHP').value=''; document.getElementById('inputJatuhTempo').value=''; document.getElementById('inputNomorKamar').value=''; currentFotoData=null; document.getElementById('fotoPreview').src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ccc'/%3E%3Ctext x='50' y='67' font-size='40' text-anchor='middle' fill='white'%3E📷%3C/text%3E%3C/svg%3E"; renderDaftarJamaah(); updateDashboard(); alert("Jamaah ditambahkan!"); });
-document.getElementById('filterSemua')?.addEventListener('click',()=>{currentFilter='SEMUA'; renderDaftarJamaah();});
-document.getElementById('filterDP')?.addEventListener('click',()=>{currentFilter='DP'; renderDaftarJamaah();});
-document.getElementById('filterLunas')?.addEventListener('click',()=>{currentFilter='LUNAS'; renderDaftarJamaah();});
-document.getElementById('exportData')?.addEventListener('click',()=>{let d=currentJamaahType==='haji'?dataHaji:dataUmroh; let csv="Nama,HP,Paket,Status,Tanggal,JatuhTempo,Bus,Hotel,Kamar,TotalDibayar\n"+d.map(j=>`"${j.nama}","${j.hp}","${j.paket}","${j.status}","${j.tglDaftar}","${j.jatuhTempo}","${daftarBus.find(b=>b.id===j.busId)?.nama||''}","${daftarHotel.find(h=>h.id===j.hotelId)?.nama||''}","${j.nomorKamar||''}","${j.totalDibayar||0}"`).join("\n"); let blob=new Blob([csv],{type:'text/csv'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`jamaah_${currentJamaahType}.csv`; a.click();});
-document.getElementById('importFile')?.addEventListener('change',(e)=>{if(!checkAccess(['admin'])){alert("Hanya admin!");return;} let f=e.target.files[0]; if(!f)return; let r=new FileReader(); r.onload=(ev)=>{let text=ev.target.result; let lines=text.split("\n").slice(1); let baru=[]; for(let line of lines){if(!line.trim())continue; let cols=line.match(/(".*?"|[^,]+)/g).map(c=>c.replace(/"/g,'').trim()); if(cols.length>=5)baru.push({id:Date.now()+Math.random(),nama:cols[0],hp:cols[1],paket:cols[2],status:cols[3],tglDaftar:cols[4]||new Date().toISOString().slice(0,7),jatuhTempo:cols[5]||new Date(Date.now()+30*24*60*60*1000).toISOString().slice(0,10),dokumen:[],busId:null,hotelId:null,nomorKamar:'',foto:null,pembayaran:[],totalDibayar:0});} if(baru.length>0){if(currentJamaahType==='haji')dataHaji.push(...baru); else dataUmroh.push(...baru); saveJamaah(); renderDaftarJamaah(); updateDashboard(); alert(`Import ${baru.length} jamaah!`);} else alert("Format salah");}; r.readAsText(f); e.target.value='';});
-document.getElementById('tutupJamaah')?.addEventListener('click',()=>document.getElementById('jamaahPanel').classList.remove('active'));
-document.getElementById('tutupInvoice')?.addEventListener('click',()=>document.getElementById('invoicePanel').classList.remove('active'));
-
-// Backup & Restore
-function backupToFile() { let semuaData = { dataHaji, dataUmroh, hargaPaket: HARGA, daftarBus, daftarHotel, backupDate: new Date().toISOString() }; let dataStr = JSON.stringify(semuaData, null, 2); let blob = new Blob([dataStr], {type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`backup_${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.json`; a.click(); URL.revokeObjectURL(blob); alert("✅ Backup berhasil!"); }
-function restoreFromFile() { let input=document.createElement('input'); input.type='file'; input.accept='application/json'; input.onchange=(e)=>{ let file=e.target.files[0]; if(!file)return; let reader=new FileReader(); reader.onload=(ev)=>{ try{ let data=JSON.parse(ev.target.result); if(data.dataHaji) dataHaji=data.dataHaji; if(data.dataUmroh) dataUmroh=data.dataUmroh; if(data.hargaPaket){ HARGA=data.hargaPaket; saveHarga(); } if(data.daftarBus){ daftarBus=data.daftarBus; saveAkomodasi(); } if(data.daftarHotel){ daftarHotel=data.daftarHotel; saveAkomodasi(); } saveJamaah(); loadJamaah(); updateDashboard(); renderDaftarJamaah(); alert("✅ Restore berhasil!"); } catch(err){ alert("❌ Gagal restore"); } }; reader.readAsText(file); }; input.click(); }
-function openBackupPanel() { if(!checkAccess(['admin'])){ alert("Hanya admin!"); return; } document.getElementById('backupContent').innerHTML = `<div class="backup-status"><span>📁 Backup</span></div><button class="btn-backup" id="backupToFileBtn">💾 Backup</button><button class="btn-restore" id="restoreFromFileBtn">📥 Restore</button><div class="backup-info"><p>Backup: Semua data + Bus + Hotel + Foto + Pembayaran</p></div>`; document.getElementById('backupToFileBtn')?.addEventListener('click', backupToFile); document.getElementById('restoreFromFileBtn')?.addEventListener('click', restoreFromFile); document.getElementById('backupPanel').classList.add('active'); }
-document.getElementById('tutupBackup')?.addEventListener('click', () => document.getElementById('backupPanel').classList.remove('active'));
-document.getElementById('googleDriveBtn')?.addEventListener('click', () => openBackupPanel());
-
-// Admin Panel
-const adminPanel=document.getElementById('adminPanel'); const adminForm=document.getElementById('adminForm'); const tombolSetting=document.getElementById('tombolSetting'); const tutupAdmin=document.getElementById('tutupAdmin'); const simpanHargaBtn=document.getElementById('simpanHarga');
-function buatFormAdmin(){adminForm.innerHTML=''; for(let key of Object.keys(DEFAULT_HARGA)){let div=document.createElement('div'); div.className='paket-row'; div.innerHTML=`<label>${NAMA_PAKET[key]}</label><input type="number" id="input_${key}" value="${HARGA[key]}"><div>${formatRupiah(HARGA[key])}</div>`; adminForm.appendChild(div);}}
-if(tombolSetting) tombolSetting.addEventListener('click',()=>{if(!checkAccess(['admin'])){alert("Hanya admin!");return;} buatFormAdmin(); adminPanel.classList.add('active');});
-if(tutupAdmin) tutupAdmin.addEventListener('click',()=>adminPanel.classList.remove('active'));
-if(simpanHargaBtn) simpanHargaBtn.addEventListener('click',()=>{for(let key of Object.keys(DEFAULT_HARGA)){let inp=document.getElementById(`input_${key}`); if(inp){let val=parseInt(inp.value); if(!isNaN(val)&&val>0)HARGA[key]=val;}} saveHarga(); adminPanel.classList.remove('active'); alert("Harga disimpan!"); buildMainGrid();});
-document.getElementById('tutupDashboard')?.addEventListener('click',()=>document.getElementById('dashboardPanel').classList.remove('active'));
-document.getElementById('tahunGrafik')?.addEventListener('change',()=>renderGrafik());
-
-// ======================== MENU UTAMA ========================
-const semuaMenu = [
-    { nama: "📊 DASHBOARD", icon: "📊", action: () => { updateDashboard(); document.getElementById('dashboardPanel').classList.add('active'); }, allowed: ['admin','karyawan','pimpinan'] },
-    { nama: "📋 REKAP", icon: "📋", action: () => openFullRekap(), allowed: ['admin','pimpinan'] },
-    { nama: "🏨 AKOMODASI", icon: "🏨", action: () => openAkomodasi(), allowed: ['admin'] },
-    { nama: "📱 BROADCAST", icon: "📱", action: () => openWABroadcast(), allowed: ['admin','karyawan'] },
-    { nama: "🕋 HAJI", icon: "🕋", action: () => openJamaahList('haji', '📋 Daftar Haji'), allowed: ['admin','karyawan'] },
-    { nama: "🕌 UMROH", icon: "🕌", action: () => openJamaahList('umroh', '📋 Daftar Umroh'), allowed: ['admin','karyawan'] },
-    { nama: "📁 DATABASE", icon: "📁", action: () => openDatabase(), allowed: ['admin'] },
-    { nama: "📅 JADWAL", icon: "📅", sub: [{ nama: "Haji 2025", icon: "🕋", pesan: "5-10 Juli 2025" }, { nama: "Umroh", icon: "🕌", pesan: "Setiap bulan" }], allowed: ['admin','karyawan','pimpinan'] },
-    { nama: "🎁 PAKET", icon: "🎁", sub: [{ nama: "Haji Ekonomi", icon: "🏨", pesan: formatRupiah(HARGA.haji_ekonomi) }, { nama: "Haji Plus", icon: "✨", pesan: formatRupiah(HARGA.haji_plus) }, { nama: "Umroh Silver", icon: "🥈", pesan: formatRupiah(HARGA.umroh_silver) }, { nama: "Umroh Gold", icon: "🥇", pesan: formatRupiah(HARGA.umroh_gold) }], allowed: ['admin','karyawan','pimpinan'] },
-    { nama: "💰 PEMBAYARAN", icon: "💰", sub: [{ nama: "Bayar Haji", icon: "🕌", pesan: "BSI 1234567890" }, { nama: "Bayar Umroh", icon: "🕋", pesan: "Mandiri 9876543210" }], allowed: ['admin','karyawan','pimpinan'] },
-    { nama: "🔍 CEK STATUS", icon: "🔍", sub: [{ nama: "Status Haji", icon: "✅", pesan: "Porsi 2026" }, { nama: "Status Umroh", icon: "✅", pesan: "Visa aktif" }], allowed: ['admin','karyawan','pimpinan'] }
-];
-function buildMainGrid() { let grid=document.getElementById('mainGrid'); grid.innerHTML=''; let menuTampil=semuaMenu.filter(m=>m.allowed.includes(currentRole)); menuTampil.forEach(menu=>{ let kartu=document.createElement('div'); kartu.className='menu-item'; kartu.innerHTML=`<div class="menu-icon">${menu.icon}</div><div class="menu-label">${menu.nama}</div>`; kartu.addEventListener('click',()=>{ if(menu.action) menu.action(); else if(menu.sub) pushSheet(menu.nama,menu.sub); }); grid.appendChild(kartu); }); }
-
-// Bottom Sheet
-const overlaySheet=document.getElementById('sheetLayer'); const judulSheet=document.getElementById('sheetJudul'); const kontenSheet=document.getElementById('sheetKonten'); const tombolKembali=document.getElementById('tombolKembali'); let stack=[], sheetAktif=false;
-function tutupSheet(){ overlaySheet.classList.remove('active'); sheetAktif=false; setTimeout(()=>{if(!sheetAktif)stack=[];},200); }
-function renderSheet(){ if(stack.length===0){tutupSheet();return;} let cur=stack[stack.length-1]; judulSheet.innerText=cur.judul; kontenSheet.innerHTML=''; kontenSheet.className='sub-grid'; cur.items.forEach(item=>{let el=document.createElement('div'); el.className='sub-item'; el.innerHTML=`<div class="sub-icon">${item.icon}</div><div class="sub-nama">${item.nama}</div>`; el.addEventListener('click',()=>alert(item.pesan)); kontenSheet.appendChild(el);}); }
-function pushSheet(judul,items){stack.push({judul,items}); if(!sheetAktif){overlaySheet.classList.add('active'); sheetAktif=true;} renderSheet();}
-function kembali(){if(stack.length<=1)tutupSheet();else{stack.pop();renderSheet();}}
-tombolKembali.addEventListener('click',kembali);
-overlaySheet.addEventListener('click',(e)=>{if(e.target===overlaySheet)tutupSheet();});
-
-// ======================== LOGIN (Tanpa Password) ========================
-const loginPage=document.getElementById('loginPage'); const mainApp=document.getElementById('mainApp'); const userRoleDisplay=document.getElementById('userRoleDisplay'); const logoutBtn=document.getElementById('logoutBtn');
-document.getElementById('loginBtn').addEventListener('click', () => {
-    let role = document.getElementById('roleSelect').value;
-    if (USERS[role]) {
-        currentUser = USERS[role].name;
-        currentRole = role;
-        userRoleDisplay.innerText = currentRole === 'admin' ? '👑 Admin' : (currentRole === 'karyawan' ? '👤 Karyawan' : '📊 Pimpinan');
-        loginPage.style.display = 'none';
-        mainApp.style.display = 'block';
-        buildMainGrid();
-        updateDashboard();
-        if(tombolSetting) tombolSetting.style.display = currentRole === 'admin' ? 'block' : 'none';
-        if(document.getElementById('googleDriveBtn')) document.getElementById('googleDriveBtn').style.display = currentRole === 'admin' ? 'block' : 'none';
-    }
-});
-logoutBtn.addEventListener('click', () => { currentUser=null; currentRole=null; loginPage.style.display='flex'; mainApp.style.display='none'; });
 </script>
 </body>
-    </html>
+                    </html>
