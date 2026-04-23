@@ -139,7 +139,19 @@
         }
         
         .logo-area { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; position: relative; z-index: 2; }
-        .logo-icon { font-size: 42px; background: rgba(255,255,255,0.12); width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 20px; backdrop-filter: blur(4px); }
+        .logo-icon { 
+            width: 56px; 
+            height: 56px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 20px; 
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(4px);
+            overflow: hidden;
+        }
+        .logo-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+        .logo-icon i { font-size: 42px; color: white; }
         .logo-text h1 { color: white; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
         .logo-text p { color: rgba(255,255,255,0.7); font-size: 0.7rem; font-weight: 500; }
         .greeting { 
@@ -621,7 +633,15 @@
 <!-- HOME PAGE -->
 <div id="page-home" class="page active">
     <div class="header-premium">
-        <div class="logo-area"><div class="logo-icon">🕋</div><div class="logo-text"><h1>PT AUVA EQTENA NAHDHA</h1><p>KBIHU AMANATUL UMMAH</p></div></div>
+        <div class="logo-area">
+            <div class="logo-icon" id="headerLogo">
+                <i class="fas fa-kaaba"></i>
+            </div>
+            <div class="logo-text">
+                <h1 id="headerInstansi1">PT AUVA EQTENA NAHDHA</h1>
+                <p id="headerInstansi2">KBIHU AMANATUL UMMAH</p>
+            </div>
+        </div>
         <div class="greeting">
             <div>
                 <h2>Selamat datang, kang Mas</h2>
@@ -652,22 +672,10 @@
     <div class="container">
         <div class="dashboard-card">
             <div class="dashboard-stats">
-                <div class="dashboard-stat-card">
-                    <div class="label">💰 TOTAL KAS</div>
-                    <div class="value" id="dashTotalKas">Rp 0</div>
-                </div>
-                <div class="dashboard-stat-card">
-                    <div class="label">👥 TOTAL JAMAAH</div>
-                    <div class="value" id="dashTotalJamaah">0</div>
-                </div>
-                <div class="dashboard-stat-card">
-                    <div class="label">✅ JAMAAH LUNAS</div>
-                    <div class="value" id="dashTotalLunas">0</div>
-                </div>
-                <div class="dashboard-stat-card">
-                    <div class="label">📋 TOTAL PIUTANG</div>
-                    <div class="value" id="dashTotalPiutang">Rp 0</div>
-                </div>
+                <div class="dashboard-stat-card"><div class="label">💰 TOTAL KAS</div><div class="value" id="dashTotalKas">Rp 0</div></div>
+                <div class="dashboard-stat-card"><div class="label">👥 TOTAL JAMAAH</div><div class="value" id="dashTotalJamaah">0</div></div>
+                <div class="dashboard-stat-card"><div class="label">✅ JAMAAH LUNAS</div><div class="value" id="dashTotalLunas">0</div></div>
+                <div class="dashboard-stat-card"><div class="label">📋 TOTAL PIUTANG</div><div class="value" id="dashTotalPiutang">Rp 0</div></div>
             </div>
             <div class="chart-container"><canvas id="kasChart"></canvas></div>
             <div class="chart-container"><canvas id="paymentChart"></canvas></div>
@@ -715,7 +723,7 @@
         <button class="btn btn-accent" onclick="tambahTransaksi()"><i class="fas fa-plus-circle"></i> TAMBAH TRANSAKSI</button>
         <button class="btn btn-teal mt-2" onclick="buatLaporanWA()"><i class="fab fa-whatsapp"></i> BUAT LAPORAN WA</button>
         <div class="summary-real" id="summaryKas">Saldo Akhir: Rp 0</div>
-        <div class="table-container"><table id="kasTable"><thead><tr><th>Tgl</th><th>Kegiatan</th><th>Keterangan</th><th>Nominal</th><th>Aksi</th></tr></thead><tbody id="bodyKas"></tbody></table></div>
+        <div class="table-container"><table id="kasTable"><thead></tr><th>Tgl</th><th>Kegiatan</th><th>Keterangan</th><th>Nominal</th><th>Aksi</th></tr></thead><tbody id="bodyKas"></tbody></table></div>
         <div id="hasilWA" class="res-card" style="display:none;"></div>
         <div class="section-title"><span>Backup & Restore Data Kas</span></div>
         <div class="backup-info"><i class="fas fa-info-circle"></i> Backup & Restore data transaksi kas</div>
@@ -827,7 +835,7 @@
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>⚙️ Konfigurasi Pro</h2><div style="width:30px;"></div></div></div>
     <div class="card-premium">
         <div class="config-section"><h3><i class="fas fa-building"></i> Data Instansi Utama</h3>
-            <div class="config-row"><label>Logo Instansi</label><input type="file" id="cfg_logo1" accept="image/*" onchange="previewLogo(this, 'previewLogo1')"><img id="previewLogo1" class="logo-preview"></div>
+            <div class="config-row"><label>Logo Instansi</label><input type="file" id="cfg_logo1" accept="image/*" onchange="previewLogo(this, 'previewLogo1')"><img id="previewLogo1" class="logo-preview"><small style="display:block; color:var(--gray); margin-top:4px;">Logo akan tampil di header HOME</small></div>
             <div class="config-row"><label>Nama Instansi</label><input type="text" id="cfg_nama1" placeholder="PT AUVA EQTENA NAHDHA"></div>
             <div class="config-row"><label>Alamat Lengkap</label><textarea id="cfg_alamat1" rows="2" placeholder="Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya"></textarea></div>
             <div class="row"><div class="config-row"><label>Telepon</label><input type="text" id="cfg_telp1" placeholder="081391485440"></div><div class="config-row"><label>Email</label><input type="email" id="cfg_email1"></div></div>
@@ -942,7 +950,7 @@
     </div>
 </div>
 
-<!-- CLOUD STORAGE PAGE (BARU) -->
+<!-- CLOUD STORAGE PAGE -->
 <div id="page-cloudstorage" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2>☁️ Cloud Storage</h2><div style="width:30px;"></div></div></div>
     <div class="container">
@@ -954,7 +962,7 @@
             <div class="text-muted text-center mt-2" style="font-size: 11px;">💾 Data aplikasi tersimpan di sini</div>
         </div>
         
-        <!-- BACKUP LOKAL (FITUR BARU) -->
+        <!-- BACKUP LOKAL -->
         <div class="card-premium">
             <div class="section-title"><span>📦 BACKUP LOKAL</span></div>
             <div class="row" style="margin-bottom: 8px;">
@@ -962,9 +970,7 @@
                 <button class="btn btn-orange btn-small" onclick="document.getElementById('restoreZipFileInput').click()" style="flex:1"><i class="fas fa-upload"></i> RESTORE DARI ZIP</button>
             </div>
             <input type="file" id="restoreZipFileInput" accept=".zip" style="display:none" onchange="restoreFromZip(this)">
-            <div class="text-muted text-center mt-2" style="font-size: 11px;">
-                📌 Backup semua data (Jamaah, Kas, Pembayaran, Dokumen) ke file ZIP
-            </div>
+            <div class="text-muted text-center mt-2" style="font-size: 11px;">📌 Backup semua data (Jamaah, Kas, Pembayaran, Dokumen) ke file ZIP</div>
         </div>
         
         <!-- Google Drive -->
@@ -995,7 +1001,7 @@
     <div class="nav-item-premium" data-page="setting" onclick="showPage('setting')"><i class="fas fa-sliders-h"></i><span>Setting</span></div>
 </div>
 
-<!-- MODALS (Singkat) -->
+<!-- MODALS (SINGKAT) -->
 <div id="jamaahModal" class="modal"><div class="modal-content"><h3 id="jamaahModalTitle">Tambah database</h3><div id="jamaahFormContainer"></div><button class="btn btn-primary" onclick="saveJamaah()">💾 SIMPAN</button><button class="btn btn-danger mt-2" onclick="closeJamaahModal()">BATAL</button></div></div>
 <div id="fieldModal" class="modal"><div class="modal-content"><h3>Tambah Field Dinamis</h3><div class="dynamic-field"><label>Nama Field</label><input type="text" id="newFieldName" placeholder="Contoh: tanggal_lahir"><div class="error-message">Hanya huruf kecil, angka, underscore</div></div><div class="dynamic-field"><label>Label Field</label><input type="text" id="newFieldLabel" placeholder="Contoh: Tanggal Lahir"></div><div class="dynamic-field"><label>Tipe Field</label><select id="newFieldType"><option value="text">Text</option><option value="date">Tanggal</option><option value="tel">Telepon</option><option value="textarea">Text Area</option></select></div><button class="btn btn-primary" onclick="addDynamicFieldJamaah()">➕ TAMBAH FIELD</button><button class="btn btn-danger mt-2" onclick="closeFieldModal()">BATAL</button></div></div>
 <div id="manageFieldsModal" class="modal"><div class="modal-content"><h3>Kelola Field Dinamis</h3><button class="btn btn-primary btn-small" style="margin-bottom:15px;" onclick="closeManageFieldsModal(); openFieldModal();">+ Tambah Field Baru</button><div id="fieldsListContainer"></div><button class="btn btn-primary mt-2" onclick="closeManageFieldsModal()">TUTUP</button></div></div>
@@ -1062,6 +1068,7 @@ window.addEventListener('popstate', function(event) {
 });
 function initHistoryState() { const hash = window.location.hash; let initialPage = 'home'; if (hash && hash.startsWith('#page-')) initialPage = hash.replace('#page-', ''); history.replaceState({ page: initialPage }, '', `#page-${initialPage}`); internalShowPage(initialPage); }
 function showToast(msg) { const toast = document.getElementById('toastPremium'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+
 function updateHomeStats() {
     document.getElementById('homeDate').innerHTML = new Date().toLocaleDateString('id-ID', { weekday: 'long', year:'numeric', month:'long', day:'numeric' });
     const kasData = JSON.parse(localStorage.getItem('auva_kas_data') || '[]');
@@ -1076,12 +1083,16 @@ function updateHomeStats() {
 function escapeHtml(text) { if(!text) return ''; return text.replace(/[&<>]/g, function(m) { if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m; }); }
 function formatRupiah(angka) { if(!angka && angka!==0) return '0'; return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
 function parseRupiah(str) { if(!str) return 0; let cleaned = str.toString().replace(/\./g, '').replace(/[^0-9]/g, ''); let num = parseInt(cleaned,10); return isNaN(num)?0:num; }
+
+// Dark Mode
 function initDarkMode() {
     const darkMode = localStorage.getItem('auva_dark_mode') === 'true';
     if (darkMode) { document.body.classList.add('dark-mode'); const toggleBtn = document.getElementById('darkModeToggle'); if (toggleBtn) toggleBtn.innerHTML = '☀️'; }
     const toggleBtn = document.getElementById('darkModeToggle');
     if (toggleBtn) toggleBtn.addEventListener('click', function() { document.body.classList.toggle('dark-mode'); const isDark = document.body.classList.contains('dark-mode'); localStorage.setItem('auva_dark_mode', isDark); this.innerHTML = isDark ? '☀️' : '🌙'; });
 }
+
+// Menu Grid
 const menuItemsPremium = [
     { id: 'estimasi', icon: '💰', label: 'Cuan Plan', badge: 'Estimasi' }, { id: 'kas', icon: '📊', label: 'Uang Kas', badge: 'Kas' }, { id: 'jamaah', icon: '👥', label: 'Database', badge: 'Jamaah' }, { id: 'jamaahkita', icon: '👥', label: 'Jamaah on proses', badge: 'Proses' }, { id: 'catatan', icon: '📝', label: 'Catatan', badge: 'Notes' }, { id: 'zakat', icon: '📊', label: 'Zakat', badge: 'Kalkulator' }, { id: 'pembayaran', icon: '💰', label: 'Pembayaran', badge: 'Tagihan' }, { id: 'datamaster', icon: '🔄', label: 'Multi Event', badge: 'Event' }, { id: 'konfigurasi', icon: '⚙️', label: 'Konfigurasi', badge: 'Setting' }, { id: 'fitur', icon: '📦', label: 'LENGKAP', badge: 'Fitur' }
 ];
@@ -1094,6 +1105,26 @@ const themesPremium = [ { primary: '#0D5C4A', name: 'Hijau Emas' }, { primary: '
 function applyThemePremium(primary) { document.documentElement.style.setProperty('--primary', primary); document.documentElement.style.setProperty('--primary-dark', primary); document.querySelectorAll('.header-premium').forEach(h=>h.style.background=`linear-gradient(135deg, ${primary} 0%, #0A3D31 100%)`); localStorage.setItem('premium_theme_primary', primary); showToast('Tema berhasil diubah'); }
 function renderColorOptionsPremium() { const container = document.getElementById('colorOptions'); if(!container) return; let html=''; themesPremium.forEach(t=>{ html+=`<div class="color-opt" style="background:${t.primary}" title="${t.name}" onclick="applyThemePremium('${t.primary}')"></div>`; }); container.innerHTML=html; }
 function loadThemePremium() { const saved = localStorage.getItem('premium_theme_primary'); if(saved) applyThemePremium(saved); }
+
+// ==================== HEADER HOME DARI KONFIGURASI ====================
+function updateHeaderFromConfig() {
+    const cfg = getKonfigurasiProData();
+    const instansi1 = cfg.instansi1.nama || 'PT AUVA EQTENA NAHDHA';
+    const instansi2 = (cfg.instansi2.aktif && cfg.instansi2.nama) ? cfg.instansi2.nama : 'KBIHU AMANATUL UMMAH';
+    document.getElementById('headerInstansi1').innerText = instansi1;
+    document.getElementById('headerInstansi2').innerText = instansi2;
+    
+    const logoIcon = document.getElementById('headerLogo');
+    if (logoIcon) {
+        if (cfg.instansi1.logo && cfg.instansi1.logo !== '') {
+            logoIcon.innerHTML = `<img src="${cfg.instansi1.logo}" alt="Logo" style="width:100%; height:100%; object-fit:cover; border-radius:20px;">`;
+        } else if (cfg.instansi2.aktif && cfg.instansi2.logo && cfg.instansi2.logo !== '') {
+            logoIcon.innerHTML = `<img src="${cfg.instansi2.logo}" alt="Logo" style="width:100%; height:100%; object-fit:cover; border-radius:20px;">`;
+        } else {
+            logoIcon.innerHTML = '<i class="fas fa-kaaba"></i>';
+        }
+    }
+}
 
 // ==================== DASHBOARD ====================
 let kasChart = null, paymentChart = null;
@@ -1128,6 +1159,44 @@ function renderDashboard() {
     const top5 = piutangList.slice(0, 5);
     const topPiutangHtml = top5.map((p, i) => `<div class="field-item"><div><strong>${i+1}. ${escapeHtml(p.nama)}</strong><br><small>Total: Rp ${formatRupiah(p.total)}</small></div><div style="color: var(--orange); font-weight: bold;">Sisa: Rp ${formatRupiah(p.sisa)}</div></div>`).join('');
     document.getElementById('topPiutangList').innerHTML = topPiutangHtml || '<p class="text-center">Tidak ada data piutang</p>';
+}
+
+function exportDashboardPDF() {
+    showToast('Membuat PDF Dashboard...');
+    setTimeout(async () => {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+            await applyPDFConfig(doc, { landscape: true });
+            doc.setFontSize(16);
+            doc.setTextColor(26, 93, 74);
+            doc.text('DASHBOARD APLIKASI AUVA', 148.5, 65, { align: 'center' });
+            const kasData = JSON.parse(localStorage.getItem('auva_kas_data') || '[]');
+            const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
+            const jamaahData = JSON.parse(localStorage.getItem('auva_jamaah_list') || '[]');
+            doc.setFontSize(12);
+            doc.setTextColor(0,0,0);
+            doc.text(`Total Kas: Rp ${formatRupiah(totalKas)}`, 20, 80);
+            doc.text(`Total Jamaah: ${jamaahData.length} orang`, 20, 90);
+            doc.save('Dashboard_Auva.pdf');
+            showToast('PDF Dashboard berhasil dibuat');
+        } catch(e) { showToast('Gagal PDF: ' + e.message); }
+    }, 100);
+}
+
+function exportDashboardExcel() {
+    const jamaahData = JSON.parse(localStorage.getItem('auva_jamaah_list') || '[]');
+    const kasData = JSON.parse(localStorage.getItem('auva_kas_data') || '[]');
+    const paymentData = JSON.parse(localStorage.getItem('auva_pembayaran_transaksi') || '[]');
+    const wsJamaah = XLSX.utils.json_to_sheet(jamaahData.map(j => ({ Nama: j.nama_lengkap, Tanggal: j.created_at })));
+    const wsKas = XLSX.utils.json_to_sheet(kasData);
+    const wsPayment = XLSX.utils.json_to_sheet(paymentData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, wsJamaah, 'Jamaah');
+    XLSX.utils.book_append_sheet(wb, wsKas, 'Kas');
+    XLSX.utils.book_append_sheet(wb, wsPayment, 'Pembayaran');
+    XLSX.writeFile(wb, `Dashboard_Auva_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.xlsx`);
+    showToast('Excel Dashboard berhasil di-export');
 }
 
 // ==================== CLOUD STORAGE & BACKUP ZIP ====================
@@ -1253,6 +1322,7 @@ async function saveDokumenJenisToIndexedDB() { try { const database = await open
 async function loadDokumenDataFromIndexedDB() { try { const database = await openIndexedDB(); const transaction = database.transaction([STORE_NAME], 'readonly'); const store = transaction.objectStore(STORE_NAME); const request = store.getAll(); return new Promise((resolve, reject) => { request.onsuccess = () => { const items = request.result || []; dokumenData = {}; items.forEach(item => { dokumenData[item.jamaahId] = item.data; }); resolve(); }; request.onerror = () => reject(request.error); }); } catch(e) { return Promise.resolve(); } }
 async function saveDokumenToIndexedDB(jamaahId, jenisId, base64Data) { try { const database = await openIndexedDB(); const transaction = database.transaction([STORE_NAME], 'readwrite'); const store = transaction.objectStore(STORE_NAME); if (!dokumenData[jamaahId]) dokumenData[jamaahId] = {}; if (jenisId && base64Data) dokumenData[jamaahId][jenisId] = base64Data; const request = store.put({ id: `jamaah_${jamaahId}`, jamaahId: jamaahId, data: dokumenData[jamaahId] }); return new Promise((resolve, reject) => { request.onsuccess = () => resolve(); request.onerror = () => reject(request.error); }); } catch(e) { return Promise.reject(e); } }
 async function loadDokumenData() { await loadDokumenJenisFromIndexedDB(); await loadDokumenDataFromIndexedDB(); renderDokumenList(); updateDokumenStats(); renderDokumenFieldsList(); }
+
 function renderDokumenList() { const container = document.getElementById('dokumenListContainer'); if(!container) return; const keyword = document.getElementById('searchDokumenInput')?.value.toLowerCase() || ''; const filterStatus = document.getElementById('filterDokumenStatus')?.value || 'semua'; let filtered = [...jamaahList]; if(keyword) filtered = filtered.filter(j => j.nama_lengkap.toLowerCase().includes(keyword)); if(filterStatus !== 'semua') filtered = filtered.filter(j => { const status = getStatusKelengkapanDokumen(j.id); if(filterStatus === 'lengkap') return status.lengkap; if(filterStatus === 'kurang') return !status.lengkap; return true; }); if(filtered.length === 0) { container.innerHTML = '<div class="card-premium" style="margin:0;"><p class="text-center">Tidak ada jamaah</p></div>'; return; } let html = ''; filtered.forEach(j => { const status = getStatusKelengkapanDokumen(j.id); const statusText = status.lengkap ? 'LENGKAP ✓' : `${status.ada}/${status.total} dokumen`; const statusClass = status.lengkap ? 'status-lengkap' : 'status-kurang'; html += `<div class="dokumen-card"><div class="dokumen-header"><div><div class="dokumen-jamaah">👤 ${escapeHtml(j.nama_lengkap)}</div><div style="font-size:11px; color:var(--gray);">📦 ${j.paket || '-'}</div></div><div class="dokumen-status-badge ${statusClass}">${statusText}</div></div><div class="dokumen-grid">`; for(const jenis of dokumenJenisList) { const hasDoc = dokumenData[j.id] && dokumenData[j.id][jenis.id] && dokumenData[j.id][jenis.id] !== ''; html += `<div class="dokumen-item"><div class="dokumen-icon">${jenis.icon}</div><div class="dokumen-label">${escapeHtml(jenis.nama)}</div><div class="${hasDoc ? 'dokumen-status-ada' : 'dokumen-status-belum'}">${hasDoc ? '✅ Ada' : '⏳ Belum'}</div><div>${hasDoc ? `<button class="btn-preview-doc" onclick="previewDokumen(${j.id}, '${jenis.id}')"><i class="fas fa-eye"></i></button><button class="btn-delete-doc" onclick="confirmDeleteDokumen(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}')"><i class="fas fa-trash-alt"></i></button>` : ''}<button class="btn-upload-doc" onclick="uploadDokumen(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}')"><i class="fas fa-upload"></i></button></div></div>`; } html += `</div></div>`; }); container.innerHTML = html; }
 function updateDokumenStats() { let total = jamaahList.length, lengkap = 0; jamaahList.forEach(j => { if(getStatusKelengkapanDokumen(j.id).lengkap) lengkap++; }); document.getElementById('statTotalDokumen').innerText = total; document.getElementById('statLengkapDokumen').innerText = lengkap; document.getElementById('statKurangDokumen').innerText = total - lengkap; }
 function filterDokumenList() { renderDokumenList(); }
@@ -1409,7 +1479,7 @@ function renderMasterForm() { const container = document.getElementById('masterF
 function getSelectedItems() { const selected = []; document.querySelectorAll('.master-item-cb:checked').forEach(cb => selected.push(cb.value)); return selected; }
 function setSelectedItems(selectedArray) { const selected = selectedArray || []; document.querySelectorAll('.master-item-cb').forEach(cb => { cb.checked = selected.includes(cb.value); }); }
 function saveMasterData() { const nama = document.getElementById('masterNama')?.value.trim(); if(!nama) { showToast('Nama lengkap wajib diisi!'); return; } const additional = {}; for(const field of masterDynamicFields) { const input = document.getElementById(`masterField_${field.name}`); if(input) additional[field.name] = input.value.trim(); } const items = getSelectedItems(); const now = new Date().toLocaleDateString('id-ID') + ' ' + new Date().toLocaleTimeString('id-ID'); if(editingMasterId !== null) { const index = masterDataList.findIndex(d => d.id == editingMasterId); if(index !== -1) { masterDataList[index] = { ...masterDataList[index], nama, additional_fields: additional, items, updated_at: now }; showToast('Data diupdate!'); } editingMasterId = null; document.getElementById('masterFormTitle').innerText = 'TAMBAH DATA'; } else { masterDataList.push({ id: Date.now(), nama, additional_fields: additional, items, created_at: now }); showToast('Data ditambahkan'); } saveMasterDataToLocal(); renderMasterTable(); renderMasterForm(); }
-function renderMasterTable() { const thead = document.getElementById('masterTableHead'); const tbody = document.getElementById('masterTableBody'); if(!thead || !tbody) return; let headerHtml = '<tr><th class="checkbox-col"><input type="checkbox" id="selectAllMaster" onchange="toggleAllMasterCheckboxes(this)"></th><th>No</th><th>Nama Lengkap</th>'; for(const field of masterDynamicFields) headerHtml += `<th>${escapeHtml(field.label)}</th>`; headerHtml += '<th>Item</th><th>Aksi</th></tr>'; thead.innerHTML = headerHtml; if(masterDataList.length === 0) { tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center; padding:30px;">Belum ada Data</td></tr>'; return; } let bodyHtml = ''; [...masterDataList].reverse().forEach((item, idx) => { const displayNum = idx + 1; let whatsappValue = ''; const whatsappField = masterDynamicFields.find(f => f.name.toLowerCase() === 'whatsapp' || f.label.toLowerCase() === 'whatsapp'); if(whatsappField) whatsappValue = item.additional_fields?.[whatsappField.name] || ''; bodyHtml += `<tr><td class="checkbox-col"><input type="checkbox" class="master-checkbox" data-nama="${escapeHtml(item.nama)}" data-wa="${escapeHtml(whatsappValue)}" onchange="updateBatchBar()"></td><td style="text-align:center;">${displayNum}</td><td><strong>${escapeHtml(item.nama)}</strong></td>`; for(const field of masterDynamicFields) { const val = item.additional_fields?.[field.name] || '-'; bodyHtml += `<td>${escapeHtml(val)}</td>`; } bodyHtml += `<td>${item.items?.map(p => `<span class="master-badge">${escapeHtml(p)}</span>`).join('') || '-'}</td><td style="white-space:nowrap;"><button onclick="editMasterData('${item.id}')" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;">✏️</button><button onclick="shareSingleMasterToWA('${item.id}')" style="background:none; border:none; color:var(--wa); font-size:1.1rem; cursor:pointer;">💬</button><button onclick="confirmDeleteMasterData('${item.id}')" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;">🗑️</button></td></tr>`; }); tbody.innerHTML = bodyHtml; }
+function renderMasterTable() { const thead = document.getElementById('masterTableHead'); const tbody = document.getElementById('masterTableBody'); if(!thead || !tbody) return; let headerHtml = '<table><th class="checkbox-col"><input type="checkbox" id="selectAllMaster" onchange="toggleAllMasterCheckboxes(this)"></th><th>No</th><th>Nama Lengkap</th>'; for(const field of masterDynamicFields) headerHtml += `<th>${escapeHtml(field.label)}</th>`; headerHtml += '<th>Item</th><th>Aksi</th></tr>'; thead.innerHTML = headerHtml; if(masterDataList.length === 0) { tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center; padding:30px;">Belum ada Data</td></tr>'; return; } let bodyHtml = ''; [...masterDataList].reverse().forEach((item, idx) => { const displayNum = idx + 1; let whatsappValue = ''; const whatsappField = masterDynamicFields.find(f => f.name.toLowerCase() === 'whatsapp' || f.label.toLowerCase() === 'whatsapp'); if(whatsappField) whatsappValue = item.additional_fields?.[whatsappField.name] || ''; bodyHtml += `<tr><td class="checkbox-col"><input type="checkbox" class="master-checkbox" data-nama="${escapeHtml(item.nama)}" data-wa="${escapeHtml(whatsappValue)}" onchange="updateBatchBar()"></td><td style="text-align:center;">${displayNum}</td><td><strong>${escapeHtml(item.nama)}</strong></td>`; for(const field of masterDynamicFields) { const val = item.additional_fields?.[field.name] || '-'; bodyHtml += `<td>${escapeHtml(val)}</td>`; } bodyHtml += `<td>${item.items?.map(p => `<span class="master-badge">${escapeHtml(p)}</span>`).join('') || '-'}</td><td style="white-space:nowrap;"><button onclick="editMasterData('${item.id}')" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;">✏️</button><button onclick="shareSingleMasterToWA('${item.id}')" style="background:none; border:none; color:var(--wa); font-size:1.1rem; cursor:pointer;">💬</button><button onclick="confirmDeleteMasterData('${item.id}')" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;">🗑️</button></td></tr>`; }); tbody.innerHTML = bodyHtml; }
 function toggleAllMasterCheckboxes(master) { document.querySelectorAll('.master-checkbox').forEach(cb => cb.checked = master.checked); updateBatchBar(); }
 function updateBatchBar() { const checked = document.querySelectorAll('.master-checkbox:checked'); const bar = document.getElementById('batchFloatingBar'); const countSpan = document.getElementById('batchCount'); if (checked.length > 0) { if (countSpan) countSpan.innerText = `${checked.length} dipilih`; if (bar) bar.style.display = 'flex'; } else { if (bar) bar.style.display = 'none'; } }
 function clearBatchSelection() { document.querySelectorAll('.master-checkbox').forEach(cb => cb.checked = false); const selectAll = document.getElementById('selectAllMaster'); if (selectAll) selectAll.checked = false; updateBatchBar(); }
@@ -1451,8 +1521,8 @@ function saveModes() { saveModesToStorage(); renderDynamicModeSwitcher(); closeM
 
 // ==================== KONFIGURASI PRO (SINGKAT) ====================
 let konfigurasiPro = { instansi1: { nama: '', alamat: '', telp: '', email: '', npwp: '', web: '', pimpinan: '', jabatan: '', logo: '' }, instansi2: { aktif: false, nama: '', alamat: '', telp: '', email: '', izin: '', pimpinan: '', jabatan: '', logo: '' }, watermark: { enabled: true, text: 'KBIHU AMANATUL UMMAH', opacity: 0.15, fontsize: 60, position: 'diagonal' }, qr: { enabled: true, text: 'Dokumen Resmi - Divalidasi oleh Sistem Auva', size: 80 }, settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/AUVA' }, wa_template: { laporan: '🏢 *LAPORAN KAS KANTOR*\n\n💰 Saldo: [saldo]\n📥 Pemasukan: [masuk]\n📤 Pengeluaran: [keluar]\n\nTerima kasih.' } };
-function loadKonfigurasiPro() { const saved = localStorage.getItem('auva_konfigurasi_pro'); if(saved) { try { const parsed = JSON.parse(saved); konfigurasiPro = { ...konfigurasiPro, ...parsed }; } catch(e) {} } document.getElementById('cfg_nama1').value = konfigurasiPro.instansi1.nama || ''; document.getElementById('cfg_alamat1').value = konfigurasiPro.instansi1.alamat || ''; document.getElementById('cfg_telp1').value = konfigurasiPro.instansi1.telp || ''; document.getElementById('cfg_email1').value = konfigurasiPro.instansi1.email || ''; document.getElementById('cfg_npwp1').value = konfigurasiPro.instansi1.npwp || ''; document.getElementById('cfg_web1').value = konfigurasiPro.instansi1.web || ''; document.getElementById('cfg_pimpinan1').value = konfigurasiPro.instansi1.pimpinan || ''; document.getElementById('cfg_jabatan1').value = konfigurasiPro.instansi1.jabatan || ''; if(konfigurasiPro.instansi1.logo) document.getElementById('previewLogo1').src = konfigurasiPro.instansi1.logo; document.getElementById('cfg_instansi2_aktif').checked = konfigurasiPro.instansi2.aktif || false; document.getElementById('cfg_nama2').value = konfigurasiPro.instansi2.nama || ''; document.getElementById('cfg_alamat2').value = konfigurasiPro.instansi2.alamat || ''; document.getElementById('cfg_telp2').value = konfigurasiPro.instansi2.telp || ''; document.getElementById('cfg_email2').value = konfigurasiPro.instansi2.email || ''; document.getElementById('cfg_izin2').value = konfigurasiPro.instansi2.izin || ''; document.getElementById('cfg_pimpinan2').value = konfigurasiPro.instansi2.pimpinan || ''; document.getElementById('cfg_jabatan2').value = konfigurasiPro.instansi2.jabatan || ''; if(konfigurasiPro.instansi2.logo) document.getElementById('previewLogo2').src = konfigurasiPro.instansi2.logo; document.getElementById('cfg_watermark_enabled').checked = konfigurasiPro.watermark.enabled !== false; document.getElementById('cfg_watermark_text').value = konfigurasiPro.watermark.text || 'KBIHU AMANATUL UMMAH'; document.getElementById('cfg_watermark_opacity').value = konfigurasiPro.watermark.opacity || 0.15; document.getElementById('opacityValue').innerText = (konfigurasiPro.watermark.opacity || 0.15).toFixed(2); document.getElementById('cfg_watermark_fontsize').value = konfigurasiPro.watermark.fontsize || 60; document.getElementById('cfg_watermark_position').value = konfigurasiPro.watermark.position || 'diagonal'; document.getElementById('cfg_qr_enabled').checked = konfigurasiPro.qr.enabled !== false; document.getElementById('cfg_qr_text').value = konfigurasiPro.qr.text || 'Dokumen Resmi - Divalidasi oleh Sistem Auva'; document.getElementById('cfg_qr_size').value = konfigurasiPro.qr.size || 80; document.getElementById('cfg_header_mode').value = konfigurasiPro.settings.header_mode || 'both'; document.getElementById('cfg_ttd_mode').value = konfigurasiPro.settings.ttd_mode || 'both'; document.getElementById('cfg_invoice_prefix').value = konfigurasiPro.settings.invoice_prefix || 'INV/AUVA'; document.getElementById('cfg_wa_laporan').value = konfigurasiPro.wa_template.laporan || ''; }
-function saveKonfigurasiPro() { konfigurasiPro.instansi1 = { nama: document.getElementById('cfg_nama1').value, alamat: document.getElementById('cfg_alamat1').value, telp: document.getElementById('cfg_telp1').value, email: document.getElementById('cfg_email1').value, npwp: document.getElementById('cfg_npwp1').value, web: document.getElementById('cfg_web1').value, pimpinan: document.getElementById('cfg_pimpinan1').value, jabatan: document.getElementById('cfg_jabatan1').value, logo: document.getElementById('previewLogo1').src || '' }; konfigurasiPro.instansi2 = { aktif: document.getElementById('cfg_instansi2_aktif').checked, nama: document.getElementById('cfg_nama2').value, alamat: document.getElementById('cfg_alamat2').value, telp: document.getElementById('cfg_telp2').value, email: document.getElementById('cfg_email2').value, izin: document.getElementById('cfg_izin2').value, pimpinan: document.getElementById('cfg_pimpinan2').value, jabatan: document.getElementById('cfg_jabatan2').value, logo: document.getElementById('previewLogo2').src || '' }; konfigurasiPro.watermark = { enabled: document.getElementById('cfg_watermark_enabled').checked, text: document.getElementById('cfg_watermark_text').value, opacity: parseFloat(document.getElementById('cfg_watermark_opacity').value), fontsize: parseInt(document.getElementById('cfg_watermark_fontsize').value), position: document.getElementById('cfg_watermark_position').value }; konfigurasiPro.qr = { enabled: document.getElementById('cfg_qr_enabled').checked, text: document.getElementById('cfg_qr_text').value, size: parseInt(document.getElementById('cfg_qr_size').value) }; konfigurasiPro.settings = { header_mode: document.getElementById('cfg_header_mode').value, ttd_mode: document.getElementById('cfg_ttd_mode').value, invoice_prefix: document.getElementById('cfg_invoice_prefix').value }; konfigurasiPro.wa_template = { laporan: document.getElementById('cfg_wa_laporan').value }; localStorage.setItem('auva_konfigurasi_pro', JSON.stringify(konfigurasiPro)); showToast('✅ Konfigurasi berhasil disimpan!'); }
+function loadKonfigurasiPro() { const saved = localStorage.getItem('auva_konfigurasi_pro'); if(saved) { try { const parsed = JSON.parse(saved); konfigurasiPro = { ...konfigurasiPro, ...parsed }; } catch(e) {} } document.getElementById('cfg_nama1').value = konfigurasiPro.instansi1.nama || ''; document.getElementById('cfg_alamat1').value = konfigurasiPro.instansi1.alamat || ''; document.getElementById('cfg_telp1').value = konfigurasiPro.instansi1.telp || ''; document.getElementById('cfg_email1').value = konfigurasiPro.instansi1.email || ''; document.getElementById('cfg_npwp1').value = konfigurasiPro.instansi1.npwp || ''; document.getElementById('cfg_web1').value = konfigurasiPro.instansi1.web || ''; document.getElementById('cfg_pimpinan1').value = konfigurasiPro.instansi1.pimpinan || ''; document.getElementById('cfg_jabatan1').value = konfigurasiPro.instansi1.jabatan || ''; if(konfigurasiPro.instansi1.logo) document.getElementById('previewLogo1').src = konfigurasiPro.instansi1.logo; document.getElementById('cfg_instansi2_aktif').checked = konfigurasiPro.instansi2.aktif || false; document.getElementById('cfg_nama2').value = konfigurasiPro.instansi2.nama || ''; document.getElementById('cfg_alamat2').value = konfigurasiPro.instansi2.alamat || ''; document.getElementById('cfg_telp2').value = konfigurasiPro.instansi2.telp || ''; document.getElementById('cfg_email2').value = konfigurasiPro.instansi2.email || ''; document.getElementById('cfg_izin2').value = konfigurasiPro.instansi2.izin || ''; document.getElementById('cfg_pimpinan2').value = konfigurasiPro.instansi2.pimpinan || ''; document.getElementById('cfg_jabatan2').value = konfigurasiPro.instansi2.jabatan || ''; if(konfigurasiPro.instansi2.logo) document.getElementById('previewLogo2').src = konfigurasiPro.instansi2.logo; document.getElementById('cfg_watermark_enabled').checked = konfigurasiPro.watermark.enabled !== false; document.getElementById('cfg_watermark_text').value = konfigurasiPro.watermark.text || 'KBIHU AMANATUL UMMAH'; document.getElementById('cfg_watermark_opacity').value = konfigurasiPro.watermark.opacity || 0.15; document.getElementById('opacityValue').innerText = (konfigurasiPro.watermark.opacity || 0.15).toFixed(2); document.getElementById('cfg_watermark_fontsize').value = konfigurasiPro.watermark.fontsize || 60; document.getElementById('cfg_watermark_position').value = konfigurasiPro.watermark.position || 'diagonal'; document.getElementById('cfg_qr_enabled').checked = konfigurasiPro.qr.enabled !== false; document.getElementById('cfg_qr_text').value = konfigurasiPro.qr.text || 'Dokumen Resmi - Divalidasi oleh Sistem Auva'; document.getElementById('cfg_qr_size').value = konfigurasiPro.qr.size || 80; document.getElementById('cfg_header_mode').value = konfigurasiPro.settings.header_mode || 'both'; document.getElementById('cfg_ttd_mode').value = konfigurasiPro.settings.ttd_mode || 'both'; document.getElementById('cfg_invoice_prefix').value = konfigurasiPro.settings.invoice_prefix || 'INV/AUVA'; document.getElementById('cfg_wa_laporan').value = konfigurasiPro.wa_template.laporan || ''; updateHeaderFromConfig(); }
+function saveKonfigurasiPro() { konfigurasiPro.instansi1 = { nama: document.getElementById('cfg_nama1').value, alamat: document.getElementById('cfg_alamat1').value, telp: document.getElementById('cfg_telp1').value, email: document.getElementById('cfg_email1').value, npwp: document.getElementById('cfg_npwp1').value, web: document.getElementById('cfg_web1').value, pimpinan: document.getElementById('cfg_pimpinan1').value, jabatan: document.getElementById('cfg_jabatan1').value, logo: document.getElementById('previewLogo1').src || '' }; konfigurasiPro.instansi2 = { aktif: document.getElementById('cfg_instansi2_aktif').checked, nama: document.getElementById('cfg_nama2').value, alamat: document.getElementById('cfg_alamat2').value, telp: document.getElementById('cfg_telp2').value, email: document.getElementById('cfg_email2').value, izin: document.getElementById('cfg_izin2').value, pimpinan: document.getElementById('cfg_pimpinan2').value, jabatan: document.getElementById('cfg_jabatan2').value, logo: document.getElementById('previewLogo2').src || '' }; konfigurasiPro.watermark = { enabled: document.getElementById('cfg_watermark_enabled').checked, text: document.getElementById('cfg_watermark_text').value, opacity: parseFloat(document.getElementById('cfg_watermark_opacity').value), fontsize: parseInt(document.getElementById('cfg_watermark_fontsize').value), position: document.getElementById('cfg_watermark_position').value }; konfigurasiPro.qr = { enabled: document.getElementById('cfg_qr_enabled').checked, text: document.getElementById('cfg_qr_text').value, size: parseInt(document.getElementById('cfg_qr_size').value) }; konfigurasiPro.settings = { header_mode: document.getElementById('cfg_header_mode').value, ttd_mode: document.getElementById('cfg_ttd_mode').value, invoice_prefix: document.getElementById('cfg_invoice_prefix').value }; konfigurasiPro.wa_template = { laporan: document.getElementById('cfg_wa_laporan').value }; localStorage.setItem('auva_konfigurasi_pro', JSON.stringify(konfigurasiPro)); showToast('✅ Konfigurasi berhasil disimpan!'); updateHeaderFromConfig(); }
 function resetKonfigurasiPro() { if(confirm('Reset semua konfigurasi ke default?')) { localStorage.removeItem('auva_konfigurasi_pro'); location.reload(); } }
 function exportKonfigurasiPro() { const blob = new Blob([JSON.stringify(konfigurasiPro, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `auva_konfigurasi_${new Date().toISOString().split('T')[0]}.json`; a.click(); showToast('📤 Konfigurasi diexport'); }
 function importKonfigurasiPro(input) { const file = input.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = (e) => { try { const imported = JSON.parse(e.target.result); konfigurasiPro = { ...konfigurasiPro, ...imported }; localStorage.setItem('auva_konfigurasi_pro', JSON.stringify(konfigurasiPro)); loadKonfigurasiPro(); showToast('📥 Konfigurasi diimport!'); } catch(err) { showToast('File tidak valid!'); } input.value = ''; }; reader.readAsText(file); }
@@ -1534,6 +1604,7 @@ async function initPremium() {
     document.getElementById('adminModeToggleBtn')?.addEventListener('click', (e) => { e.preventDefault(); toggleAdminMode(); });
     document.getElementById('paymentFabOpen')?.addEventListener('click', () => openPaymentModal());
     document.addEventListener('input', function(e) { if(e.target.classList && e.target.classList.contains('money-input')) { let value = e.target.value.replace(/\./g, ''); let num = parseInt(value, 10); if(!isNaN(num)) e.target.value = num.toLocaleString('id-ID'); else if(value === '') e.target.value = ''; } });
+    updateHeaderFromConfig();
     initGoogleDriveAPI();
     checkDriveConnection();
     updateStorageInfo();
@@ -1543,4 +1614,4 @@ async function initPremium() {
 document.addEventListener('DOMContentLoaded', initPremium);
 </script>
 </body>
-    </html>
+                                                                                                                          </html>
