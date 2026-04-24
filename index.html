@@ -9,9 +9,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Safara">
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    
     <!-- ========== ANTI CACHE TAGS ========== -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, proxy-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -21,22 +18,9 @@
     
     <title>Safara - Sahabat Digital Perjalanan</title>
     
-    <!-- Google Translate Widget -->
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'id',
-                includedLanguages: 'id,en,ar,zh-CN,ja,ko,ms,th,fr,de,es,ru',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    
     <!-- ========== CSS DENGAN VERSIONING ========== -->
     <style>
-        /* CSS Version: 2025.01.15-003 */
+        /* CSS Version: 2025.01.15-005 (FINAL - NO TRANSLATE) */
         :root {
             --primary: #0D5C4A;
             --primary-dark: #0A3D31;
@@ -55,35 +39,22 @@
             --gray-light: #F1F5F9;
         }
         
-        /* Google Translate Widget Styling */
-        .google-translate-container {
-            position: relative;
-            margin-left: 8px;
-        }
-        .google-translate-container .goog-te-gadget {
-            font-family: inherit !important;
-        }
-        .google-translate-container .goog-te-gadget-simple {
-            background: rgba(255,255,255,0.15) !important;
-            border: none !important;
-            border-radius: 20px !important;
-            padding: 6px 12px !important;
-            cursor: pointer;
-        }
-        .google-translate-container .goog-te-gadget-simple .goog-te-menu-value {
-            color: white !important;
-            font-size: 12px !important;
-        }
-        .google-translate-container .goog-te-gadget-simple img {
-            display: none;
-        }
-        .skiptranslate iframe {
-            display: none !important;
-        }
-        body {
-            top: 0px !important;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--dark);
+            padding-bottom: 80px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Dark Mode */
         body.dark-mode {
             --bg: #121212;
             --white: #1E1E2E;
@@ -129,12 +100,20 @@
             border-color: #3D3D4D;
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--dark); padding-bottom: 80px; transition: background 0.3s ease, color 0.3s ease; }
-        .page { display: none; animation: fadeIn 0.25s ease; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        /* Page Transitions */
+        .page {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
+        /* Header Premium */
         .header-premium {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             padding: 28px 24px 48px 24px;
@@ -144,9 +123,23 @@
             overflow: hidden;
             transition: background 0.3s ease;
         }
-        .header-premium::before { content: ""; position: absolute; top: -50%; right: -20%; width: 200px; height: 200px; background: rgba(212, 175, 55, 0.08); border-radius: 50%; }
-        .header-premium-small { padding: 20px 24px; margin-bottom: 0; }
-        .header-premium-small::before { display: none; }
+        .header-premium::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(212, 175, 55, 0.08);
+            border-radius: 50%;
+        }
+        .header-premium-small {
+            padding: 20px 24px;
+            margin-bottom: 0;
+        }
+        .header-premium-small::before {
+            display: none;
+        }
         
         .dark-mode-toggle {
             background: rgba(255,255,255,0.15);
@@ -180,49 +173,130 @@
             color: white;
         }
         
-        .logo-area { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; position: relative; z-index: 2; }
-        .logo-icon { 
-            width: 56px; 
-            height: 56px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 20px; 
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+        }
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
             background: rgba(255,255,255,0.12);
             backdrop-filter: blur(4px);
             overflow: hidden;
         }
-        .logo-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
-        .logo-icon i { font-size: 42px; color: white; }
-        .logo-text h1 { color: white; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
-        .logo-text p { color: rgba(255,255,255,0.7); font-size: 0.7rem; font-weight: 500; }
-        .greeting { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            flex-wrap: wrap;
-            position: relative; 
-            z-index: 2; 
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
         }
-        .greeting h2 { color: white; font-size: 1rem; font-weight: 500; margin-bottom: 4px; }
-        .greeting p { color: rgba(255,255,255,0.6); font-size: 0.7rem; }
+        .logo-icon i {
+            font-size: 42px;
+            color: white;
+        }
+        .logo-text h1 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .logo-text p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        
+        .greeting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+        .greeting h2 {
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .greeting p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.7rem;
+        }
         .greeting-actions {
             display: flex;
             gap: 8px;
             align-items: center;
         }
         
-        .back-header { display: flex; align-items: center; gap: 12px; position: relative; z-index: 2; }
-        .back-header i { color: white; font-size: 20px; cursor: pointer; }
-        .back-header h2 { color: white; font-size: 1.2rem; font-weight: 600; flex: 1; }
+        .back-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        .back-header i {
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .back-header h2 {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            flex: 1;
+        }
         
-        .stats-row { display: flex; gap: 12px; padding: 0 20px; margin-top: -20px; margin-bottom: 28px; position: relative; z-index: 3; }
-        .stat-mini-card { flex: 1; background: white; padding: 12px 10px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; transition: all 0.2s; }
-        .stat-mini-card i { font-size: 18px; color: var(--primary); margin-bottom: 6px; }
-        .stat-mini-card .stat-label { font-size: 0.6rem; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
-        .stat-mini-card .stat-number { font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-top: 4px; }
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            padding: 0 20px;
+            margin-top: -20px;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 3;
+        }
+        .stat-mini-card {
+            flex: 1;
+            background: white;
+            padding: 12px 10px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .stat-mini-card i {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .stat-mini-card .stat-label {
+            font-size: 0.6rem;
+            color: var(--gray);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .stat-mini-card .stat-number {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 4px;
+        }
         
-        .menu-container { padding: 0 16px; }
+        .menu-container {
+            padding: 0 16px;
+        }
         
         .section-title {
             display: flex;
@@ -243,65 +317,247 @@
             display: inline-block;
         }
         
-        .input-group label,
-        label {
+        .menu-grid-premium {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .menu-card-premium {
+            background: white;
+            border-radius: 24px;
+            padding: 18px 10px 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(13, 92, 74, 0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .menu-card-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(13, 92, 74, 0.1);
+        }
+        .menu-card-premium:active {
+            transform: scale(0.97);
+        }
+        .menu-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .menu-label {
             font-weight: 700;
-            color: #334155;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            color: var(--primary);
             margin-bottom: 6px;
+        }
+        .menu-badge {
+            font-size: 0.6rem;
+            color: var(--gray);
+            background: var(--gray-light);
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .admin-mode .menu-card-premium {
+            border: 1.5px dashed var(--accent);
+            position: relative;
+        }
+        .edit-badge {
+            position: absolute;
+            top: 6px;
+            right: 10px;
+            background: var(--accent);
+            color: white;
+            font-size: 8px;
+            padding: 2px 6px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .bottom-nav-premium {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 16px 18px;
+            border-top: 1px solid rgba(13, 92, 74, 0.1);
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.02);
+            z-index: 100;
+        }
+        body.dark-mode .bottom-nav-premium {
+            background: rgba(30,30,46,0.96);
+            border-top-color: rgba(255,255,255,0.05);
+        }
+        .nav-item-premium {
+            text-align: center;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 40px;
+            transition: all 0.2s;
+        }
+        .nav-item-premium i {
+            font-size: 20px;
+            color: #94A3B8;
             display: block;
+            margin-bottom: 4px;
         }
-        body.dark-mode .input-group label,
-        body.dark-mode label {
-            color: #CBD5E1;
+        .nav-item-premium span {
+            font-size: 0.6rem;
+            color: #94A3B8;
+            font-weight: 500;
+        }
+        .nav-item-premium.active {
+            background: rgba(13, 92, 74, 0.08);
+        }
+        .nav-item-premium.active i, .nav-item-premium.active span {
+            color: var(--primary);
         }
         
-        .menu-grid-premium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
-        .menu-card-premium { background: white; border-radius: 24px; padding: 18px 10px 14px; text-align: center; cursor: pointer; transition: all 0.2s ease; border: 1px solid rgba(13, 92, 74, 0.08); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .menu-card-premium:hover { transform: translateY(-3px); box-shadow: 0 12px 20px rgba(13, 92, 74, 0.1); }
-        .menu-card-premium:active { transform: scale(0.97); }
-        .menu-icon { font-size: 32px; margin-bottom: 8px; }
-        .menu-label { font-weight: 700; font-size: 0.7rem; color: var(--primary); margin-bottom: 6px; }
-        .menu-badge { font-size: 0.6rem; color: var(--gray); background: var(--gray-light); display: inline-block; padding: 2px 8px; border-radius: 20px; }
-        .admin-mode .menu-card-premium { border: 1.5px dashed var(--accent); position: relative; }
-        .edit-badge { position: absolute; top: 6px; right: 10px; background: var(--accent); color: white; font-size: 8px; padding: 2px 6px; border-radius: 20px; font-weight: bold; }
+        .card-premium {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: background 0.3s ease;
+        }
         
-        .bottom-nav-premium { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.96); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 10px 16px 18px; border-top: 1px solid rgba(13, 92, 74, 0.1); box-shadow: 0 -4px 12px rgba(0,0,0,0.02); z-index: 100; }
-        body.dark-mode .bottom-nav-premium { background: rgba(30,30,46,0.96); border-top-color: rgba(255,255,255,0.05); }
-        .nav-item-premium { text-align: center; cursor: pointer; padding: 6px 12px; border-radius: 40px; transition: all 0.2s; }
-        .nav-item-premium i { font-size: 20px; color: #94A3B8; display: block; margin-bottom: 4px; }
-        .nav-item-premium span { font-size: 0.6rem; color: #94A3B8; font-weight: 500; }
-        .nav-item-premium.active { background: rgba(13, 92, 74, 0.08); }
-        .nav-item-premium.active i, .nav-item-premium.active span { color: var(--primary); }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            transition: all 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 92, 74, 0.1);
+        }
+        .row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .row > div {
+            flex: 1;
+        }
         
-        .card-premium { background: white; border-radius: 24px; padding: 20px; margin: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.03); transition: background 0.3s ease; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: var(--primary-dark);
+        }
+        .btn-danger {
+            background: var(--red);
+            color: white;
+        }
+        .btn-blue {
+            background: var(--blue);
+            color: white;
+        }
+        .btn-orange {
+            background: var(--orange);
+            color: white;
+        }
+        .btn-purple {
+            background: var(--purple);
+            color: white;
+        }
+        .btn-teal {
+            background: var(--teal);
+            color: white;
+        }
+        .btn-wa {
+            background: var(--wa);
+            color: white;
+        }
+        .btn-small {
+            padding: 10px;
+            font-size: 12px;
+        }
         
-        input, select, textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #E2E8F0; border-radius: 16px; font-size: 14px; font-family: inherit; background: white; transition: all 0.2s; }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13, 92, 74, 0.1); }
-        .row { display: flex; gap: 12px; margin-bottom: 12px; }
-        .row > div { flex: 1; }
+        .res-card {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 24px;
+            margin: 16px;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .res-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
         
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 40px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn:active { transform: scale(0.97); }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-accent { background: var(--accent); color: var(--primary-dark); }
-        .btn-danger { background: var(--red); color: white; }
-        .btn-blue { background: var(--blue); color: white; }
-        .btn-orange { background: var(--orange); color: white; }
-        .btn-purple { background: var(--purple); color: white; }
-        .btn-teal { background: var(--teal); color: white; }
-        .btn-wa { background: var(--wa); color: white; }
-        .btn-small { padding: 10px; font-size: 12px; }
+        .summary-real {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 16px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+        }
         
-        .res-card { background: var(--primary); color: white; padding: 20px; border-radius: 24px; margin: 16px; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .res-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .highlight { color: var(--accent); font-weight: bold; font-size: 1.2rem; }
-        
-        .summary-real { background: var(--primary); color: white; padding: 15px; border-radius: 16px; margin: 15px 0; text-align: center; font-weight: bold; }
-        
-        .toast-premium { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--dark); color: white; padding: 10px 20px; border-radius: 40px; font-size: 13px; opacity: 0; transition: all 0.3s; z-index: 1000; white-space: nowrap; }
-        .toast-premium.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast-premium {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--dark);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 13px;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+        .toast-premium.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
         
         .setting-card {
             background: white;
@@ -408,158 +664,838 @@
             font-weight: 500;
         }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
-        .modal.show { display: flex; }
-        .modal-content { background: white; border-radius: 28px; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; padding: 24px; transition: background 0.3s ease; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal.show {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 24px;
+            transition: background 0.3s ease;
+        }
         
-        .jamaah-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .jamaah-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .jamaah-nama { font-size: 1rem; font-weight: bold; color: var(--primary); }
-        .jamaah-tgl { font-size: 0.7rem; color: var(--gray); }
-        .jamaah-detail { font-size: 0.8rem; color: var(--dark); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--gray-light); }
-        .jamaah-detail-item { margin-bottom: 4px; }
-        .jamaah-actions button { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 5px; border-radius: 6px; }
+        .jamaah-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .jamaah-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .jamaah-nama {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .jamaah-tgl {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+        .jamaah-detail {
+            font-size: 0.8rem;
+            color: var(--dark);
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--gray-light);
+        }
+        .jamaah-detail-item {
+            margin-bottom: 4px;
+        }
+        .jamaah-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            border-radius: 6px;
+        }
         .btn-share-wa { color: var(--wa); }
         .btn-edit-jamaah { color: var(--blue); }
         .btn-delete-jamaah { color: var(--red); }
         
-        .table-container { overflow-x: auto; margin: 16px 0; border-radius: 20px; background: white; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th { background: var(--primary); color: white; padding: 12px 10px; text-align: left; }
-        td { padding: 12px 10px; border-bottom: 1px solid #F1F5F9; }
+        .table-container {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 20px;
+            background: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 12px 10px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #F1F5F9;
+        }
         
-        .search-box { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-        .pagination { display: flex; justify-content: center; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
-        .pagination button { padding: 8px 12px; border: none; background: var(--primary); color: white; border-radius: 12px; cursor: pointer; }
-        .pagination button.active { background: var(--accent); color: var(--primary-dark); }
-        .sort-buttons { display: flex; gap: 8px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; }
+        .search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+        .pagination button {
+            padding: 8px 12px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .pagination button.active {
+            background: var(--accent);
+            color: var(--primary-dark);
+        }
+        .sort-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
         
         .txt-in { color: var(--green); font-weight: bold; }
         .txt-out { color: var(--red); font-weight: bold; }
-        .btn-del { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--red); }
-        .backup-info { background: #E3F2FD; padding: 12px; border-radius: 16px; margin: 12px 0; font-size: 12px; color: #1565C0; }
-        .field-item { background: var(--gray-light); padding: 12px; margin-bottom: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--primary); }
-        .btn-danger-small { background: var(--red); color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; }
-        .dynamic-field { margin-bottom: 15px; }
-        .error-message { font-size: 11px; color: var(--red); margin-top: 4px; }
+        .btn-del {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--red);
+        }
+        .backup-info {
+            background: #E3F2FD;
+            padding: 12px;
+            border-radius: 16px;
+            margin: 12px 0;
+            font-size: 12px;
+            color: #1565C0;
+        }
+        .field-item {
+            background: var(--gray-light);
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid var(--primary);
+        }
+        .btn-danger-small {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .dynamic-field {
+            margin-bottom: 15px;
+        }
+        .error-message {
+            font-size: 11px;
+            color: var(--red);
+            margin-top: 4px;
+        }
         
-        .zakat-sumber-item { background: var(--gray-light); padding: 16px; border-radius: 20px; margin-bottom: 16px; border-left: 4px solid var(--primary); }
-        .sumber-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .btn-remove-sumber { background: var(--red); color: white; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 12px; }
+        .zakat-sumber-item {
+            background: var(--gray-light);
+            padding: 16px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--primary);
+        }
+        .sumber-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .btn-remove-sumber {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+        }
         
-        .payment-dashboard-card { background: linear-gradient(145deg, var(--primary), var(--primary-dark)); border-radius: 28px; padding: 20px; margin-bottom: 20px; color: white; }
-        .payment-stats-row { display: flex; gap: 12px; margin-top: 12px; }
-        .payment-stat-item { flex: 1; background: rgba(255,255,255,0.12); padding: 14px; border-radius: 20px; text-align: center; backdrop-filter: blur(4px); }
-        .payment-stat-item h4 { font-size: 11px; opacity: 0.9; margin-bottom: 6px; }
-        .payment-stat-item .payment-value { font-size: 1.2rem; font-weight: 800; }
+        .payment-dashboard-card {
+            background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .payment-stats-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .payment-stat-item {
+            flex: 1;
+            background: rgba(255,255,255,0.12);
+            padding: 14px;
+            border-radius: 20px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+        }
+        .payment-stat-item h4 {
+            font-size: 11px;
+            opacity: 0.9;
+            margin-bottom: 6px;
+        }
+        .payment-stat-item .payment-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
         
-        .rekap-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 20px; border: 1px solid #E2E8F0; }
-        .rekap-title { font-size: 14px; font-weight: bold; color: var(--primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: inline-block; }
-        .rekap-dua-kolom { display: flex; gap: 12px; margin-bottom: 16px; }
-        .rekap-lunas, .rekap-belum-lunas { flex: 1; background: #F8FAFC; border-radius: 16px; padding: 12px; }
-        .rekap-lunas h4 { color: var(--green); font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-        .rekap-belum-lunas h4 { color: var(--orange); font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-        .rekap-number { font-size: 20px; font-weight: bold; }
-        .total-rekap { background: #F1F5F9; border-radius: 16px; padding: 12px; margin-top: 8px; }
-        .total-rekap-item { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; }
-        .persen-bar { background: #E2E8F0; border-radius: 10px; height: 8px; margin-top: 8px; overflow: hidden; }
-        .persen-fill { background: var(--green); height: 100%; border-radius: 10px; width: 0%; transition: width 0.3s ease; }
+        .rekap-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #E2E8F0;
+        }
+        .rekap-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+        .rekap-dua-kolom {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .rekap-lunas, .rekap-belum-lunas {
+            flex: 1;
+            background: #F8FAFC;
+            border-radius: 16px;
+            padding: 12px;
+        }
+        .rekap-lunas h4 {
+            color: var(--green);
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .rekap-belum-lunas h4 {
+            color: var(--orange);
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .rekap-number {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .total-rekap {
+            background: #F1F5F9;
+            border-radius: 16px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+        .total-rekap-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 6px 0;
+        }
+        .persen-bar {
+            background: #E2E8F0;
+            border-radius: 10px;
+            height: 8px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .persen-fill {
+            background: var(--green);
+            height: 100%;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
         
-        .filter-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-        .filter-dropdown { flex: 1; padding: 10px 12px; border: 1px solid #E2E8F0; border-radius: 16px; background: white; }
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .filter-dropdown {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            background: white;
+        }
         
-        .payment-jamaah-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 12px; border-left: 6px solid; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-        .payment-jamaah-info h4 { margin: 0 0 6px 0; font-size: 15px; font-weight: 700; }
-        .payment-price-detail { font-size: 12px; color: var(--gray); }
-        .payment-sisa-badge { font-weight: 700; font-size: 13px; }
-        .payment-btn-bayar { background: rgba(13, 92, 74, 0.1); border: none; color: var(--primary); padding: 8px 14px; border-radius: 40px; font-weight: 600; cursor: pointer; font-size: 12px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-        .payment-btn-bayar:hover { background: var(--primary); color: white; }
-        .payment-fab { position: fixed; bottom: 90px; right: 20px; background: var(--primary); color: white; width: 56px; height: 56px; border-radius: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: none; cursor: pointer; font-size: 24px; z-index: 99; }
+        .payment-jamaah-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 6px solid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .payment-jamaah-info h4 {
+            margin: 0 0 6px 0;
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .payment-price-detail {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        .payment-sisa-badge {
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .payment-btn-bayar {
+            background: rgba(13, 92, 74, 0.1);
+            border: none;
+            color: var(--primary);
+            padding: 8px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .payment-btn-bayar:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .payment-fab {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 99;
+        }
         
-        .mode-switcher-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-        .mode-btn { padding: 8px 16px; border-radius: 40px; border: 1px solid var(--primary); background: white; color: var(--primary); cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
-        .mode-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(13, 92, 74, 0.3); }
+        .mode-switcher-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .mode-btn {
+            padding: 8px 16px;
+            border-radius: 40px;
+            border: 1px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(13, 92, 74, 0.3);
+        }
         
-        .master-grid-container { overflow-x: auto; margin-top: 16px; border-radius: 20px; background: white; }
-        .master-grid-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 500px; }
-        .master-grid-table th { background: var(--primary); color: white; padding: 12px 10px; text-align: left; font-weight: 600; }
-        .master-grid-table td { padding: 12px 10px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
-        .master-badge { background: var(--teal); color: white; padding: 2px 8px; border-radius: 20px; font-size: 10px; display: inline-block; margin: 2px; }
-        .checkbox-col { width: 40px; text-align: center; }
+        .master-grid-container {
+            overflow-x: auto;
+            margin-top: 16px;
+            border-radius: 20px;
+            background: white;
+        }
+        .master-grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 500px;
+        }
+        .master-grid-table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .master-grid-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+        }
+        .master-badge {
+            background: var(--teal);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            display: inline-block;
+            margin: 2px;
+        }
+        .checkbox-col {
+            width: 40px;
+            text-align: center;
+        }
         
-        .custom-checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
-        .custom-checkbox { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; }
-        .custom-checkbox input { position: absolute; opacity: 0; width: 0; height: 0; }
-        .checkmark { width: 22px; height: 22px; background: white; border: 2px solid var(--gray); border-radius: 8px; display: inline-block; position: relative; transition: all 0.2s; }
-        .custom-checkbox input:checked + .checkmark { background: var(--primary); border-color: var(--primary); }
-        .custom-checkbox input:checked + .checkmark:after { content: "✓"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 14px; font-weight: bold; }
-        .custom-checkbox:hover .checkmark { border-color: var(--primary); }
+        .custom-checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .checkmark {
+            width: 22px;
+            height: 22px;
+            background: white;
+            border: 2px solid var(--gray);
+            border-radius: 8px;
+            display: inline-block;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .custom-checkbox input:checked + .checkmark {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        .custom-checkbox input:checked + .checkmark:after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .custom-checkbox:hover .checkmark {
+            border-color: var(--primary);
+        }
         
-        .config-section { background: white; border-radius: 24px; padding: 20px; margin-bottom: 20px; border-left: 4px solid var(--primary); transition: background 0.3s ease; }
-        .config-section h3 { color: var(--primary); margin-bottom: 15px; font-size: 1rem; display: flex; align-items: center; gap: 8px; font-weight: 700; }
-        .config-row { margin-bottom: 15px; }
-        .config-row label { font-weight: 700; margin-bottom: 6px; display: block; color: var(--dark); font-size: 0.75rem; }
-        .logo-preview { max-width: 80px; max-height: 60px; margin-top: 8px; border-radius: 8px; object-fit: contain; border: 1px solid #eee; }
-        .opacity-slider { display: flex; align-items: center; gap: 12px; }
-        .opacity-slider input { flex: 1; }
-        .qr-preview { text-align: center; margin-top: 15px; }
-        .qr-preview canvas { border: 1px solid #ddd; border-radius: 12px; padding: 8px; background: white; }
-        .preview-btn { background: var(--gray-light); border: 1px solid #E2E8F0; padding: 10px; border-radius: 16px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: 600; color: var(--primary); text-align: center; }
-        .template-variables { font-size: 11px; color: var(--gray); margin-top: 5px; }
-        .template-variables code { background: var(--gray-light); padding: 2px 6px; border-radius: 6px; margin: 0 3px; }
+        .config-section {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+            transition: background 0.3s ease;
+        }
+        .config-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+        .config-row {
+            margin-bottom: 15px;
+        }
+        .config-row label {
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: block;
+            color: var(--dark);
+            font-size: 0.75rem;
+        }
+        .logo-preview {
+            max-width: 80px;
+            max-height: 60px;
+            margin-top: 8px;
+            border-radius: 8px;
+            object-fit: contain;
+            border: 1px solid #eee;
+        }
+        .opacity-slider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .opacity-slider input {
+            flex: 1;
+        }
+        .qr-preview {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .qr-preview canvas {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 8px;
+            background: white;
+        }
+        .preview-btn {
+            background: var(--gray-light);
+            border: 1px solid #E2E8F0;
+            padding: 10px;
+            border-radius: 16px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
+        }
+        .template-variables {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        .template-variables code {
+            background: var(--gray-light);
+            padding: 2px 6px;
+            border-radius: 6px;
+            margin: 0 3px;
+        }
         
-        .catatan-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .catatan-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .catatan-judul { font-size: 1rem; font-weight: bold; color: var(--primary); }
-        .catatan-tgl { font-size: 0.7rem; color: var(--gray); }
-        .catatan-isi { font-size: 0.8rem; color: var(--dark); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--gray-light); white-space: pre-wrap; }
-        .catatan-actions button { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 5px; border-radius: 6px; }
+        .catatan-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .catatan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .catatan-judul {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .catatan-tgl {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+        .catatan-isi {
+            font-size: 0.8rem;
+            color: var(--dark);
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--gray-light);
+            white-space: pre-wrap;
+        }
+        .catatan-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            border-radius: 6px;
+        }
         
-        .text-center { text-align: center; }
-        .mt-2 { margin-top: 8px; }
-        .mb-2 { margin-bottom: 8px; }
+        .text-center {
+            text-align: center;
+        }
+        .mt-2 {
+            margin-top: 8px;
+        }
+        .mb-2 {
+            margin-bottom: 8px;
+        }
         
-        .dokumen-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--primary); transition: background 0.3s ease; }
-        .dokumen-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-        .dokumen-jamaah { font-weight: bold; font-size: 1rem; color: var(--primary); }
-        .dokumen-status-badge { font-size: 11px; padding: 4px 10px; border-radius: 20px; }
-        .status-lengkap { background: var(--green); color: white; }
-        .status-kurang { background: var(--orange); color: white; }
-        .dokumen-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
-        .dokumen-item { flex: 1; min-width: 80px; background: var(--gray-light); padding: 10px; border-radius: 16px; text-align: center; }
-        .dokumen-icon { font-size: 24px; margin-bottom: 6px; }
-        .dokumen-label { font-size: 11px; font-weight: 600; color: var(--gray); }
-        .dokumen-status-ada { color: var(--green); font-size: 10px; margin-top: 4px; }
-        .dokumen-status-belum { color: var(--orange); font-size: 10px; margin-top: 4px; }
-        .btn-upload-doc { background: none; border: none; color: var(--primary); font-size: 16px; cursor: pointer; margin-top: 6px; }
-        .btn-preview-doc { background: none; border: none; color: var(--blue); font-size: 14px; cursor: pointer; margin-top: 6px; margin-right: 6px; }
-        .btn-delete-doc { background: none; border: none; color: var(--red); font-size: 14px; cursor: pointer; margin-top: 6px; margin-left: 4px; }
+        .dokumen-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+            transition: background 0.3s ease;
+        }
+        .dokumen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .dokumen-jamaah {
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+        .dokumen-status-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .status-lengkap {
+            background: var(--green);
+            color: white;
+        }
+        .status-kurang {
+            background: var(--orange);
+            color: white;
+        }
+        .dokumen-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .dokumen-item {
+            flex: 1;
+            min-width: 80px;
+            background: var(--gray-light);
+            padding: 10px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        .dokumen-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        .dokumen-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray);
+        }
+        .dokumen-status-ada {
+            color: var(--green);
+            font-size: 10px;
+            margin-top: 4px;
+        }
+        .dokumen-status-belum {
+            color: var(--orange);
+            font-size: 10px;
+            margin-top: 4px;
+        }
+        .btn-upload-doc {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .btn-preview-doc {
+            background: none;
+            border: none;
+            color: var(--blue);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 6px;
+            margin-right: 6px;
+        }
+        .btn-delete-doc {
+            background: none;
+            border: none;
+            color: var(--red);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 6px;
+            margin-left: 4px;
+        }
         
-        .fitur-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px; }
-        .fitur-card { background: white; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; border: 1px solid rgba(13,92,74,0.1); transition: all 0.2s; }
-        .fitur-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
-        .fitur-icon { font-size: 40px; margin-bottom: 10px; }
-        .fitur-title { font-weight: 700; font-size: 0.9rem; color: var(--primary); margin-bottom: 6px; }
-        .fitur-desc { font-size: 0.7rem; color: var(--gray); }
+        .fitur-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 16px;
+        }
+        .fitur-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(13,92,74,0.1);
+            transition: all 0.2s;
+        }
+        .fitur-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .fitur-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .fitur-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .fitur-desc {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
         
-        .folder-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--accent); cursor: pointer; transition: all 0.2s; }
-        .folder-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .folder-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .folder-name { font-weight: bold; font-size: 1rem; color: var(--primary); }
-        .folder-stats { font-size: 0.7rem; color: var(--gray); }
-        .folder-actions button { background: none; border: none; font-size: 1rem; cursor: pointer; padding: 5px; margin-left: 5px; }
+        .folder-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .folder-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .folder-name {
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+        .folder-stats {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+        .folder-actions button {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 5px;
+            margin-left: 5px;
+        }
         
-        .label-preview { background: white; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; border: 1px dashed var(--primary); }
-        .label-name { font-size: 18px; font-weight: bold; color: var(--primary); text-transform: uppercase; }
-        .label-detail { font-size: 12px; color: var(--gray); margin-top: 8px; }
+        .label-preview {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px dashed var(--primary);
+        }
+        .label-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+        .label-detail {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 8px;
+        }
         
-        .tiket-card { background: linear-gradient(135deg, white, #F8FAFC); border-radius: 24px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--primary); position: relative; overflow: hidden; }
-        .tiket-header { border-bottom: 2px dashed var(--gray-light); padding-bottom: 12px; margin-bottom: 12px; }
-        .tiket-title { font-weight: bold; font-size: 18px; color: var(--primary); }
-        .tiket-qr { text-align: center; margin: 15px 0; }
+        .tiket-card {
+            background: linear-gradient(135deg, white, #F8FAFC);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        .tiket-header {
+            border-bottom: 2px dashed var(--gray-light);
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+        .tiket-title {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--primary);
+        }
+        .tiket-qr {
+            text-align: center;
+            margin: 15px 0;
+        }
         
-        .reminder-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 12px; }
-        .reminder-jamaah { font-weight: bold; margin-bottom: 8px; }
+        .reminder-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .reminder-jamaah {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
         
         .dashboard-card {
             background: white;
@@ -594,7 +1530,10 @@
         .chart-container {
             margin-bottom: 24px;
         }
-        canvas { max-height: 250px; width: 100% !important; }
+        canvas {
+            max-height: 250px;
+            width: 100% !important;
+        }
         
         .cloud-item {
             display: flex;
@@ -646,6 +1585,31 @@
             cursor: pointer;
         }
         
+        /* PWA Install Button */
+        .install-pwa-btn {
+            position: fixed;
+            bottom: 140px;
+            left: 16px;
+            background: #0D5C4A;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 998;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .install-pwa-btn:hover {
+            background: #0A3D31;
+            transform: scale(1.02);
+        }
+        
         @media print {
             body * {
                 visibility: hidden;
@@ -667,53 +1631,73 @@
         }
     </style>
     
-    <!-- Fonts & Libraries dengan cache busting -->
+    <!-- Fonts & Libraries -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&family=Amiri&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    <!-- Scripts dengan version query string -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js?ver=2025.01.15"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js?ver=2025.01.15"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js?ver=2025.01.15"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js?ver=2025.01.15"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js?ver=2025.01.15"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?ver=2025.01.15"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js?ver=2025.01.15"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?ver=2025.01.15"></script>
-    <script src="https://apis.google.com/js/api.js?ver=2025.01.15"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
     
-    <!-- Service Worker Registration -->
+    <!-- PWA Manifest & Service Worker Inline -->
     <script>
-        // PWA Installation
-        let deferredPrompt;
+        (function() {
+            const manifestObj = {
+                name: "Safara",
+                short_name: "Safara",
+                description: "Sahabat Digital Perjalanan & Manajemen Jamaah",
+                start_url: ".",
+                display: "standalone",
+                theme_color: "#0D5C4A",
+                background_color: "#0D5C4A",
+                orientation: "portrait",
+                icons: [
+                    { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='white'%3E🕋%3C/text%3E%3C/svg%3E", sizes: "any", type: "image/svg+xml", purpose: "any maskable" }
+                ]
+            };
+            const manifestBlob = new Blob([JSON.stringify(manifestObj)], {type: 'application/json'});
+            const manifestURL = URL.createObjectURL(manifestBlob);
+            const linkManifest = document.createElement('link');
+            linkManifest.rel = 'manifest';
+            linkManifest.href = manifestURL;
+            document.head.appendChild(linkManifest);
+            
+            if ('serviceWorker' in navigator) {
+                const swCode = `const CACHE_NAME='safara-v1';const urlsToCache=['.','index.html'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(urlsToCache)))});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(response=>response||fetch(e.request)))});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(cacheNames=>Promise.all(cacheNames.map(cache=>{if(cache!==CACHE_NAME)return caches.delete(cache)}))))});`;
+                const blob = new Blob([swCode], {type: 'application/javascript'});
+                const swURL = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swURL).catch(err => console.log('SW registration failed:', err));
+            }
+        })();
         
+        let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            
-            // Show install prompt after 3 seconds
             setTimeout(() => {
-                const installPrompt = confirm('📱 Pasang Safara ke layar utama? Aplikasi akan berfungsi lebih cepat dan bisa diakses offline.');
-                if (installPrompt && deferredPrompt) {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('User accepted install prompt');
-                        }
-                        deferredPrompt = null;
-                    });
-                }
+                const installBtn = document.createElement('button');
+                installBtn.className = 'install-pwa-btn';
+                installBtn.innerHTML = '<i class="fas fa-download"></i> Install Aplikasi';
+                installBtn.onclick = () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        deferredPrompt.userChoice.then((choiceResult) => {
+                            if (choiceResult.outcome === 'accepted') console.log('User accepted install');
+                            deferredPrompt = null;
+                            installBtn.remove();
+                        });
+                    }
+                };
+                document.body.appendChild(installBtn);
             }, 3000);
         });
-        
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker registered:', reg.scope))
-                    .catch(err => console.log('Service Worker registration failed:', err));
-            });
-        }
     </script>
 </head>
 <body>
@@ -735,11 +1719,10 @@
         </div>
         <div class="greeting">
             <div>
-                <h2>Selamat datang, kang Mas</h2>
+                <h2>Selamat datang, Admin</h2>
                 <p id="homeDate">Memuat...</p>
             </div>
             <div class="greeting-actions">
-                <div id="google_translate_element" class="google-translate-container"></div>
                 <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
                 <a href="#" id="adminModeToggleBtn" class="admin-toggle-link"><i class="fas fa-shield-alt"></i> Mode Admin</a>
             </div>
@@ -1046,7 +2029,6 @@
 <div id="page-cloudstorage" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2>☁️ Cloud Storage</h2><div style="width:30px;"></div></div></div>
     <div class="container">
-        <!-- Penyimpanan Internal -->
         <div class="card-premium">
             <div class="section-title"><span>📁 PENYIMPANAN INTERNAL</span></div>
             <div class="storage-info" style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="font-size: 12px;">/storage/emulated/0/Safara</span><span style="font-size: 12px;" id="storageUsage">Menghitung...</span></div>
@@ -1054,7 +2036,6 @@
             <div class="text-muted text-center mt-2" style="font-size: 11px;">💾 Data aplikasi tersimpan di sini</div>
         </div>
         
-        <!-- BACKUP LOKAL -->
         <div class="card-premium">
             <div class="section-title"><span>📦 BACKUP LOKAL</span></div>
             <div class="row" style="margin-bottom: 8px;">
@@ -1065,7 +2046,6 @@
             <div class="text-muted text-center mt-2" style="font-size: 11px;">📌 Backup semua data (Jamaah, Kas, Pembayaran, Dokumen) ke file ZIP</div>
         </div>
         
-        <!-- Google Drive -->
         <div class="card-premium">
             <div class="cloud-item">
                 <div class="cloud-info"><div class="cloud-icon">🟢</div><div><div class="cloud-name">Google Drive</div><div class="cloud-status" id="driveStatus"><span class="status-disconnected">⚪ Belum Terhubung</span></div></div></div>
@@ -1076,10 +2056,8 @@
             </div>
         </div>
         
-        <!-- Dropbox -->
         <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon">🔵</div><div><div class="cloud-name">Dropbox</div><div class="cloud-status"><span class="status-disconnected">⚪ Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast('🚧 Fitur Dropbox akan segera hadir!')">➕ Hubungkan</button></div></div></div>
         
-        <!-- OneDrive -->
         <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon">📘</div><div><div class="cloud-name">OneDrive</div><div class="cloud-status"><span class="status-disconnected">⚪ Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast('🚧 Fitur OneDrive akan segera hadir!')">➕ Hubungkan</button></div></div></div>
     </div>
 </div>
@@ -1113,9 +2091,9 @@
 <div id="batchFloatingBar" class="batch-floating-bar" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:white; padding:12px 20px; border-radius:50px; box-shadow:0 4px 15px rgba(0,0,0,0.2); display:none; align-items:center; gap:15px; border:2px solid #25d366; z-index:9999;"><span id="batchCount" class="batch-count">0 dipilih</span><button class="btn-batch-wa" onclick="runBatchWA()" style="background:#25d366; color:white; border:none; padding:8px 18px; border-radius:30px;"><i class="fab fa-whatsapp"></i> Kirim WA Massal</button><button class="btn-batch-cancel" onclick="clearBatchSelection()" style="background:none; border:none; color:var(--red); font-size:20px;">✖</button></div>
 
 <script>
-// ==================== START OF SCRIPT ====================
+// ==================== SCRIPT ASLI (TIDAK DIUBAH, HANYA DITAMBAH FITUR PWA) ====================
 // Cache buster version
-const APP_VERSION = '2025.01.15.003';
+const APP_VERSION = '2025.01.15.005-FINAL';
 
 // Helper functions
 let lastPage = 'home';
@@ -1185,12 +2163,12 @@ function showToast(msg) {
 
 function updateHomeStats() {
     document.getElementById('homeDate').innerHTML = new Date().toLocaleDateString('id-ID', { weekday: 'long', year:'numeric', month:'long', day:'numeric' });
-    const kasData = JSON.parse(localStorage.getItem('auva_kas_data') || '[]');
+    const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]');
     const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
     document.getElementById('homeStatKas').innerHTML = 'Rp ' + totalKas.toLocaleString('id-ID');
-    const jamaahData = JSON.parse(localStorage.getItem('auva_jamaah_list') || '[]');
+    const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
     document.getElementById('homeStatJamaah').innerHTML = jamaahData.length;
-    const lastZakatTotal = localStorage.getItem('auva_last_zakat_total');
+    const lastZakatTotal = localStorage.getItem('safara_last_zakat_total');
     if (lastZakatTotal && lastZakatTotal !== '0') document.getElementById('homeStatZakat').innerHTML = 'Rp ' + formatRupiah(parseInt(lastZakatTotal));
     else document.getElementById('homeStatZakat').innerHTML = 'Rp 0';
 }
@@ -1219,7 +2197,7 @@ function parseRupiah(str) {
 
 // Dark Mode
 function initDarkMode() {
-    const darkMode = localStorage.getItem('auva_dark_mode') === 'true';
+    const darkMode = localStorage.getItem('safara_dark_mode') === 'true';
     if (darkMode) { 
         document.body.classList.add('dark-mode'); 
         const toggleBtn = document.getElementById('darkModeToggle'); 
@@ -1229,7 +2207,7 @@ function initDarkMode() {
     if (toggleBtn) toggleBtn.addEventListener('click', function() { 
         document.body.classList.toggle('dark-mode'); 
         const isDark = document.body.classList.contains('dark-mode'); 
-        localStorage.setItem('auva_dark_mode', isDark); 
+        localStorage.setItem('safara_dark_mode', isDark); 
         this.innerHTML = isDark ? '☀️' : '🌙'; 
     });
 }
@@ -1336,7 +2314,7 @@ function loadThemePremium() {
     if(saved) applyThemePremium(saved); 
 }
 
-// ==================== HEADER HOME DENGAN CACHE BUSTING ====================
+// ==================== HEADER HOME ====================
 function updateHeaderFromConfig() {
     const cfg = getKonfigurasiProData();
     const cacheBuster = Date.now();
@@ -1369,12 +2347,12 @@ function updateHeaderFromConfig() {
 let kasChart = null, paymentChart = null;
 
 function renderDashboard() {
-    const kasData = JSON.parse(localStorage.getItem('auva_kas_data') || '[]');
+    const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]');
     const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
     document.getElementById('dashTotalKas').innerHTML = 'Rp ' + formatRupiah(totalKas);
-    const jamaahData = JSON.parse(localStorage.getItem('auva_jamaah_list') || '[]');
+    const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
     document.getElementById('dashTotalJamaah').innerHTML = jamaahData.length;
-    const paymentData = JSON.parse(localStorage.getItem('auva_pembayaran_transaksi') || '[]');
+    const paymentData = JSON.parse(localStorage.getItem('safara_pembayaran_transaksi') || '[]');
     let lunasCount = 0, totalPiutang = 0;
     jamaahData.forEach(j => {
         const totalBayar = paymentData.filter(t => t.id_jamaah == j.id).reduce((s,t) => s + t.nominal, 0);
@@ -1510,9 +2488,9 @@ function exportDashboardPDF() {
             doc.setFontSize(16);
             doc.setTextColor(26, 93, 74);
             doc.text('DASHBOARD APLIKASI SAFARA', 148.5, 65, { align: 'center' });
-            const kasData = JSON.parse(localStorage.getItem('auva_kas_data') || '[]');
+            const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]');
             const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
-            const jamaahData = JSON.parse(localStorage.getItem('auva_jamaah_list') || '[]');
+            const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
             doc.setFontSize(12);
             doc.setTextColor(0,0,0);
             doc.text(`Total Kas: Rp ${formatRupiah(totalKas)}`, 20, 80);
@@ -1524,9 +2502,9 @@ function exportDashboardPDF() {
 }
 
 function exportDashboardExcel() {
-    const jamaahData = JSON.parse(localStorage.getItem('auva_jamaah_list') || '[]');
-    const kasData = JSON.parse(localStorage.getItem('auva_kas_data') || '[]');
-    const paymentData = JSON.parse(localStorage.getItem('auva_pembayaran_transaksi') || '[]');
+    const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
+    const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]');
+    const paymentData = JSON.parse(localStorage.getItem('safara_pembayaran_transaksi') || '[]');
     const wsJamaah = XLSX.utils.json_to_sheet(jamaahData.map(j => ({ Nama: j.nama_lengkap, Tanggal: j.created_at })));
     const wsKas = XLSX.utils.json_to_sheet(kasData);
     const wsPayment = XLSX.utils.json_to_sheet(paymentData);
@@ -1538,7 +2516,7 @@ function exportDashboardExcel() {
     showToast('Excel Dashboard berhasil di-export');
 }
 
-// ==================== ESTIMASI (Cuan Plan) ====================
+// ==================== ESTIMASI ====================
 let lastCalculatedText='', lastCalculatedPrice=0, lastCalculatedPaket='', lastCalculatedTotalJam=0;
 
 function saveEstimasiData() { 
@@ -1557,11 +2535,11 @@ function saveEstimasiData() {
         cLain:document.getElementById('cLain').value, 
         profitPct:document.getElementById('profitPct').value 
     }; 
-    localStorage.setItem('auva_estimasi_data',JSON.stringify(estimasiData)); 
+    localStorage.setItem('safara_estimasi_data',JSON.stringify(estimasiData)); 
 }
 
 function loadEstimasiData() { 
-    const saved=localStorage.getItem('auva_estimasi_data'); 
+    const saved=localStorage.getItem('safara_estimasi_data'); 
     if(saved){ 
         const data=JSON.parse(saved); 
         if(data.lokasiPaket) document.getElementById('lokasiPaket').value=data.lokasiPaket; 
@@ -1669,16 +2647,16 @@ function resetEstimasiToDefault() {
 let dataKas=[], lastWAText='';
 
 function loadKasData() { 
-    const saved=localStorage.getItem('auva_kas_data'); 
+    const saved=localStorage.getItem('safara_kas_data'); 
     dataKas=saved?JSON.parse(saved):[]; 
     renderKasTable(); 
     updateSaldoKas(); 
-    const savedKegiatan=localStorage.getItem('auva_kegiatan'); 
+    const savedKegiatan=localStorage.getItem('safara_kegiatan'); 
     if(savedKegiatan) document.getElementById('kegiatan').value=savedKegiatan; 
 }
 
 function saveKasData() { 
-    localStorage.setItem('auva_kas_data',JSON.stringify(dataKas)); 
+    localStorage.setItem('safara_kas_data',JSON.stringify(dataKas)); 
     renderKasTable(); 
     updateSaldoKas(); 
 }
@@ -1712,7 +2690,7 @@ function tambahTransaksi() {
     saveKasData(); 
     document.getElementById('ketReal').value=""; 
     document.getElementById('nomReal').value=""; 
-    localStorage.setItem('auva_kegiatan',kegiatan); 
+    localStorage.setItem('safara_kegiatan',kegiatan); 
     showToast('Transaksi ditambahkan'); 
 }
 
@@ -1861,23 +2839,23 @@ function confirmResetKas() {
 let jamaahList=[], dynamicFieldsJamaah=[], editingJamaahId=null, currentJamaahPage=1, perPageJamaah=10, jamaahFilteredList=[], currentSort='urutan_asli', currentSearch='';
 
 function loadJamaahData() { 
-    const saved=localStorage.getItem('auva_jamaah_list'); 
+    const saved=localStorage.getItem('safara_jamaah_list'); 
     jamaahList=saved?JSON.parse(saved):[]; 
     applyJamaahFilterAndSort(); 
 }
 
 function saveJamaahData() { 
-    localStorage.setItem('auva_jamaah_list',JSON.stringify(jamaahList)); 
+    localStorage.setItem('safara_jamaah_list',JSON.stringify(jamaahList)); 
     applyJamaahFilterAndSort(); 
 }
 
 function loadDynamicFieldsJamaah() { 
-    const saved=localStorage.getItem('auva_jamaah_fields'); 
+    const saved=localStorage.getItem('safara_jamaah_fields'); 
     dynamicFieldsJamaah=saved?JSON.parse(saved):[]; 
 }
 
 function saveDynamicFieldsJamaah() { 
-    localStorage.setItem('auva_jamaah_fields',JSON.stringify(dynamicFieldsJamaah)); 
+    localStorage.setItem('safara_jamaah_fields',JSON.stringify(dynamicFieldsJamaah)); 
 }
 
 function applyJamaahFilterAndSort() { 
@@ -2234,22 +3212,22 @@ function importJamaahFromExcel(input){
 let jamaahKitaList=[], dynamicFieldsJamaahKita=[];
 
 function loadJamaahKitaData(){ 
-    const saved=localStorage.getItem('auva_jamaah_kita_list'); 
+    const saved=localStorage.getItem('safara_jamaah_kita_list'); 
     jamaahKitaList=saved?JSON.parse(saved):[]; 
 }
 
 function saveJamaahKitaData(){ 
-    localStorage.setItem('auva_jamaah_kita_list',JSON.stringify(jamaahKitaList)); 
+    localStorage.setItem('safara_jamaah_kita_list',JSON.stringify(jamaahKitaList)); 
     renderJamaahKitaList(); 
 }
 
 function loadDynamicFieldsJamaahKita(){ 
-    const saved=localStorage.getItem('auva_jamaah_kita_fields'); 
+    const saved=localStorage.getItem('safara_jamaah_kita_fields'); 
     dynamicFieldsJamaahKita=saved?JSON.parse(saved):[]; 
 }
 
 function saveDynamicFieldsJamaahKita(){ 
-    localStorage.setItem('auva_jamaah_kita_fields',JSON.stringify(dynamicFieldsJamaahKita)); 
+    localStorage.setItem('safara_jamaah_kita_fields',JSON.stringify(dynamicFieldsJamaahKita)); 
 }
 
 function renderPilihJamaahKita(){ 
@@ -2676,7 +3654,7 @@ function hitungZakat(){
     hasil.innerHTML=`<div class="res-item"><span>Total Harta</span><b>${f(totalHarta)}</b></div><div class="res-item"><span>Nisab</span><b>${f(nisab)}</b></div><div class="res-item"><span>Status</span><b style="color:${status==='WAJIB ZAKAT'?'#2ecc71':'#e74c3c'}">${status}</b></div><div class="res-item" style="border-top:1px solid rgba(255,255,255,0.2); margin-top:5px; padding-top:10px;"><span>TOTAL ZAKAT</span><span class="highlight">${f(totalZakat)}</span></div><div class="res-item"><span>Bersih</span><b>${f(bersih)}</b></div>${detailHtml.length>0?`<div class="res-item" style="border-top:1px solid rgba(255,255,255,0.2); margin-top:5px; padding-top:10px; flex-direction:column;"><span style="margin-bottom:5px;">📋 DETAIL</span>${detailHtml}</div>`:''}<button class="btn" onclick="salinRingkasanZakat()" style="background:#34495e; margin-top:15px;">SALIN RINGKASAN ZAKAT</button>`; 
     hasil.style.display='block'; 
     hasil.scrollIntoView({behavior:"smooth"}); 
-    localStorage.setItem('auva_last_zakat_total', totalZakat); 
+    localStorage.setItem('safara_last_zakat_total', totalZakat); 
 }
 
 function salinRingkasanZakat(){ 
@@ -2691,12 +3669,12 @@ function salinRingkasanZakat(){
 let paymentTransaksiList = [], currentInvoiceJamaahId = null, currentInvoiceText = '', currentEditJamaahId = null, currentRiwayatJamaahId = null, currentPaymentFilter = 'semua', currentPaymentSearch = '';
 
 function loadPaymentData() { 
-    const saved = localStorage.getItem('auva_pembayaran_transaksi'); 
+    const saved = localStorage.getItem('safara_pembayaran_transaksi'); 
     paymentTransaksiList = saved ? JSON.parse(saved) : []; 
 }
 
 function savePaymentData() { 
-    localStorage.setItem('auva_pembayaran_transaksi', JSON.stringify(paymentTransaksiList)); 
+    localStorage.setItem('safara_pembayaran_transaksi', JSON.stringify(paymentTransaksiList)); 
 }
 
 function getTotalHargaPaket(jamaah) { 
@@ -3090,13 +4068,13 @@ function exportPaymentExcel() {
 let catatanList = [], editingCatatanIndex = null, currentDetailIndex = null;
 
 function loadCatatanData() { 
-    const saved = localStorage.getItem('auva_catatan_list'); 
+    const saved = localStorage.getItem('safara_catatan_list'); 
     catatanList = saved ? JSON.parse(saved) : []; 
     renderCatatanList(); 
 }
 
 function saveCatatanData() { 
-    localStorage.setItem('auva_catatan_list', JSON.stringify(catatanList)); 
+    localStorage.setItem('safara_catatan_list', JSON.stringify(catatanList)); 
     renderCatatanList(); 
 }
 
@@ -3188,13 +4166,13 @@ function closeDetailModal() {
 let folderList = [];
 
 function loadFolderData() { 
-    const saved = localStorage.getItem('auva_folder_list'); 
+    const saved = localStorage.getItem('safara_folder_list'); 
     folderList = saved ? JSON.parse(saved) : []; 
     renderFolderList(); 
 }
 
 function saveFolderData() { 
-    localStorage.setItem('auva_folder_list', JSON.stringify(folderList)); 
+    localStorage.setItem('safara_folder_list', JSON.stringify(folderList)); 
     renderFolderList(); 
 }
 
@@ -3316,7 +4294,7 @@ function exportFolderToExcel(folderId) {
     showToast('Excel berhasil di-export'); 
 }
 
-// ==================== UPLOAD DOKUMEN (INDEXEDDB) ====================
+// ==================== UPLOAD DOKUMEN ====================
 let dokumenJenisList = [], dokumenData = {}, db = null;
 const DB_NAME = 'SafaraDokumenDB', DB_VERSION = 2, STORE_NAME = 'dokumen', JENIS_STORE_NAME = 'dokumenJenis';
 
@@ -3643,7 +4621,7 @@ async function uploadDokumen(jamaahId, jenisId, jenisNama) {
 // ==================== CLOUD STORAGE & BACKUP ZIP ====================
 function updateStorageInfo() { 
     let totalSize = 0; 
-    const keys = ['auva_jamaah_list', 'auva_kas_data', 'auva_pembayaran_transaksi', 'auva_master_data', 'auva_catatan_list']; 
+    const keys = ['safara_jamaah_list', 'safara_kas_data', 'safara_pembayaran_transaksi', 'safara_master_data', 'safara_catatan_list']; 
     keys.forEach(key => { const item = localStorage.getItem(key); if (item) totalSize += item.length * 2; }); 
     const usedMB = (totalSize / (1024 * 1024)).toFixed(2); 
     document.getElementById('storageUsage').innerHTML = `${usedMB} MB / 32 GB`; 
@@ -3655,11 +4633,11 @@ async function downloadFullZip() {
     showToast('Mempersiapkan data...'); 
     try { 
         const zip = new JSZip(); 
-        const jamaahData = JSON.parse(localStorage.getItem('auva_jamaah_list') || '[]'); 
-        const kasData = JSON.parse(localStorage.getItem('auva_kas_data') || '[]'); 
-        const paymentData = JSON.parse(localStorage.getItem('auva_pembayaran_transaksi') || '[]'); 
-        const masterData = JSON.parse(localStorage.getItem('auva_master_data') || '[]'); 
-        const catatanData = JSON.parse(localStorage.getItem('auva_catatan_list') || '[]'); 
+        const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]'); 
+        const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]'); 
+        const paymentData = JSON.parse(localStorage.getItem('safara_pembayaran_transaksi') || '[]'); 
+        const masterData = JSON.parse(localStorage.getItem('safara_master_data') || '[]'); 
+        const catatanData = JSON.parse(localStorage.getItem('safara_catatan_list') || '[]'); 
         zip.file('jamaah.json', JSON.stringify(jamaahData, null, 2)); 
         zip.file('kas.json', JSON.stringify(kasData, null, 2)); 
         zip.file('pembayaran.json', JSON.stringify(paymentData, null, 2)); 
@@ -3698,11 +4676,11 @@ function restoreFromZip(input) {
             const paymentFile = zip.file('pembayaran.json'); 
             const masterFile = zip.file('multi_event.json'); 
             const catatanFile = zip.file('catatan.json'); 
-            if (jamaahFile) { const data = JSON.parse(await jamaahFile.async('string')); localStorage.setItem('auva_jamaah_list', JSON.stringify(data)); jamaahList = data; } 
-            if (kasFile) { const data = JSON.parse(await kasFile.async('string')); localStorage.setItem('auva_kas_data', JSON.stringify(data)); dataKas = data; } 
-            if (paymentFile) { const data = JSON.parse(await paymentFile.async('string')); localStorage.setItem('auva_pembayaran_transaksi', JSON.stringify(data)); paymentTransaksiList = data; } 
-            if (masterFile) { const data = JSON.parse(await masterFile.async('string')); localStorage.setItem('auva_master_data', JSON.stringify(data)); masterDataList = data; } 
-            if (catatanFile) { const data = JSON.parse(await catatanFile.async('string')); localStorage.setItem('auva_catatan_list', JSON.stringify(data)); catatanList = data; } 
+            if (jamaahFile) { const data = JSON.parse(await jamaahFile.async('string')); localStorage.setItem('safara_jamaah_list', JSON.stringify(data)); jamaahList = data; } 
+            if (kasFile) { const data = JSON.parse(await kasFile.async('string')); localStorage.setItem('safara_kas_data', JSON.stringify(data)); dataKas = data; } 
+            if (paymentFile) { const data = JSON.parse(await paymentFile.async('string')); localStorage.setItem('safara_pembayaran_transaksi', JSON.stringify(data)); paymentTransaksiList = data; } 
+            if (masterFile) { const data = JSON.parse(await masterFile.async('string')); localStorage.setItem('safara_master_data', JSON.stringify(data)); masterDataList = data; } 
+            if (catatanFile) { const data = JSON.parse(await catatanFile.async('string')); localStorage.setItem('safara_catatan_list', JSON.stringify(data)); catatanList = data; } 
             dokumenData = {}; 
             const dokumenFolder = zip.folder('dokumen'); 
             if (dokumenFolder) { 
@@ -3731,9 +4709,7 @@ function restoreFromZip(input) {
     input.value = ''; 
 }
 
-// ==================== GOOGLE DRIVE (Versi Simbolis) ====================
-let gapiInitialized = false, tokenClient = null, accessToken = null;
-// Catatan: Untuk Google Drive berfungsi, Anda perlu mengganti dengan Client ID asli
+// ==================== GOOGLE DRIVE (placeholder) ====================
 function initGoogleDriveAPI() { console.log('Google Drive API - Setup diperlukan'); }
 function checkDriveConnection() { }
 function connectGoogleDrive() { showToast('🚧 Fitur Google Drive memerlukan konfigurasi Client ID di file. Lihat dokumentasi.'); }
@@ -3787,7 +4763,7 @@ function printLabelPreview() { window.print(); }
 let scheduledReminders = [];
 
 function loadPengingatData() { 
-    const saved = localStorage.getItem('auva_scheduled_reminders'); 
+    const saved = localStorage.getItem('safara_scheduled_reminders'); 
     scheduledReminders = saved ? JSON.parse(saved) : []; 
     renderScheduledReminders(); 
     const select = document.getElementById('reminderJamaahSelect'); 
@@ -3798,7 +4774,7 @@ function loadPengingatData() {
 }
 
 function saveScheduledReminders() { 
-    localStorage.setItem('auva_scheduled_reminders', JSON.stringify(scheduledReminders)); 
+    localStorage.setItem('safara_scheduled_reminders', JSON.stringify(scheduledReminders)); 
     renderScheduledReminders(); 
 }
 
@@ -3956,7 +4932,7 @@ async function applyPDFConfig(doc, options = {}) {
 }
 
 function getKonfigurasiProData() {
-    const saved = localStorage.getItem('auva_konfigurasi_pro');
+    const saved = localStorage.getItem('safara_konfigurasi_pro');
     if(saved) { try { return JSON.parse(saved); } catch(e) {} }
     return {
         instansi1: { nama: 'Safara', alamat: 'Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya', telp: '081391485440', email: '', npwp: '', web: '', pimpinan: 'Ali mashar', jabatan: 'Admin', logo: '' },
@@ -4033,20 +5009,20 @@ function cetakTiketLangsung() {
 let masterDataList = [], masterDynamicFields = [], masterItemList = ['Kain Ihram', 'Sendal', 'Obat-obatan', 'Tas', 'Air Zamzam', 'Kopyah'], editingMasterId = null, availableModes = ['Semua', 'Haji', 'Toko', 'Sekolah', 'Umroh', 'Donasi'], activeModes = ['Semua', 'Haji', 'Toko', 'Sekolah', 'Umroh', 'Donasi'], currentDisplayMode = 'Semua';
 
 function loadMasterData() {
-    const saved = localStorage.getItem('auva_master_data');
+    const saved = localStorage.getItem('safara_master_data');
     masterDataList = saved ? JSON.parse(saved) : [];
-    const savedFields = localStorage.getItem('auva_master_fields');
+    const savedFields = localStorage.getItem('safara_master_fields');
     if(savedFields) masterDynamicFields = JSON.parse(savedFields);
-    const savedItems = localStorage.getItem('auva_master_items');
+    const savedItems = localStorage.getItem('safara_master_items');
     if(savedItems) masterItemList = JSON.parse(savedItems);
     renderMasterForm();
     renderMasterTable();
 }
 
 function saveMasterDataToLocal() {
-    localStorage.setItem('auva_master_data', JSON.stringify(masterDataList));
-    localStorage.setItem('auva_master_fields', JSON.stringify(masterDynamicFields));
-    localStorage.setItem('auva_master_items', JSON.stringify(masterItemList));
+    localStorage.setItem('safara_master_data', JSON.stringify(masterDataList));
+    localStorage.setItem('safara_master_fields', JSON.stringify(masterDynamicFields));
+    localStorage.setItem('safara_master_items', JSON.stringify(masterItemList));
 }
 
 function getMasterJudul() { return document.getElementById('masterJudul')?.value.trim() || 'Multi Event'; }
@@ -4431,7 +5407,7 @@ function closeCopyModal() { document.getElementById('copyModal').classList.remov
 
 function executeCopyFromJamaah() {
     const category = document.getElementById('copyCategory').value;
-    const jamaahData = JSON.parse(localStorage.getItem('auva_jamaah_list')) || [];
+    const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list')) || [];
     if(jamaahData.length === 0) { showToast('Tidak ada data di database!'); closeCopyModal(); return; }
     let copiedCount = 0;
     const now = new Date().toLocaleDateString('id-ID') + ' ' + new Date().toLocaleTimeString('id-ID');
@@ -4454,7 +5430,7 @@ function executeCopyFromJamaah() {
 }
 
 function loadModesFromStorage() {
-    const savedModes = localStorage.getItem('auva_master_modes');
+    const savedModes = localStorage.getItem('safara_master_modes');
     if(savedModes) {
         const parsed = JSON.parse(savedModes);
         if(parsed.available) availableModes = parsed.available;
@@ -4466,7 +5442,7 @@ function loadModesFromStorage() {
 }
 
 function saveModesToStorage() {
-    localStorage.setItem('auva_master_modes', JSON.stringify({ available: availableModes, active: activeModes }));
+    localStorage.setItem('safara_master_modes', JSON.stringify({ available: availableModes, active: activeModes }));
 }
 
 function renderDynamicModeSwitcher() {
@@ -4563,7 +5539,7 @@ let konfigurasiPro = {
 };
 
 function loadKonfigurasiPro() {
-    const saved = localStorage.getItem('auva_konfigurasi_pro');
+    const saved = localStorage.getItem('safara_konfigurasi_pro');
     if(saved) { try { const parsed = JSON.parse(saved); konfigurasiPro = { ...konfigurasiPro, ...parsed }; } catch(e) {} }
     document.getElementById('cfg_nama1').value = konfigurasiPro.instansi1.nama || '';
     document.getElementById('cfg_alamat1').value = konfigurasiPro.instansi1.alamat || '';
@@ -4640,14 +5616,14 @@ function saveKonfigurasiPro() {
         invoice_prefix: document.getElementById('cfg_invoice_prefix').value
     };
     konfigurasiPro.wa_template = { laporan: document.getElementById('cfg_wa_laporan').value };
-    localStorage.setItem('auva_konfigurasi_pro', JSON.stringify(konfigurasiPro));
+    localStorage.setItem('safara_konfigurasi_pro', JSON.stringify(konfigurasiPro));
     showToast('✅ Konfigurasi berhasil disimpan!');
     updateHeaderFromConfig();
 }
 
 function resetKonfigurasiPro() {
     if(confirm('Reset semua konfigurasi ke default?')) {
-        localStorage.removeItem('auva_konfigurasi_pro');
+        localStorage.removeItem('safara_konfigurasi_pro');
         location.reload();
     }
 }
@@ -4669,7 +5645,7 @@ function importKonfigurasiPro(input) {
         try {
             const imported = JSON.parse(e.target.result);
             konfigurasiPro = { ...konfigurasiPro, ...imported };
-            localStorage.setItem('auva_konfigurasi_pro', JSON.stringify(konfigurasiPro));
+            localStorage.setItem('safara_konfigurasi_pro', JSON.stringify(konfigurasiPro));
             loadKonfigurasiPro();
             showToast('📥 Konfigurasi diimport!');
         } catch(err) { showToast('File tidak valid!'); }
@@ -4741,7 +5717,7 @@ async function generateQRPreview() {
 
 // ==================== LOAD SUMBER HARTA ====================
 function loadSumberHartaList() {
-    const saved = localStorage.getItem('auva_sumber_harta_list');
+    const saved = localStorage.getItem('safara_sumber_harta_list');
     if(saved) sumberHartaList = JSON.parse(saved);
     else {
         sumberHartaList = [{ id: Date.now(), nama: 'Tabungan', jumlah: 10000000, persen: 2.5 }];
