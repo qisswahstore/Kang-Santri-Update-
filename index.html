@@ -7,7 +7,10 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Auva">
+    <meta name="apple-mobile-web-app-title" content="Safara">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
     
     <!-- ========== ANTI CACHE TAGS ========== -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, proxy-revalidate">
@@ -16,7 +19,20 @@
     <meta name="format-detection" content="telephone=no">
     <!-- ===================================== -->
     
-    <title>Auva Kbihu AU - Premium Final</title>
+    <title>Safara - Sahabat Digital Perjalanan</title>
+    
+    <!-- Google Translate Widget -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'id',
+                includedLanguages: 'id,en,ar,zh-CN,ja,ko,ms,th,fr,de,es,ru',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     
     <!-- ========== CSS DENGAN VERSIONING ========== -->
     <style>
@@ -37,6 +53,35 @@
             --dark: #1E293B;
             --gray: #64748B;
             --gray-light: #F1F5F9;
+        }
+        
+        /* Google Translate Widget Styling */
+        .google-translate-container {
+            position: relative;
+            margin-left: 8px;
+        }
+        .google-translate-container .goog-te-gadget {
+            font-family: inherit !important;
+        }
+        .google-translate-container .goog-te-gadget-simple {
+            background: rgba(255,255,255,0.15) !important;
+            border: none !important;
+            border-radius: 20px !important;
+            padding: 6px 12px !important;
+            cursor: pointer;
+        }
+        .google-translate-container .goog-te-gadget-simple .goog-te-menu-value {
+            color: white !important;
+            font-size: 12px !important;
+        }
+        .google-translate-container .goog-te-gadget-simple img {
+            display: none;
+        }
+        .skiptranslate iframe {
+            display: none !important;
+        }
+        body {
+            top: 0px !important;
         }
         
         body.dark-mode {
@@ -636,11 +681,45 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js?ver=2025.01.15"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?ver=2025.01.15"></script>
     <script src="https://apis.google.com/js/api.js?ver=2025.01.15"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        // PWA Installation
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install prompt after 3 seconds
+            setTimeout(() => {
+                const installPrompt = confirm('📱 Pasang Safara ke layar utama? Aplikasi akan berfungsi lebih cepat dan bisa diakses offline.');
+                if (installPrompt && deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted install prompt');
+                        }
+                        deferredPrompt = null;
+                    });
+                }
+            }, 3000);
+        });
+        
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered:', reg.scope))
+                    .catch(err => console.log('Service Worker registration failed:', err));
+            });
+        }
+    </script>
 </head>
 <body>
 
 <div id="toastPremium" class="toast-premium"></div>
-<div id="splashScreen" style="position:fixed; inset:0; background:linear-gradient(135deg, var(--primary) 0%, #0a3d31 100%); z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition:opacity 0.5s ease;"><div style="width:120px; height:120px; background:white; border-radius:30px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; animation:pulse 2s infinite;"><div style="font-size:70px;">🕋</div></div><div style="color:white; font-size:28px; font-weight:bold;">Auva</div><div style="color:rgba(255,255,255,0.8); font-size:14px;">Kbihu AU - Mobile</div><div style="width:200px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin-top:40px; overflow:hidden;"><div style="height:100%; width:100%; background:var(--accent); border-radius:2px;"></div></div></div>
+<div id="splashScreen" style="position:fixed; inset:0; background:linear-gradient(135deg, var(--primary) 0%, #0a3d31 100%); z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition:opacity 0.5s ease;"><div style="width:120px; height:120px; background:white; border-radius:30px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; animation:pulse 2s infinite;"><div style="font-size:70px;">🕋</div></div><div style="color:white; font-size:28px; font-weight:bold;">Safara</div><div style="color:rgba(255,255,255,0.8); font-size:14px;">Sahabat Digital Perjalanan</div><div style="width:200px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin-top:40px; overflow:hidden;"><div style="height:100%; width:100%; background:var(--accent); border-radius:2px;"></div></div></div>
 
 <!-- HOME PAGE -->
 <div id="page-home" class="page active">
@@ -650,8 +729,8 @@
                 <i class="fas fa-kaaba"></i>
             </div>
             <div class="logo-text">
-                <h1 id="headerInstansi1">PT AUVA EQTENA NAHDHA</h1>
-                <p id="headerInstansi2">KBIHU AMANATUL UMMAH</p>
+                <h1 id="headerInstansi1">Safara</h1>
+                <p id="headerInstansi2">Safara</p>
             </div>
         </div>
         <div class="greeting">
@@ -660,6 +739,7 @@
                 <p id="homeDate">Memuat...</p>
             </div>
             <div class="greeting-actions">
+                <div id="google_translate_element" class="google-translate-container"></div>
                 <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
                 <a href="#" id="adminModeToggleBtn" class="admin-toggle-link"><i class="fas fa-shield-alt"></i> Mode Admin</a>
             </div>
@@ -707,7 +787,7 @@
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>Cuan Plan Umroh</h2><div style="width:30px;"></div></div></div>
     <div class="card-premium">
         <div class="logo-box text-center"><img src="https://img.icons8.com/color/96/kaaba.png" style="width:50px;"></div>
-        <p class="text-center" style="color:var(--gray); font-size:0.8rem;">Auva Kbihu AU</p>
+        <p class="text-center" style="color:var(--gray); font-size:0.8rem;">Safara</p>
         <div class="section-title" style="margin-top:15px;"><span>DATA ROMBONGAN</span></div>
         <div class="input-group"><label>Nama Paket / Lokasi</label><input type="text" id="lokasiPaket" value="Program 9 HARI"></div>
         <div class="row"><div class="input-group"><label>Total Pax</label><input type="number" id="totJam" value="21"></div><div class="input-group"><label>Gratis</label><input type="number" id="jamGratis" value="1"></div><div class="input-group"><label>Jumlah TL</label><input type="number" id="numTL" value="1"></div></div>
@@ -793,7 +873,7 @@
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>Kalkulator Zakat</h2><div style="width:30px;"></div></div></div>
     <div class="card-premium">
         <div class="logo-box text-center"><div style="font-size:40px;">📊</div></div>
-        <p class="text-center" style="color:var(--gray);">Auva Kbihu AU</p>
+        <p class="text-center" style="color:var(--gray);">Safara</p>
         <div class="row"><div class="input-group"><label>Jenis Zakat</label><select id="jenisZakat" onchange="toggleZakatInput()"><option value="mal">Zakat Mal (Harta/Uang)</option><option value="pertanian">Zakat Pertanian</option><option value="perdagangan">Zakat Perdagangan</option></select></div></div>
         <div id="zakatGlobalInput"><div class="input-group"><label>Harga Emas per Gram (Rp)</label><input type="text" id="hargaEmas" class="money-input" value="1.200.000"></div></div>
         <div class="section-title"><span>Sumber Harta</span></div>
@@ -848,7 +928,7 @@
     <div class="card-premium">
         <div class="config-section"><h3><i class="fas fa-building"></i> Data Instansi Utama</h3>
             <div class="config-row"><label>Logo Instansi</label><input type="file" id="cfg_logo1" accept="image/*" onchange="previewLogo(this, 'previewLogo1')"><img id="previewLogo1" class="logo-preview"><small style="display:block; color:var(--gray); margin-top:4px;">Logo akan tampil di header HOME</small></div>
-            <div class="config-row"><label>Nama Instansi</label><input type="text" id="cfg_nama1" placeholder="PT AUVA EQTENA NAHDHA"></div>
+            <div class="config-row"><label>Nama Instansi</label><input type="text" id="cfg_nama1" placeholder="Safara"></div>
             <div class="config-row"><label>Alamat Lengkap</label><textarea id="cfg_alamat1" rows="2" placeholder="Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya"></textarea></div>
             <div class="row"><div class="config-row"><label>Telepon</label><input type="text" id="cfg_telp1" placeholder="081391485440"></div><div class="config-row"><label>Email</label><input type="email" id="cfg_email1"></div></div>
             <div class="row"><div class="config-row"><label>NPWP</label><input type="text" id="cfg_npwp1"></div><div class="config-row"><label>Website</label><input type="text" id="cfg_web1"></div></div>
@@ -857,7 +937,7 @@
         <div class="config-section"><h3><i class="fas fa-mosque"></i> Data Instansi Kedua</h3>
             <div class="config-row" style="display:flex; justify-content:space-between; align-items:center;"><label>Aktifkan Instansi Kedua</label><label class="switch"><input type="checkbox" id="cfg_instansi2_aktif"><span class="slider"></span></label></div>
             <div class="config-row"><label>Logo</label><input type="file" id="cfg_logo2" accept="image/*" onchange="previewLogo(this, 'previewLogo2')"><img id="previewLogo2" class="logo-preview"></div>
-            <div class="config-row"><label>Nama Instansi</label><input type="text" id="cfg_nama2" placeholder="KBIH Amanatul Ummah"></div>
+            <div class="config-row"><label>Nama Instansi</label><input type="text" id="cfg_nama2" placeholder="Safara"></div>
             <div class="config-row"><label>Alamat</label><textarea id="cfg_alamat2" rows="2" placeholder="Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya"></textarea></div>
             <div class="row"><div class="config-row"><label>Telepon</label><input type="text" id="cfg_telp2"></div><div class="config-row"><label>Email</label><input type="email" id="cfg_email2"></div></div>
             <div class="row"><div class="config-row"><label>No. Izin</label><input type="text" id="cfg_izin2"></div><div class="config-row"><label>Pimpinan</label><input type="text" id="cfg_pimpinan2"></div></div>
@@ -865,21 +945,21 @@
         </div>
         <div class="config-section"><h3><i class="fas fa-watermark"></i> Watermark</h3>
             <div class="config-row" style="display:flex; justify-content:space-between; align-items:center;"><label>Aktifkan Watermark</label><label class="switch"><input type="checkbox" id="cfg_watermark_enabled" checked><span class="slider"></span></label></div>
-            <div class="config-row"><label>Teks Watermark</label><input type="text" id="cfg_watermark_text" value="KBIHU AMANATUL UMMAH"></div>
+            <div class="config-row"><label>Teks Watermark</label><input type="text" id="cfg_watermark_text" value="Safara"></div>
             <div class="config-row"><label>Opacity</label><div class="opacity-slider"><input type="range" id="cfg_watermark_opacity" min="0.05" max="0.4" step="0.05" value="0.15"><span id="opacityValue">0.15</span></div></div>
             <div class="row"><div class="config-row"><label>Ukuran Font</label><select id="cfg_watermark_fontsize"><option value="40">Kecil (40)</option><option value="60" selected>Sedang (60)</option><option value="80">Besar (80)</option></select></div><div class="config-row"><label>Posisi</label><select id="cfg_watermark_position"><option value="diagonal" selected>Diagonal</option><option value="center">Tengah</option><option value="tile">Ulangi (Tile)</option></select></div></div>
             <div class="preview-btn" onclick="previewWatermark()"><i class="fas fa-eye"></i> Preview Watermark</div>
         </div>
         <div class="config-section"><h3><i class="fas fa-qrcode"></i> QR Code</h3>
             <div class="config-row" style="display:flex; justify-content:space-between; align-items:center;"><label>Aktifkan QR Code</label><label class="switch"><input type="checkbox" id="cfg_qr_enabled" checked><span class="slider"></span></label></div>
-            <div class="config-row"><label>Teks QR</label><textarea id="cfg_qr_text" rows="2" placeholder="Dokumen Resmi - Divalidasi oleh Sistem Auva"></textarea></div>
+            <div class="config-row"><label>Teks QR</label><textarea id="cfg_qr_text" rows="2" placeholder="Dokumen Resmi - Divalidasi oleh Sistem Safara"></textarea></div>
             <div class="config-row"><label>Ukuran QR</label><select id="cfg_qr_size"><option value="60">Kecil (60px)</option><option value="80" selected>Sedang (80px)</option><option value="100">Besar (100px)</option></select></div>
             <div id="qrPreviewContainer" class="qr-preview hidden"><canvas id="qrPreviewCanvas" width="100" height="100"></canvas></div>
             <div class="preview-btn" onclick="generateQRPreview()"><i class="fas fa-qrcode"></i> Generate QR Preview</div>
         </div>
         <div class="config-section"><h3><i class="fas fa-file-pdf"></i> Pengaturan Laporan</h3>
             <div class="row"><div class="config-row"><label>Header PDF</label><select id="cfg_header_mode"><option value="both">Keduanya</option><option value="instansi1">Instansi 1 saja</option><option value="instansi2">Instansi 2 saja</option><option value="none">Tidak ada</option></select></div><div class="config-row"><label>Tanda Tangan</label><select id="cfg_ttd_mode"><option value="both">Dua Pihak</option><option value="single">Satu Pihak</option></select></div></div>
-            <div class="config-row"><label>Prefix Invoice / No. Dokumen</label><input type="text" id="cfg_invoice_prefix" value="INV/AUVA"></div>
+            <div class="config-row"><label>Prefix Invoice / No. Dokumen</label><input type="text" id="cfg_invoice_prefix" value="INV/SAFARA"></div>
         </div>
         <div class="config-section"><h3><i class="fab fa-whatsapp"></i> Template WhatsApp</h3>
             <div class="config-row"><label>Template Laporan Kas</label><textarea id="cfg_wa_laporan" rows="3" placeholder="🏢 *LAPORAN KAS KANTOR*\n\n💰 Saldo: [saldo]\n📥 Pemasukan: [masuk]\n📤 Pengeluaran: [keluar]\n\nTerima kasih."></textarea><div class="template-variables">Variabel: <code>[saldo]</code> <code>[masuk]</code> <code>[keluar]</code></div></div>
@@ -969,7 +1049,7 @@
         <!-- Penyimpanan Internal -->
         <div class="card-premium">
             <div class="section-title"><span>📁 PENYIMPANAN INTERNAL</span></div>
-            <div class="storage-info" style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="font-size: 12px;">/storage/emulated/0/Auva</span><span style="font-size: 12px;" id="storageUsage">Menghitung...</span></div>
+            <div class="storage-info" style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="font-size: 12px;">/storage/emulated/0/Safara</span><span style="font-size: 12px;" id="storageUsage">Menghitung...</span></div>
             <div class="storage-bar" style="background: var(--gray-light); border-radius: 10px; height: 8px; overflow: hidden;"><div id="storageFill" style="width: 0%; background: var(--primary); height: 100%; border-radius: 10px;"></div></div>
             <div class="text-muted text-center mt-2" style="font-size: 11px;">💾 Data aplikasi tersimpan di sini</div>
         </div>
@@ -1260,8 +1340,8 @@ function loadThemePremium() {
 function updateHeaderFromConfig() {
     const cfg = getKonfigurasiProData();
     const cacheBuster = Date.now();
-    const instansi1 = cfg.instansi1.nama || 'PT AUVA EQTENA NAHDHA';
-    const instansi2 = (cfg.instansi2.aktif && cfg.instansi2.nama) ? cfg.instansi2.nama : 'KBIHU AMANATUL UMMAH';
+    const instansi1 = cfg.instansi1.nama || 'Safara';
+    const instansi2 = (cfg.instansi2.aktif && cfg.instansi2.nama) ? cfg.instansi2.nama : 'Safara';
     document.getElementById('headerInstansi1').innerText = instansi1;
     document.getElementById('headerInstansi2').innerText = instansi2;
     
@@ -1429,7 +1509,7 @@ function exportDashboardPDF() {
             await applyPDFConfig(doc, { landscape: true });
             doc.setFontSize(16);
             doc.setTextColor(26, 93, 74);
-            doc.text('DASHBOARD APLIKASI AUVA', 148.5, 65, { align: 'center' });
+            doc.text('DASHBOARD APLIKASI SAFARA', 148.5, 65, { align: 'center' });
             const kasData = JSON.parse(localStorage.getItem('auva_kas_data') || '[]');
             const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
             const jamaahData = JSON.parse(localStorage.getItem('auva_jamaah_list') || '[]');
@@ -1437,7 +1517,7 @@ function exportDashboardPDF() {
             doc.setTextColor(0,0,0);
             doc.text(`Total Kas: Rp ${formatRupiah(totalKas)}`, 20, 80);
             doc.text(`Total Jamaah: ${jamaahData.length} orang`, 20, 90);
-            doc.save('Dashboard_Auva.pdf');
+            doc.save('Dashboard_Safara.pdf');
             showToast('PDF Dashboard berhasil dibuat');
         } catch(e) { showToast('Gagal PDF: ' + e.message); }
     }, 100);
@@ -1454,7 +1534,7 @@ function exportDashboardExcel() {
     XLSX.utils.book_append_sheet(wb, wsJamaah, 'Jamaah');
     XLSX.utils.book_append_sheet(wb, wsKas, 'Kas');
     XLSX.utils.book_append_sheet(wb, wsPayment, 'Pembayaran');
-    XLSX.writeFile(wb, `Dashboard_Auva_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.xlsx`);
+    XLSX.writeFile(wb, `Dashboard_Safara_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.xlsx`);
     showToast('Excel Dashboard berhasil di-export');
 }
 
@@ -1657,7 +1737,7 @@ function buatLaporanWA() {
     dataKas.forEach(i=>{ 
         detail+=`${i.tipe==='masuk'?'🟢':'🔴'} ${i.tgl} | [${i.kegiatan}] ${i.ket}\n   💰 ${f(i.nom)}\n\n`; 
     }); 
-    lastWAText=`🧾 *LAPORAN KEUANGAN ${judul.toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n📍 *${judul}*\n📅 ${new Date().toLocaleDateString('id-ID')}\n\n━━━━━━━━━━━━━━━━━━\n💚 *TOTAL MASUK:* ${f(masuk)}\n❤️ *TOTAL KELUAR:* ${f(keluar)}\n━━━━━━━━━━━━━━━━━━\n💰 *SALDO AKHIR:* *${f(masuk-keluar)}*\n\n━━━━━━━━━━━━━━━━━━\n📋 *DETAIL TRANSAKSI:*\n━━━━━━━━━━━━━━━━━━\n\n${detail}\n🤖 Generated by Auva Kbihu AU`; 
+    lastWAText=`🧾 *LAPORAN KEUANGAN ${judul.toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n📍 *${judul}*\n📅 ${new Date().toLocaleDateString('id-ID')}\n\n━━━━━━━━━━━━━━━━━━\n💚 *TOTAL MASUK:* ${f(masuk)}\n❤️ *TOTAL KELUAR:* ${f(keluar)}\n━━━━━━━━━━━━━━━━━━\n💰 *SALDO AKHIR:* *${f(masuk-keluar)}*\n\n━━━━━━━━━━━━━━━━━━\n📋 *DETAIL TRANSAKSI:*\n━━━━━━━━━━━━━━━━━━\n\n${detail}\n🤖 Generated by Safara`; 
     const hasilWA=document.getElementById('hasilWA'); 
     hasilWA.innerHTML=`<div class="res-item"><span>Total Masuk</span><span style="color:#2ecc71">${f(masuk)}</span></div><div class="res-item"><span>Total Keluar</span><span style="color:#e74c3c">${f(keluar)}</span></div><div class="res-item"><span>SALDO AKHIR</span><span class="highlight">${f(masuk-keluar)}</span></div><button class="btn" onclick="salinLaporanWA()" style="background:#34495e; margin-top:15px;">SALIN LAPORAN WA</button>`; 
     hasilWA.style.display='block'; 
@@ -1674,10 +1754,10 @@ function salinLaporanWA() {
 
 function backupKasData() { 
     if(dataKas.length===0) return showToast("Tidak ada data!"); 
-    const backup={app:"Auva Kbihu AU - Kas", version:"1.0", created:new Date().toISOString(), kegiatan:document.getElementById('kegiatan').value, data:dataKas}; 
+    const backup={app:"Safara - Kas", version:"1.0", created:new Date().toISOString(), kegiatan:document.getElementById('kegiatan').value, data:dataKas}; 
     const a=document.createElement('a'); 
     a.href=URL.createObjectURL(new Blob([JSON.stringify(backup,null,2)],{type:'application/json'})); 
-    a.download=`Auva_Kas_Backup_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.json`; 
+    a.download=`Safara_Kas_Backup_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.json`; 
     a.click(); 
     showToast('Backup kas berhasil'); 
 }
@@ -1884,7 +1964,7 @@ function shareSingleJamaahById(id){
         const val=j.additional_fields?.[field.name]||''; 
         if(val) text+=`*${field.label}:* ${val}\n`; 
     } 
-    text+=`\n📅 *Tgl Input:* ${j.created_at||'-'}\n#AuvaKbihuAU`; 
+    text+=`\n📅 *Tgl Input:* ${j.created_at||'-'}\n#Safara`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
@@ -1975,7 +2055,7 @@ function shareAllJamaahToWA(){
         } 
         text+=`\n`; 
     }); 
-    text+=`━━━━━━━━━━━━━━━━━━\n#AuvaKbihuAU`; 
+    text+=`━━━━━━━━━━━━━━━━━━\n#Safara`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
@@ -1997,10 +2077,10 @@ function exportJamaahToExcel(){
 
 function backupJamaahData(){ 
     if(jamaahList.length===0 && dynamicFieldsJamaah.length===0) return showToast("Tidak ada data!"); 
-    const backup={app:"Auva Kbihu AU - database", version:"1.0", created:new Date().toISOString(), fields:dynamicFieldsJamaah, data:jamaahList}; 
+    const backup={app:"Safara - database", version:"1.0", created:new Date().toISOString(), fields:dynamicFieldsJamaah, data:jamaahList}; 
     const a=document.createElement('a'); 
     a.href=URL.createObjectURL(new Blob([JSON.stringify(backup,null,2)],{type:'application/json'})); 
-    a.download=`Auva_Jamaah_Backup_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.json`; 
+    a.download=`Safara_Jamaah_Backup_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.json`; 
     a.click(); 
     showToast('Backup jamaah berhasil'); 
 }
@@ -2286,7 +2366,7 @@ function shareSingleJamaahKita(index){
         const val=jk.additional_fields?.[field.name]||''; 
         if(val) text+=`*${field.label}:* ${val}\n`; 
     } 
-    text+=`\n📅 *Tgl Input:* ${jk.created_at||'-'}\n#AuvaKbihuAU`; 
+    text+=`\n📅 *Tgl Input:* ${jk.created_at||'-'}\n#Safara`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
@@ -2327,16 +2407,16 @@ function shareAllJamaahKitaToWA(){
         } 
         text+=`\n`; 
     }); 
-    text+=`━━━━━━━━━━━━━━━━━━\n#AuvaKbihuAU`; 
+    text+=`━━━━━━━━━━━━━━━━━━\n#Safara`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
 function backupJamaahKitaData(){ 
     if(jamaahKitaList.length===0 && dynamicFieldsJamaahKita.length===0) return showToast("Tidak ada data!"); 
-    const backup={app:"Auva Kbihu AU - Jamaah on proses", version:"1.0", created:new Date().toISOString(), fields:dynamicFieldsJamaahKita, data:jamaahKitaList}; 
+    const backup={app:"Safara - Jamaah on proses", version:"1.0", created:new Date().toISOString(), fields:dynamicFieldsJamaahKita, data:jamaahKitaList}; 
     const a=document.createElement('a'); 
     a.href=URL.createObjectURL(new Blob([JSON.stringify(backup,null,2)],{type:'application/json'})); 
-    a.download=`Auva_JamaahKita_Backup_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.json`; 
+    a.download=`Safara_JamaahKita_Backup_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.json`; 
     a.click(); 
     showToast('Backup Jamaah on proses berhasil'); 
 }
@@ -2587,7 +2667,7 @@ function hitungZakat(){
     const bersih=totalHarta-totalZakat; 
     const f=n=>"Rp "+n.toLocaleString('id-ID'); 
     const garis="━━━━━━━━━━━━━━━━━━"; 
-    lastZakatText=`📊 *KALKULATOR ZAKAT*\n${garis}\n📌 *Jenis Zakat:* ${jenis==='mal'?'Zakat Mal':(jenis==='pertanian'?'Zakat Pertanian':'Zakat Perdagangan')}\n💰 *Total Harta:* ${f(totalHarta)}\n⚖️ *Nisab:* ${f(nisab)}\n📋 *Status:* ${status}\n${garis}\n💵 *Total Zakat:* ${f(totalZakat)}\n✨ *Bersih:* ${f(bersih)}\n${garis}\n#AuvaKbihuAU`; 
+    lastZakatText=`📊 *KALKULATOR ZAKAT*\n${garis}\n📌 *Jenis Zakat:* ${jenis==='mal'?'Zakat Mal':(jenis==='pertanian'?'Zakat Pertanian':'Zakat Perdagangan')}\n💰 *Total Harta:* ${f(totalHarta)}\n⚖️ *Nisab:* ${f(nisab)}\n📋 *Status:* ${status}\n${garis}\n💵 *Total Zakat:* ${f(totalZakat)}\n✨ *Bersih:* ${f(bersih)}\n${garis}\n#Safara`; 
     let detailHtml=''; 
     for(const d of detailZakat){ 
         detailHtml+=`<div class="res-item"><span>📌</span><span>${d}</span></div>`; 
@@ -2796,12 +2876,12 @@ function prepareInvoice(idJamaah) {
     const totalBayar = hitungTotalBayarJamaah(idJamaah); 
     let totalHargaPaket = getTotalHargaPaket(jamaah) || 0; 
     const sisa = totalHargaPaket - totalBayar; 
-    let text = `🏆 *INVOICE PEMBAYARAN - AUVA TOUR & TRAVEL* 🏆\n━━━━━━━━━━━━━━━━━━\n👤 *Nama:* ${jamaah.nama_lengkap}\n💎 *Total Paket:* ${formatRupiah(totalHargaPaket)}\n📅 *Tanggal:* ${new Date().toLocaleDateString('id-ID')}\n━━━━━━━━━━━━━━━━━━\n📋 *RINCIAN PEMBAYARAN:*\n`; 
+    let text = `🏆 *INVOICE PEMBAYARAN - SAFARA TOUR & TRAVEL* 🏆\n━━━━━━━━━━━━━━━━━━\n👤 *Nama:* ${jamaah.nama_lengkap}\n💎 *Total Paket:* ${formatRupiah(totalHargaPaket)}\n📅 *Tanggal:* ${new Date().toLocaleDateString('id-ID')}\n━━━━━━━━━━━━━━━━━━\n📋 *RINCIAN PEMBAYARAN:*\n`; 
     if (transaksiList.length === 0) text += `Belum ada pembayaran.\n`; 
     else transaksiList.forEach((t, i) => { 
         text += `${i+1}. ${t.tanggal} | ${t.keterangan}\n   💰 ${formatRupiah(t.nominal)} (${t.metode})\n`; 
     }); 
-    text += `━━━━━━━━━━━━━━━━━━\n💰 *Total Dibayar:* ${formatRupiah(totalBayar)}\n📌 *Sisa Tagihan:* ${formatRupiah(sisa > 0 ? sisa : 0)}\n✅ *Status:* ${sisa <= 0 ? 'LUNAS 🎉' : 'BELUM LUNAS ⚠️'}\n━━━━━━━━━━━━━━━━━━\n_Auva Mobile - Kbihu Amanatul Ummah_`; 
+    text += `━━━━━━━━━━━━━━━━━━\n💰 *Total Dibayar:* ${formatRupiah(totalBayar)}\n📌 *Sisa Tagihan:* ${formatRupiah(sisa > 0 ? sisa : 0)}\n✅ *Status:* ${sisa <= 0 ? 'LUNAS 🎉' : 'BELUM LUNAS ⚠️'}\n━━━━━━━━━━━━━━━━━━\n_Safara Mobile_`; 
     currentInvoiceText = text; 
     let waNumber = '628123456789'; 
     if (jamaah.additional_fields && jamaah.additional_fields.whatsapp) { 
@@ -2843,7 +2923,7 @@ async function cetakInvoicePDF(jamaahId) {
         const totalBayar = hitungTotalBayarJamaah(jamaahId); 
         let totalHargaPaket = getTotalHargaPaket(jamaah) || 0; 
         const sisa = totalHargaPaket - totalBayar; 
-        const prefix = getKonfigurasiProData().settings.invoice_prefix || 'INV/AUVA'; 
+        const prefix = getKonfigurasiProData().settings.invoice_prefix || 'INV/SAFARA'; 
         doc.setFontSize(16); 
         doc.setTextColor(26,93,74); 
         doc.text('INVOICE PEMBAYARAN', 105, 65, { align: 'center' }); 
@@ -3085,13 +3165,13 @@ function viewDetailCatatan(idx) {
 function shareDetailToWA() { 
     const item = catatanList[currentDetailIndex]; 
     if(!item) return; 
-    const text = `*${item.judul}*\n\n${item.isi}\n\n#AuvaKbihuAU`; 
+    const text = `*${item.judul}*\n\n${item.isi}\n\n#Safara`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
 function shareCatatanItem(idx) { 
     const item = catatanList[idx]; 
-    const text = `*${item.judul}*\n\n${item.isi}\n\n#AuvaKbihuAU`; 
+    const text = `*${item.judul}*\n\n${item.isi}\n\n#Safara`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
@@ -3238,7 +3318,7 @@ function exportFolderToExcel(folderId) {
 
 // ==================== UPLOAD DOKUMEN (INDEXEDDB) ====================
 let dokumenJenisList = [], dokumenData = {}, db = null;
-const DB_NAME = 'AuvaDokumenDB', DB_VERSION = 2, STORE_NAME = 'dokumen', JENIS_STORE_NAME = 'dokumenJenis';
+const DB_NAME = 'SafaraDokumenDB', DB_VERSION = 2, STORE_NAME = 'dokumen', JENIS_STORE_NAME = 'dokumenJenis';
 
 function openIndexedDB() { 
     return new Promise((resolve, reject) => { 
@@ -3398,7 +3478,7 @@ function remindAllKurangDokumen() {
         const status = getStatusKelengkapanDokumen(j.id); 
         text += `${i+1}. ${j.nama_lengkap} (${status.ada}/${status.total} dokumen)\n`; 
     }); 
-    text += `━━━━━━━━━━━━━━━━━━\nMohon segera melengkapi dokumen.\n#AuvaKbihuAU`; 
+    text += `━━━━━━━━━━━━━━━━━━\nMohon segera melengkapi dokumen.\n#Safara`; 
     navigator.clipboard.writeText(text); 
     showToast(`✅ Teks reminder untuk ${kurang.length} jamaah tersalin! Bisa paste ke WA`); 
 }
@@ -3600,7 +3680,7 @@ async function downloadFullZip() {
         } 
         const content = await zip.generateAsync({ type: 'blob' }); 
         const date = new Date().toISOString().slice(0,19).replace(/:/g, '-'); 
-        saveAs(content, `Auva_Full_Backup_${date}.zip`); 
+        saveAs(content, `Safara_Full_Backup_${date}.zip`); 
         showToast('✅ Download ZIP berhasil!'); 
     } catch(e) { showToast('❌ Gagal membuat ZIP: ' + e.message); } 
 }
@@ -3684,7 +3764,7 @@ function cetakLabel() {
             const kamar = jk?.additional_fields?.kamar || '-'; 
             const bus = jk?.additional_fields?.bus || '-'; 
             const cfg = getKonfigurasiProData(); 
-            const logo = cfg.instansi1.logo ? `<img src="${cfg.instansi1.logo}" style="height:30px; margin-bottom:8px;">` : '🕋 Auva'; 
+            const logo = cfg.instansi1.logo ? `<img src="${cfg.instansi1.logo}" style="height:30px; margin-bottom:8px;">` : '🕋 Safara'; 
             let nameTagHtml = '', luggageHtml = ''; 
             if(template === 'nametag' || template === 'both') nameTagHtml = `<div style="width:220px; padding:15px; background:white; border-radius:12px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); border:1px solid #0D5C4A;"><div style="font-size:14px; font-weight:bold; color:#0D5C4A;">${logo}</div><div style="font-size:18px; font-weight:bold; margin:10px 0; text-transform:uppercase;">${j.nama_lengkap}</div><div style="font-size:11px; color:#666;">Paspor: ${paspor}</div><div style="font-size:11px; color:#666;">WA: ${whatsapp}</div><div style="font-size:11px; color:#666;">Kamar: ${kamar} | Bus: ${bus}</div><div style="font-size:10px; margin-top:8px; color:#888;">${eventName}</div></div>`; 
             if(template === 'luggage' || template === 'both') luggageHtml = `<div style="width:180px; padding:15px; background:#FFF8E7; border-radius:12px; text-align:center; border:1px dashed #F59E0B;"><div style="font-size:12px; font-weight:bold;">✈️ KOPER - ${eventName}</div><div style="font-size:16px; font-weight:bold; margin:8px 0; text-transform:uppercase;">${j.nama_lengkap}</div><div style="font-size:10px;">Paspor: ${paspor}</div><div style="font-size:10px;">WA: ${whatsapp}</div></div>`; 
@@ -3796,547 +3876,547 @@ async function kompresLogo(base64Data, maxWidth = 80) {
         if (!base64Data || !base64Data.startsWith('data:image')) { resolve(null); return; } 
         const img = new Image(); 
         img.onload = () => { 
-            const canvas = document.createElement('canvas'); 
-            let width = img.width, height = img.height; 
-            if (width > maxWidth) { height = (height * maxWidth) / width; width = maxWidth; } 
-            canvas.width = width; canvas.height = height; 
-            const ctx = canvas.getContext('2d'); 
-            ctx.drawImage(img, 0, 0, width, height); 
-            resolve(canvas.toDataURL('image/jpeg', 0.7)); 
-        }; 
-        img.onerror = () => resolve(null); 
-        img.src = base64Data; 
-    }); 
+            const canvas = document.createElement('canvas');
+            let width = img.width, height = img.height;
+            if (width > maxWidth) { height = (height * maxWidth) / width; width = maxWidth; }
+            canvas.width = width; canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.onerror = () => resolve(null);
+        img.src = base64Data;
+    });
 }
 
-async function applyPDFConfig(doc, options = {}) { 
-    const cfg = getKonfigurasiProData(); 
-    const pageWidth = options.landscape ? 297 : 210, pageHeight = options.landscape ? 210 : 297; 
-    let startY = options.startY || 0; 
-    if (cfg.settings.header_mode !== 'none') { 
-        doc.setFillColor(26, 93, 74); 
-        doc.rect(0, startY, pageWidth, 50, 'F'); 
-        doc.setTextColor(255, 255, 255); 
-        let currentY = startY + 12; 
-        let logoToAdd = null; 
-        if (cfg.settings.header_mode === 'both' || cfg.settings.header_mode === 'instansi1') logoToAdd = cfg.instansi1.logo; 
-        else if (cfg.settings.header_mode === 'instansi2' && cfg.instansi2.logo) logoToAdd = cfg.instansi2.logo; 
-        if (logoToAdd && logoToAdd.startsWith('data:image')) { 
-            const kompresLogoData = await kompresLogo(logoToAdd, 60); 
-            if (kompresLogoData) { try { doc.addImage(kompresLogoData, 'JPEG', 12, startY + 6, 30, 30); } catch(e) {} } 
-        } 
-        doc.setFontSize(12); 
-        doc.setFont('helvetica', 'bold'); 
-        if (cfg.settings.header_mode === 'both' || cfg.settings.header_mode === 'instansi1') { 
-            doc.text(cfg.instansi1.nama || 'Auva Kbihu AU', pageWidth/2, currentY, { align: 'center' }); 
-            currentY += 7; 
-        } 
-        if (cfg.settings.header_mode === 'both' && cfg.instansi2.aktif && cfg.instansi2.nama) { 
-            doc.setFontSize(10); 
-            doc.text(cfg.instansi2.nama, pageWidth/2, currentY, { align: 'center' }); 
-            currentY += 6; 
-        } 
-        doc.setFontSize(8); 
-        doc.setFont('helvetica', 'normal'); 
-        let alamatDisplay = cfg.instansi1.alamat || ''; 
-        if (cfg.settings.header_mode === 'both' && cfg.instansi2.aktif && cfg.instansi2.alamat && cfg.instansi2.alamat !== alamatDisplay) alamatDisplay = cfg.instansi2.alamat; 
-        if (alamatDisplay) { 
-            doc.text(alamatDisplay, pageWidth/2, currentY, { align: 'center' }); 
-            currentY += 5; 
-        } 
-        let kontakInfo = []; 
-        if (cfg.instansi1.telp) kontakInfo.push(`Telp: ${cfg.instansi1.telp}`); 
-        if (cfg.instansi1.email) kontakInfo.push(`Email: ${cfg.instansi1.email}`); 
-        if (cfg.instansi1.npwp) kontakInfo.push(`NPWP: ${cfg.instansi1.npwp}`); 
-        if (cfg.instansi1.web) kontakInfo.push(`Web: ${cfg.instansi1.web}`); 
-        if (kontakInfo.length > 0) doc.text(kontakInfo.join(' | '), pageWidth/2, currentY, { align: 'center' }); 
-    } 
-    if (cfg.watermark.enabled && cfg.watermark.text) { 
-        doc.saveGraphicsState(); 
-        doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 })); 
-        doc.setFontSize(cfg.watermark.fontsize || 60); 
-        doc.setTextColor(150, 150, 150); 
-        doc.setFont('helvetica', 'bold'); 
-        if (cfg.watermark.position === 'diagonal') doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center', angle: -45 }); 
-        else if (cfg.watermark.position === 'center') doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' }); 
-        doc.restoreGraphicsState(); 
-    } 
-    if (cfg.qr.enabled && cfg.qr.text && typeof QRCode !== 'undefined') { 
-        const qrSize = cfg.qr.size || 80; 
-        try { 
-            const canvas = document.createElement('canvas'); 
-            canvas.width = qrSize; 
-            canvas.height = qrSize; 
-            await QRCode.toCanvas(canvas, cfg.qr.text, { width: qrSize }); 
-            const qrDataUrl = canvas.toDataURL(); 
-            doc.addImage(qrDataUrl, 'PNG', pageWidth - qrSize - 10, pageHeight - qrSize - 10, qrSize, qrSize); 
-        } catch(e) { } 
-    } 
-    return doc; 
+async function applyPDFConfig(doc, options = {}) {
+    const cfg = getKonfigurasiProData();
+    const pageWidth = options.landscape ? 297 : 210, pageHeight = options.landscape ? 210 : 297;
+    let startY = options.startY || 0;
+    if (cfg.settings.header_mode !== 'none') {
+        doc.setFillColor(26, 93, 74);
+        doc.rect(0, startY, pageWidth, 50, 'F');
+        doc.setTextColor(255, 255, 255);
+        let currentY = startY + 12;
+        let logoToAdd = null;
+        if (cfg.settings.header_mode === 'both' || cfg.settings.header_mode === 'instansi1') logoToAdd = cfg.instansi1.logo;
+        else if (cfg.settings.header_mode === 'instansi2' && cfg.instansi2.logo) logoToAdd = cfg.instansi2.logo;
+        if (logoToAdd && logoToAdd.startsWith('data:image')) {
+            const kompresLogoData = await kompresLogo(logoToAdd, 60);
+            if (kompresLogoData) { try { doc.addImage(kompresLogoData, 'JPEG', 12, startY + 6, 30, 30); } catch(e) {} }
+        }
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        if (cfg.settings.header_mode === 'both' || cfg.settings.header_mode === 'instansi1') {
+            doc.text(cfg.instansi1.nama || 'Safara', pageWidth/2, currentY, { align: 'center' });
+            currentY += 7;
+        }
+        if (cfg.settings.header_mode === 'both' && cfg.instansi2.aktif && cfg.instansi2.nama) {
+            doc.setFontSize(10);
+            doc.text(cfg.instansi2.nama, pageWidth/2, currentY, { align: 'center' });
+            currentY += 6;
+        }
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        let alamatDisplay = cfg.instansi1.alamat || '';
+        if (cfg.settings.header_mode === 'both' && cfg.instansi2.aktif && cfg.instansi2.alamat && cfg.instansi2.alamat !== alamatDisplay) alamatDisplay = cfg.instansi2.alamat;
+        if (alamatDisplay) {
+            doc.text(alamatDisplay, pageWidth/2, currentY, { align: 'center' });
+            currentY += 5;
+        }
+        let kontakInfo = [];
+        if (cfg.instansi1.telp) kontakInfo.push(`Telp: ${cfg.instansi1.telp}`);
+        if (cfg.instansi1.email) kontakInfo.push(`Email: ${cfg.instansi1.email}`);
+        if (cfg.instansi1.npwp) kontakInfo.push(`NPWP: ${cfg.instansi1.npwp}`);
+        if (cfg.instansi1.web) kontakInfo.push(`Web: ${cfg.instansi1.web}`);
+        if (kontakInfo.length > 0) doc.text(kontakInfo.join(' | '), pageWidth/2, currentY, { align: 'center' });
+    }
+    if (cfg.watermark.enabled && cfg.watermark.text) {
+        doc.saveGraphicsState();
+        doc.setGState(new doc.GState({ opacity: cfg.watermark.opacity || 0.15 }));
+        doc.setFontSize(cfg.watermark.fontsize || 60);
+        doc.setTextColor(150, 150, 150);
+        doc.setFont('helvetica', 'bold');
+        if (cfg.watermark.position === 'diagonal') doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center', angle: -45 });
+        else if (cfg.watermark.position === 'center') doc.text(cfg.watermark.text, pageWidth/2, pageHeight/2, { align: 'center' });
+        doc.restoreGraphicsState();
+    }
+    if (cfg.qr.enabled && cfg.qr.text && typeof QRCode !== 'undefined') {
+        const qrSize = cfg.qr.size || 80;
+        try {
+            const canvas = document.createElement('canvas');
+            canvas.width = qrSize;
+            canvas.height = qrSize;
+            await QRCode.toCanvas(canvas, cfg.qr.text, { width: qrSize });
+            const qrDataUrl = canvas.toDataURL();
+            doc.addImage(qrDataUrl, 'PNG', pageWidth - qrSize - 10, pageHeight - qrSize - 10, qrSize, qrSize);
+        } catch(e) { }
+    }
+    return doc;
 }
 
-function getKonfigurasiProData() { 
-    const saved = localStorage.getItem('auva_konfigurasi_pro'); 
-    if(saved) { try { return JSON.parse(saved); } catch(e) {} } 
-    return { 
-        instansi1: { nama: 'PT AUVA EQTENA NAHDHA', alamat: 'Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya', telp: '081391485440', email: '', npwp: '', web: '', pimpinan: 'Ali mashar', jabatan: 'Admin', logo: '' }, 
-        instansi2: { aktif: true, nama: 'KBIH Amanatul Ummah', alamat: 'Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya' }, 
-        watermark: { enabled: true, text: 'DOKUMEN RESMI', opacity: 0.15, fontsize: 60, position: 'diagonal' }, 
-        qr: { enabled: true, text: 'Dokumen Resmi - Divalidasi oleh Sistem Auva', size: 80 }, 
-        settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/AUVA' } 
-    }; 
+function getKonfigurasiProData() {
+    const saved = localStorage.getItem('auva_konfigurasi_pro');
+    if(saved) { try { return JSON.parse(saved); } catch(e) {} }
+    return {
+        instansi1: { nama: 'Safara', alamat: 'Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya', telp: '081391485440', email: '', npwp: '', web: '', pimpinan: 'Ali mashar', jabatan: 'Admin', logo: '' },
+        instansi2: { aktif: true, nama: 'Safara', alamat: 'Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya' },
+        watermark: { enabled: true, text: 'DOKUMEN RESMI', opacity: 0.15, fontsize: 60, position: 'diagonal' },
+        qr: { enabled: true, text: 'Dokumen Resmi - Divalidasi oleh Sistem Safara', size: 80 },
+        settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/SAFARA' }
+    };
 }
 
 // ==================== E-TIKET & QR ====================
-function populateTiketDropdown() { 
-    const select = document.getElementById('tiketJamaahSelect'); 
-    if(!select) return; 
-    select.innerHTML = '<option value="">-- Pilih Jamaah --</option>'; 
-    jamaahList.forEach(j => { select.innerHTML += `<option value="${j.id}">${escapeHtml(j.nama_lengkap)}</option>`; }); 
+function populateTiketDropdown() {
+    const select = document.getElementById('tiketJamaahSelect');
+    if(!select) return;
+    select.innerHTML = '<option value="">-- Pilih Jamaah --</option>';
+    jamaahList.forEach(j => { select.innerHTML += `<option value="${j.id}">${escapeHtml(j.nama_lengkap)}</option>`; });
 }
 
-async function generateTiketQR() { 
-    const jamaahId = document.getElementById('tiketJamaahSelect').value; 
-    if(!jamaahId) return; 
-    const jamaah = jamaahList.find(j => j.id == jamaahId); 
-    if(!jamaah) return; 
-    const paket = jamaah.paket || '-'; 
-    document.getElementById('tiketNama').innerText = jamaah.nama_lengkap; 
-    document.getElementById('tiketPaket').innerText = `Paket: ${paket}`; 
-    const qrContainer = document.getElementById('tiketQR'); 
-    qrContainer.innerHTML = ''; 
-    const canvas = document.createElement('canvas'); 
-    const qrText = `Nama: ${jamaah.nama_lengkap}\nID: ${jamaah.id}\nPaket: ${paket}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\nAuva Kbihu AU`; 
-    await QRCode.toCanvas(canvas, qrText, { width: 150, height: 150 }); 
-    qrContainer.appendChild(canvas); 
-    document.getElementById('tiketPreview').style.display = 'block'; 
+async function generateTiketQR() {
+    const jamaahId = document.getElementById('tiketJamaahSelect').value;
+    if(!jamaahId) return;
+    const jamaah = jamaahList.find(j => j.id == jamaahId);
+    if(!jamaah) return;
+    const paket = jamaah.paket || '-';
+    document.getElementById('tiketNama').innerText = jamaah.nama_lengkap;
+    document.getElementById('tiketPaket').innerText = `Paket: ${paket}`;
+    const qrContainer = document.getElementById('tiketQR');
+    qrContainer.innerHTML = '';
+    const canvas = document.createElement('canvas');
+    const qrText = `Nama: ${jamaah.nama_lengkap}\nID: ${jamaah.id}\nPaket: ${paket}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\nSafara`;
+    await QRCode.toCanvas(canvas, qrText, { width: 150, height: 150 });
+    qrContainer.appendChild(canvas);
+    document.getElementById('tiketPreview').style.display = 'block';
 }
 
-function downloadTiketAsImage() { 
-    const tiketCard = document.querySelector('.tiket-card'); 
-    if(!tiketCard) return; 
-    html2canvas(tiketCard).then(canvas => { 
-        const link = document.createElement('a'); 
-        link.download = 'tiket.png'; 
-        link.href = canvas.toDataURL(); 
-        link.click(); 
-    }).catch(() => showToast('Gagal membuat gambar')); 
+function downloadTiketAsImage() {
+    const tiketCard = document.querySelector('.tiket-card');
+    if(!tiketCard) return;
+    html2canvas(tiketCard).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'tiket.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    }).catch(() => showToast('Gagal membuat gambar'));
 }
 
-function shareTiketWA() { 
-    const jamaahId = document.getElementById('tiketJamaahSelect').value; 
-    if(!jamaahId) return; 
-    const jamaah = jamaahList.find(j => j.id == jamaahId); 
-    if(!jamaah) return; 
-    let waNumber = '628123456789'; 
-    if(jamaah.additional_fields && jamaah.additional_fields.whatsapp) { 
-        let num = jamaah.additional_fields.whatsapp.replace(/\D/g, ''); 
-        if(num.startsWith('0')) num = '62' + num.substring(1); 
-        if(num.length >= 10) waNumber = num; 
-    } 
-    const text = `🎫 *E-TIKET ${jamaah.nama_lengkap}*\n━━━━━━━━━━━━━━━━━━\n👤 Nama: ${jamaah.nama_lengkap}\n📦 Paket: ${jamaah.paket || '-'}\n📅 Tanggal: ${new Date().toLocaleDateString('id-ID')}\n━━━━━━━━━━━━━━━━━━\n#AuvaKbihuAU`; 
-    window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank'); 
+function shareTiketWA() {
+    const jamaahId = document.getElementById('tiketJamaahSelect').value;
+    if(!jamaahId) return;
+    const jamaah = jamaahList.find(j => j.id == jamaahId);
+    if(!jamaah) return;
+    let waNumber = '628123456789';
+    if(jamaah.additional_fields && jamaah.additional_fields.whatsapp) {
+        let num = jamaah.additional_fields.whatsapp.replace(/\D/g, '');
+        if(num.startsWith('0')) num = '62' + num.substring(1);
+        if(num.length >= 10) waNumber = num;
+    }
+    const text = `🎫 *E-TIKET ${jamaah.nama_lengkap}*\n━━━━━━━━━━━━━━━━━━\n👤 Nama: ${jamaah.nama_lengkap}\n📦 Paket: ${jamaah.paket || '-'}\n📅 Tanggal: ${new Date().toLocaleDateString('id-ID')}\n━━━━━━━━━━━━━━━━━━\n#Safara`;
+    window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
 }
 
-function cetakTiketLangsung() { 
-    const tiketCard = document.querySelector('.tiket-card'); 
-    if (!tiketCard || tiketCard.style.display === 'none') { 
-        showToast('Pilih jamaah dulu untuk mencetak tiket'); 
-        return; 
-    } 
-    const printWindow = window.open('', '_blank'); 
-    printWindow.document.write(`<html><head><title>Cetak Tiket</title><style>body { font-family: Arial; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; background: white; } .tiket-card { max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #0D5C4A; border-radius: 24px; background: white; } .tiket-header { text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 12px; margin-bottom: 12px; } .tiket-title { font-size: 20px; font-weight: bold; color: #0D5C4A; } .tiket-qr { text-align: center; margin: 15px 0; } .tiket-qr canvas { width: 150px; height: 150px; } @media print { .no-print { display: none; } }</style></head><body>${tiketCard.outerHTML}<div style="text-align: center; margin-top: 20px;"><button onclick="window.print()" class="no-print" style="padding: 10px 20px; background: #0D5C4A; color: white; border: none; border-radius: 8px; cursor: pointer;">🖨️ PRINT</button><button onclick="window.close()" class="no-print" style="padding: 10px 20px; background: #ccc; border: none; border-radius: 8px; cursor: pointer;">TUTUP</button></div></body></html>`); 
-    printWindow.document.close(); 
+function cetakTiketLangsung() {
+    const tiketCard = document.querySelector('.tiket-card');
+    if (!tiketCard || tiketCard.style.display === 'none') {
+        showToast('Pilih jamaah dulu untuk mencetak tiket');
+        return;
+    }
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`<html><head><title>Cetak Tiket</title><style>body { font-family: Arial; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; background: white; } .tiket-card { max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #0D5C4A; border-radius: 24px; background: white; } .tiket-header { text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 12px; margin-bottom: 12px; } .tiket-title { font-size: 20px; font-weight: bold; color: #0D5C4A; } .tiket-qr { text-align: center; margin: 15px 0; } .tiket-qr canvas { width: 150px; height: 150px; } @media print { .no-print { display: none; } }</style></head><body>${tiketCard.outerHTML}<div style="text-align: center; margin-top: 20px;"><button onclick="window.print()" class="no-print" style="padding: 10px 20px; background: #0D5C4A; color: white; border: none; border-radius: 8px; cursor: pointer;">🖨️ PRINT</button><button onclick="window.close()" class="no-print" style="padding: 10px 20px; background: #ccc; border: none; border-radius: 8px; cursor: pointer;">TUTUP</button></div></body></html>`);
+    printWindow.document.close();
 }
 
 // ==================== MULTI EVENT (SINGKAT) ====================
 let masterDataList = [], masterDynamicFields = [], masterItemList = ['Kain Ihram', 'Sendal', 'Obat-obatan', 'Tas', 'Air Zamzam', 'Kopyah'], editingMasterId = null, availableModes = ['Semua', 'Haji', 'Toko', 'Sekolah', 'Umroh', 'Donasi'], activeModes = ['Semua', 'Haji', 'Toko', 'Sekolah', 'Umroh', 'Donasi'], currentDisplayMode = 'Semua';
 
-function loadMasterData() { 
-    const saved = localStorage.getItem('auva_master_data'); 
-    masterDataList = saved ? JSON.parse(saved) : []; 
-    const savedFields = localStorage.getItem('auva_master_fields'); 
-    if(savedFields) masterDynamicFields = JSON.parse(savedFields); 
-    const savedItems = localStorage.getItem('auva_master_items'); 
-    if(savedItems) masterItemList = JSON.parse(savedItems); 
-    renderMasterForm(); 
-    renderMasterTable(); 
+function loadMasterData() {
+    const saved = localStorage.getItem('auva_master_data');
+    masterDataList = saved ? JSON.parse(saved) : [];
+    const savedFields = localStorage.getItem('auva_master_fields');
+    if(savedFields) masterDynamicFields = JSON.parse(savedFields);
+    const savedItems = localStorage.getItem('auva_master_items');
+    if(savedItems) masterItemList = JSON.parse(savedItems);
+    renderMasterForm();
+    renderMasterTable();
 }
 
-function saveMasterDataToLocal() { 
-    localStorage.setItem('auva_master_data', JSON.stringify(masterDataList)); 
-    localStorage.setItem('auva_master_fields', JSON.stringify(masterDynamicFields)); 
-    localStorage.setItem('auva_master_items', JSON.stringify(masterItemList)); 
+function saveMasterDataToLocal() {
+    localStorage.setItem('auva_master_data', JSON.stringify(masterDataList));
+    localStorage.setItem('auva_master_fields', JSON.stringify(masterDynamicFields));
+    localStorage.setItem('auva_master_items', JSON.stringify(masterItemList));
 }
 
 function getMasterJudul() { return document.getElementById('masterJudul')?.value.trim() || 'Multi Event'; }
 
-function renderMasterForm() { 
-    const container = document.getElementById('masterFormContainer'); 
-    if(!container) return; 
-    let html = `<div class="dynamic-field"><label>Nama Lengkap / Judul Item <span style="color:red;">*</span></label><input type="text" id="masterNama" placeholder="Contoh: Ahmad bin Abdullah"></div>`; 
-    for(const field of masterDynamicFields) html += `<div class="dynamic-field"><label>${escapeHtml(field.label)}</label>${field.type==='textarea' ? `<textarea id="masterField_${field.name}" rows="2"></textarea>` : `<input type="${field.type}" id="masterField_${field.name}">`}</div>`; 
-    html += `<div class="dynamic-field"><label>Item</label><div class="custom-checkbox-group" id="masterCheckboxGroup">`; 
-    masterItemList.forEach((item) => { 
-        html += `<label class="custom-checkbox"><input type="checkbox" class="master-item-cb" value="${escapeHtml(item)}"><span class="checkmark"></span><span>${escapeHtml(item)}</span></label>`; 
-    }); 
-    html += `</div></div>`; 
-    container.innerHTML = html; 
+function renderMasterForm() {
+    const container = document.getElementById('masterFormContainer');
+    if(!container) return;
+    let html = `<div class="dynamic-field"><label>Nama Lengkap / Judul Item <span style="color:red;">*</span></label><input type="text" id="masterNama" placeholder="Contoh: Ahmad bin Abdullah"></div>`;
+    for(const field of masterDynamicFields) html += `<div class="dynamic-field"><label>${escapeHtml(field.label)}</label>${field.type==='textarea' ? `<textarea id="masterField_${field.name}" rows="2"></textarea>` : `<input type="${field.type}" id="masterField_${field.name}">`}</div>`;
+    html += `<div class="dynamic-field"><label>Item</label><div class="custom-checkbox-group" id="masterCheckboxGroup">`;
+    masterItemList.forEach((item) => {
+        html += `<label class="custom-checkbox"><input type="checkbox" class="master-item-cb" value="${escapeHtml(item)}"><span class="checkmark"></span><span>${escapeHtml(item)}</span></label>`;
+    });
+    html += `</div></div>`;
+    container.innerHTML = html;
 }
 
-function getSelectedItems() { 
-    const selected = []; 
-    document.querySelectorAll('.master-item-cb:checked').forEach(cb => selected.push(cb.value)); 
-    return selected; 
+function getSelectedItems() {
+    const selected = [];
+    document.querySelectorAll('.master-item-cb:checked').forEach(cb => selected.push(cb.value));
+    return selected;
 }
 
-function setSelectedItems(selectedArray) { 
-    const selected = selectedArray || []; 
-    document.querySelectorAll('.master-item-cb').forEach(cb => { cb.checked = selected.includes(cb.value); }); 
+function setSelectedItems(selectedArray) {
+    const selected = selectedArray || [];
+    document.querySelectorAll('.master-item-cb').forEach(cb => { cb.checked = selected.includes(cb.value); });
 }
 
-function saveMasterData() { 
-    const nama = document.getElementById('masterNama')?.value.trim(); 
-    if(!nama) { showToast('Nama lengkap wajib diisi!'); return; } 
-    const additional = {}; 
-    for(const field of masterDynamicFields) { 
-        const input = document.getElementById(`masterField_${field.name}`); 
-        if(input) additional[field.name] = input.value.trim(); 
-    } 
-    const items = getSelectedItems(); 
-    const now = new Date().toLocaleDateString('id-ID') + ' ' + new Date().toLocaleTimeString('id-ID'); 
-    if(editingMasterId !== null) { 
-        const index = masterDataList.findIndex(d => d.id == editingMasterId); 
-        if(index !== -1) { 
-            masterDataList[index] = { ...masterDataList[index], nama, additional_fields: additional, items, updated_at: now }; 
-            showToast('Data diupdate!'); 
-        } 
-        editingMasterId = null; 
-        document.getElementById('masterFormTitle').innerText = 'TAMBAH DATA'; 
-    } else { 
-        masterDataList.push({ id: Date.now(), nama, additional_fields: additional, items, created_at: now }); 
-        showToast('Data ditambahkan'); 
-    } 
-    saveMasterDataToLocal(); 
-    renderMasterTable(); 
-    renderMasterForm(); 
+function saveMasterData() {
+    const nama = document.getElementById('masterNama')?.value.trim();
+    if(!nama) { showToast('Nama lengkap wajib diisi!'); return; }
+    const additional = {};
+    for(const field of masterDynamicFields) {
+        const input = document.getElementById(`masterField_${field.name}`);
+        if(input) additional[field.name] = input.value.trim();
+    }
+    const items = getSelectedItems();
+    const now = new Date().toLocaleDateString('id-ID') + ' ' + new Date().toLocaleTimeString('id-ID');
+    if(editingMasterId !== null) {
+        const index = masterDataList.findIndex(d => d.id == editingMasterId);
+        if(index !== -1) {
+            masterDataList[index] = { ...masterDataList[index], nama, additional_fields: additional, items, updated_at: now };
+            showToast('Data diupdate!');
+        }
+        editingMasterId = null;
+        document.getElementById('masterFormTitle').innerText = 'TAMBAH DATA';
+    } else {
+        masterDataList.push({ id: Date.now(), nama, additional_fields: additional, items, created_at: now });
+        showToast('Data ditambahkan');
+    }
+    saveMasterDataToLocal();
+    renderMasterTable();
+    renderMasterForm();
 }
 
-function renderMasterTable() { 
-    const thead = document.getElementById('masterTableHead'); 
-    const tbody = document.getElementById('masterTableBody'); 
-    if(!thead || !tbody) return; 
-    let headerHtml = '<tr><th class="checkbox-col"><input type="checkbox" id="selectAllMaster" onchange="toggleAllMasterCheckboxes(this)"></th><th>No</th><th>Nama Lengkap</th>'; 
-    for(const field of masterDynamicFields) headerHtml += `<th>${escapeHtml(field.label)}</th>`; 
-    headerHtml += '<th>Item</th><th>Aksi</th></tr>'; 
-    thead.innerHTML = headerHtml; 
-    if(masterDataList.length === 0) { tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center; padding:30px;">Belum ada Data</td></tr>'; return; } 
-    let bodyHtml = ''; 
-    [...masterDataList].reverse().forEach((item, idx) => { 
-        const displayNum = idx + 1; 
-        let whatsappValue = ''; 
-        const whatsappField = masterDynamicFields.find(f => f.name.toLowerCase() === 'whatsapp' || f.label.toLowerCase() === 'whatsapp'); 
-        if(whatsappField) whatsappValue = item.additional_fields?.[whatsappField.name] || ''; 
-        bodyHtml += `<tr><td class="checkbox-col"><input type="checkbox" class="master-checkbox" data-nama="${escapeHtml(item.nama)}" data-wa="${escapeHtml(whatsappValue)}" onchange="updateBatchBar()"></td><td style="text-align:center;">${displayNum}</td><td><strong>${escapeHtml(item.nama)}</strong></td>`; 
-        for(const field of masterDynamicFields) { 
-            const val = item.additional_fields?.[field.name] || '-'; 
-            bodyHtml += `<td>${escapeHtml(val)}</td>`; 
-        } 
-        bodyHtml += `<td>${item.items?.map(p => `<span class="master-badge">${escapeHtml(p)}</span>`).join('') || '-'}</td><td style="white-space:nowrap;"><button onclick="editMasterData('${item.id}')" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;">✏️</button><button onclick="shareSingleMasterToWA('${item.id}')" style="background:none; border:none; color:var(--wa); font-size:1.1rem; cursor:pointer;">💬</button><button onclick="confirmDeleteMasterData('${item.id}')" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;">🗑️</button></td></tr>`; 
-    }); 
-    tbody.innerHTML = bodyHtml; 
+function renderMasterTable() {
+    const thead = document.getElementById('masterTableHead');
+    const tbody = document.getElementById('masterTableBody');
+    if(!thead || !tbody) return;
+    let headerHtml = '<tr><th class="checkbox-col"><input type="checkbox" id="selectAllMaster" onchange="toggleAllMasterCheckboxes(this)"></th><th>No</th><th>Nama Lengkap</th>';
+    for(const field of masterDynamicFields) headerHtml += `<th>${escapeHtml(field.label)}</th>`;
+    headerHtml += '<th>Item</th><th>Aksi</th></tr>';
+    thead.innerHTML = headerHtml;
+    if(masterDataList.length === 0) { tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center; padding:30px;">Belum ada Data</td></tr>'; return; }
+    let bodyHtml = '';
+    [...masterDataList].reverse().forEach((item, idx) => {
+        const displayNum = idx + 1;
+        let whatsappValue = '';
+        const whatsappField = masterDynamicFields.find(f => f.name.toLowerCase() === 'whatsapp' || f.label.toLowerCase() === 'whatsapp');
+        if(whatsappField) whatsappValue = item.additional_fields?.[whatsappField.name] || '';
+        bodyHtml += `<tr><td class="checkbox-col"><input type="checkbox" class="master-checkbox" data-nama="${escapeHtml(item.nama)}" data-wa="${escapeHtml(whatsappValue)}" onchange="updateBatchBar()"></td><td style="text-align:center;">${displayNum}</td><td><strong>${escapeHtml(item.nama)}</strong></td>`;
+        for(const field of masterDynamicFields) {
+            const val = item.additional_fields?.[field.name] || '-';
+            bodyHtml += `<td>${escapeHtml(val)}</td>`;
+        }
+        bodyHtml += `<td>${item.items?.map(p => `<span class="master-badge">${escapeHtml(p)}</span>`).join('') || '-'}</td><td style="white-space:nowrap;"><button onclick="editMasterData('${item.id}')" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;">✏️</button><button onclick="shareSingleMasterToWA('${item.id}')" style="background:none; border:none; color:var(--wa); font-size:1.1rem; cursor:pointer;">💬</button><button onclick="confirmDeleteMasterData('${item.id}')" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;">🗑️</button></td></tr>`;
+    });
+    tbody.innerHTML = bodyHtml;
 }
 
-function toggleAllMasterCheckboxes(master) { 
-    document.querySelectorAll('.master-checkbox').forEach(cb => cb.checked = master.checked); 
-    updateBatchBar(); 
+function toggleAllMasterCheckboxes(master) {
+    document.querySelectorAll('.master-checkbox').forEach(cb => cb.checked = master.checked);
+    updateBatchBar();
 }
 
-function updateBatchBar() { 
-    const checked = document.querySelectorAll('.master-checkbox:checked'); 
-    const bar = document.getElementById('batchFloatingBar'); 
-    const countSpan = document.getElementById('batchCount'); 
-    if (checked.length > 0) { 
-        if (countSpan) countSpan.innerText = `${checked.length} dipilih`; 
-        if (bar) bar.style.display = 'flex'; 
-    } else { 
-        if (bar) bar.style.display = 'none'; 
-    } 
+function updateBatchBar() {
+    const checked = document.querySelectorAll('.master-checkbox:checked');
+    const bar = document.getElementById('batchFloatingBar');
+    const countSpan = document.getElementById('batchCount');
+    if (checked.length > 0) {
+        if (countSpan) countSpan.innerText = `${checked.length} dipilih`;
+        if (bar) bar.style.display = 'flex';
+    } else {
+        if (bar) bar.style.display = 'none';
+    }
 }
 
-function clearBatchSelection() { 
-    document.querySelectorAll('.master-checkbox').forEach(cb => cb.checked = false); 
-    const selectAll = document.getElementById('selectAllMaster'); 
-    if (selectAll) selectAll.checked = false; 
-    updateBatchBar(); 
+function clearBatchSelection() {
+    document.querySelectorAll('.master-checkbox').forEach(cb => cb.checked = false);
+    const selectAll = document.getElementById('selectAllMaster');
+    if (selectAll) selectAll.checked = false;
+    updateBatchBar();
 }
 
-function runBatchWA() { 
-    const selected = document.querySelectorAll('.master-checkbox:checked'); 
-    const hasWA = Array.from(selected).some(cb => cb.getAttribute('data-wa') && cb.getAttribute('data-wa') !== ''); 
-    if (!hasWA) { showToast("⚠️ Tidak ada nomor WhatsApp!"); return; } 
-    const template = prompt("Ketik pesan WA (Gunakan [nama]):", "Assalamu'alaikum [nama]..."); 
-    if (!template) return; 
-    selected.forEach((cb, index) => { 
-        const nama = cb.getAttribute('data-nama'); 
-        let wa = cb.getAttribute('data-wa'); 
-        if (wa) { 
-            let num = wa.replace(/\D/g, ''); 
-            if (num.startsWith('0')) num = '62' + num.substring(1); 
-            if (num.length < 10) return; 
-            const msg = template.replace(/\[nama\]/gi, nama); 
-            setTimeout(() => { window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank'); }, index * 2000); 
-        } 
-    }); 
-    showToast(`Membuka ${selected.length} chat...`); 
+function runBatchWA() {
+    const selected = document.querySelectorAll('.master-checkbox:checked');
+    const hasWA = Array.from(selected).some(cb => cb.getAttribute('data-wa') && cb.getAttribute('data-wa') !== '');
+    if (!hasWA) { showToast("⚠️ Tidak ada nomor WhatsApp!"); return; }
+    const template = prompt("Ketik pesan WA (Gunakan [nama]):", "Assalamu'alaikum [nama]...");
+    if (!template) return;
+    selected.forEach((cb, index) => {
+        const nama = cb.getAttribute('data-nama');
+        let wa = cb.getAttribute('data-wa');
+        if (wa) {
+            let num = wa.replace(/\D/g, '');
+            if (num.startsWith('0')) num = '62' + num.substring(1);
+            if (num.length < 10) return;
+            const msg = template.replace(/\[nama\]/gi, nama);
+            setTimeout(() => { window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank'); }, index * 2000);
+        }
+    });
+    showToast(`Membuka ${selected.length} chat...`);
 }
 
-function editMasterData(id) { 
-    if(!isAdminModePremium) { showToast('Aktifkan Mode Admin dulu!'); return; } 
-    const item = masterDataList.find(d => d.id == id); 
-    if(!item) return; 
-    editingMasterId = id; 
-    document.getElementById('masterNama').value = item.nama; 
-    for(const field of masterDynamicFields) { 
-        const input = document.getElementById(`masterField_${field.name}`); 
-        if(input) input.value = item.additional_fields?.[field.name] || ''; 
-    } 
-    setSelectedItems(item.items || []); 
-    document.getElementById('masterFormTitle').innerText = '✏️ EDIT DATA'; 
-    document.getElementById('masterFormTitle').scrollIntoView({ behavior: 'smooth' }); 
+function editMasterData(id) {
+    if(!isAdminModePremium) { showToast('Aktifkan Mode Admin dulu!'); return; }
+    const item = masterDataList.find(d => d.id == id);
+    if(!item) return;
+    editingMasterId = id;
+    document.getElementById('masterNama').value = item.nama;
+    for(const field of masterDynamicFields) {
+        const input = document.getElementById(`masterField_${field.name}`);
+        if(input) input.value = item.additional_fields?.[field.name] || '';
+    }
+    setSelectedItems(item.items || []);
+    document.getElementById('masterFormTitle').innerText = '✏️ EDIT DATA';
+    document.getElementById('masterFormTitle').scrollIntoView({ behavior: 'smooth' });
 }
 
-function confirmDeleteMasterData(id) { 
-    if(confirm('Hapus data ini?')) { 
-        masterDataList = masterDataList.filter(d => d.id != id); 
-        saveMasterDataToLocal(); 
-        renderMasterTable(); 
-        showToast('Data dihapus'); 
-    } 
+function confirmDeleteMasterData(id) {
+    if(confirm('Hapus data ini?')) {
+        masterDataList = masterDataList.filter(d => d.id != id);
+        saveMasterDataToLocal();
+        renderMasterTable();
+        showToast('Data dihapus');
+    }
 }
 
-function confirmDeleteAllMasterData() { 
-    if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; } 
-    if(confirm(`⚠️ Hapus SEMUA ${masterDataList.length} data?`)) { 
-        masterDataList = []; 
-        saveMasterDataToLocal(); 
-        renderMasterTable(); 
-        showToast(`✅ Semua data dihapus`); 
-    } 
+function confirmDeleteAllMasterData() {
+    if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; }
+    if(confirm(`⚠️ Hapus SEMUA ${masterDataList.length} data?`)) {
+        masterDataList = [];
+        saveMasterDataToLocal();
+        renderMasterTable();
+        showToast(`✅ Semua data dihapus`);
+    }
 }
 
-function deleteSelectedMasterData() { 
-    const selected = document.querySelectorAll('.master-checkbox:checked'); 
-    if(selected.length === 0) { showToast('Pilih data dulu!'); return; } 
-    if(confirm(`Hapus ${selected.length} data?`)) { 
-        const idsToDelete = []; 
-        selected.forEach(cb => { 
-            const row = cb.closest('tr'); 
-            if(row) { 
-                const editBtn = row.querySelector('button[onclick*="editMasterData"]'); 
-                if(editBtn) { 
-                    const match = editBtn.getAttribute('onclick').match(/'(\d+)'/); 
-                    if(match) idsToDelete.push(parseInt(match[1])); 
-                } 
-            } 
-        }); 
-        masterDataList = masterDataList.filter(d => !idsToDelete.includes(d.id)); 
-        saveMasterDataToLocal(); 
-        renderMasterTable(); 
-        clearBatchSelection(); 
-        showToast(`✅ ${idsToDelete.length} data dihapus`); 
-    } 
+function deleteSelectedMasterData() {
+    const selected = document.querySelectorAll('.master-checkbox:checked');
+    if(selected.length === 0) { showToast('Pilih data dulu!'); return; }
+    if(confirm(`Hapus ${selected.length} data?`)) {
+        const idsToDelete = [];
+        selected.forEach(cb => {
+            const row = cb.closest('tr');
+            if(row) {
+                const editBtn = row.querySelector('button[onclick*="editMasterData"]');
+                if(editBtn) {
+                    const match = editBtn.getAttribute('onclick').match(/'(\d+)'/);
+                    if(match) idsToDelete.push(parseInt(match[1]));
+                }
+            }
+        });
+        masterDataList = masterDataList.filter(d => !idsToDelete.includes(d.id));
+        saveMasterDataToLocal();
+        renderMasterTable();
+        clearBatchSelection();
+        showToast(`✅ ${idsToDelete.length} data dihapus`);
+    }
 }
 
-function shareSingleMasterToWA(id) { 
-    const item = masterDataList.find(d => d.id == id); 
-    if(!item) return; 
-    let text = `*${getMasterJudul().toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n*Nama:* ${item.nama}\n`; 
-    for(const field of masterDynamicFields) { 
-        const val = item.additional_fields?.[field.name] || ''; 
-        if(val) text += `*${field.label}:* ${val}\n`; 
-    } 
-    if(item.items && item.items.length) text += `*Item:* ${item.items.join(', ')}\n`; 
-    text += `━━━━━━━━━━━━━━━━━━\n#AuvaKbihuAU`; 
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
+function shareSingleMasterToWA(id) {
+    const item = masterDataList.find(d => d.id == id);
+    if(!item) return;
+    let text = `*${getMasterJudul().toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n*Nama:* ${item.nama}\n`;
+    for(const field of masterDynamicFields) {
+        const val = item.additional_fields?.[field.name] || '';
+        if(val) text += `*${field.label}:* ${val}\n`;
+    }
+    if(item.items && item.items.length) text += `*Item:* ${item.items.join(', ')}\n`;
+    text += `━━━━━━━━━━━━━━━━━━\n#Safara`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
 }
 
-function shareAllMasterToWA() { 
-    if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; } 
-    let text = `*${getMasterJudul().toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n📊 *Total: ${masterDataList.length} data*\n━━━━━━━━━━━━━━━━━━\n\n`; 
-    masterDataList.forEach((item, i) => { 
-        text += `${i+1}. *${item.nama}*\n`; 
-        for(const field of masterDynamicFields) { 
-            const val = item.additional_fields?.[field.name] || ''; 
-            if(val) text += `   ${field.label}: ${val}\n`; 
-        } 
-        if(item.items && item.items.length) text += `   Item: ${item.items.join(', ')}\n`; 
-        text += `\n`; 
-    }); 
-    text += `━━━━━━━━━━━━━━━━━━\n#AuvaKbihuAU`; 
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
+function shareAllMasterToWA() {
+    if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; }
+    let text = `*${getMasterJudul().toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n📊 *Total: ${masterDataList.length} data*\n━━━━━━━━━━━━━━━━━━\n\n`;
+    masterDataList.forEach((item, i) => {
+        text += `${i+1}. *${item.nama}*\n`;
+        for(const field of masterDynamicFields) {
+            const val = item.additional_fields?.[field.name] || '';
+            if(val) text += `   ${field.label}: ${val}\n`;
+        }
+        if(item.items && item.items.length) text += `   Item: ${item.items.join(', ')}\n`;
+        text += `\n`;
+    });
+    text += `━━━━━━━━━━━━━━━━━━\n#Safara`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
 }
 
-async function exportMasterPDF() { 
-    if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; } 
-    showToast('Membuat PDF...'); 
-    setTimeout(async () => { 
-        try { 
-            const { jsPDF } = window.jspdf; 
-            const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' }); 
-            await applyPDFConfig(doc, { landscape: true }); 
-            const judul = getMasterJudul(); 
-            doc.setFontSize(16); 
-            doc.setTextColor(26,93,74); 
-            doc.text(judul, 148.5, 65, { align: 'center' }); 
-            const headers = ['No', 'Nama Lengkap', ...masterDynamicFields.map(f => f.label), 'Item']; 
-            const body = masterDataList.map((item, i) => { 
-                const row = [i+1, item.nama]; 
-                for(const field of masterDynamicFields) row.push(item.additional_fields?.[field.name] || '-'); 
-                row.push(item.items?.join(', ') || '-'); 
-                return row; 
-            }); 
-            doc.autoTable({ startY: 80, head: [headers], body: body, theme: 'striped', headStyles: { fillColor: [26,93,74] }, styles: { fontSize: 8, lineWidth: 0.1 } }); 
-            doc.save(`${judul.replace(/\s+/g,'_')}.pdf`); 
-            showToast('PDF berhasil dibuat'); 
-        } catch(e) { showToast('Gagal PDF: '+e.message); } 
-    }, 100); 
+async function exportMasterPDF() {
+    if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; }
+    showToast('Membuat PDF...');
+    setTimeout(async () => {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+            await applyPDFConfig(doc, { landscape: true });
+            const judul = getMasterJudul();
+            doc.setFontSize(16);
+            doc.setTextColor(26,93,74);
+            doc.text(judul, 148.5, 65, { align: 'center' });
+            const headers = ['No', 'Nama Lengkap', ...masterDynamicFields.map(f => f.label), 'Item'];
+            const body = masterDataList.map((item, i) => {
+                const row = [i+1, item.nama];
+                for(const field of masterDynamicFields) row.push(item.additional_fields?.[field.name] || '-');
+                row.push(item.items?.join(', ') || '-');
+                return row;
+            });
+            doc.autoTable({ startY: 80, head: [headers], body: body, theme: 'striped', headStyles: { fillColor: [26,93,74] }, styles: { fontSize: 8, lineWidth: 0.1 } });
+            doc.save(`${judul.replace(/\s+/g,'_')}.pdf`);
+            showToast('PDF berhasil dibuat');
+        } catch(e) { showToast('Gagal PDF: '+e.message); }
+    }, 100);
 }
 
-function exportMasterExcel() { 
-    if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; } 
-    const headers = ['No', 'Nama Lengkap', ...masterDynamicFields.map(f => f.label), 'Item', 'Tanggal Input']; 
-    const rows = masterDataList.map((item, i) => [ i+1, item.nama, ...masterDynamicFields.map(f => item.additional_fields?.[f.name] || ''), item.items?.join(', ') || '', item.created_at || '-' ]); 
-    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]); 
-    const wb = XLSX.utils.book_new(); 
-    XLSX.utils.book_append_sheet(wb, ws, getMasterJudul()); 
-    XLSX.writeFile(wb, `${getMasterJudul().replace(/\s+/g,'_')}.xlsx`); 
-    showToast('Excel berhasil di-export'); 
+function exportMasterExcel() {
+    if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; }
+    const headers = ['No', 'Nama Lengkap', ...masterDynamicFields.map(f => f.label), 'Item', 'Tanggal Input'];
+    const rows = masterDataList.map((item, i) => [ i+1, item.nama, ...masterDynamicFields.map(f => item.additional_fields?.[f.name] || ''), item.items?.join(', ') || '', item.created_at || '-' ]);
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, getMasterJudul());
+    XLSX.writeFile(wb, `${getMasterJudul().replace(/\s+/g,'_')}.xlsx`);
+    showToast('Excel berhasil di-export');
 }
 
-function backupMasterData() { 
-    if(masterDataList.length === 0 && masterDynamicFields.length === 0) { showToast('Tidak ada data!'); return; } 
-    const backup = { app: "Auva - Multi Event", version: "1.0", created: new Date().toISOString(), judul: getMasterJudul(), fields: masterDynamicFields, items: masterItemList, data: masterDataList }; 
-    const a = document.createElement('a'); 
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'})); 
-    a.download = `Auva_DataMaster_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.json`; 
-    a.click(); 
-    showToast('Backup berhasil'); 
+function backupMasterData() {
+    if(masterDataList.length === 0 && masterDynamicFields.length === 0) { showToast('Tidak ada data!'); return; }
+    const backup = { app: "Safara - Multi Event", version: "1.0", created: new Date().toISOString(), judul: getMasterJudul(), fields: masterDynamicFields, items: masterItemList, data: masterDataList };
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'}));
+    a.download = `Safara_DataMaster_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.json`;
+    a.click();
+    showToast('Backup berhasil');
 }
 
-function restoreMasterData(input) { 
-    const file = input.files[0]; 
-    if(!file) return; 
-    input.value = ''; 
-    if(confirm('Timpa data yang ada?')) { 
-        const reader = new FileReader(); 
-        reader.onload = e => { 
-            try { 
-                const backup = JSON.parse(e.target.result); 
-                if(backup.data && Array.isArray(backup.data)) { 
-                    masterDataList = backup.data; 
-                    if(backup.fields) masterDynamicFields = backup.fields; 
-                    if(backup.items) masterItemList = backup.items; 
-                    if(backup.judul && document.getElementById('masterJudul')) document.getElementById('masterJudul').value = backup.judul; 
-                    saveMasterDataToLocal(); 
-                    renderMasterForm(); 
-                    renderMasterTable(); 
-                    showToast(`Restore ${masterDataList.length} data berhasil`); 
-                } else showToast('File tidak valid!'); 
-            } catch(err) { showToast('File tidak valid!'); } 
-        }; 
-        reader.readAsText(file); 
-    } 
+function restoreMasterData(input) {
+    const file = input.files[0];
+    if(!file) return;
+    input.value = '';
+    if(confirm('Timpa data yang ada?')) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const backup = JSON.parse(e.target.result);
+                if(backup.data && Array.isArray(backup.data)) {
+                    masterDataList = backup.data;
+                    if(backup.fields) masterDynamicFields = backup.fields;
+                    if(backup.items) masterItemList = backup.items;
+                    if(backup.judul && document.getElementById('masterJudul')) document.getElementById('masterJudul').value = backup.judul;
+                    saveMasterDataToLocal();
+                    renderMasterForm();
+                    renderMasterTable();
+                    showToast(`Restore ${masterDataList.length} data berhasil`);
+                } else showToast('File tidak valid!');
+            } catch(err) { showToast('File tidak valid!'); }
+        };
+        reader.readAsText(file);
+    }
 }
 
-function openMasterSetting() { 
-    if(!isAdminModePremium) { showToast('Aktifkan Mode Admin dulu!'); return; } 
-    document.getElementById('masterAdminPanel').style.display = 'block'; 
+function openMasterSetting() {
+    if(!isAdminModePremium) { showToast('Aktifkan Mode Admin dulu!'); return; }
+    document.getElementById('masterAdminPanel').style.display = 'block';
 }
 
-function openMasterFieldModal() { 
-    if(!isAdminModePremium) return; 
-    renderMasterFieldsList(); 
-    document.getElementById('masterFieldModal').classList.add('show'); 
+function openMasterFieldModal() {
+    if(!isAdminModePremium) return;
+    renderMasterFieldsList();
+    document.getElementById('masterFieldModal').classList.add('show');
 }
 
 function closeMasterFieldModal() { document.getElementById('masterFieldModal').classList.remove('show'); }
 
-function renderMasterFieldsList() { 
-    const container = document.getElementById('masterFieldsList'); 
-    if(!container) return; 
-    if(masterDynamicFields.length === 0) { container.innerHTML = '<p>Belum ada field dinamis</p>'; return; } 
-    let html = '<h4>Daftar Field:</h4>'; 
-    masterDynamicFields.forEach((f, idx) => { 
-        html += `<div class="field-item"><div><strong>${escapeHtml(f.label)}</strong><br><small>${f.name} (${f.type})</small></div><button class="btn-danger-small" onclick="confirmDeleteMasterField(${idx})">Hapus</button></div>`; 
-    }); 
-    container.innerHTML = html; 
+function renderMasterFieldsList() {
+    const container = document.getElementById('masterFieldsList');
+    if(!container) return;
+    if(masterDynamicFields.length === 0) { container.innerHTML = '<p>Belum ada field dinamis</p>'; return; }
+    let html = '<h4>Daftar Field:</h4>';
+    masterDynamicFields.forEach((f, idx) => {
+        html += `<div class="field-item"><div><strong>${escapeHtml(f.label)}</strong><br><small>${f.name} (${f.type})</small></div><button class="btn-danger-small" onclick="confirmDeleteMasterField(${idx})">Hapus</button></div>`;
+    });
+    container.innerHTML = html;
 }
 
-function addMasterDynamicField() { 
-    const name = document.getElementById('masterNewFieldName').value.trim().toLowerCase(); 
-    const label = document.getElementById('masterNewFieldLabel').value.trim(); 
-    const type = document.getElementById('masterNewFieldType').value; 
-    if(!/^[a-z0-9_]+$/.test(name)) { showToast('Nama field: huruf kecil, angka, underscore!'); return; } 
-    if(!label) { showToast('Label harus diisi!'); return; } 
-    if(masterDynamicFields.some(f => f.name === name)) { showToast('Field sudah ada!'); return; } 
-    masterDynamicFields.push({ name, label, type }); 
-    saveMasterDataToLocal(); 
-    document.getElementById('masterNewFieldName').value = ''; 
-    document.getElementById('masterNewFieldLabel').value = ''; 
-    renderMasterFieldsList(); 
-    renderMasterForm(); 
-    renderMasterTable(); 
-    showToast('Field ditambahkan'); 
+function addMasterDynamicField() {
+    const name = document.getElementById('masterNewFieldName').value.trim().toLowerCase();
+    const label = document.getElementById('masterNewFieldLabel').value.trim();
+    const type = document.getElementById('masterNewFieldType').value;
+    if(!/^[a-z0-9_]+$/.test(name)) { showToast('Nama field: huruf kecil, angka, underscore!'); return; }
+    if(!label) { showToast('Label harus diisi!'); return; }
+    if(masterDynamicFields.some(f => f.name === name)) { showToast('Field sudah ada!'); return; }
+    masterDynamicFields.push({ name, label, type });
+    saveMasterDataToLocal();
+    document.getElementById('masterNewFieldName').value = '';
+    document.getElementById('masterNewFieldLabel').value = '';
+    renderMasterFieldsList();
+    renderMasterForm();
+    renderMasterTable();
+    showToast('Field ditambahkan');
 }
 
-function confirmDeleteMasterField(idx) { 
-    if(confirm(`Hapus field "${masterDynamicFields[idx].label}"?`)) { 
-        masterDynamicFields.splice(idx,1); 
-        saveMasterDataToLocal(); 
-        renderMasterFieldsList(); 
-        renderMasterForm(); 
-        renderMasterTable(); 
-        showToast('Field dihapus'); 
-    } 
+function confirmDeleteMasterField(idx) {
+    if(confirm(`Hapus field "${masterDynamicFields[idx].label}"?`)) {
+        masterDynamicFields.splice(idx,1);
+        saveMasterDataToLocal();
+        renderMasterFieldsList();
+        renderMasterForm();
+        renderMasterTable();
+        showToast('Field dihapus');
+    }
 }
 
-function openMasterItemModal() { 
-    if(!isAdminModePremium) return; 
-    renderMasterItemList(); 
-    document.getElementById('masterItemModal').classList.add('show'); 
+function openMasterItemModal() {
+    if(!isAdminModePremium) return;
+    renderMasterItemList();
+    document.getElementById('masterItemModal').classList.add('show');
 }
 
 function closeMasterItemModal() { document.getElementById('masterItemModal').classList.remove('show'); }
 
-function renderMasterItemList() { 
-    const container = document.getElementById('masterItemList'); 
-    if(!container) return; 
-    if(masterItemList.length === 0) { container.innerHTML = '<p>Belum ada daftar item</p>'; return; } 
-    let html = '<h4>Daftar Item:</h4>'; 
-    masterItemList.forEach((item, idx) => { 
-        html += `<div class="field-item"><div>${escapeHtml(item)}</div><button class="btn-danger-small" onclick="confirmDeleteMasterItem(${idx})">Hapus</button></div>`; 
-    }); 
-    container.innerHTML = html; 
+function renderMasterItemList() {
+    const container = document.getElementById('masterItemList');
+    if(!container) return;
+    if(masterItemList.length === 0) { container.innerHTML = '<p>Belum ada daftar item</p>'; return; }
+    let html = '<h4>Daftar Item:</h4>';
+    masterItemList.forEach((item, idx) => {
+        html += `<div class="field-item"><div>${escapeHtml(item)}</div><button class="btn-danger-small" onclick="confirmDeleteMasterItem(${idx})">Hapus</button></div>`;
+    });
+    container.innerHTML = html;
 }
 
-function addMasterItem() { 
-    const newItem = document.getElementById('masterNewItem').value.trim(); 
-    if(!newItem) { showToast('Isi nama item!'); return; } 
-    if(masterItemList.includes(newItem)) { showToast('Sudah ada!'); return; } 
-    masterItemList.push(newItem); 
-    saveMasterDataToLocal(); 
-    document.getElementById('masterNewItem').value = ''; 
-    renderMasterItemList(); 
-    renderMasterForm(); 
-    showToast('Item ditambahkan'); 
+function addMasterItem() {
+    const newItem = document.getElementById('masterNewItem').value.trim();
+    if(!newItem) { showToast('Isi nama item!'); return; }
+    if(masterItemList.includes(newItem)) { showToast('Sudah ada!'); return; }
+    masterItemList.push(newItem);
+    saveMasterDataToLocal();
+    document.getElementById('masterNewItem').value = '';
+    renderMasterItemList();
+    renderMasterForm();
+    showToast('Item ditambahkan');
 }
 
-function confirmDeleteMasterItem(idx) { 
-    if(confirm(`Hapus "${masterItemList[idx]}"?`)) { 
-        masterItemList.splice(idx,1); 
-        saveMasterDataToLocal(); 
-                renderMasterItemList();
+function confirmDeleteMasterItem(idx) {
+    if(confirm(`Hapus "${masterItemList[idx]}"?`)) {
+        masterItemList.splice(idx,1);
+        saveMasterDataToLocal();
+        renderMasterItemList();
         renderMasterForm();
         showToast('Dihapus');
     }
@@ -4476,9 +4556,9 @@ function saveModes() {
 let konfigurasiPro = {
     instansi1: { nama: '', alamat: '', telp: '', email: '', npwp: '', web: '', pimpinan: '', jabatan: '', logo: '' },
     instansi2: { aktif: false, nama: '', alamat: '', telp: '', email: '', izin: '', pimpinan: '', jabatan: '', logo: '' },
-    watermark: { enabled: true, text: 'KBIHU AMANATUL UMMAH', opacity: 0.15, fontsize: 60, position: 'diagonal' },
-    qr: { enabled: true, text: 'Dokumen Resmi - Divalidasi oleh Sistem Auva', size: 80 },
-    settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/AUVA' },
+    watermark: { enabled: true, text: 'Safara', opacity: 0.15, fontsize: 60, position: 'diagonal' },
+    qr: { enabled: true, text: 'Dokumen Resmi - Divalidasi oleh Sistem Safara', size: 80 },
+    settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/SAFARA' },
     wa_template: { laporan: '🏢 *LAPORAN KAS KANTOR*\n\n💰 Saldo: [saldo]\n📥 Pemasukan: [masuk]\n📤 Pengeluaran: [keluar]\n\nTerima kasih.' }
 };
 
@@ -4504,17 +4584,17 @@ function loadKonfigurasiPro() {
     document.getElementById('cfg_jabatan2').value = konfigurasiPro.instansi2.jabatan || '';
     if(konfigurasiPro.instansi2.logo) document.getElementById('previewLogo2').src = konfigurasiPro.instansi2.logo;
     document.getElementById('cfg_watermark_enabled').checked = konfigurasiPro.watermark.enabled !== false;
-    document.getElementById('cfg_watermark_text').value = konfigurasiPro.watermark.text || 'KBIHU AMANATUL UMMAH';
+    document.getElementById('cfg_watermark_text').value = konfigurasiPro.watermark.text || 'Safara';
     document.getElementById('cfg_watermark_opacity').value = konfigurasiPro.watermark.opacity || 0.15;
     document.getElementById('opacityValue').innerText = (konfigurasiPro.watermark.opacity || 0.15).toFixed(2);
     document.getElementById('cfg_watermark_fontsize').value = konfigurasiPro.watermark.fontsize || 60;
     document.getElementById('cfg_watermark_position').value = konfigurasiPro.watermark.position || 'diagonal';
     document.getElementById('cfg_qr_enabled').checked = konfigurasiPro.qr.enabled !== false;
-    document.getElementById('cfg_qr_text').value = konfigurasiPro.qr.text || 'Dokumen Resmi - Divalidasi oleh Sistem Auva';
+    document.getElementById('cfg_qr_text').value = konfigurasiPro.qr.text || 'Dokumen Resmi - Divalidasi oleh Sistem Safara';
     document.getElementById('cfg_qr_size').value = konfigurasiPro.qr.size || 80;
     document.getElementById('cfg_header_mode').value = konfigurasiPro.settings.header_mode || 'both';
     document.getElementById('cfg_ttd_mode').value = konfigurasiPro.settings.ttd_mode || 'both';
-    document.getElementById('cfg_invoice_prefix').value = konfigurasiPro.settings.invoice_prefix || 'INV/AUVA';
+    document.getElementById('cfg_invoice_prefix').value = konfigurasiPro.settings.invoice_prefix || 'INV/SAFARA';
     document.getElementById('cfg_wa_laporan').value = konfigurasiPro.wa_template.laporan || '';
     updateHeaderFromConfig();
 }
@@ -4576,7 +4656,7 @@ function exportKonfigurasiPro() {
     const blob = new Blob([JSON.stringify(konfigurasiPro, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `auva_konfigurasi_${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `safara_konfigurasi_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     showToast('📤 Konfigurasi diexport');
 }
@@ -4659,6 +4739,17 @@ async function generateQRPreview() {
     } catch(e) { showToast('❌ Gagal generate QR'); }
 }
 
+// ==================== LOAD SUMBER HARTA ====================
+function loadSumberHartaList() {
+    const saved = localStorage.getItem('auva_sumber_harta_list');
+    if(saved) sumberHartaList = JSON.parse(saved);
+    else {
+        sumberHartaList = [{ id: Date.now(), nama: 'Tabungan', jumlah: 10000000, persen: 2.5 }];
+        renderSumberHartaList();
+    }
+    renderSumberHartaList();
+}
+
 // ==================== INITIALIZATION ====================
 async function initPremium() {
     const savedAdmin = localStorage.getItem('premium_admin_mode') === 'true';
@@ -4690,8 +4781,6 @@ async function initPremium() {
     loadPengingatData();
     loadSumberHartaList();
     
-    if(sumberHartaList.length === 0) tambahSumberHarta();
-    
     document.getElementById('adminModeToggleBtn')?.addEventListener('click', (e) => { e.preventDefault(); toggleAdminMode(); });
     document.getElementById('paymentFabOpen')?.addEventListener('click', () => openPaymentModal());
     
@@ -4712,14 +4801,11 @@ async function initPremium() {
     
     setTimeout(() => {
         const splash = document.getElementById('splashScreen');
-        if(splash) splash.style.display = 'none';
+        if(splash) splash.style.opacity = '0';
+        setTimeout(() => {
+            if(splash) splash.style.display = 'none';
+        }, 500);
     }, 1500);
-}
-
-function loadSumberHartaList() {
-    const saved = localStorage.getItem('auva_sumber_harta_list');
-    if(saved) sumberHartaList = JSON.parse(saved);
-    renderSumberHartaList();
 }
 
 document.addEventListener('DOMContentLoaded', initPremium);
