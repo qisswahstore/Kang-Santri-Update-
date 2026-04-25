@@ -9,6 +9,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Safara">
     
+    <!-- ========== FAVICON dengan 🕋 dan background hijau #0D5C4A ========== -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3E🕋%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3E🕋%3C/text%3E%3C/svg%3E">
+    
     <!-- ========== ANTI CACHE TAGS ========== -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, proxy-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -20,7 +24,7 @@
     
     <!-- ========== CSS DENGAN VERSIONING ========== -->
     <style>
-        /* CSS Version: 2025.01.15-005 (FINAL - NO TRANSLATE) */
+        /* CSS Version: 2025.01.15-006 (FINAL - FIXED PWA & INVOICE & PRINT TICKET) */
         :root {
             --primary: #0D5C4A;
             --primary-dark: #0A3D31;
@@ -1585,7 +1589,7 @@
             cursor: pointer;
         }
         
-        /* PWA Install Button */
+        /* PWA Install Button - DIPERBAIKI: Text lebih pendek */
         .install-pwa-btn {
             position: fixed;
             bottom: 140px;
@@ -1610,22 +1614,28 @@
             transform: scale(1.02);
         }
         
+        /* PERBAIKAN CETAK TIKET: Hanya area tiket yang tercetak */
         @media print {
             body * {
                 visibility: hidden;
             }
-            #labelPreview, #labelPreview * {
+            .tiket-card, .tiket-card * {
                 visibility: visible;
             }
-            #labelPreview {
+            .tiket-card {
                 position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
-                margin: 0;
+                max-width: 360px;
+                margin: 0 auto;
                 padding: 20px;
+                border: 1px solid #0D5C4A;
+                border-radius: 24px;
+                background: white;
+                box-shadow: none;
             }
-            .btn, .back-header, .header-premium, .bottom-nav-premium, .card-premium > *:not(#labelPreview) {
+            .btn, .back-header, .header-premium, .bottom-nav-premium, .card-premium > *:not(.tiket-card) {
                 display: none !important;
             }
         }
@@ -1684,7 +1694,8 @@
             setTimeout(() => {
                 const installBtn = document.createElement('button');
                 installBtn.className = 'install-pwa-btn';
-                installBtn.innerHTML = '<i class="fas fa-download"></i> Install Aplikasi';
+                // PERBAIKAN PWA: Text tombol lebih pendek "Install"
+                installBtn.innerHTML = '<i class="fas fa-download"></i> Install';
                 installBtn.onclick = () => {
                     if (deferredPrompt) {
                         deferredPrompt.prompt();
@@ -2091,9 +2102,9 @@
 <div id="batchFloatingBar" class="batch-floating-bar" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:white; padding:12px 20px; border-radius:50px; box-shadow:0 4px 15px rgba(0,0,0,0.2); display:none; align-items:center; gap:15px; border:2px solid #25d366; z-index:9999;"><span id="batchCount" class="batch-count">0 dipilih</span><button class="btn-batch-wa" onclick="runBatchWA()" style="background:#25d366; color:white; border:none; padding:8px 18px; border-radius:30px;"><i class="fab fa-whatsapp"></i> Kirim WA Massal</button><button class="btn-batch-cancel" onclick="clearBatchSelection()" style="background:none; border:none; color:var(--red); font-size:20px;">✖</button></div>
 
 <script>
-// ==================== SCRIPT ASLI (TIDAK DIUBAH, HANYA DITAMBAH FITUR PWA) ====================
+// ==================== SCRIPT ASLI (DIPERBAIKI UNTUK 4 POIN) ====================
 // Cache buster version
-const APP_VERSION = '2025.01.15.005-FINAL';
+const APP_VERSION = '2025.01.15.006-FINAL';
 
 // Helper functions
 let lastPage = 'home';
@@ -3846,20 +3857,28 @@ function simpanPembayaran() {
     showToast(`✅ Pembayaran Rp ${nominal.toLocaleString('id-ID')} berhasil!`); 
 }
 
+// PERBAIKAN POIN 2: INVOICE WHATSAPP - Mengambil nama instansi dari Konfigurasi Pro, tanpa hardcode
 function prepareInvoice(idJamaah) { 
     currentInvoiceJamaahId = idJamaah; 
     const jamaah = jamaahList.find(j => j.id == idJamaah); 
     if (!jamaah) return; 
+    // Ambil konfigurasi untuk nama instansi
+    const cfg = getKonfigurasiProData();
+    const instansiNama = cfg.instansi1.nama || 'Safara';
+    const footerNama = (cfg.instansi2.aktif && cfg.instansi2.nama) ? cfg.instansi2.nama : instansiNama;
+    
     const transaksiList = paymentTransaksiList.filter(t => t.id_jamaah == idJamaah).sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal)); 
     const totalBayar = hitungTotalBayarJamaah(idJamaah); 
     let totalHargaPaket = getTotalHargaPaket(jamaah) || 0; 
     const sisa = totalHargaPaket - totalBayar; 
-    let text = `🏆 *INVOICE PEMBAYARAN - SAFARA TOUR & TRAVEL* 🏆\n━━━━━━━━━━━━━━━━━━\n👤 *Nama:* ${jamaah.nama_lengkap}\n💎 *Total Paket:* ${formatRupiah(totalHargaPaket)}\n📅 *Tanggal:* ${new Date().toLocaleDateString('id-ID')}\n━━━━━━━━━━━━━━━━━━\n📋 *RINCIAN PEMBAYARAN:*\n`; 
+    // Menggunakan nama instansi dari konfigurasi, bukan hardcode
+    let text = `🏆 *INVOICE PEMBAYARAN - ${instansiNama}* 🏆\n━━━━━━━━━━━━━━━━━━\n👤 *Nama:* ${jamaah.nama_lengkap}\n💎 *Total Paket:* ${formatRupiah(totalHargaPaket)}\n📅 *Tanggal:* ${new Date().toLocaleDateString('id-ID')}\n━━━━━━━━━━━━━━━━━━\n📋 *RINCIAN PEMBAYARAN:*\n`; 
     if (transaksiList.length === 0) text += `Belum ada pembayaran.\n`; 
     else transaksiList.forEach((t, i) => { 
         text += `${i+1}. ${t.tanggal} | ${t.keterangan}\n   💰 ${formatRupiah(t.nominal)} (${t.metode})\n`; 
     }); 
-    text += `━━━━━━━━━━━━━━━━━━\n💰 *Total Dibayar:* ${formatRupiah(totalBayar)}\n📌 *Sisa Tagihan:* ${formatRupiah(sisa > 0 ? sisa : 0)}\n✅ *Status:* ${sisa <= 0 ? 'LUNAS 🎉' : 'BELUM LUNAS ⚠️'}\n━━━━━━━━━━━━━━━━━━\n_Safara Mobile_`; 
+    // Footer menggunakan nama instansi dari konfigurasi
+    text += `━━━━━━━━━━━━━━━━━━\n💰 *Total Dibayar:* ${formatRupiah(totalBayar)}\n📌 *Sisa Tagihan:* ${formatRupiah(sisa > 0 ? sisa : 0)}\n✅ *Status:* ${sisa <= 0 ? 'LUNAS 🎉' : 'BELUM LUNAS ⚠️'}\n━━━━━━━━━━━━━━━━━━\n_${footerNama}_`; 
     currentInvoiceText = text; 
     let waNumber = '628123456789'; 
     if (jamaah.additional_fields && jamaah.additional_fields.whatsapp) { 
@@ -4994,14 +5013,83 @@ function shareTiketWA() {
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
 }
 
+// PERBAIKAN POIN 1: CETAK TIKET - Hanya mencetak area tiket, bersih tanpa menu/footer
 function cetakTiketLangsung() {
     const tiketCard = document.querySelector('.tiket-card');
     if (!tiketCard || tiketCard.style.display === 'none') {
         showToast('Pilih jamaah dulu untuk mencetak tiket');
         return;
     }
+    // Clone tiket card untuk dicetak
+    const printContent = tiketCard.cloneNode(true);
+    // Buat style untuk cetakan yang bersih
+    const style = `
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+                font-family: 'Inter', Arial, sans-serif; 
+                display: flex; 
+                justify-content: center; 
+                align-items: center; 
+                min-height: 100vh; 
+                background: white;
+                padding: 20px;
+            }
+            .tiket-card-print {
+                max-width: 360px;
+                width: 100%;
+                margin: 0 auto;
+                padding: 20px;
+                border: 2px solid #0D5C4A;
+                border-radius: 24px;
+                background: white;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+            .tiket-header {
+                text-align: center;
+                border-bottom: 2px dashed #ccc;
+                padding-bottom: 12px;
+                margin-bottom: 12px;
+            }
+            .tiket-title {
+                font-size: 20px;
+                font-weight: bold;
+                color: #0D5C4A;
+            }
+            .tiket-qr {
+                text-align: center;
+                margin: 15px 0;
+            }
+            .tiket-qr canvas {
+                width: 150px;
+                height: 150px;
+            }
+            .btn, .no-print {
+                display: none !important;
+            }
+        </style>
+    `;
+    // Ganti class agar tidak bentrok dengan style asli
+    printContent.classList.add('tiket-card-print');
+    printContent.classList.remove('tiket-card');
+    // Buat window baru untuk print
     const printWindow = window.open('', '_blank');
-    printWindow.document.write(`<html><head><title>Cetak Tiket</title><style>body { font-family: Arial; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; background: white; } .tiket-card { max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #0D5C4A; border-radius: 24px; background: white; } .tiket-header { text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 12px; margin-bottom: 12px; } .tiket-title { font-size: 20px; font-weight: bold; color: #0D5C4A; } .tiket-qr { text-align: center; margin: 15px 0; } .tiket-qr canvas { width: 150px; height: 150px; } @media print { .no-print { display: none; } }</style></head><body>${tiketCard.outerHTML}<div style="text-align: center; margin-top: 20px;"><button onclick="window.print()" class="no-print" style="padding: 10px 20px; background: #0D5C4A; color: white; border: none; border-radius: 8px; cursor: pointer;">🖨️ PRINT</button><button onclick="window.close()" class="no-print" style="padding: 10px 20px; background: #ccc; border: none; border-radius: 8px; cursor: pointer;">TUTUP</button></div></body></html>`);
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Cetak Tiket - Safara</title>
+            ${style}
+        </head>
+        <body>
+            ${printContent.outerHTML}
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="window.print()" class="no-print" style="padding: 10px 20px; background: #0D5C4A; color: white; border: none; border-radius: 8px; cursor: pointer; margin-right: 10px;">🖨️ PRINT</button>
+                <button onclick="window.close()" class="no-print" style="padding: 10px 20px; background: #ccc; border: none; border-radius: 8px; cursor: pointer;">TUTUP</button>
+            </div>
+        </body>
+        </html>
+    `);
     printWindow.document.close();
 }
 
@@ -5082,7 +5170,7 @@ function renderMasterTable() {
     const thead = document.getElementById('masterTableHead');
     const tbody = document.getElementById('masterTableBody');
     if(!thead || !tbody) return;
-    let headerHtml = '<tr><th class="checkbox-col"><input type="checkbox" id="selectAllMaster" onchange="toggleAllMasterCheckboxes(this)"></th><th>No</th><th>Nama Lengkap</th>';
+    let headerHtml = '<td><th class="checkbox-col"><input type="checkbox" id="selectAllMaster" onchange="toggleAllMasterCheckboxes(this)"></th><th>No</th><th>Nama Lengkap</th>';
     for(const field of masterDynamicFields) headerHtml += `<th>${escapeHtml(field.label)}</th>`;
     headerHtml += '<th>Item</th><th>Aksi</th></tr>';
     thead.innerHTML = headerHtml;
