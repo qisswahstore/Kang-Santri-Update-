@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Safara">
-    
-    <!-- ========== FAVICON dengan 🕋 dan background hijau #0D5C4A ========== -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3E🕋%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3E🕋%3C/text%3E%3C/svg%3E">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Safara%22%2C%22short_name%22%3A%22Safara%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230D5C4A%22%2C%22theme_color%22%3A%22%230D5C4A%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fcolor%2F192%2Fkaaba.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%2C%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fcolor%2F512%2Fkaaba.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    <!-- ========== FAVICON dengan  dan background hijau #0D5C4A ========== -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3E%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3E%3C/text%3E%3C/svg%3E">
     
     <!-- ========== ANTI CACHE TAGS ========== -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, proxy-revalidate">
@@ -1141,7 +1141,7 @@
             border-color: var(--primary);
         }
         .custom-checkbox input:checked + .checkmark:after {
-            content: "✓";
+            content: "";
             position: absolute;
             top: 50%;
             left: 50%;
@@ -1669,7 +1669,7 @@
                 background_color: "#0D5C4A",
                 orientation: "portrait",
                 icons: [
-                    { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='white'%3E🕋%3C/text%3E%3C/svg%3E", sizes: "any", type: "image/svg+xml", purpose: "any maskable" }
+                    { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='white'%3E%3C/text%3E%3C/svg%3E", sizes: "any", type: "image/svg+xml", purpose: "any maskable" }
                 ]
             };
             const manifestBlob = new Blob([JSON.stringify(manifestObj)], {type: 'application/json'});
@@ -1714,7 +1714,7 @@
 <body>
 
 <div id="toastPremium" class="toast-premium"></div>
-<div id="splashScreen" style="position:fixed; inset:0; background:linear-gradient(135deg, var(--primary) 0%, #0a3d31 100%); z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition:opacity 0.5s ease;"><div style="width:120px; height:120px; background:white; border-radius:30px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; animation:pulse 2s infinite;"><div style="font-size:70px;">🕋</div></div><div style="color:white; font-size:28px; font-weight:bold;">Safara</div><div style="color:rgba(255,255,255,0.8); font-size:14px;">Sahabat Digital Perjalanan</div><div style="width:200px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin-top:40px; overflow:hidden;"><div style="height:100%; width:100%; background:var(--accent); border-radius:2px;"></div></div></div>
+<div id="splashScreen" style="position:fixed; inset:0; background:linear-gradient(135deg, var(--primary) 0%, #0a3d31 100%); z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition:opacity 0.5s ease;"><div style="width:120px; height:120px; background:white; border-radius:30px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; animation:pulse 2s infinite;"><div style="font-size:70px;"></div></div><div style="color:white; font-size:28px; font-weight:bold;">Safara</div><div style="color:rgba(255,255,255,0.8); font-size:14px;">Sahabat Digital Perjalanan</div><div style="width:200px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin-top:40px; overflow:hidden;"><div style="height:100%; width:100%; background:var(--accent); border-radius:2px;"></div></div></div>
 
 <!-- HOME PAGE -->
 <div id="page-home" class="page active">
@@ -1734,7 +1734,7 @@
                 <p id="homeDate">Memuat...</p>
             </div>
             <div class="greeting-actions">
-                <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
+                <button id="darkModeToggle" class="dark-mode-toggle"></button>
                 <a href="#" id="adminModeToggleBtn" class="admin-toggle-link"><i class="fas fa-shield-alt"></i> Mode Admin</a>
             </div>
         </div>
@@ -1753,19 +1753,19 @@
 <!-- DASHBOARD PAGE -->
 <div id="page-dashboard" class="page">
     <div class="header-premium header-premium-small">
-        <div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2>📊 Dashboard</h2><div style="width:30px;"></div></div>
+        <div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> Dashboard</h2><div style="width:30px;"></div></div>
     </div>
     <div class="container">
         <div class="dashboard-card">
             <div class="dashboard-stats">
-                <div class="dashboard-stat-card"><div class="label">💰 TOTAL KAS</div><div class="value" id="dashTotalKas">Rp 0</div></div>
-                <div class="dashboard-stat-card"><div class="label">👥 TOTAL JAMAAH</div><div class="value" id="dashTotalJamaah">0</div></div>
-                <div class="dashboard-stat-card"><div class="label">✅ JAMAAH LUNAS</div><div class="value" id="dashTotalLunas">0</div></div>
-                <div class="dashboard-stat-card"><div class="label">📋 TOTAL PIUTANG</div><div class="value" id="dashTotalPiutang">Rp 0</div></div>
+                <div class="dashboard-stat-card"><div class="label"> TOTAL KAS</div><div class="value" id="dashTotalKas">Rp 0</div></div>
+                <div class="dashboard-stat-card"><div class="label"> TOTAL JAMAAH</div><div class="value" id="dashTotalJamaah">0</div></div>
+                <div class="dashboard-stat-card"><div class="label"> JAMAAH LUNAS</div><div class="value" id="dashTotalLunas">0</div></div>
+                <div class="dashboard-stat-card"><div class="label"> TOTAL PIUTANG</div><div class="value" id="dashTotalPiutang">Rp 0</div></div>
             </div>
             <div class="chart-container"><canvas id="kasChart"></canvas></div>
             <div class="chart-container"><canvas id="paymentChart"></canvas></div>
-            <div class="section-title"><span>📋 5 JAMAAH DENGAN TAGIHAN TERBESAR</span></div>
+            <div class="section-title"><span> 5 JAMAAH DENGAN TAGIHAN TERBESAR</span></div>
             <div id="topPiutangList"></div>
             <div class="row" style="margin-top:16px;">
                 <button class="btn btn-purple btn-small" onclick="exportDashboardPDF()" style="flex:1"><i class="fas fa-file-pdf"></i> PDF</button>
@@ -1825,9 +1825,9 @@
 <div id="page-jamaah" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>Database Jamaah</h2><div style="width:30px;"></div></div></div>
     <div class="card-premium">
-        <div id="jamaahAdminPanel" class="setting-card" style="display:none"><h3 style="color:var(--primary);">🔧 Panel Admin Jamaah</h3><button class="btn btn-primary btn-small mt-2" onclick="openTambahJamaahModal()">📝 + Tambah database</button><button class="btn btn-blue btn-small mt-2" onclick="openManageFieldsModal()">⚙️ Kelola Field Dinamis</button><button class="btn btn-teal btn-small mt-2" onclick="exportJamaahToExcel()">📊 Export ke Excel</button><button class="btn btn-orange btn-small mt-2" onclick="document.getElementById('importExcelFile').click()">📥 IMPORT EXCEL</button><input type="file" id="importExcelFile" accept=".xlsx,.xls" style="display:none" onchange="importJamaahFromExcel(this)"><button class="btn btn-danger btn-small mt-2" onclick="confirmDeleteAllJamaah()">🗑️ HAPUS SEMUA database</button></div>
+        <div id="jamaahAdminPanel" class="setting-card" style="display:none"><h3 style="color:var(--primary);"> Panel Admin Jamaah</h3><button class="btn btn-primary btn-small mt-2" onclick="openTambahJamaahModal()"> + Tambah database</button><button class="btn btn-blue btn-small mt-2" onclick="openManageFieldsModal()"> Kelola Field Dinamis</button><button class="btn btn-teal btn-small mt-2" onclick="exportJamaahToExcel()"> Export ke Excel</button><button class="btn btn-orange btn-small mt-2" onclick="document.getElementById('importExcelFile').click()"> IMPORT EXCEL</button><input type="file" id="importExcelFile" accept=".xlsx,.xls" style="display:none" onchange="importJamaahFromExcel(this)"><button class="btn btn-danger btn-small mt-2" onclick="confirmDeleteAllJamaah()"> HAPUS SEMUA database</button></div>
         <div class="section-title"><span>DAFTAR JAMAAH</span></div>
-        <div class="search-box"><input type="text" id="searchJamaahInput" placeholder="🔍 Cari nama jamaah..." onkeyup="filterJamaahList()"><select id="sortJamaahSelect" onchange="sortJamaahList()"><option value="urutan_asli">Urutan asli</option><option value="nama_asc">Nama A-Z</option><option value="nama_desc">Nama Z-A</option><option value="tgl_asc">Tanggal lama ke baru</option><option value="tgl_desc">Tanggal baru ke lama</option></select><button onclick="resetJamaahFilter()">Reset</button></div>
+        <div class="search-box"><input type="text" id="searchJamaahInput" placeholder=" Cari nama jamaah..." onkeyup="filterJamaahList()"><select id="sortJamaahSelect" onchange="sortJamaahList()"><option value="urutan_asli">Urutan asli</option><option value="nama_asc">Nama A-Z</option><option value="nama_desc">Nama Z-A</option><option value="tgl_asc">Tanggal lama ke baru</option><option value="tgl_desc">Tanggal baru ke lama</option></select><button onclick="resetJamaahFilter()">Reset</button></div>
         <div class="sort-buttons"><span style="font-size:12px; color:var(--gray);">Jumlah per halaman:</span><select id="perPageJamaah" onchange="changePerPage()"><option value="10">10</option><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="all">Semua</option></select></div>
         <div id="jamaahListContainer"></div><div id="paginationContainer" class="pagination"></div>
         <button class="btn btn-wa" onclick="shareAllJamaahToWA()"><i class="fab fa-whatsapp"></i> SHARE SEMUA JAMAAH KE WA</button>
@@ -1841,16 +1841,16 @@
 <div id="page-jamaahkita" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>Jamaah on proses</h2><div style="width:30px;"></div></div></div>
     <div class="card-premium">
-        <div id="jamaahKitaAdminPanel" class="setting-card" style="display:none"><h3>🔧 Pengaturan Jamaah on proses</h3><button class="btn btn-primary btn-small" onclick="openJamaahKitaFieldModal()">⚙️ Kelola Field Dinamis (Kamar/Bus/dll)</button><button class="btn btn-danger btn-small mt-2" onclick="confirmDeleteAllJamaahKita()">🗑️ HAPUS SEMUA Jamaah on proses</button></div>
+        <div id="jamaahKitaAdminPanel" class="setting-card" style="display:none"><h3> Pengaturan Jamaah on proses</h3><button class="btn btn-primary btn-small" onclick="openJamaahKitaFieldModal()"> Kelola Field Dinamis (Kamar/Bus/dll)</button><button class="btn btn-danger btn-small mt-2" onclick="confirmDeleteAllJamaahKita()"> HAPUS SEMUA Jamaah on proses</button></div>
         <div class="section-title"><span>TAMBAH DATABASE KITA</span></div>
         <div class="input-group"><label>Pilih Jamaah dari database</label><select id="pilihJamaahKita"></select></div>
         <div id="jamaahKitaDynamicFields"></div>
         <button class="btn btn-accent" onclick="tambahJamaahKita()"><i class="fas fa-plus-circle"></i> TAMBAHKAN KE Jamaah on proses</button>
         <div class="section-title"><span>DAFTAR JAMAAH ON PROSES</span></div>
-        <div class="search-box"><input type="text" id="searchJamaahKitaInput" placeholder="🔍 Cari nama jamaah on proses..." onkeyup="filterJamaahKitaList()"><button onclick="resetJamaahKitaFilter()">Reset</button></div>
+        <div class="search-box"><input type="text" id="searchJamaahKitaInput" placeholder=" Cari nama jamaah on proses..." onkeyup="filterJamaahKitaList()"><button onclick="resetJamaahKitaFilter()">Reset</button></div>
         <div id="jamaahKitaListContainer"></div>
         <button class="btn btn-wa" onclick="shareAllJamaahKitaToWA()"><i class="fab fa-whatsapp"></i> SHARE SEMUA Jamaah on proses KE WA</button>
-        <button class="btn btn-purple mt-2" onclick="printGroupedPDF()"><i class="fas fa-print"></i> 📄 CETAK PDF PER KELOMPOK (KAMAR/BUS/KELAS)</button>
+        <button class="btn btn-purple mt-2" onclick="printGroupedPDF()"><i class="fas fa-print"></i>  CETAK PDF PER KELOMPOK (KAMAR/BUS/KELAS)</button>
         <div class="row"><button class="btn btn-blue btn-small" onclick="backupJamaahKitaData()" style="flex:1"><i class="fas fa-download"></i> BACKUP Jamaah on proses</button><button class="btn btn-orange btn-small" onclick="document.getElementById('restoreJamaahKitaFile').click()" style="flex:1"><i class="fas fa-upload"></i> RESTORE Jamaah on proses</button></div>
         <input type="file" id="restoreJamaahKitaFile" accept=".json" style="display:none" onchange="restoreJamaahKitaData(this)">
     </div>
@@ -1866,7 +1866,7 @@
 <div id="page-zakat" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>Kalkulator Zakat</h2><div style="width:30px;"></div></div></div>
     <div class="card-premium">
-        <div class="logo-box text-center"><div style="font-size:40px;">📊</div></div>
+        <div class="logo-box text-center"><div style="font-size:40px;"></div></div>
         <p class="text-center" style="color:var(--gray);">Safara</p>
         <div class="row"><div class="input-group"><label>Jenis Zakat</label><select id="jenisZakat" onchange="toggleZakatInput()"><option value="mal">Zakat Mal (Harta/Uang)</option><option value="pertanian">Zakat Pertanian</option><option value="perdagangan">Zakat Perdagangan</option></select></div></div>
         <div id="zakatGlobalInput"><div class="input-group"><label>Harga Emas per Gram (Rp)</label><input type="text" id="hargaEmas" class="money-input" value="1.200.000"></div></div>
@@ -1883,11 +1883,11 @@
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>Pembayaran</h2><div style="width:30px;"></div></div></div>
     <div class="card-premium">
         <div class="payment-dashboard-card"><div style="font-weight:700; margin-bottom:8px;"><i class="fas fa-file-invoice-dollar"></i> Manajemen Pembayaran</div>
-        <div class="payment-stats-row"><div class="payment-stat-item"><h4>💰 Total Uang Masuk</h4><div class="payment-value" id="paymentTotalMasuk">Rp 0</div></div><div class="payment-stat-item"><h4>📋 Total Piutang</h4><div class="payment-value" id="paymentTotalPiutang">Rp 0</div></div></div></div>
+        <div class="payment-stats-row"><div class="payment-stat-item"><h4> Total Uang Masuk</h4><div class="payment-value" id="paymentTotalMasuk">Rp 0</div></div><div class="payment-stat-item"><h4> Total Piutang</h4><div class="payment-value" id="paymentTotalPiutang">Rp 0</div></div></div></div>
         <div class="rekap-card"><div class="rekap-title"><i class="fas fa-chart-pie"></i> REKAP PEMBAYARAN</div>
         <div class="rekap-dua-kolom"><div class="rekap-lunas"><h4><i class="fas fa-check-circle"></i> LUNAS</h4><div class="rekap-number" id="rekapLunasCount">0 org</div></div><div class="rekap-belum-lunas"><h4><i class="fas fa-clock"></i> BELUM LUNAS</h4><div class="rekap-number" id="rekapBelumCount">0 org (Rp 0)</div></div></div>
-        <div class="total-rekap"><div class="total-rekap-item"><span>📋 Total Tertagih:</span><span class="value" id="totalTertagih">Rp 0</span></div><div class="total-rekap-item"><span>✅ Total Terbayar:</span><span class="value" id="totalTerbayar">Rp 0</span></div><div class="persen-bar"><div class="persen-fill" id="persenFill"></div></div><div class="total-rekap-item"><span>📊 Persentase:</span><span class="value" id="persentaseText">0%</span></div></div></div>
-        <div class="filter-row"><select id="paymentStatusFilter" class="filter-dropdown" onchange="filterPaymentJamaahList()"><option value="semua">📋 Semua</option><option value="lunas">✅ Lunas</option><option value="belum_lunas">⚠️ Belum Lunas</option></select><input type="text" id="paymentSearchNama" class="filter-dropdown" placeholder="🔍 Cari nama jamaah..." onkeyup="filterPaymentJamaahList()"></div>
+        <div class="total-rekap"><div class="total-rekap-item"><span> Total Tertagih:</span><span class="value" id="totalTertagih">Rp 0</span></div><div class="total-rekap-item"><span> Total Terbayar:</span><span class="value" id="totalTerbayar">Rp 0</span></div><div class="persen-bar"><div class="persen-fill" id="persenFill"></div></div><div class="total-rekap-item"><span> Persentase:</span><span class="value" id="persentaseText">0%</span></div></div></div>
+        <div class="filter-row"><select id="paymentStatusFilter" class="filter-dropdown" onchange="filterPaymentJamaahList()"><option value="semua"> Semua</option><option value="lunas"> Lunas</option><option value="belum_lunas"> Belum Lunas</option></select><input type="text" id="paymentSearchNama" class="filter-dropdown" placeholder=" Cari nama jamaah..." onkeyup="filterPaymentJamaahList()"></div>
         <div class="row" style="margin-bottom:16px;"><button class="btn btn-purple btn-small" onclick="exportPaymentPDF()" style="flex:1"><i class="fas fa-file-pdf"></i> PDF Laporan</button><button class="btn btn-teal btn-small" onclick="exportPaymentExcel()" style="flex:1"><i class="fas fa-file-excel"></i> Excel Laporan</button></div>
         <div class="section-title"><span><i class="fas fa-users"></i> DAFTAR TAGIHAN JAMAAH</span></div>
         <div id="paymentJamaahListContainer"><div style="text-align:center; padding:20px;">Memuat data jamaah...</div></div>
@@ -1900,10 +1900,10 @@
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2 id="masterJudulHeader">Multi Event</h2><i class="fas fa-cog" onclick="openMasterSetting()" style="color:white; font-size:18px; cursor:pointer;"></i></div></div>
     <div class="card-premium">
         <div id="masterAdminPanel" style="display:none; background:var(--gray-light); padding:15px; border-radius:20px; margin-bottom:15px;">
-            <div class="input-group"><label>📝 Judul Halaman / Laporan</label><input type="text" id="masterJudul" placeholder="Contoh: BADAL HAJI 2026"></div>
-            <div class="row"><button class="btn btn-blue btn-small" onclick="openMasterFieldModal()" style="flex:1">➕ Kelola Field Dinamis</button><button class="btn btn-teal btn-small" onclick="openMasterItemModal()" style="flex:1">☑️ Kelola Item</button></div>
-            <div class="row mt-2"><button class="btn btn-purple btn-small" onclick="copyFromJamaah()" style="flex:1">📋 Copy dari database</button><button class="btn btn-orange btn-small" onclick="openModeManager()" style="flex:1"><i class="fas fa-sliders-h"></i> ⚙️ Kelola Mode</button></div>
-            <div class="row mt-2"><button class="btn btn-danger btn-small" onclick="confirmDeleteAllMasterData()" style="flex:1"><i class="fas fa-trash-alt"></i> 🗑️ HAPUS SEMUA</button><button class="btn btn-orange btn-small" onclick="deleteSelectedMasterData()" style="flex:1"><i class="fas fa-trash-alt"></i> 🗑️ HAPUS TERPILIH</button></div>
+            <div class="input-group"><label> Judul Halaman / Laporan</label><input type="text" id="masterJudul" placeholder="Contoh: BADAL HAJI 2026"></div>
+            <div class="row"><button class="btn btn-blue btn-small" onclick="openMasterFieldModal()" style="flex:1"> Kelola Field Dinamis</button><button class="btn btn-teal btn-small" onclick="openMasterItemModal()" style="flex:1"> Kelola Item</button></div>
+            <div class="row mt-2"><button class="btn btn-purple btn-small" onclick="copyFromJamaah()" style="flex:1"> Copy dari database</button><button class="btn btn-orange btn-small" onclick="openModeManager()" style="flex:1"><i class="fas fa-sliders-h"></i>  Kelola Mode</button></div>
+            <div class="row mt-2"><button class="btn btn-danger btn-small" onclick="confirmDeleteAllMasterData()" style="flex:1"><i class="fas fa-trash-alt"></i>  HAPUS SEMUA</button><button class="btn btn-orange btn-small" onclick="deleteSelectedMasterData()" style="flex:1"><i class="fas fa-trash-alt"></i>  HAPUS TERPILIH</button></div>
         </div>
         <div id="modeSwitcherContainer"></div>
         <div class="section-title" id="masterFormTitle"><span>TAMBAH DATA</span></div>
@@ -1918,7 +1918,7 @@
 
 <!-- KONFIGURASI PRO PAGE -->
 <div id="page-konfigurasi" class="page">
-    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>⚙️ Konfigurasi Pro</h2><div style="width:30px;"></div></div></div>
+    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2> Konfigurasi Pro</h2><div style="width:30px;"></div></div></div>
     <div class="card-premium">
         <div class="config-section"><h3><i class="fas fa-building"></i> Data Instansi Utama</h3>
             <div class="config-row"><label>Logo Instansi</label><input type="file" id="cfg_logo1" accept="image/*" onchange="previewLogo(this, 'previewLogo1')"><img id="previewLogo1" class="logo-preview"><small style="display:block; color:var(--gray); margin-top:4px;">Logo akan tampil di header HOME</small></div>
@@ -1956,7 +1956,7 @@
             <div class="config-row"><label>Prefix Invoice / No. Dokumen</label><input type="text" id="cfg_invoice_prefix" value="INV/SAFARA"></div>
         </div>
         <div class="config-section"><h3><i class="fab fa-whatsapp"></i> Template WhatsApp</h3>
-            <div class="config-row"><label>Template Laporan Kas</label><textarea id="cfg_wa_laporan" rows="3" placeholder="🏢 *LAPORAN KAS KANTOR*\n\n💰 Saldo: [saldo]\n📥 Pemasukan: [masuk]\n📤 Pengeluaran: [keluar]\n\nTerima kasih."></textarea><div class="template-variables">Variabel: <code>[saldo]</code> <code>[masuk]</code> <code>[keluar]</code></div></div>
+            <div class="config-row"><label>Template Laporan Kas</label><textarea id="cfg_wa_laporan" rows="3" placeholder=" *LAPORAN KAS KANTOR*\n\n Saldo: [saldo]\n Pemasukan: [masuk]\n Pengeluaran: [keluar]\n\nTerima kasih."></textarea><div class="template-variables">Variabel: <code>[saldo]</code> <code>[masuk]</code> <code>[keluar]</code></div></div>
         </div>
         <div class="row"><button class="btn btn-primary" onclick="saveKonfigurasiPro()" style="flex:2;"><i class="fas fa-save"></i> SIMPAN KONFIGURASI</button><button class="btn btn-danger" onclick="resetKonfigurasiPro()" style="flex:1;"><i class="fas fa-undo-alt"></i> Reset</button></div>
         <div class="row mt-2"><button class="btn btn-blue btn-small" onclick="exportKonfigurasiPro()" style="flex:1;"><i class="fas fa-download"></i> Export</button><button class="btn btn-orange btn-small" onclick="document.getElementById('importConfigFile').click()" style="flex:1;"><i class="fas fa-upload"></i> Import</button></div>
@@ -1968,108 +1968,108 @@
 <div id="page-setting" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>Pengaturan</h2><div style="width:30px;"></div></div></div>
     <div class="container">
-        <div class="setting-card"><div class="setting-row"><span><i class="fas fa-user-shield"></i> 🔧 Mode Admin</span><label class="switch"><input type="checkbox" id="adminMode" onchange="toggleAdminMode()"><span class="slider"></span></label></div></div>
-        <div class="setting-card"><h4>🎨 Warna Tema</h4><div class="color-options" id="colorOptions"></div></div>
-        <div class="setting-card"><h4>📋 Atur Tampilan Menu</h4><div id="menuSettingsContainer"></div></div>
-        <button class="btn btn-danger" onclick="confirmResetAllData()">🔄 RESET SEMUA DATA</button>
+        <div class="setting-card"><div class="setting-row"><span><i class="fas fa-user-shield"></i>  Mode Admin</span><label class="switch"><input type="checkbox" id="adminMode" onchange="toggleAdminMode()"><span class="slider"></span></label></div></div>
+        <div class="setting-card"><h4> Warna Tema</h4><div class="color-options" id="colorOptions"></div></div>
+        <div class="setting-card"><h4> Atur Tampilan Menu</h4><div id="menuSettingsContainer"></div></div>
+        <button class="btn btn-danger" onclick="confirmResetAllData()"> RESET SEMUA DATA</button>
     </div>
 </div>
 
 <!-- HALAMAN FITUR LENGKAP -->
 <div id="page-fitur" class="page">
-    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>📦 Fitur Lengkap</h2><div style="width:30px;"></div></div></div>
+    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2> Fitur Lengkap</h2><div style="width:30px;"></div></div></div>
     <div class="container">
         <div class="fitur-grid">
-            <div class="fitur-card" onclick="showPage('uploaddokumen')"><div class="fitur-icon">📄</div><div class="fitur-title">Upload Dokumen</div><div class="fitur-desc">Simpan KTP, Paspor, Foto</div></div>
-            <div class="fitur-card" onclick="showPage('foldervirtual')"><div class="fitur-icon">📁</div><div class="fitur-title">Folder Virtual</div><div class="fitur-desc">Pisah per rombongan</div></div>
-            <div class="fitur-card" onclick="showPage('pengingatwa')"><div class="fitur-icon">🔔</div><div class="fitur-title">Pengingat WA</div><div class="fitur-desc">Kirim pengingat otomatis</div></div>
-            <div class="fitur-card" onclick="showPage('etikettiket')"><div class="fitur-icon">🎫</div><div class="fitur-title">E-Tiket & QR</div><div class="fitur-desc">Tiket digital dengan QR</div></div>
-            <div class="fitur-card" onclick="showPage('cetaklabel')"><div class="fitur-icon">🏷️</div><div class="fitur-title">Cetak Label</div><div class="fitur-desc">Name tag / stiker koper</div></div>
-            <div class="fitur-card" onclick="showPage('cloudstorage')"><div class="fitur-icon">☁️</div><div class="fitur-title">Cloud Storage</div><div class="fitur-desc">Backup & Restore data</div></div>
-            <div class="fitur-card" onclick="showPage('dashboard')"><div class="fitur-icon">📊</div><div class="fitur-title">Dashboard</div><div class="fitur-desc">Grafik statistik data</div></div>
+            <div class="fitur-card" onclick="showPage('uploaddokumen')"><div class="fitur-icon"></div><div class="fitur-title">Upload Dokumen</div><div class="fitur-desc">Simpan KTP, Paspor, Foto</div></div>
+            <div class="fitur-card" onclick="showPage('foldervirtual')"><div class="fitur-icon"></div><div class="fitur-title">Folder Virtual</div><div class="fitur-desc">Pisah per rombongan</div></div>
+            <div class="fitur-card" onclick="showPage('pengingatwa')"><div class="fitur-icon"></div><div class="fitur-title">Pengingat WA</div><div class="fitur-desc">Kirim pengingat otomatis</div></div>
+            <div class="fitur-card" onclick="showPage('etikettiket')"><div class="fitur-icon"></div><div class="fitur-title">E-Tiket & QR</div><div class="fitur-desc">Tiket digital dengan QR</div></div>
+            <div class="fitur-card" onclick="showPage('cetaklabel')"><div class="fitur-icon"></div><div class="fitur-title">Cetak Label</div><div class="fitur-desc">Name tag / stiker koper</div></div>
+            <div class="fitur-card" onclick="showPage('cloudstorage')"><div class="fitur-icon"></div><div class="fitur-title">Cloud Storage</div><div class="fitur-desc">Backup & Restore data</div></div>
+            <div class="fitur-card" onclick="showPage('dashboard')"><div class="fitur-icon"></div><div class="fitur-title">Dashboard</div><div class="fitur-desc">Grafik statistik data</div></div>
         </div>
     </div>
 </div>
 
 <!-- UPLOAD DOKUMEN PAGE -->
 <div id="page-uploaddokumen" class="page">
-    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2>📄 Upload Dokumen</h2><div style="width:30px;"></div></div></div>
+    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> Upload Dokumen</h2><div style="width:30px;"></div></div></div>
     <div class="container">
-        <div id="dokumenAdminPanel" class="setting-card" style="display:none"><h3 style="color:var(--primary);">🔧 Kelola Jenis Dokumen</h3><button class="btn btn-primary btn-small mt-2" onclick="openDokumenFieldModal()">➕ Tambah Jenis Dokumen</button><div id="dokumenFieldsList" style="margin-top:12px;"></div></div>
-        <div class="card-premium" style="margin:0 0 16px 0;"><div class="search-box"><input type="text" id="searchDokumenInput" placeholder="🔍 Cari nama jamaah..." onkeyup="filterDokumenList()"><select id="filterDokumenStatus" onchange="filterDokumenList()"><option value="semua">Semua</option><option value="lengkap">✅ Lengkap</option><option value="kurang">⚠️ Kurang</option></select></div></div>
-        <div class="stats-row" style="margin-top:0; margin-bottom:16px;"><div class="stat-mini-card"><div class="stat-label">📊 Total</div><div class="stat-number" id="statTotalDokumen">0</div></div><div class="stat-mini-card"><div class="stat-label">✅ Lengkap</div><div class="stat-number" id="statLengkapDokumen">0</div></div><div class="stat-mini-card"><div class="stat-label">⚠️ Kurang</div><div class="stat-number" id="statKurangDokumen">0</div></div></div>
+        <div id="dokumenAdminPanel" class="setting-card" style="display:none"><h3 style="color:var(--primary);"> Kelola Jenis Dokumen</h3><button class="btn btn-primary btn-small mt-2" onclick="openDokumenFieldModal()"> Tambah Jenis Dokumen</button><div id="dokumenFieldsList" style="margin-top:12px;"></div></div>
+        <div class="card-premium" style="margin:0 0 16px 0;"><div class="search-box"><input type="text" id="searchDokumenInput" placeholder=" Cari nama jamaah..." onkeyup="filterDokumenList()"><select id="filterDokumenStatus" onchange="filterDokumenList()"><option value="semua">Semua</option><option value="lengkap"> Lengkap</option><option value="kurang"> Kurang</option></select></div></div>
+        <div class="stats-row" style="margin-top:0; margin-bottom:16px;"><div class="stat-mini-card"><div class="stat-label"> Total</div><div class="stat-number" id="statTotalDokumen">0</div></div><div class="stat-mini-card"><div class="stat-label"> Lengkap</div><div class="stat-number" id="statLengkapDokumen">0</div></div><div class="stat-mini-card"><div class="stat-label"> Kurang</div><div class="stat-number" id="statKurangDokumen">0</div></div></div>
         <div id="dokumenListContainer"></div>
-        <div class="row" style="margin-top:16px;"><button class="btn btn-warning" onclick="remindAllKurangDokumen()" style="flex:1"><i class="fab fa-whatsapp"></i> REMINDER WA</button><button class="btn btn-primary" onclick="downloadAllDokumenZip()" style="flex:1"><i class="fas fa-download"></i> 📦 DOWNLOAD ZIP</button></div>
+        <div class="row" style="margin-top:16px;"><button class="btn btn-warning" onclick="remindAllKurangDokumen()" style="flex:1"><i class="fab fa-whatsapp"></i> REMINDER WA</button><button class="btn btn-primary" onclick="downloadAllDokumenZip()" style="flex:1"><i class="fas fa-download"></i>  DOWNLOAD ZIP</button></div>
     </div>
 </div>
 
 <!-- FOLDER VIRTUAL PAGE -->
 <div id="page-foldervirtual" class="page">
-    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2>📁 Folder Virtual</h2><div style="width:30px;"></div></div></div>
-    <div class="container"><div id="folderAdminPanel" class="setting-card" style="display:none"><h3>🔧 Kelola Folder</h3><div class="row"><div class="input-group"><label>Nama Folder Baru</label><input type="text" id="newFolderName" placeholder="Contoh: Umroh Syawal 2026"></div><button class="btn btn-primary btn-small" onclick="tambahFolder()" style="flex:0.5;">+ Buat</button></div></div><div id="folderListContainer"></div></div>
+    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> Folder Virtual</h2><div style="width:30px;"></div></div></div>
+    <div class="container"><div id="folderAdminPanel" class="setting-card" style="display:none"><h3> Kelola Folder</h3><div class="row"><div class="input-group"><label>Nama Folder Baru</label><input type="text" id="newFolderName" placeholder="Contoh: Umroh Syawal 2026"></div><button class="btn btn-primary btn-small" onclick="tambahFolder()" style="flex:0.5;">+ Buat</button></div></div><div id="folderListContainer"></div></div>
 </div>
 
 <!-- PENGINGAT WA PAGE -->
 <div id="page-pengingatwa" class="page">
-    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2>🔔 Pengingat WA</h2><div style="width:30px;"></div></div></div>
+    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> Pengingat WA</h2><div style="width:30px;"></div></div></div>
     <div class="container">
-        <div class="card-premium"><div class="input-group"><label>📝 Pesan Pengingat</label><textarea id="reminderMessage" rows="4" placeholder="Contoh: Yth. [nama], jadwal pembayaran Anda jatuh tempo pada [tanggal]. Sisa tagihan: [sisa]"></textarea></div><div class="input-group"><label>👥 Pilih Jamaah</label><select id="reminderJamaahSelect" multiple style="height:100px;"><option value="all">-- Semua Jamaah --</option></select></div><div class="input-group"><label>📅 Jadwal Pengingat (opsional)</label><input type="datetime-local" id="reminderSchedule"></div><button class="btn btn-wa" onclick="kirimPengingatWA()"><i class="fab fa-whatsapp"></i> KIRIM SEKARANG</button><button class="btn btn-primary mt-2" onclick="aturPengingatOtomatis()">⏰ ATUR PENGGINGAT OTOMATIS</button></div>
-        <div id="reminderScheduledList" class="card-premium"><h4>📋 Pengingat Terjadwal</h4><p class="text-center">Belum ada pengingat terjadwal</p></div>
+        <div class="card-premium"><div class="input-group"><label> Pesan Pengingat</label><textarea id="reminderMessage" rows="4" placeholder="Contoh: Yth. [nama], jadwal pembayaran Anda jatuh tempo pada [tanggal]. Sisa tagihan: [sisa]"></textarea></div><div class="input-group"><label> Pilih Jamaah</label><select id="reminderJamaahSelect" multiple style="height:100px;"><option value="all">-- Semua Jamaah --</option></select></div><div class="input-group"><label> Jadwal Pengingat (opsional)</label><input type="datetime-local" id="reminderSchedule"></div><button class="btn btn-wa" onclick="kirimPengingatWA()"><i class="fab fa-whatsapp"></i> KIRIM SEKARANG</button><button class="btn btn-primary mt-2" onclick="aturPengingatOtomatis()"> ATUR PENGGINGAT OTOMATIS</button></div>
+        <div id="reminderScheduledList" class="card-premium"><h4> Pengingat Terjadwal</h4><p class="text-center">Belum ada pengingat terjadwal</p></div>
     </div>
 </div>
 
 <!-- E-TIKET & QR PAGE -->
 <div id="page-etikettiket" class="page">
-    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2>🎫 E-Tiket & QR</h2><div style="width:30px;"></div></div></div>
+    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> E-Tiket & QR</h2><div style="width:30px;"></div></div></div>
     <div class="container">
-        <div class="card-premium"><div class="input-group"><label>👤 Pilih Jamaah</label><select id="tiketJamaahSelect" onchange="generateTiketQR()"></select></div>
+        <div class="card-premium"><div class="input-group"><label> Pilih Jamaah</label><select id="tiketJamaahSelect" onchange="generateTiketQR()"></select></div>
         <div id="tiketPreview" class="tiket-card" style="display:none;"><div class="tiket-header"><div class="tiket-title" id="tiketNama"></div><div id="tiketPaket" style="font-size:12px;"></div></div><div id="tiketQR" class="tiket-qr"></div><div class="row" style="margin-top:15px;"><button class="btn btn-primary btn-small" onclick="downloadTiketAsImage()"><i class="fas fa-download"></i> Simpan sebagai Gambar</button><button class="btn btn-wa btn-small" onclick="shareTiketWA()"><i class="fab fa-whatsapp"></i> Kirim ke WA</button><button class="btn btn-purple btn-small" onclick="cetakTiketLangsung()"><i class="fas fa-print"></i> CETAK TIKET</button></div></div></div>
     </div>
 </div>
 
 <!-- CETAK LABEL PAGE -->
 <div id="page-cetaklabel" class="page">
-    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2>🏷️ Cetak Label</h2><div style="width:30px;"></div></div></div>
+    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> Cetak Label</h2><div style="width:30px;"></div></div></div>
     <div class="container">
-        <div class="card-premium"><div class="input-group"><label>📝 Nama Acara / Rombongan</label><input type="text" id="labelEvent" placeholder="Umroh Syawal 2026"></div><div class="input-group"><label>👥 Pilih Jamaah</label><select id="labelJamaahSelect" multiple style="height:100px;"></select></div><div class="row"><div class="input-group"><label>Ukuran Label</label><select id="labelSize"><option value="small">Kecil (40x30mm)</option><option value="medium" selected>Sedang (60x40mm)</option><option value="large">Besar (80x50mm)</option></select></div><div class="input-group"><label>Template</label><select id="labelTemplate"><option value="nametag">Name Tag</option><option value="luggage">Stiker Koper</option><option value="both">Name Tag + Koper</option></select></div></div><button class="btn btn-primary" onclick="cetakLabel()"><i class="fas fa-print"></i> CETAK LABEL</button></div>
+        <div class="card-premium"><div class="input-group"><label> Nama Acara / Rombongan</label><input type="text" id="labelEvent" placeholder="Umroh Syawal 2026"></div><div class="input-group"><label> Pilih Jamaah</label><select id="labelJamaahSelect" multiple style="height:100px;"></select></div><div class="row"><div class="input-group"><label>Ukuran Label</label><select id="labelSize"><option value="small">Kecil (40x30mm)</option><option value="medium" selected>Sedang (60x40mm)</option><option value="large">Besar (80x50mm)</option></select></div><div class="input-group"><label>Template</label><select id="labelTemplate"><option value="nametag">Name Tag</option><option value="luggage">Stiker Koper</option><option value="both">Name Tag + Koper</option></select></div></div><button class="btn btn-primary" onclick="cetakLabel()"><i class="fas fa-print"></i> CETAK LABEL</button></div>
         <div id="labelPreviewContainer" class="card-premium" style="display:none;"><h4>Preview Label</h4><div id="labelPreview"></div><button class="btn btn-primary mt-2" onclick="printLabelPreview()"><i class="fas fa-print"></i> Print</button></div>
     </div>
 </div>
 
 <!-- CLOUD STORAGE PAGE -->
 <div id="page-cloudstorage" class="page">
-    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2>☁️ Cloud Storage</h2><div style="width:30px;"></div></div></div>
+    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> Cloud Storage</h2><div style="width:30px;"></div></div></div>
     <div class="container">
         <div class="card-premium">
-            <div class="section-title"><span>📁 PENYIMPANAN INTERNAL</span></div>
+            <div class="section-title"><span> PENYIMPANAN INTERNAL</span></div>
             <div class="storage-info" style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="font-size: 12px;">/storage/emulated/0/Safara</span><span style="font-size: 12px;" id="storageUsage">Menghitung...</span></div>
             <div class="storage-bar" style="background: var(--gray-light); border-radius: 10px; height: 8px; overflow: hidden;"><div id="storageFill" style="width: 0%; background: var(--primary); height: 100%; border-radius: 10px;"></div></div>
-            <div class="text-muted text-center mt-2" style="font-size: 11px;">💾 Data aplikasi tersimpan di sini</div>
+            <div class="text-muted text-center mt-2" style="font-size: 11px;"> Data aplikasi tersimpan di sini</div>
         </div>
         
         <div class="card-premium">
-            <div class="section-title"><span>📦 BACKUP LOKAL</span></div>
+            <div class="section-title"><span> BACKUP LOKAL</span></div>
             <div class="row" style="margin-bottom: 8px;">
                 <button class="btn btn-primary btn-small" onclick="downloadFullZip()" style="flex:1"><i class="fas fa-download"></i> DOWNLOAD FULL ZIP</button>
                 <button class="btn btn-orange btn-small" onclick="document.getElementById('restoreZipFileInput').click()" style="flex:1"><i class="fas fa-upload"></i> RESTORE DARI ZIP</button>
             </div>
             <input type="file" id="restoreZipFileInput" accept=".zip" style="display:none" onchange="restoreFromZip(this)">
-            <div class="text-muted text-center mt-2" style="font-size: 11px;">📌 Backup semua data (Jamaah, Kas, Pembayaran, Dokumen) ke file ZIP</div>
+            <div class="text-muted text-center mt-2" style="font-size: 11px;"> Backup semua data (Jamaah, Kas, Pembayaran, Dokumen) ke file ZIP</div>
         </div>
         
         <div class="card-premium">
             <div class="cloud-item">
-                <div class="cloud-info"><div class="cloud-icon">🟢</div><div><div class="cloud-name">Google Drive</div><div class="cloud-status" id="driveStatus"><span class="status-disconnected">⚪ Belum Terhubung</span></div></div></div>
-                <div><button id="driveConnectBtn" class="btn-connect" onclick="connectGoogleDrive()">➕ Hubungkan</button>
-                <button id="driveBackupBtn" class="btn-connect" style="display:none; background: var(--primary);" onclick="backupToDrive()">☁️ Backup</button>
-                <button id="driveRestoreBtn" class="btn-connect" style="display:none; background: var(--purple);" onclick="restoreFromDrive()">📥 Restore</button>
-                <button id="driveDisconnectBtn" class="btn-connect" style="display:none; background: var(--gray-light); color: var(--dark);" onclick="disconnectDrive()">🔌 Putus</button></div>
+                <div class="cloud-info"><div class="cloud-icon"></div><div><div class="cloud-name">Google Drive</div><div class="cloud-status" id="driveStatus"><span class="status-disconnected"> Belum Terhubung</span></div></div></div>
+                <div><button id="driveConnectBtn" class="btn-connect" onclick="connectGoogleDrive()"> Hubungkan</button>
+                <button id="driveBackupBtn" class="btn-connect" style="display:none; background: var(--primary);" onclick="backupToDrive()"> Backup</button>
+                <button id="driveRestoreBtn" class="btn-connect" style="display:none; background: var(--purple);" onclick="restoreFromDrive()"> Restore</button>
+                <button id="driveDisconnectBtn" class="btn-connect" style="display:none; background: var(--gray-light); color: var(--dark);" onclick="disconnectDrive()"> Putus</button></div>
             </div>
         </div>
         
-        <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon">🔵</div><div><div class="cloud-name">Dropbox</div><div class="cloud-status"><span class="status-disconnected">⚪ Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast('🚧 Fitur Dropbox akan segera hadir!')">➕ Hubungkan</button></div></div></div>
+        <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon"></div><div><div class="cloud-name">Dropbox</div><div class="cloud-status"><span class="status-disconnected"> Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast(' Fitur Dropbox akan segera hadir!')"> Hubungkan</button></div></div></div>
         
-        <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon">📘</div><div><div class="cloud-name">OneDrive</div><div class="cloud-status"><span class="status-disconnected">⚪ Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast('🚧 Fitur OneDrive akan segera hadir!')">➕ Hubungkan</button></div></div></div>
+        <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon"></div><div><div class="cloud-name">OneDrive</div><div class="cloud-status"><span class="status-disconnected"> Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast(' Fitur OneDrive akan segera hadir!')"> Hubungkan</button></div></div></div>
     </div>
 </div>
 
@@ -2083,23 +2083,23 @@
 </div>
 
 <!-- MODALS -->
-<div id="jamaahModal" class="modal"><div class="modal-content"><h3 id="jamaahModalTitle">Tambah database</h3><div id="jamaahFormContainer"></div><button class="btn btn-primary" onclick="saveJamaah()">💾 SIMPAN</button><button class="btn btn-danger mt-2" onclick="closeJamaahModal()">BATAL</button></div></div>
-<div id="fieldModal" class="modal"><div class="modal-content"><h3>Tambah Field Dinamis</h3><div class="dynamic-field"><label>Nama Field</label><input type="text" id="newFieldName" placeholder="Contoh: tanggal_lahir"><div class="error-message">Hanya huruf kecil, angka, underscore</div></div><div class="dynamic-field"><label>Label Field</label><input type="text" id="newFieldLabel" placeholder="Contoh: Tanggal Lahir"></div><div class="dynamic-field"><label>Tipe Field</label><select id="newFieldType"><option value="text">Text</option><option value="date">Tanggal</option><option value="tel">Telepon</option><option value="textarea">Text Area</option></select></div><button class="btn btn-primary" onclick="addDynamicFieldJamaah()">➕ TAMBAH FIELD</button><button class="btn btn-danger mt-2" onclick="closeFieldModal()">BATAL</button></div></div>
+<div id="jamaahModal" class="modal"><div class="modal-content"><h3 id="jamaahModalTitle">Tambah database</h3><div id="jamaahFormContainer"></div><button class="btn btn-primary" onclick="saveJamaah()"> SIMPAN</button><button class="btn btn-danger mt-2" onclick="closeJamaahModal()">BATAL</button></div></div>
+<div id="fieldModal" class="modal"><div class="modal-content"><h3>Tambah Field Dinamis</h3><div class="dynamic-field"><label>Nama Field</label><input type="text" id="newFieldName" placeholder="Contoh: tanggal_lahir"><div class="error-message">Hanya huruf kecil, angka, underscore</div></div><div class="dynamic-field"><label>Label Field</label><input type="text" id="newFieldLabel" placeholder="Contoh: Tanggal Lahir"></div><div class="dynamic-field"><label>Tipe Field</label><select id="newFieldType"><option value="text">Text</option><option value="date">Tanggal</option><option value="tel">Telepon</option><option value="textarea">Text Area</option></select></div><button class="btn btn-primary" onclick="addDynamicFieldJamaah()"> TAMBAH FIELD</button><button class="btn btn-danger mt-2" onclick="closeFieldModal()">BATAL</button></div></div>
 <div id="manageFieldsModal" class="modal"><div class="modal-content"><h3>Kelola Field Dinamis</h3><button class="btn btn-primary btn-small" style="margin-bottom:15px;" onclick="closeManageFieldsModal(); openFieldModal();">+ Tambah Field Baru</button><div id="fieldsListContainer"></div><button class="btn btn-primary mt-2" onclick="closeManageFieldsModal()">TUTUP</button></div></div>
-<div id="jamaahKitaFieldModal" class="modal"><div class="modal-content"><h3>Kelola Field Dinamis (Jamaah on proses)</h3><div class="dynamic-field"><label>Nama Field</label><input type="text" id="jamaahKitaNewFieldName" placeholder="Contoh: kamar, bus, makanan"><div class="error-message">Hanya huruf kecil, angka, underscore</div></div><div class="dynamic-field"><label>Label Field</label><input type="text" id="jamaahKitaNewFieldLabel" placeholder="Contoh: Kamar, Bus, Makanan"></div><div class="dynamic-field"><label>Tipe Field</label><select id="jamaahKitaNewFieldType"><option value="text">Text</option><option value="number">Number</option><option value="tel">Telepon</option><option value="textarea">Text Area</option></select></div><button class="btn btn-primary" onclick="addJamaahKitaDynamicField()">➕ TAMBAH FIELD</button><div id="jamaahKitaFieldsListContainer" style="margin-top:20px;"></div><button class="btn btn-primary mt-2" onclick="closeJamaahKitaFieldModal()">TUTUP</button></div></div>
-<div id="paymentModal" class="modal"><div class="modal-content"><h3>💸 Input Pembayaran</h3><div class="input-group"><label>📅 Tanggal</label><input type="date" id="paymentTanggal"></div><div class="input-group"><label>👤 Nama Jamaah *</label><select id="paymentJamaahSelect"><option value="">-- Pilih Jamaah --</option></select></div><div class="input-group"><label>💵 Nominal (Rp)</label><input type="number" id="paymentNominal" placeholder="Contoh: 5000000"></div><div class="input-group"><label>🏦 Metode</label><select id="paymentMetode"><option value="Transfer">Transfer</option><option value="Cash">Cash</option><option value="QRIS">QRIS</option></select></div><div class="input-group"><label>📝 Keterangan</label><input type="text" id="paymentKeterangan" placeholder="DP / Cicilan / Pelunasan"></div><div class="row"><button class="btn btn-danger" onclick="closePaymentModal()" style="flex:1">Batal</button><button class="btn btn-primary" onclick="simpanPembayaran()" style="flex:1">Simpan</button></div></div></div>
-<div id="invoiceConfirmModal" class="modal"><div class="modal-content"><h3>📱 Konfirmasi Kirim Invoice</h3><p>Akan dikirim ke nomor WhatsApp:</p><p id="invoiceWANumber" style="font-weight:bold; font-size:18px; background:#f0f0f0; padding:10px; border-radius:10px;"></p><p id="invoiceWAName" style="color:#666;"></p><div class="row" style="margin-top:20px;"><button class="btn btn-danger" onclick="closeInvoiceConfirmModal()" style="flex:1">Batal</button><button class="btn btn-wa" onclick="sendInvoiceWA()" style="flex:1">Kirim via WA</button><button class="btn btn-orange" onclick="copyInvoiceText()" style="flex:1">Salin Teks</button></div></div></div>
-<div id="editHargaModal" class="modal"><div class="modal-content"><h3>✏️ Edit Harga Paket</h3><p id="editHargaNama" style="font-weight:bold;"></p><div class="input-group"><label>💰 Total Harga Paket (Rp)</label><input type="number" id="editHargaValue" placeholder="Contoh: 35000000"></div><div class="row"><button class="btn btn-danger" onclick="closeEditHargaModal()" style="flex:1">Batal</button><button class="btn btn-primary" onclick="saveEditHarga()" style="flex:1">Simpan</button></div></div></div>
-<div id="riwayatModal" class="modal"><div class="modal-content"><h3>📋 Riwayat Pembayaran</h3><p id="riwayatNama" style="font-weight:bold;"></p><div id="riwayatListContainer" style="max-height:400px; overflow-y:auto;"></div><div class="row" style="margin-top:15px;"><button class="btn btn-danger" onclick="closeRiwayatModal()" style="flex:1">Tutup</button><button class="btn btn-purple" onclick="printRiwayatPDF()" style="flex:1"><i class="fas fa-file-pdf"></i> Cetak PDF</button></div></div></div>
-<div id="masterFieldModal" class="modal"><div class="modal-content"><h3>Kelola Field Dinamis</h3><div class="dynamic-field"><label>Nama Field</label><input type="text" id="masterNewFieldName" placeholder="contoh: alamat, no_hp"></div><div class="dynamic-field"><label>Label Field</label><input type="text" id="masterNewFieldLabel" placeholder="Contoh: Alamat, No HP"></div><div class="dynamic-field"><label>Tipe</label><select id="masterNewFieldType"><option value="text">Text</option><option value="date">Tanggal</option><option value="tel">Telepon</option><option value="textarea">Text Area</option></select></div><button class="btn btn-primary" onclick="addMasterDynamicField()">➕ TAMBAH FIELD</button><div id="masterFieldsList" style="margin-top:15px;"></div><button class="btn btn-danger mt-2" onclick="closeMasterFieldModal()">TUTUP</button></div></div>
+<div id="jamaahKitaFieldModal" class="modal"><div class="modal-content"><h3>Kelola Field Dinamis (Jamaah on proses)</h3><div class="dynamic-field"><label>Nama Field</label><input type="text" id="jamaahKitaNewFieldName" placeholder="Contoh: kamar, bus, makanan"><div class="error-message">Hanya huruf kecil, angka, underscore</div></div><div class="dynamic-field"><label>Label Field</label><input type="text" id="jamaahKitaNewFieldLabel" placeholder="Contoh: Kamar, Bus, Makanan"></div><div class="dynamic-field"><label>Tipe Field</label><select id="jamaahKitaNewFieldType"><option value="text">Text</option><option value="number">Number</option><option value="tel">Telepon</option><option value="textarea">Text Area</option></select></div><button class="btn btn-primary" onclick="addJamaahKitaDynamicField()"> TAMBAH FIELD</button><div id="jamaahKitaFieldsListContainer" style="margin-top:20px;"></div><button class="btn btn-primary mt-2" onclick="closeJamaahKitaFieldModal()">TUTUP</button></div></div>
+<div id="paymentModal" class="modal"><div class="modal-content"><h3> Input Pembayaran</h3><div class="input-group"><label> Tanggal</label><input type="date" id="paymentTanggal"></div><div class="input-group"><label> Nama Jamaah *</label><select id="paymentJamaahSelect"><option value="">-- Pilih Jamaah --</option></select></div><div class="input-group"><label> Nominal (Rp)</label><input type="number" id="paymentNominal" placeholder="Contoh: 5000000"></div><div class="input-group"><label> Metode</label><select id="paymentMetode"><option value="Transfer">Transfer</option><option value="Cash">Cash</option><option value="QRIS">QRIS</option></select></div><div class="input-group"><label> Keterangan</label><input type="text" id="paymentKeterangan" placeholder="DP / Cicilan / Pelunasan"></div><div class="row"><button class="btn btn-danger" onclick="closePaymentModal()" style="flex:1">Batal</button><button class="btn btn-primary" onclick="simpanPembayaran()" style="flex:1">Simpan</button></div></div></div>
+<div id="invoiceConfirmModal" class="modal"><div class="modal-content"><h3> Konfirmasi Kirim Invoice</h3><p>Akan dikirim ke nomor WhatsApp:</p><p id="invoiceWANumber" style="font-weight:bold; font-size:18px; background:#f0f0f0; padding:10px; border-radius:10px;"></p><p id="invoiceWAName" style="color:#666;"></p><div class="row" style="margin-top:20px;"><button class="btn btn-danger" onclick="closeInvoiceConfirmModal()" style="flex:1">Batal</button><button class="btn btn-wa" onclick="sendInvoiceWA()" style="flex:1">Kirim via WA</button><button class="btn btn-orange" onclick="copyInvoiceText()" style="flex:1">Salin Teks</button></div></div></div>
+<div id="editHargaModal" class="modal"><div class="modal-content"><h3> Edit Harga Paket</h3><p id="editHargaNama" style="font-weight:bold;"></p><div class="input-group"><label> Total Harga Paket (Rp)</label><input type="number" id="editHargaValue" placeholder="Contoh: 35000000"></div><div class="row"><button class="btn btn-danger" onclick="closeEditHargaModal()" style="flex:1">Batal</button><button class="btn btn-primary" onclick="saveEditHarga()" style="flex:1">Simpan</button></div></div></div>
+<div id="riwayatModal" class="modal"><div class="modal-content"><h3> Riwayat Pembayaran</h3><p id="riwayatNama" style="font-weight:bold;"></p><div id="riwayatListContainer" style="max-height:400px; overflow-y:auto;"></div><div class="row" style="margin-top:15px;"><button class="btn btn-danger" onclick="closeRiwayatModal()" style="flex:1">Tutup</button><button class="btn btn-purple" onclick="printRiwayatPDF()" style="flex:1"><i class="fas fa-file-pdf"></i> Cetak PDF</button></div></div></div>
+<div id="masterFieldModal" class="modal"><div class="modal-content"><h3>Kelola Field Dinamis</h3><div class="dynamic-field"><label>Nama Field</label><input type="text" id="masterNewFieldName" placeholder="contoh: alamat, no_hp"></div><div class="dynamic-field"><label>Label Field</label><input type="text" id="masterNewFieldLabel" placeholder="Contoh: Alamat, No HP"></div><div class="dynamic-field"><label>Tipe</label><select id="masterNewFieldType"><option value="text">Text</option><option value="date">Tanggal</option><option value="tel">Telepon</option><option value="textarea">Text Area</option></select></div><button class="btn btn-primary" onclick="addMasterDynamicField()"> TAMBAH FIELD</button><div id="masterFieldsList" style="margin-top:15px;"></div><button class="btn btn-danger mt-2" onclick="closeMasterFieldModal()">TUTUP</button></div></div>
 <div id="masterItemModal" class="modal"><div class="modal-content"><h3>Kelola Daftar Item</h3><div class="row"><div class="input-group"><label>Nama Item</label><input type="text" id="masterNewItem" placeholder="Contoh: Kain Ihram"></div><button class="btn-small" onclick="addMasterItem()" style="background:var(--primary); color:white; padding:0 15px;">+ Tambah</button></div><div id="masterItemList" style="margin-top:15px;"></div><button class="btn btn-danger mt-2" onclick="closeMasterItemModal()">TUTUP</button></div></div>
-<div id="copyModal" class="modal"><div class="modal-content"><h3>📋 Copy dari database</h3><div class="dynamic-field"><label>Pilih Kategori</label><select id="copyCategory"><option value="Haji">🕋 Haji</option><option value="Toko">🛒 Toko</option><option value="Sekolah">🎓 Sekolah</option><option value="Umroh">🕋 Umroh</option><option value="Donasi">💰 Donasi</option></select></div><p style="font-size:12px; color:#666; margin:10px 0;">⚠️ Data yang sudah ada tidak akan dihapus. Data baru akan ditambahkan.</p><div class="row"><button class="btn btn-danger" onclick="closeCopyModal()" style="flex:1">BATAL</button><button class="btn btn-primary" onclick="executeCopyFromJamaah()" style="flex:1">COPY SEKARANG</button></div></div></div>
-<div id="modeManagerModal" class="modal"><div class="modal-content"><h3><i class="fas fa-sliders-h"></i> Kelola Mode Switcher</h3><p style="font-size:12px; color:#666; margin-bottom:15px;">Centang mode yang ingin ditampilkan.</p><div id="modeManagerList" style="margin-bottom:20px;"></div><div class="row"><div class="input-group" style="flex:3"><input type="text" id="newModeName" placeholder="Nama mode baru (contoh: Wisata)"></div><button class="btn-small" onclick="addNewMode()" style="background:var(--primary); color:white; padding:0 15px;">+ TAMBAH</button></div><div class="row" style="margin-top:15px;"><button class="btn btn-danger" onclick="closeModeManager()" style="flex:1">BATAL</button><button class="btn btn-primary" onclick="saveModes()" style="flex:1">💾 SIMPAN PERUBAHAN</button></div></div></div>
-<div id="entryModal" class="modal"><div class="modal-content"><h3 id="entryModalTitle">Tambah Catatan</h3><div class="input-group"><label>Judul</label><input type="text" id="entryJudul" placeholder="Judul catatan..."></div><div class="input-group"><label>Isi</label><textarea id="entryIsi" rows="8" placeholder="Tulis catatan di sini..."></textarea></div><button class="btn btn-primary" onclick="saveCatatanEntry()">💾 SIMPAN</button><button class="btn btn-danger mt-2" onclick="closeEntryModal()">BATAL</button></div></div>
-<div id="detailModal" class="modal"><div class="modal-content"><h3 id="detailJudul"></h3><div id="detailIsi" style="margin:15px 0; white-space:pre-wrap;"></div><button class="btn btn-wa" onclick="shareDetailToWA()">💬 KIRIM KE WA</button><button class="btn btn-danger mt-2" onclick="closeDetailModal()">TUTUP</button></div></div>
-<div id="dokumenFieldModal" class="modal"><div class="modal-content"><h3>Tambah Jenis Dokumen</h3><div class="dynamic-field"><label>Nama Dokumen</label><input type="text" id="newDokumenName" placeholder="Contoh: Visa, Tiket, Sertifikat"></div><div class="dynamic-field"><label>Icon</label><select id="newDokumenIcon"><option value="🪪">🪪 KTP</option><option value="📘">📘 Paspor</option><option value="📷">📷 Foto</option><option value="💉">💉 Vaksin</option><option value="🛂">🛂 Visa</option><option value="🎫">🎫 Tiket</option><option value="📄">📄 Dokumen</option></select></div><button class="btn btn-primary" onclick="addDokumenField()">➕ TAMBAH</button><button class="btn btn-danger mt-2" onclick="closeDokumenFieldModal()">BATAL</button></div></div>
+<div id="copyModal" class="modal"><div class="modal-content"><h3> Copy dari database</h3><div class="dynamic-field"><label>Pilih Kategori</label><select id="copyCategory"><option value="Haji"> Haji</option><option value="Toko"> Toko</option><option value="Sekolah"> Sekolah</option><option value="Umroh"> Umroh</option><option value="Donasi"> Donasi</option></select></div><p style="font-size:12px; color:#666; margin:10px 0;"> Data yang sudah ada tidak akan dihapus. Data baru akan ditambahkan.</p><div class="row"><button class="btn btn-danger" onclick="closeCopyModal()" style="flex:1">BATAL</button><button class="btn btn-primary" onclick="executeCopyFromJamaah()" style="flex:1">COPY SEKARANG</button></div></div></div>
+<div id="modeManagerModal" class="modal"><div class="modal-content"><h3><i class="fas fa-sliders-h"></i> Kelola Mode Switcher</h3><p style="font-size:12px; color:#666; margin-bottom:15px;">Centang mode yang ingin ditampilkan.</p><div id="modeManagerList" style="margin-bottom:20px;"></div><div class="row"><div class="input-group" style="flex:3"><input type="text" id="newModeName" placeholder="Nama mode baru (contoh: Wisata)"></div><button class="btn-small" onclick="addNewMode()" style="background:var(--primary); color:white; padding:0 15px;">+ TAMBAH</button></div><div class="row" style="margin-top:15px;"><button class="btn btn-danger" onclick="closeModeManager()" style="flex:1">BATAL</button><button class="btn btn-primary" onclick="saveModes()" style="flex:1"> SIMPAN PERUBAHAN</button></div></div></div>
+<div id="entryModal" class="modal"><div class="modal-content"><h3 id="entryModalTitle">Tambah Catatan</h3><div class="input-group"><label>Judul</label><input type="text" id="entryJudul" placeholder="Judul catatan..."></div><div class="input-group"><label>Isi</label><textarea id="entryIsi" rows="8" placeholder="Tulis catatan di sini..."></textarea></div><button class="btn btn-primary" onclick="saveCatatanEntry()"> SIMPAN</button><button class="btn btn-danger mt-2" onclick="closeEntryModal()">BATAL</button></div></div>
+<div id="detailModal" class="modal"><div class="modal-content"><h3 id="detailJudul"></h3><div id="detailIsi" style="margin:15px 0; white-space:pre-wrap;"></div><button class="btn btn-wa" onclick="shareDetailToWA()"> KIRIM KE WA</button><button class="btn btn-danger mt-2" onclick="closeDetailModal()">TUTUP</button></div></div>
+<div id="dokumenFieldModal" class="modal"><div class="modal-content"><h3>Tambah Jenis Dokumen</h3><div class="dynamic-field"><label>Nama Dokumen</label><input type="text" id="newDokumenName" placeholder="Contoh: Visa, Tiket, Sertifikat"></div><div class="dynamic-field"><label>Icon</label><select id="newDokumenIcon"><option value=""> KTP</option><option value=""> Paspor</option><option value=""> Foto</option><option value=""> Vaksin</option><option value=""> Visa</option><option value=""> Tiket</option><option value=""> Dokumen</option></select></div><button class="btn btn-primary" onclick="addDokumenField()"> TAMBAH</button><button class="btn btn-danger mt-2" onclick="closeDokumenFieldModal()">BATAL</button></div></div>
 <div id="previewDokumenModal" class="modal"><div class="modal-content"><h3 id="previewDokumenTitle">Preview Dokumen</h3><img id="previewDokumenImage" class="preview-img" style="max-width:100%; border-radius:16px; margin:15px 0;"><button class="btn btn-primary" onclick="closePreviewDokumenModal()">Tutup</button></div></div>
-<div id="batchFloatingBar" class="batch-floating-bar" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:white; padding:12px 20px; border-radius:50px; box-shadow:0 4px 15px rgba(0,0,0,0.2); display:none; align-items:center; gap:15px; border:2px solid #25d366; z-index:9999;"><span id="batchCount" class="batch-count">0 dipilih</span><button class="btn-batch-wa" onclick="runBatchWA()" style="background:#25d366; color:white; border:none; padding:8px 18px; border-radius:30px;"><i class="fab fa-whatsapp"></i> Kirim WA Massal</button><button class="btn-batch-cancel" onclick="clearBatchSelection()" style="background:none; border:none; color:var(--red); font-size:20px;">✖</button></div>
+<div id="batchFloatingBar" class="batch-floating-bar" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:white; padding:12px 20px; border-radius:50px; box-shadow:0 4px 15px rgba(0,0,0,0.2); display:none; align-items:center; gap:15px; border:2px solid #25d366; z-index:9999;"><span id="batchCount" class="batch-count">0 dipilih</span><button class="btn-batch-wa" onclick="runBatchWA()" style="background:#25d366; color:white; border:none; padding:8px 18px; border-radius:30px;"><i class="fab fa-whatsapp"></i> Kirim WA Massal</button><button class="btn-batch-cancel" onclick="clearBatchSelection()" style="background:none; border:none; color:var(--red); font-size:20px;"></button></div>
 
 <script>
 // ==================== SCRIPT ASLI (DIPERBAIKI UNTUK 4 POIN) ====================
@@ -2212,29 +2212,29 @@ function initDarkMode() {
     if (darkMode) { 
         document.body.classList.add('dark-mode'); 
         const toggleBtn = document.getElementById('darkModeToggle'); 
-        if (toggleBtn) toggleBtn.innerHTML = '☀️'; 
+        if (toggleBtn) toggleBtn.innerHTML = ''; 
     }
     const toggleBtn = document.getElementById('darkModeToggle');
     if (toggleBtn) toggleBtn.addEventListener('click', function() { 
         document.body.classList.toggle('dark-mode'); 
         const isDark = document.body.classList.contains('dark-mode'); 
         localStorage.setItem('safara_dark_mode', isDark); 
-        this.innerHTML = isDark ? '☀️' : '🌙'; 
+        this.innerHTML = isDark ? '' : ''; 
     });
 }
 
 // Menu Grid
 const menuItemsPremium = [
-    { id: 'estimasi', icon: '💰', label: 'Cuan Plan', badge: 'Estimasi' }, 
-    { id: 'kas', icon: '📊', label: 'Uang Kas', badge: 'Kas' }, 
-    { id: 'jamaah', icon: '👥', label: 'Database', badge: 'Jamaah' }, 
-    { id: 'jamaahkita', icon: '👥', label: 'Jamaah on proses', badge: 'Proses' }, 
-    { id: 'catatan', icon: '📝', label: 'Catatan', badge: 'Notes' }, 
-    { id: 'zakat', icon: '📊', label: 'Zakat', badge: 'Kalkulator' }, 
-    { id: 'pembayaran', icon: '💰', label: 'Pembayaran', badge: 'Tagihan' }, 
-    { id: 'datamaster', icon: '🔄', label: 'Multi Event', badge: 'Event' }, 
-    { id: 'konfigurasi', icon: '⚙️', label: 'Konfigurasi', badge: 'Setting' }, 
-    { id: 'fitur', icon: '📦', label: 'LENGKAP', badge: 'Fitur' }
+    { id: 'estimasi', icon: '', label: 'Cuan Plan', badge: 'Estimasi' }, 
+    { id: 'kas', icon: '', label: 'Uang Kas', badge: 'Kas' }, 
+    { id: 'jamaah', icon: '', label: 'Database', badge: 'Jamaah' }, 
+    { id: 'jamaahkita', icon: '', label: 'Jamaah on proses', badge: 'Proses' }, 
+    { id: 'catatan', icon: '', label: 'Catatan', badge: 'Notes' }, 
+    { id: 'zakat', icon: '', label: 'Zakat', badge: 'Kalkulator' }, 
+    { id: 'pembayaran', icon: '', label: 'Pembayaran', badge: 'Tagihan' }, 
+    { id: 'datamaster', icon: '', label: 'Multi Event', badge: 'Event' }, 
+    { id: 'konfigurasi', icon: '', label: 'Konfigurasi', badge: 'Setting' }, 
+    { id: 'fitur', icon: '', label: 'LENGKAP', badge: 'Fitur' }
 ];
 
 let isAdminModePremium = false;
@@ -2247,7 +2247,7 @@ function renderMenuPremium() {
         const menu = menuItemsPremium[i]; 
         const isVisible = localStorage.getItem(`menu_${menu.id}_visible`) !== 'false'; 
         if(isVisible || isAdminModePremium) 
-            html += `<div class="menu-card-premium" onclick="showPage('${menu.id}')">${isAdminModePremium ? '<div class="edit-badge">✏️</div>' : ''}<div class="menu-icon">${menu.icon}</div><div class="menu-label">${menu.label}</div><div class="menu-badge">${menu.badge}</div></div>`; 
+            html += `<div class="menu-card-premium" onclick="showPage('${menu.id}')">${isAdminModePremium ? '<div class="edit-badge"></div>' : ''}<div class="menu-icon">${menu.icon}</div><div class="menu-label">${menu.label}</div><div class="menu-badge">${menu.badge}</div></div>`; 
         else 
             html += `<div class="menu-card-premium" style="opacity:0.3; cursor:default;" onclick="return false;"><div class="menu-icon">${menu.icon}</div><div class="menu-label">${menu.label}</div><div class="menu-badge">${menu.badge}</div></div>`; 
     } 
@@ -2586,8 +2586,8 @@ function hitungUmroh() {
     const totalOmzet=jual*(nJam-nFoc); 
     const f=n=>"Rp "+Math.round(n).toLocaleString('id-ID'); 
     const lokasi=document.getElementById('lokasiPaket').value; 
-    const garis="━━━━━━━━━━━━━━━━━━"; 
-    lastCalculatedText=`🧾 *Ringkasan Estimasi Paket*\n${garis}\n📍 *${lokasi}*\n👥 *Total Jamaah:* ${nJam}\n💰 *Harga per Pax:* *${f(jual)}*\n${garis}\n📞 *Silakan hubungi admin untuk detail.*`; 
+    const garis=""; 
+    lastCalculatedText=` *Ringkasan Estimasi Paket*\n${garis}\n *${lokasi}*\n *Total Jamaah:* ${nJam}\n *Harga per Pax:* *${f(jual)}*\n${garis}\n *Silakan hubungi admin untuk detail.*`; 
     lastCalculatedPrice=jual; 
     lastCalculatedPaket=lokasi; 
     lastCalculatedTotalJam=nJam; 
@@ -2599,7 +2599,7 @@ function hitungUmroh() {
 
 function salinRingkasan() { 
     if(lastCalculatedText) { 
-        navigator.clipboard.writeText(lastCalculatedText).then(()=>showToast("✅ Ringkasan tersalin!")).catch(()=>showToast("❌ Gagal menyalin")); 
+        navigator.clipboard.writeText(lastCalculatedText).then(()=>showToast(" Ringkasan tersalin!")).catch(()=>showToast(" Gagal menyalin")); 
     } else { 
         showToast('Silakan hitung estimasi dulu!'); 
     } 
@@ -2680,7 +2680,7 @@ function renderKasTable() {
     dataKas.forEach(i=>{ 
         if(i.tipe==='masuk') masuk+=i.nom; 
         else keluar+=i.nom; 
-        body.innerHTML+=`<tr><td style="vertical-align:middle; padding:10px 5px;">${i.tgl}</td><td style="vertical-align:middle; padding:10px 5px;"><span style="background:var(--teal); color:white; padding:2px 8px; border-radius:12px; font-size:10px;">${escapeHtml(i.kegiatan)}</span></td><td style="vertical-align:middle; padding:10px 5px;">${escapeHtml(i.ket)}</td><td class="${i.tipe==='masuk'?'txt-in':'txt-out'}" style="vertical-align:middle; padding:10px 5px;">Rp ${i.nom.toLocaleString('id-ID')}</td><td style="vertical-align:middle; padding:10px 5px;"><button class="btn-del" onclick="confirmHapusTransaksi(${i.id})">🗑️</button></td></tr>`; 
+        body.innerHTML+=`<tr><td style="vertical-align:middle; padding:10px 5px;">${i.tgl}</td><td style="vertical-align:middle; padding:10px 5px;"><span style="background:var(--teal); color:white; padding:2px 8px; border-radius:12px; font-size:10px;">${escapeHtml(i.kegiatan)}</span></td><td style="vertical-align:middle; padding:10px 5px;">${escapeHtml(i.ket)}</td><td class="${i.tipe==='masuk'?'txt-in':'txt-out'}" style="vertical-align:middle; padding:10px 5px;">Rp ${i.nom.toLocaleString('id-ID')}</td><td style="vertical-align:middle; padding:10px 5px;"><button class="btn-del" onclick="confirmHapusTransaksi(${i.id})"></button></td></tr>`; 
     }); 
     updateSaldoKas(); 
 }
@@ -2724,9 +2724,9 @@ function buatLaporanWA() {
     const f=n=>"Rp "+n.toLocaleString('id-ID'); 
     let detail=""; 
     dataKas.forEach(i=>{ 
-        detail+=`${i.tipe==='masuk'?'🟢':'🔴'} ${i.tgl} | [${i.kegiatan}] ${i.ket}\n   💰 ${f(i.nom)}\n\n`; 
+        detail+=`${i.tipe==='masuk'?'':''} ${i.tgl} | [${i.kegiatan}] ${i.ket}\n    ${f(i.nom)}\n\n`; 
     }); 
-    lastWAText=`🧾 *LAPORAN KEUANGAN ${judul.toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n📍 *${judul}*\n📅 ${new Date().toLocaleDateString('id-ID')}\n\n━━━━━━━━━━━━━━━━━━\n💚 *TOTAL MASUK:* ${f(masuk)}\n❤️ *TOTAL KELUAR:* ${f(keluar)}\n━━━━━━━━━━━━━━━━━━\n💰 *SALDO AKHIR:* *${f(masuk-keluar)}*\n\n━━━━━━━━━━━━━━━━━━\n📋 *DETAIL TRANSAKSI:*\n━━━━━━━━━━━━━━━━━━\n\n${detail}\n🤖 Generated by Safara`; 
+    lastWAText=` *LAPORAN KEUANGAN ${judul.toUpperCase()}*\n\n *${judul}*\n ${new Date().toLocaleDateString('id-ID')}\n\n\n *TOTAL MASUK:* ${f(masuk)}\n *TOTAL KELUAR:* ${f(keluar)}\n\n *SALDO AKHIR:* *${f(masuk-keluar)}*\n\n\n *DETAIL TRANSAKSI:*\n\n\n${detail}\n Generated by Safara`; 
     const hasilWA=document.getElementById('hasilWA'); 
     hasilWA.innerHTML=`<div class="res-item"><span>Total Masuk</span><span style="color:#2ecc71">${f(masuk)}</span></div><div class="res-item"><span>Total Keluar</span><span style="color:#e74c3c">${f(keluar)}</span></div><div class="res-item"><span>SALDO AKHIR</span><span class="highlight">${f(masuk-keluar)}</span></div><button class="btn" onclick="salinLaporanWA()" style="background:#34495e; margin-top:15px;">SALIN LAPORAN WA</button>`; 
     hasilWA.style.display='block'; 
@@ -2735,7 +2735,7 @@ function buatLaporanWA() {
 
 function salinLaporanWA() { 
     if(lastWAText) { 
-        navigator.clipboard.writeText(lastWAText).then(()=>showToast("✅ Laporan tersalin!")).catch(()=>showToast("❌ Gagal menyalin")); 
+        navigator.clipboard.writeText(lastWAText).then(()=>showToast(" Laporan tersalin!")).catch(()=>showToast(" Gagal menyalin")); 
     } else { 
         showToast('Buat laporan dulu!'); 
     } 
@@ -2894,10 +2894,10 @@ function renderJamaahListWithPagination() {
         document.getElementById('paginationContainer').innerHTML=''; 
         return; 
     } 
-    let html=`<div style="margin-bottom:10px; font-size:0.8rem; color:var(--accent);">📋 Total: ${jamaahFilteredList.length} jamaah (halaman ${currentJamaahPage} dari ${totalPages})</div>`; 
+    let html=`<div style="margin-bottom:10px; font-size:0.8rem; color:var(--accent);"> Total: ${jamaahFilteredList.length} jamaah (halaman ${currentJamaahPage} dari ${totalPages})</div>`; 
     pageData.forEach((j,idx)=>{ 
         const displayNum=start+idx+1; 
-        html+=`<div class="jamaah-card"><div class="jamaah-header"><div><div class="jamaah-nama"><span style="background:var(--primary); color:white; display:inline-block; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:13px; margin-right:10px;">${displayNum}</span> ${escapeHtml(j.nama_lengkap)}</div><div class="jamaah-tgl">📅 ${j.created_at||'-'}</div></div><div class="jamaah-actions"><button class="btn-share-wa" onclick="shareSingleJamaahById('${j.id}')">💬</button><button class="btn-edit-jamaah" onclick="editJamaahById('${j.id}')">✏️</button><button class="btn-delete-jamaah" onclick="confirmDeleteJamaahById('${j.id}')">🗑️</button></div></div><div class="jamaah-detail">`; 
+        html+=`<div class="jamaah-card"><div class="jamaah-header"><div><div class="jamaah-nama"><span style="background:var(--primary); color:white; display:inline-block; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:13px; margin-right:10px;">${displayNum}</span> ${escapeHtml(j.nama_lengkap)}</div><div class="jamaah-tgl"> ${j.created_at||'-'}</div></div><div class="jamaah-actions"><button class="btn-share-wa" onclick="shareSingleJamaahById('${j.id}')"></button><button class="btn-edit-jamaah" onclick="editJamaahById('${j.id}')"></button><button class="btn-delete-jamaah" onclick="confirmDeleteJamaahById('${j.id}')"></button></div></div><div class="jamaah-detail">`; 
         for(const field of dynamicFieldsJamaah){ 
             const val=j.additional_fields?.[field.name]||''; 
             if(val) html+=`<div class="jamaah-detail-item"><strong>${escapeHtml(field.label)}:</strong> ${escapeHtml(val)}</div>`; 
@@ -2907,11 +2907,11 @@ function renderJamaahListWithPagination() {
     container.innerHTML=html; 
     let paginationHtml=''; 
     if(totalPages>1){ 
-        paginationHtml+=`<button onclick="goToJamaahPage(1)" ${currentJamaahPage===1?'disabled':''}>«</button><button onclick="goToJamaahPage(${currentJamaahPage-1})" ${currentJamaahPage===1?'disabled':''}>‹</button>`; 
+        paginationHtml+=`<button onclick="goToJamaahPage(1)" ${currentJamaahPage===1?'disabled':''}>�</button><button onclick="goToJamaahPage(${currentJamaahPage-1})" ${currentJamaahPage===1?'disabled':''}>�</button>`; 
         for(let i=Math.max(1,currentJamaahPage-2);i<=Math.min(totalPages,currentJamaahPage+2);i++){ 
             paginationHtml+=`<button onclick="goToJamaahPage(${i})" class="${i===currentJamaahPage?'active':''}">${i}</button>`; 
         } 
-        paginationHtml+=`<button onclick="goToJamaahPage(${currentJamaahPage+1})" ${currentJamaahPage===totalPages?'disabled':''}>›</button><button onclick="goToJamaahPage(${totalPages})" ${currentJamaahPage===totalPages?'disabled':''}>»</button>`; 
+        paginationHtml+=`<button onclick="goToJamaahPage(${currentJamaahPage+1})" ${currentJamaahPage===totalPages?'disabled':''}>�</button><button onclick="goToJamaahPage(${totalPages})" ${currentJamaahPage===totalPages?'disabled':''}>�</button>`; 
     } 
     document.getElementById('paginationContainer').innerHTML=paginationHtml; 
 }
@@ -2948,12 +2948,12 @@ function resetJamaahFilter(){
 function shareSingleJamaahById(id){ 
     const j=jamaahList.find(j=>j.id==id); 
     if(!j) return; 
-    let text=`*database*\n━━━━━━━━━━━━━━━━━━\n*Nama:* ${j.nama_lengkap}\n`; 
+    let text=`*database*\n\n*Nama:* ${j.nama_lengkap}\n`; 
     for(const field of dynamicFieldsJamaah){ 
         const val=j.additional_fields?.[field.name]||''; 
         if(val) text+=`*${field.label}:* ${val}\n`; 
     } 
-    text+=`\n📅 *Tgl Input:* ${j.created_at||'-'}\n#Safara`; 
+    text+=`\n *Tgl Input:* ${j.created_at||'-'}\n#Safara`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
@@ -3035,7 +3035,7 @@ function closeJamaahModal(){
 
 function shareAllJamaahToWA(){ 
     if(jamaahList.length===0) return showToast('Tidak ada database!'); 
-    let text=`*DAFTAR JAMAAH*\n━━━━━━━━━━━━━━━━━━\n📊 *Total: ${jamaahList.length} Jamaah*\n━━━━━━━━━━━━━━━━━━\n\n`; 
+    let text=`*DAFTAR JAMAAH*\n\n *Total: ${jamaahList.length} Jamaah*\n\n\n`; 
     jamaahList.forEach((j,i)=>{ 
         text+=`${i+1}. *${j.nama_lengkap}*\n`; 
         for(const field of dynamicFieldsJamaah){ 
@@ -3044,7 +3044,7 @@ function shareAllJamaahToWA(){
         } 
         text+=`\n`; 
     }); 
-    text+=`━━━━━━━━━━━━━━━━━━\n#Safara`; 
+    text+=`\n#Safara`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
@@ -3164,10 +3164,10 @@ function confirmDeleteAllJamaah(){
         showToast('Tidak ada data!'); 
         return; 
     } 
-    if(confirm(`⚠️ PERINGATAN: Semua ${jamaahList.length} data akan dihapus PERMANEN! Lanjutkan?`)){ 
+    if(confirm(` PERINGATAN: Semua ${jamaahList.length} data akan dihapus PERMANEN! Lanjutkan?`)){ 
         jamaahList=[]; 
         saveJamaahData(); 
-        showToast('✅ Semua database telah dihapus'); 
+        showToast(' Semua database telah dihapus'); 
         renderJamaahListWithPagination(); 
     } 
 }
@@ -3212,7 +3212,7 @@ function importJamaahFromExcel(input){
                 added++; 
             } 
             saveJamaahData(); 
-            showToast(`✅ Import selesai! ${added} jamaah ditambahkan`); 
+            showToast(` Import selesai! ${added} jamaah ditambahkan`); 
             input.value=''; 
         }; 
         reader.readAsArrayBuffer(file); 
@@ -3305,7 +3305,7 @@ function renderJamaahKitaList(){
     let html=''; 
     [...jamaahKitaList].reverse().forEach((jk,idx)=>{ 
         const displayNum=idx+1; 
-        html+=`<div class="jamaah-card"><div class="jamaah-header"><div><div class="jamaah-nama"><span style="background:var(--primary); color:white; display:inline-block; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:13px; margin-right:10px;">${displayNum}</span> ${escapeHtml(jk.nama_lengkap)}</div><div class="jamaah-tgl">📅 ${jk.created_at||'-'}</div></div><div class="jamaah-actions"><button class="btn-share-wa" onclick="shareSingleJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})">💬</button><button class="btn-edit-jamaah" onclick="editJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})">✏️</button><button class="btn-delete-jamaah" onclick="confirmDeleteJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})">🗑️</button></div></div><div class="jamaah-detail">`; 
+        html+=`<div class="jamaah-card"><div class="jamaah-header"><div><div class="jamaah-nama"><span style="background:var(--primary); color:white; display:inline-block; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:13px; margin-right:10px;">${displayNum}</span> ${escapeHtml(jk.nama_lengkap)}</div><div class="jamaah-tgl"> ${jk.created_at||'-'}</div></div><div class="jamaah-actions"><button class="btn-share-wa" onclick="shareSingleJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})"></button><button class="btn-edit-jamaah" onclick="editJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})"></button><button class="btn-delete-jamaah" onclick="confirmDeleteJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})"></button></div></div><div class="jamaah-detail">`; 
         for(const field of dynamicFieldsJamaahKita){ 
             const val=jk.additional_fields?.[field.name]||''; 
             if(val) html+=`<div class="jamaah-detail-item"><strong>${escapeHtml(field.label)}:</strong> ${escapeHtml(val)}</div>`; 
@@ -3331,7 +3331,7 @@ function filterJamaahKitaList(){
     let html=''; 
     [...filtered].reverse().forEach((jk,idx)=>{ 
         const displayNum=idx+1; 
-        html+=`<div class="jamaah-card"><div class="jamaah-header"><div><div class="jamaah-nama"><span style="background:var(--primary); color:white; display:inline-block; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:13px; margin-right:10px;">${displayNum}</span> ${escapeHtml(jk.nama_lengkap)}</div><div class="jamaah-tgl">📅 ${jk.created_at||'-'}</div></div><div class="jamaah-actions"><button class="btn-share-wa" onclick="shareSingleJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})">💬</button><button class="btn-edit-jamaah" onclick="editJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})">✏️</button><button class="btn-delete-jamaah" onclick="confirmDeleteJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})">🗑️</button></div></div><div class="jamaah-detail">`; 
+        html+=`<div class="jamaah-card"><div class="jamaah-header"><div><div class="jamaah-nama"><span style="background:var(--primary); color:white; display:inline-block; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:13px; margin-right:10px;">${displayNum}</span> ${escapeHtml(jk.nama_lengkap)}</div><div class="jamaah-tgl"> ${jk.created_at||'-'}</div></div><div class="jamaah-actions"><button class="btn-share-wa" onclick="shareSingleJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})"></button><button class="btn-edit-jamaah" onclick="editJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})"></button><button class="btn-delete-jamaah" onclick="confirmDeleteJamaahKita(${jamaahKitaList.findIndex(j=>j.id===jk.id)})"></button></div></div><div class="jamaah-detail">`; 
         for(const field of dynamicFieldsJamaahKita){ 
             const val=jk.additional_fields?.[field.name]||''; 
             if(val) html+=`<div class="jamaah-detail-item"><strong>${escapeHtml(field.label)}:</strong> ${escapeHtml(val)}</div>`; 
@@ -3350,12 +3350,12 @@ function resetJamaahKitaFilter(){
 function shareSingleJamaahKita(index){ 
     const jk=jamaahKitaList[index]; 
     if(!jk) return; 
-    let text=`*Jamaah on proses*\n━━━━━━━━━━━━━━━━━━\n*Nama:* ${jk.nama_lengkap}\n`; 
+    let text=`*Jamaah on proses*\n\n*Nama:* ${jk.nama_lengkap}\n`; 
     for(const field of dynamicFieldsJamaahKita){ 
         const val=jk.additional_fields?.[field.name]||''; 
         if(val) text+=`*${field.label}:* ${val}\n`; 
     } 
-    text+=`\n📅 *Tgl Input:* ${jk.created_at||'-'}\n#Safara`; 
+    text+=`\n *Tgl Input:* ${jk.created_at||'-'}\n#Safara`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
@@ -3387,7 +3387,7 @@ function confirmDeleteJamaahKita(index){
 
 function shareAllJamaahKitaToWA(){ 
     if(jamaahKitaList.length===0) return showToast('Tidak ada database kita!'); 
-    let text=`*Jamaah on proses*\n━━━━━━━━━━━━━━━━━━\n📊 *Total: ${jamaahKitaList.length} Jamaah*\n━━━━━━━━━━━━━━━━━━\n\n`; 
+    let text=`*Jamaah on proses*\n\n *Total: ${jamaahKitaList.length} Jamaah*\n\n\n`; 
     jamaahKitaList.forEach((jk,i)=>{ 
         text+=`${i+1}. *${jk.nama_lengkap}*\n`; 
         for(const field of dynamicFieldsJamaahKita){ 
@@ -3396,7 +3396,7 @@ function shareAllJamaahKitaToWA(){
         } 
         text+=`\n`; 
     }); 
-    text+=`━━━━━━━━━━━━━━━━━━\n#Safara`; 
+    text+=`\n#Safara`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
@@ -3493,11 +3493,11 @@ function confirmDeleteAllJamaahKita(){
         showToast('Tidak ada data Jamaah on proses!'); 
         return; 
     } 
-    if(confirm(`⚠️ PERINGATAN: Semua ${jamaahKitaList.length} data Jamaah on proses akan dihapus PERMANEN! Lanjutkan?`)){ 
+    if(confirm(` PERINGATAN: Semua ${jamaahKitaList.length} data Jamaah on proses akan dihapus PERMANEN! Lanjutkan?`)){ 
         jamaahKitaList=[]; 
         saveJamaahKitaData(); 
         renderJamaahKitaList(); 
-        showToast('✅ Semua data Jamaah on proses telah dihapus'); 
+        showToast(' Semua data Jamaah on proses telah dihapus'); 
     } 
 }
 
@@ -3515,7 +3515,7 @@ function printGroupedPDF(){
     groupFields.forEach(f=>{ 
         fieldOptions+=`<option value="${f.name}">${escapeHtml(f.label)}</option>`; 
     }); 
-    const modalHtml=`<div id="groupPrintModal" class="modal" style="display:flex;"><div class="modal-content"><h3>📄 Cetak PDF Per Kelompok</h3><div class="dynamic-field"><label>Pilih Field Kelompok</label><select id="groupFieldSelect">${fieldOptions}</select></div><div class="dynamic-field"><label>Judul Laporan</label><input type="text" id="reportTitle" value="Daftar Kelompok Jamaah"></div><button class="btn btn-primary" onclick="generateGroupedPDF()">CETAK PDF</button><button class="btn btn-danger mt-2" onclick="closeGroupPrintModal()">BATAL</button></div></div>`; 
+    const modalHtml=`<div id="groupPrintModal" class="modal" style="display:flex;"><div class="modal-content"><h3> Cetak PDF Per Kelompok</h3><div class="dynamic-field"><label>Pilih Field Kelompok</label><select id="groupFieldSelect">${fieldOptions}</select></div><div class="dynamic-field"><label>Judul Laporan</label><input type="text" id="reportTitle" value="Daftar Kelompok Jamaah"></div><button class="btn btn-primary" onclick="generateGroupedPDF()">CETAK PDF</button><button class="btn btn-danger mt-2" onclick="closeGroupPrintModal()">BATAL</button></div></div>`; 
     document.body.insertAdjacentHTML('beforeend', modalHtml); 
 }
 
@@ -3655,14 +3655,14 @@ function hitungZakat(){
     const status=totalHarta>=nisab?'WAJIB ZAKAT':'TIDAK WAJIB ZAKAT'; 
     const bersih=totalHarta-totalZakat; 
     const f=n=>"Rp "+n.toLocaleString('id-ID'); 
-    const garis="━━━━━━━━━━━━━━━━━━"; 
-    lastZakatText=`📊 *KALKULATOR ZAKAT*\n${garis}\n📌 *Jenis Zakat:* ${jenis==='mal'?'Zakat Mal':(jenis==='pertanian'?'Zakat Pertanian':'Zakat Perdagangan')}\n💰 *Total Harta:* ${f(totalHarta)}\n⚖️ *Nisab:* ${f(nisab)}\n📋 *Status:* ${status}\n${garis}\n💵 *Total Zakat:* ${f(totalZakat)}\n✨ *Bersih:* ${f(bersih)}\n${garis}\n#Safara`; 
+    const garis=""; 
+    lastZakatText=` *KALKULATOR ZAKAT*\n${garis}\n *Jenis Zakat:* ${jenis==='mal'?'Zakat Mal':(jenis==='pertanian'?'Zakat Pertanian':'Zakat Perdagangan')}\n *Total Harta:* ${f(totalHarta)}\n *Nisab:* ${f(nisab)}\n *Status:* ${status}\n${garis}\n *Total Zakat:* ${f(totalZakat)}\n *Bersih:* ${f(bersih)}\n${garis}\n#Safara`; 
     let detailHtml=''; 
     for(const d of detailZakat){ 
-        detailHtml+=`<div class="res-item"><span>📌</span><span>${d}</span></div>`; 
+        detailHtml+=`<div class="res-item"><span></span><span>${d}</span></div>`; 
     } 
     const hasil=document.getElementById('hasilZakat'); 
-    hasil.innerHTML=`<div class="res-item"><span>Total Harta</span><b>${f(totalHarta)}</b></div><div class="res-item"><span>Nisab</span><b>${f(nisab)}</b></div><div class="res-item"><span>Status</span><b style="color:${status==='WAJIB ZAKAT'?'#2ecc71':'#e74c3c'}">${status}</b></div><div class="res-item" style="border-top:1px solid rgba(255,255,255,0.2); margin-top:5px; padding-top:10px;"><span>TOTAL ZAKAT</span><span class="highlight">${f(totalZakat)}</span></div><div class="res-item"><span>Bersih</span><b>${f(bersih)}</b></div>${detailHtml.length>0?`<div class="res-item" style="border-top:1px solid rgba(255,255,255,0.2); margin-top:5px; padding-top:10px; flex-direction:column;"><span style="margin-bottom:5px;">📋 DETAIL</span>${detailHtml}</div>`:''}<button class="btn" onclick="salinRingkasanZakat()" style="background:#34495e; margin-top:15px;">SALIN RINGKASAN ZAKAT</button>`; 
+    hasil.innerHTML=`<div class="res-item"><span>Total Harta</span><b>${f(totalHarta)}</b></div><div class="res-item"><span>Nisab</span><b>${f(nisab)}</b></div><div class="res-item"><span>Status</span><b style="color:${status==='WAJIB ZAKAT'?'#2ecc71':'#e74c3c'}">${status}</b></div><div class="res-item" style="border-top:1px solid rgba(255,255,255,0.2); margin-top:5px; padding-top:10px;"><span>TOTAL ZAKAT</span><span class="highlight">${f(totalZakat)}</span></div><div class="res-item"><span>Bersih</span><b>${f(bersih)}</b></div>${detailHtml.length>0?`<div class="res-item" style="border-top:1px solid rgba(255,255,255,0.2); margin-top:5px; padding-top:10px; flex-direction:column;"><span style="margin-bottom:5px;"> DETAIL</span>${detailHtml}</div>`:''}<button class="btn" onclick="salinRingkasanZakat()" style="background:#34495e; margin-top:15px;">SALIN RINGKASAN ZAKAT</button>`; 
     hasil.style.display='block'; 
     hasil.scrollIntoView({behavior:"smooth"}); 
     localStorage.setItem('safara_last_zakat_total', totalZakat); 
@@ -3670,7 +3670,7 @@ function hitungZakat(){
 
 function salinRingkasanZakat(){ 
     if(lastZakatText){ 
-        navigator.clipboard.writeText(lastZakatText).then(()=>showToast("✅ Ringkasan zakat tersalin!")).catch(()=>showToast("❌ Gagal menyalin")); 
+        navigator.clipboard.writeText(lastZakatText).then(()=>showToast(" Ringkasan zakat tersalin!")).catch(()=>showToast(" Gagal menyalin")); 
     } else { 
         showToast('Silakan hitung zakat dulu!'); 
     } 
@@ -3792,9 +3792,9 @@ function renderPaymentJamaahList() {
     filteredJamaah.forEach(j => { 
         const { status, warna, sisa, totalBayar, totalHargaPaket, needInput } = getStatusPembayaran(j); 
         if (needInput) 
-            html += `<div class="payment-jamaah-card" style="border-left-color: #f39c12;"><div class="payment-jamaah-info"><h4>${escapeHtml(j.nama_lengkap)}</h4><div class="payment-price-detail" style="color: #f39c12;">⚠️ Total Harga Paket belum diisi!</div></div><div><button class="payment-btn-bayar" onclick="openEditHargaModal('${j.id}')" style="background:#f39c12; color:white;"><i class="fas fa-tag"></i> Atur Harga</button></div></div>`; 
+            html += `<div class="payment-jamaah-card" style="border-left-color: #f39c12;"><div class="payment-jamaah-info"><h4>${escapeHtml(j.nama_lengkap)}</h4><div class="payment-price-detail" style="color: #f39c12;"> Total Harga Paket belum diisi!</div></div><div><button class="payment-btn-bayar" onclick="openEditHargaModal('${j.id}')" style="background:#f39c12; color:white;"><i class="fas fa-tag"></i> Atur Harga</button></div></div>`; 
         else 
-            html += `<div class="payment-jamaah-card" style="border-left-color: ${warna};"><div class="payment-jamaah-info"><h4>${escapeHtml(j.nama_lengkap)}</h4><div class="payment-price-detail">💎 Total Paket: ${formatRupiah(totalHargaPaket)}<br>💸 Dibayar: ${formatRupiah(totalBayar)}</div></div><div style="text-align: right;"><div class="payment-sisa-badge" style="color: ${warna}; margin-bottom: 8px;">${status === 'LUNAS' ? '✅ LUNAS' : '📌 Sisa ' + formatRupiah(sisa)}</div><div><button class="payment-btn-bayar" onclick="openPaymentModalWithJamaah('${j.id}')"><i class="fas fa-plus-circle"></i> Bayar</button><button class="payment-btn-bayar" onclick="prepareInvoice('${j.id}')"><i class="fas fa-file-invoice"></i> WA</button><button class="payment-btn-bayar" onclick="cetakInvoicePDF('${j.id}')"><i class="fas fa-file-pdf"></i> PDF</button><button class="payment-btn-bayar" onclick="openEditHargaModal('${j.id}')"><i class="fas fa-edit"></i> Harga</button><button class="payment-btn-bayar" onclick="openRiwayatModal('${j.id}')"><i class="fas fa-history"></i> Riwayat</button></div></div></div>`; 
+            html += `<div class="payment-jamaah-card" style="border-left-color: ${warna};"><div class="payment-jamaah-info"><h4>${escapeHtml(j.nama_lengkap)}</h4><div class="payment-price-detail"> Total Paket: ${formatRupiah(totalHargaPaket)}<br> Dibayar: ${formatRupiah(totalBayar)}</div></div><div style="text-align: right;"><div class="payment-sisa-badge" style="color: ${warna}; margin-bottom: 8px;">${status === 'LUNAS' ? ' LUNAS' : ' Sisa ' + formatRupiah(sisa)}</div><div><button class="payment-btn-bayar" onclick="openPaymentModalWithJamaah('${j.id}')"><i class="fas fa-plus-circle"></i> Bayar</button><button class="payment-btn-bayar" onclick="prepareInvoice('${j.id}')"><i class="fas fa-file-invoice"></i> WA</button><button class="payment-btn-bayar" onclick="cetakInvoicePDF('${j.id}')"><i class="fas fa-file-pdf"></i> PDF</button><button class="payment-btn-bayar" onclick="openEditHargaModal('${j.id}')"><i class="fas fa-edit"></i> Harga</button><button class="payment-btn-bayar" onclick="openRiwayatModal('${j.id}')"><i class="fas fa-history"></i> Riwayat</button></div></div></div>`; 
     }); 
     if (filteredJamaah.length === 0) html = '<div style="text-align:center; padding:20px; color:#94a3b8;">Tidak ada jamaah yang sesuai dengan filter.</div>'; 
     container.innerHTML = html; 
@@ -3836,8 +3836,8 @@ function simpanPembayaran() {
     const tanggal = document.getElementById('paymentTanggal').value; 
     const metode = document.getElementById('paymentMetode').value; 
     const keterangan = document.getElementById('paymentKeterangan').value.trim() || 'Pembayaran'; 
-    if (!idJamaah) { showToast('❌ Pilih jamaah!'); return; } 
-    if (!nominal || nominal <= 0) { showToast('❌ Masukkan nominal!'); return; } 
+    if (!idJamaah) { showToast(' Pilih jamaah!'); return; } 
+    if (!nominal || nominal <= 0) { showToast(' Masukkan nominal!'); return; } 
     const jamaah = jamaahList.find(j => j.id == idJamaah); 
     if (!jamaah) { showToast('Data jamaah tidak ditemukan'); return; } 
     const newTrx = { 
@@ -3854,7 +3854,7 @@ function simpanPembayaran() {
     closePaymentModal(); 
     renderPaymentDashboard(); 
     renderPaymentJamaahList(); 
-    showToast(`✅ Pembayaran Rp ${nominal.toLocaleString('id-ID')} berhasil!`); 
+    showToast(` Pembayaran Rp ${nominal.toLocaleString('id-ID')} berhasil!`); 
 }
 
 // PERBAIKAN POIN 2: INVOICE WHATSAPP - Mengambil nama instansi dari Konfigurasi Pro, tanpa hardcode
@@ -3872,13 +3872,13 @@ function prepareInvoice(idJamaah) {
     let totalHargaPaket = getTotalHargaPaket(jamaah) || 0; 
     const sisa = totalHargaPaket - totalBayar; 
     // Menggunakan nama instansi dari konfigurasi, bukan hardcode
-    let text = `🏆 *INVOICE PEMBAYARAN - ${instansiNama}* 🏆\n━━━━━━━━━━━━━━━━━━\n👤 *Nama:* ${jamaah.nama_lengkap}\n💎 *Total Paket:* ${formatRupiah(totalHargaPaket)}\n📅 *Tanggal:* ${new Date().toLocaleDateString('id-ID')}\n━━━━━━━━━━━━━━━━━━\n📋 *RINCIAN PEMBAYARAN:*\n`; 
+    let text = ` *INVOICE PEMBAYARAN - ${instansiNama}* \n\n *Nama:* ${jamaah.nama_lengkap}\n *Total Paket:* ${formatRupiah(totalHargaPaket)}\n *Tanggal:* ${new Date().toLocaleDateString('id-ID')}\n\n *RINCIAN PEMBAYARAN:*\n`; 
     if (transaksiList.length === 0) text += `Belum ada pembayaran.\n`; 
     else transaksiList.forEach((t, i) => { 
-        text += `${i+1}. ${t.tanggal} | ${t.keterangan}\n   💰 ${formatRupiah(t.nominal)} (${t.metode})\n`; 
+        text += `${i+1}. ${t.tanggal} | ${t.keterangan}\n    ${formatRupiah(t.nominal)} (${t.metode})\n`; 
     }); 
     // Footer menggunakan nama instansi dari konfigurasi
-    text += `━━━━━━━━━━━━━━━━━━\n💰 *Total Dibayar:* ${formatRupiah(totalBayar)}\n📌 *Sisa Tagihan:* ${formatRupiah(sisa > 0 ? sisa : 0)}\n✅ *Status:* ${sisa <= 0 ? 'LUNAS 🎉' : 'BELUM LUNAS ⚠️'}\n━━━━━━━━━━━━━━━━━━\n_${footerNama}_`; 
+    text += `\n *Total Dibayar:* ${formatRupiah(totalBayar)}\n *Sisa Tagihan:* ${formatRupiah(sisa > 0 ? sisa : 0)}\n *Status:* ${sisa <= 0 ? 'LUNAS ' : 'BELUM LUNAS '}\n\n_${footerNama}_`; 
     currentInvoiceText = text; 
     let waNumber = '628123456789'; 
     if (jamaah.additional_fields && jamaah.additional_fields.whatsapp) { 
@@ -3903,7 +3903,7 @@ function sendInvoiceWA() {
 function copyInvoiceText() { 
     if (currentInvoiceText) { 
         navigator.clipboard.writeText(currentInvoiceText); 
-        showToast('✅ Teks invoice tersalin!'); 
+        showToast(' Teks invoice tersalin!'); 
     } 
     closeInvoiceConfirmModal(); 
 }
@@ -3940,7 +3940,7 @@ async function cetakInvoicePDF(jamaahId) {
         doc.text(`Total Dibayar: ${formatRupiah(totalBayar)}`, 20, finalY); 
         doc.text(`Sisa Tagihan: ${formatRupiah(sisa > 0 ? sisa : 0)}`, 20, finalY+10); 
         doc.setTextColor(sisa <= 0 ? '#2ecc71' : '#e74c3c'); 
-        doc.text(`Status: ${sisa <= 0 ? 'LUNAS ✓' : 'BELUM LUNAS'}`, 20, finalY+20); 
+        doc.text(`Status: ${sisa <= 0 ? 'LUNAS ' : 'BELUM LUNAS'}`, 20, finalY+20); 
         doc.save(`Invoice_${jamaah.nama_lengkap.replace(/\s/g, '_')}.pdf`); 
         showToast('PDF Invoice berhasil dibuat'); 
     } catch(e) { showToast('Gagal PDF: ' + e.message); } 
@@ -3962,7 +3962,7 @@ function closeEditHargaModal() {
 
 function saveEditHarga() { 
     const newHarga = parseInt(document.getElementById('editHargaValue').value); 
-    if (isNaN(newHarga) || newHarga <= 0) { showToast('❌ Masukkan harga yang valid!'); return; } 
+    if (isNaN(newHarga) || newHarga <= 0) { showToast(' Masukkan harga yang valid!'); return; } 
     const jamaah = jamaahList.find(j => j.id == currentEditJamaahId); 
     if (jamaah) { 
         let targetField = null; 
@@ -3983,7 +3983,7 @@ function saveEditHarga() {
         saveJamaahData(); 
         renderPaymentJamaahList(); 
         renderPaymentDashboard(); 
-        showToast(`✅ Harga paket diatur ke ${formatRupiah(newHarga)}`); 
+        showToast(` Harga paket diatur ke ${formatRupiah(newHarga)}`); 
     } 
     closeEditHargaModal(); 
 }
@@ -3995,7 +3995,7 @@ function openRiwayatModal(jamaahId) {
     document.getElementById('riwayatNama').innerHTML = `${jamaah.nama_lengkap} <span style="font-size:12px;">(Total: ${formatRupiah(transaksi.reduce((s,t)=>s+t.nominal,0))})</span>`; 
     let html = ''; 
     transaksi.forEach((t) => { 
-        html += `<div style="background:var(--gray-light); border-radius:12px; padding:12px; margin-bottom:8px;"><div><div style="font-size:12px; color:var(--gray);">📅 ${t.tanggal} | ${t.metode}</div><div><strong>${escapeHtml(t.keterangan)}</strong></div></div><div style="font-weight:bold; color:var(--primary);">${formatRupiah(t.nominal)}</div><div><button onclick="deletePaymentTransaction('${t.id}')" style="background:none; border:none; color:var(--red); font-size:18px;">🗑️</button></div></div>`; 
+        html += `<div style="background:var(--gray-light); border-radius:12px; padding:12px; margin-bottom:8px;"><div><div style="font-size:12px; color:var(--gray);"> ${t.tanggal} | ${t.metode}</div><div><strong>${escapeHtml(t.keterangan)}</strong></div></div><div style="font-weight:bold; color:var(--primary);">${formatRupiah(t.nominal)}</div><div><button onclick="deletePaymentTransaction('${t.id}')" style="background:none; border:none; color:var(--red); font-size:18px;"></button></div></div>`; 
     }); 
     if (transaksi.length === 0) html = '<div style="text-align:center; padding:20px;">Belum ada transaksi</div>'; 
     document.getElementById('riwayatListContainer').innerHTML = html; 
@@ -4014,7 +4014,7 @@ function deletePaymentTransaction(trxId) {
         if (currentRiwayatJamaahId) openRiwayatModal(currentRiwayatJamaahId); 
         renderPaymentDashboard(); 
         renderPaymentJamaahList(); 
-        showToast('✅ Transaksi dihapus'); 
+        showToast(' Transaksi dihapus'); 
     } 
 }
 
@@ -4106,7 +4106,7 @@ function renderCatatanList() {
     } 
     let html = ''; 
     catatanList.forEach((item, idx) => { 
-        html += `<div class="catatan-card" onclick="viewDetailCatatan(${idx})"><div class="catatan-header"><div><div class="catatan-judul">📝 ${escapeHtml(item.judul)}</div><div class="catatan-tgl">📅 ${item.created_at || '-'}</div></div><div class="catatan-actions" onclick="event.stopPropagation()"><button class="btn-share-wa" onclick="shareCatatanItem(${idx})">💬</button><button class="btn-edit-jamaah" onclick="editCatatan(${idx})">✏️</button><button class="btn-delete-jamaah" onclick="confirmDeleteCatatan(${idx})">🗑️</button></div></div><div class="catatan-isi">${escapeHtml(item.isi).substring(0, 100)}${item.isi.length > 100 ? '...' : ''}</div></div>`; 
+        html += `<div class="catatan-card" onclick="viewDetailCatatan(${idx})"><div class="catatan-header"><div><div class="catatan-judul"> ${escapeHtml(item.judul)}</div><div class="catatan-tgl"> ${item.created_at || '-'}</div></div><div class="catatan-actions" onclick="event.stopPropagation()"><button class="btn-share-wa" onclick="shareCatatanItem(${idx})"></button><button class="btn-edit-jamaah" onclick="editCatatan(${idx})"></button><button class="btn-delete-jamaah" onclick="confirmDeleteCatatan(${idx})"></button></div></div><div class="catatan-isi">${escapeHtml(item.isi).substring(0, 100)}${item.isi.length > 100 ? '...' : ''}</div></div>`; 
     }); 
     container.innerHTML = html; 
 }
@@ -4215,7 +4215,7 @@ function renderFolderList() {
     let html = ''; 
     folderList.forEach(folder => { 
         const jamaahInFolder = folder.jamaahIds.map(id => jamaahList.find(j => j.id == id)).filter(j => j); 
-        html += `<div class="folder-card" onclick="openFolderDetail('${folder.id}')"><div class="folder-header"><div class="folder-name">📁 ${escapeHtml(folder.nama)}</div><div class="folder-stats">👥 ${jamaahInFolder.length} jamaah</div></div><div class="folder-actions" onclick="event.stopPropagation()"><button class="btn-edit-jamaah" onclick="editFolder('${folder.id}')">✏️</button><button class="btn-delete-jamaah" onclick="confirmDeleteFolder('${folder.id}')">🗑️</button></div><div class="folder-stats" style="margin-top:8px;">📅 ${folder.created_at || '-'}</div></div>`; 
+        html += `<div class="folder-card" onclick="openFolderDetail('${folder.id}')"><div class="folder-header"><div class="folder-name"> ${escapeHtml(folder.nama)}</div><div class="folder-stats"> ${jamaahInFolder.length} jamaah</div></div><div class="folder-actions" onclick="event.stopPropagation()"><button class="btn-edit-jamaah" onclick="editFolder('${folder.id}')"></button><button class="btn-delete-jamaah" onclick="confirmDeleteFolder('${folder.id}')"></button></div><div class="folder-stats" style="margin-top:8px;"> ${folder.created_at || '-'}</div></div>`; 
     }); 
     container.innerHTML = html; 
 }
@@ -4225,10 +4225,10 @@ function openFolderDetail(folderId) {
     if(!folder) return; 
     let jamaahInFolder = folder.jamaahIds.map(id => jamaahList.find(j => j.id == id)).filter(j => j); 
     let availableJamaah = jamaahList.filter(j => !folder.jamaahIds.includes(j.id)); 
-    let html = `<div class="card-premium"><div class="back-header" style="margin-bottom:15px;"><i class="fas fa-arrow-left" onclick="renderFolderList()" style="cursor:pointer;"></i><h3 style="flex:1; text-align:center;">📁 ${escapeHtml(folder.nama)}</h3><div style="width:30px;"></div></div><div class="input-group"><label>➕ Tambah Jamaah ke Folder</label><select id="addJamaahToFolderSelect"><option value="">-- Pilih Jamaah --</option>${availableJamaah.map(j => `<option value="${j.id}">${escapeHtml(j.nama_lengkap)}</option>`).join('')}</select><button class="btn btn-primary btn-small mt-2" onclick="addJamaahToFolder('${folderId}')">Tambah</button></div><div class="section-title">Daftar Jamaah dalam Folder</div><div id="folderJamaahList">`; 
+    let html = `<div class="card-premium"><div class="back-header" style="margin-bottom:15px;"><i class="fas fa-arrow-left" onclick="renderFolderList()" style="cursor:pointer;"></i><h3 style="flex:1; text-align:center;"> ${escapeHtml(folder.nama)}</h3><div style="width:30px;"></div></div><div class="input-group"><label> Tambah Jamaah ke Folder</label><select id="addJamaahToFolderSelect"><option value="">-- Pilih Jamaah --</option>${availableJamaah.map(j => `<option value="${j.id}">${escapeHtml(j.nama_lengkap)}</option>`).join('')}</select><button class="btn btn-primary btn-small mt-2" onclick="addJamaahToFolder('${folderId}')">Tambah</button></div><div class="section-title">Daftar Jamaah dalam Folder</div><div id="folderJamaahList">`; 
     if(jamaahInFolder.length === 0) html += '<p class="text-center">Belum ada jamaah</p>'; 
     else jamaahInFolder.forEach(j => { 
-        html += `<div class="jamaah-card"><div class="jamaah-header"><div class="jamaah-nama">👤 ${escapeHtml(j.nama_lengkap)}</div><button class="btn-delete-jamaah" onclick="removeJamaahFromFolder('${folderId}', ${j.id})">🗑️ Hapus dari folder</button></div></div>`; 
+        html += `<div class="jamaah-card"><div class="jamaah-header"><div class="jamaah-nama"> ${escapeHtml(j.nama_lengkap)}</div><button class="btn-delete-jamaah" onclick="removeJamaahFromFolder('${folderId}', ${j.id})"> Hapus dari folder</button></div></div>`; 
     }); 
     html += `</div><button class="btn btn-purple btn-small mt-2" onclick="exportFolderToPDF('${folderId}')"><i class="fas fa-file-pdf"></i> Export Folder ke PDF</button><button class="btn btn-teal btn-small mt-2" onclick="exportFolderToExcel('${folderId}')"><i class="fas fa-file-excel"></i> Export Folder ke Excel</button></div>`; 
     document.getElementById('folderListContainer').innerHTML = html; 
@@ -4340,13 +4340,13 @@ async function loadDokumenJenisFromIndexedDB() {
         return new Promise((resolve, reject) => { 
             request.onsuccess = () => { 
                 if (request.result && request.result.data && request.result.data.length > 0) dokumenJenisList = request.result.data; 
-                else dokumenJenisList = [ { id: 'ktp', nama: 'KTP', icon: '🪪' }, { id: 'paspor', nama: 'Paspor', icon: '📘' }, { id: 'foto', nama: 'Foto', icon: '📷' }, { id: 'vaksin', nama: 'Vaksin', icon: '💉' } ]; 
+                else dokumenJenisList = [ { id: 'ktp', nama: 'KTP', icon: '' }, { id: 'paspor', nama: 'Paspor', icon: '' }, { id: 'foto', nama: 'Foto', icon: '' }, { id: 'vaksin', nama: 'Vaksin', icon: '' } ]; 
                 resolve(); 
             }; 
             request.onerror = () => reject(request.error); 
         }); 
     } catch(e) { 
-        dokumenJenisList = [ { id: 'ktp', nama: 'KTP', icon: '🪪' }, { id: 'paspor', nama: 'Paspor', icon: '📘' }, { id: 'foto', nama: 'Foto', icon: '📷' }, { id: 'vaksin', nama: 'Vaksin', icon: '💉' } ]; 
+        dokumenJenisList = [ { id: 'ktp', nama: 'KTP', icon: '' }, { id: 'paspor', nama: 'Paspor', icon: '' }, { id: 'foto', nama: 'Foto', icon: '' }, { id: 'vaksin', nama: 'Vaksin', icon: '' } ]; 
         return Promise.resolve(); 
     } 
 }
@@ -4415,12 +4415,12 @@ function renderDokumenList() {
     let html = ''; 
     filtered.forEach(j => { 
         const status = getStatusKelengkapanDokumen(j.id); 
-        const statusText = status.lengkap ? 'LENGKAP ✓' : `${status.ada}/${status.total} dokumen`; 
+        const statusText = status.lengkap ? 'LENGKAP ' : `${status.ada}/${status.total} dokumen`; 
         const statusClass = status.lengkap ? 'status-lengkap' : 'status-kurang'; 
-        html += `<div class="dokumen-card"><div class="dokumen-header"><div><div class="dokumen-jamaah">👤 ${escapeHtml(j.nama_lengkap)}</div><div style="font-size:11px; color:var(--gray);">📦 ${j.paket || '-'}</div></div><div class="dokumen-status-badge ${statusClass}">${statusText}</div></div><div class="dokumen-grid">`; 
+        html += `<div class="dokumen-card"><div class="dokumen-header"><div><div class="dokumen-jamaah"> ${escapeHtml(j.nama_lengkap)}</div><div style="font-size:11px; color:var(--gray);"> ${j.paket || '-'}</div></div><div class="dokumen-status-badge ${statusClass}">${statusText}</div></div><div class="dokumen-grid">`; 
         for(const jenis of dokumenJenisList) { 
             const hasDoc = dokumenData[j.id] && dokumenData[j.id][jenis.id] && dokumenData[j.id][jenis.id] !== ''; 
-            html += `<div class="dokumen-item"><div class="dokumen-icon">${jenis.icon}</div><div class="dokumen-label">${escapeHtml(jenis.nama)}</div><div class="${hasDoc ? 'dokumen-status-ada' : 'dokumen-status-belum'}">${hasDoc ? '✅ Ada' : '⏳ Belum'}</div><div>${hasDoc ? `<button class="btn-preview-doc" onclick="previewDokumen(${j.id}, '${jenis.id}')"><i class="fas fa-eye"></i></button><button class="btn-delete-doc" onclick="confirmDeleteDokumen(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}')"><i class="fas fa-trash-alt"></i></button>` : ''}<button class="btn-upload-doc" onclick="uploadDokumen(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}')"><i class="fas fa-upload"></i></button></div></div>`; 
+            html += `<div class="dokumen-item"><div class="dokumen-icon">${jenis.icon}</div><div class="dokumen-label">${escapeHtml(jenis.nama)}</div><div class="${hasDoc ? 'dokumen-status-ada' : 'dokumen-status-belum'}">${hasDoc ? ' Ada' : ' Belum'}</div><div>${hasDoc ? `<button class="btn-preview-doc" onclick="previewDokumen(${j.id}, '${jenis.id}')"><i class="fas fa-eye"></i></button><button class="btn-delete-doc" onclick="confirmDeleteDokumen(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}')"><i class="fas fa-trash-alt"></i></button>` : ''}<button class="btn-upload-doc" onclick="uploadDokumen(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}')"><i class="fas fa-upload"></i></button></div></div>`; 
         } 
         html += `</div></div>`; 
     }); 
@@ -4449,7 +4449,7 @@ function previewDokumen(jamaahId, jenisId) {
     if(data) { 
         const jamaah = jamaahList.find(j => j.id == jamaahId); 
         const jenis = dokumenJenisList.find(j => j.id === jenisId); 
-        document.getElementById('previewDokumenTitle').innerText = `📄 ${jenis?.nama} - ${jamaah?.nama_lengkap}`; 
+        document.getElementById('previewDokumenTitle').innerText = ` ${jenis?.nama} - ${jamaah?.nama_lengkap}`; 
         document.getElementById('previewDokumenImage').src = data; 
         document.getElementById('previewDokumenModal').classList.add('show'); 
     } 
@@ -4463,21 +4463,21 @@ async function confirmDeleteDokumen(jamaahId, jenisId, jenisNama) {
         await saveDokumenToIndexedDB(jamaahId, null, null); 
         renderDokumenList(); 
         updateDokumenStats(); 
-        showToast(`✅ ${jenisNama} dihapus`); 
+        showToast(` ${jenisNama} dihapus`); 
     } 
 }
 
 function remindAllKurangDokumen() { 
     const kurang = jamaahList.filter(j => !getStatusKelengkapanDokumen(j.id).lengkap); 
-    if(kurang.length === 0) { showToast('✅ Semua jamaah sudah lengkap dokumennya!'); return; } 
-    let text = `📋 *PENGINGAT DOKUMEN*\n━━━━━━━━━━━━━━━━━━\nBerikut jamaah yang dokumennya belum lengkap:\n\n`; 
+    if(kurang.length === 0) { showToast(' Semua jamaah sudah lengkap dokumennya!'); return; } 
+    let text = ` *PENGINGAT DOKUMEN*\n\nBerikut jamaah yang dokumennya belum lengkap:\n\n`; 
     kurang.forEach((j, i) => { 
         const status = getStatusKelengkapanDokumen(j.id); 
         text += `${i+1}. ${j.nama_lengkap} (${status.ada}/${status.total} dokumen)\n`; 
     }); 
-    text += `━━━━━━━━━━━━━━━━━━\nMohon segera melengkapi dokumen.\n#Safara`; 
+    text += `\nMohon segera melengkapi dokumen.\n#Safara`; 
     navigator.clipboard.writeText(text); 
-    showToast(`✅ Teks reminder untuk ${kurang.length} jamaah tersalin! Bisa paste ke WA`); 
+    showToast(` Teks reminder untuk ${kurang.length} jamaah tersalin! Bisa paste ke WA`); 
 }
 
 function openDokumenFieldModal() { 
@@ -4499,7 +4499,7 @@ async function addDokumenField() {
     closeDokumenFieldModal(); 
     renderDokumenList(); 
     renderDokumenFieldsList(); 
-    showToast(`✅ Jenis dokumen "${nama}" ditambahkan`); 
+    showToast(` Jenis dokumen "${nama}" ditambahkan`); 
 }
 
 function renderDokumenFieldsList() { 
@@ -4551,7 +4551,7 @@ async function downloadAllDokumenZip() {
     if(totalFiles === 0) { showToast('Belum ada dokumen yang diupload!'); return; } 
     const content = await zip.generateAsync({ type: 'blob' }); 
     saveAs(content, `dokumen_jamaah_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.zip`); 
-    showToast(`✅ ZIP berhasil dibuat! ${totalFiles} file tersimpan.`); 
+    showToast(` ZIP berhasil dibuat! ${totalFiles} file tersimpan.`); 
 }
 
 async function kompresGambar(file, maxWidth = 800, quality = 0.7) { 
@@ -4586,7 +4586,7 @@ async function uploadDokumen(jamaahId, jenisId, jenisNama) {
     if (!jamaah) return; 
     const modal = document.createElement('div'); 
     modal.style.cssText = `position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 20px;`; 
-    modal.innerHTML = `<div style="background: var(--white); border-radius: 28px; max-width: 400px; width: 100%; max-height: 90vh; overflow: auto; padding: 24px;"><h3 style="color: var(--primary); margin-bottom: 16px;">📄 Upload ${jenisNama}</h3><p style="font-size: 13px; color: var(--gray); margin-bottom: 16px;">Jamaah: <strong>${escapeHtml(jamaah.nama_lengkap)}</strong></p><div id="previewArea" style="background: var(--gray-light); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 16px; min-height: 200px; display: flex; align-items: center; justify-content: center;"><div style="color: var(--gray);"><i class="fas fa-image" style="font-size: 48px; margin-bottom: 12px; display: block;"></i><span>Belum ada gambar dipilih</span></div></div><div id="fileInfo" style="font-size: 12px; color: var(--gray); margin-bottom: 16px; text-align: center;"></div><input type="file" id="previewFileInput" accept="image/*" style="display: none;"><button id="pilihFileBtn" style="width: 100%; padding: 12px; background: var(--gray-light); border: none; border-radius: 40px; font-weight: 600; margin-bottom: 12px; cursor: pointer; color: var(--primary);">📁 Pilih Gambar</button><div style="display: flex; gap: 12px;"><button id="batalBtn" style="flex: 1; padding: 12px; background: var(--gray-light); border: none; border-radius: 40px; font-weight: 600; cursor: pointer; color: var(--red);">BATAL</button><button id="uploadBtn" style="flex: 1; padding: 12px; background: var(--primary); border: none; border-radius: 40px; font-weight: 600; cursor: pointer; color: white;" disabled>UPLOAD</button></div></div>`; 
+    modal.innerHTML = `<div style="background: var(--white); border-radius: 28px; max-width: 400px; width: 100%; max-height: 90vh; overflow: auto; padding: 24px;"><h3 style="color: var(--primary); margin-bottom: 16px;"> Upload ${jenisNama}</h3><p style="font-size: 13px; color: var(--gray); margin-bottom: 16px;">Jamaah: <strong>${escapeHtml(jamaah.nama_lengkap)}</strong></p><div id="previewArea" style="background: var(--gray-light); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 16px; min-height: 200px; display: flex; align-items: center; justify-content: center;"><div style="color: var(--gray);"><i class="fas fa-image" style="font-size: 48px; margin-bottom: 12px; display: block;"></i><span>Belum ada gambar dipilih</span></div></div><div id="fileInfo" style="font-size: 12px; color: var(--gray); margin-bottom: 16px; text-align: center;"></div><input type="file" id="previewFileInput" accept="image/*" style="display: none;"><button id="pilihFileBtn" style="width: 100%; padding: 12px; background: var(--gray-light); border: none; border-radius: 40px; font-weight: 600; margin-bottom: 12px; cursor: pointer; color: var(--primary);"> Pilih Gambar</button><div style="display: flex; gap: 12px;"><button id="batalBtn" style="flex: 1; padding: 12px; background: var(--gray-light); border: none; border-radius: 40px; font-weight: 600; cursor: pointer; color: var(--red);">BATAL</button><button id="uploadBtn" style="flex: 1; padding: 12px; background: var(--primary); border: none; border-radius: 40px; font-weight: 600; cursor: pointer; color: white;" disabled>UPLOAD</button></div></div>`; 
     document.body.appendChild(modal); 
     let selectedFile = null, originalSizeKB = 0; 
     function showPreview(file) { 
@@ -4599,7 +4599,7 @@ async function uploadDokumen(jamaahId, jenisId, jenisNama) {
         } 
         const sizeKB = (file.size / 1024).toFixed(1), sizeMB = (file.size / (1024 * 1024)).toFixed(2), sizeText = file.size > 1024 * 1024 ? `${sizeMB} MB` : `${sizeKB} KB`; 
         originalSizeKB = parseFloat(sizeKB); 
-        fileInfo.innerHTML = `📁 ${file.name}<br>📦 Ukuran: ${sizeText}`; 
+        fileInfo.innerHTML = ` ${file.name}<br> Ukuran: ${sizeText}`; 
         const reader = new FileReader(); 
         reader.onload = (e) => { previewArea.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px; border-radius: 12px; object-fit: contain;">`; uploadBtn.disabled = false; }; 
         reader.readAsDataURL(file); 
@@ -4615,7 +4615,7 @@ async function uploadDokumen(jamaahId, jenisId, jenisNama) {
         try { 
             let fileToUpload = selectedFile; 
             const sizeMB = selectedFile.size / (1024 * 1024); 
-            if (sizeMB > 0.5) { showToast('📦 Mengompres gambar...'); fileToUpload = await kompresGambar(selectedFile, 800, 0.7); } 
+            if (sizeMB > 0.5) { showToast(' Mengompres gambar...'); fileToUpload = await kompresGambar(selectedFile, 800, 0.7); } 
             const compressedSizeKB = (fileToUpload.size / 1024).toFixed(1), hematPersen = ((1 - fileToUpload.size / selectedFile.size) * 100).toFixed(1); 
             uploadBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> UPLOADING...'; 
             const reader = new FileReader(); 
@@ -4624,14 +4624,14 @@ async function uploadDokumen(jamaahId, jenisId, jenisNama) {
                     await saveDokumenToIndexedDB(jamaahId, jenisId, event.target.result); 
                     renderDokumenList(); 
                     updateDokumenStats(); 
-                    if (sizeMB > 0.5) showToast(`✅ ${jenisNama} berhasil! ${originalSizeKB} KB → ${compressedSizeKB} KB (hemat ${hematPersen}%)`); 
-                    else showToast(`✅ ${jenisNama} berhasil diupload (${compressedSizeKB} KB)`); 
+                    if (sizeMB > 0.5) showToast(` ${jenisNama} berhasil! ${originalSizeKB} KB  ${compressedSizeKB} KB (hemat ${hematPersen}%)`); 
+                    else showToast(` ${jenisNama} berhasil diupload (${compressedSizeKB} KB)`); 
                     modal.remove(); 
-                } catch(err) { showToast('❌ Gagal menyimpan. Coba lagi.'); uploadBtn.disabled = false; uploadBtn.innerHTML = 'UPLOAD'; } 
+                } catch(err) { showToast(' Gagal menyimpan. Coba lagi.'); uploadBtn.disabled = false; uploadBtn.innerHTML = 'UPLOAD'; } 
             }; 
-            reader.onerror = () => { showToast('❌ Gagal membaca file'); uploadBtn.disabled = false; uploadBtn.innerHTML = 'UPLOAD'; }; 
+            reader.onerror = () => { showToast(' Gagal membaca file'); uploadBtn.disabled = false; uploadBtn.innerHTML = 'UPLOAD'; }; 
             reader.readAsDataURL(fileToUpload); 
-        } catch(error) { showToast('❌ Gagal kompres: ' + error); uploadBtn.disabled = false; uploadBtn.innerHTML = 'UPLOAD'; } 
+        } catch(error) { showToast(' Gagal kompres: ' + error); uploadBtn.disabled = false; uploadBtn.innerHTML = 'UPLOAD'; } 
     }; 
     const batalBtn = modal.querySelector('#batalBtn'); 
     batalBtn.onclick = () => modal.remove(); 
@@ -4678,8 +4678,8 @@ async function downloadFullZip() {
         const content = await zip.generateAsync({ type: 'blob' }); 
         const date = new Date().toISOString().slice(0,19).replace(/:/g, '-'); 
         saveAs(content, `Safara_Full_Backup_${date}.zip`); 
-        showToast('✅ Download ZIP berhasil!'); 
-    } catch(e) { showToast('❌ Gagal membuat ZIP: ' + e.message); } 
+        showToast(' Download ZIP berhasil!'); 
+    } catch(e) { showToast(' Gagal membuat ZIP: ' + e.message); } 
 }
 
 function restoreFromZip(input) { 
@@ -4720,9 +4720,9 @@ function restoreFromZip(input) {
                     } 
                 } 
             } 
-            showToast('✅ Restore berhasil! Reload halaman...'); 
+            showToast(' Restore berhasil! Reload halaman...'); 
             setTimeout(() => location.reload(), 2000); 
-        } catch(err) { showToast('❌ Gagal restore: ' + err.message); } 
+        } catch(err) { showToast(' Gagal restore: ' + err.message); } 
     }; 
     reader.readAsArrayBuffer(file); 
     input.value = ''; 
@@ -4731,10 +4731,10 @@ function restoreFromZip(input) {
 // ==================== GOOGLE DRIVE (placeholder) ====================
 function initGoogleDriveAPI() { console.log('Google Drive API - Setup diperlukan'); }
 function checkDriveConnection() { }
-function connectGoogleDrive() { showToast('🚧 Fitur Google Drive memerlukan konfigurasi Client ID di file. Lihat dokumentasi.'); }
-function disconnectDrive() { showToast('🚧 Fitur Google Drive memerlukan konfigurasi'); }
-function backupToDrive() { showToast('🚧 Konfigurasi Google Drive belum lengkap'); }
-function restoreFromDrive() { showToast('🚧 Konfigurasi Google Drive belum lengkap'); }
+function connectGoogleDrive() { showToast(' Fitur Google Drive memerlukan konfigurasi Client ID di file. Lihat dokumentasi.'); }
+function disconnectDrive() { showToast(' Fitur Google Drive memerlukan konfigurasi'); }
+function backupToDrive() { showToast(' Konfigurasi Google Drive belum lengkap'); }
+function restoreFromDrive() { showToast(' Konfigurasi Google Drive belum lengkap'); }
 
 // ==================== CETAK LABEL ====================
 function populateLabelDropdown() { 
@@ -4759,10 +4759,10 @@ function cetakLabel() {
             const kamar = jk?.additional_fields?.kamar || '-'; 
             const bus = jk?.additional_fields?.bus || '-'; 
             const cfg = getKonfigurasiProData(); 
-            const logo = cfg.instansi1.logo ? `<img src="${cfg.instansi1.logo}" style="height:30px; margin-bottom:8px;">` : '🕋 Safara'; 
+            const logo = cfg.instansi1.logo ? `<img src="${cfg.instansi1.logo}" style="height:30px; margin-bottom:8px;">` : ' Safara'; 
             let nameTagHtml = '', luggageHtml = ''; 
             if(template === 'nametag' || template === 'both') nameTagHtml = `<div style="width:220px; padding:15px; background:white; border-radius:12px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); border:1px solid #0D5C4A;"><div style="font-size:14px; font-weight:bold; color:#0D5C4A;">${logo}</div><div style="font-size:18px; font-weight:bold; margin:10px 0; text-transform:uppercase;">${j.nama_lengkap}</div><div style="font-size:11px; color:#666;">Paspor: ${paspor}</div><div style="font-size:11px; color:#666;">WA: ${whatsapp}</div><div style="font-size:11px; color:#666;">Kamar: ${kamar} | Bus: ${bus}</div><div style="font-size:10px; margin-top:8px; color:#888;">${eventName}</div></div>`; 
-            if(template === 'luggage' || template === 'both') luggageHtml = `<div style="width:180px; padding:15px; background:#FFF8E7; border-radius:12px; text-align:center; border:1px dashed #F59E0B;"><div style="font-size:12px; font-weight:bold;">✈️ KOPER - ${eventName}</div><div style="font-size:16px; font-weight:bold; margin:8px 0; text-transform:uppercase;">${j.nama_lengkap}</div><div style="font-size:10px;">Paspor: ${paspor}</div><div style="font-size:10px;">WA: ${whatsapp}</div></div>`; 
+            if(template === 'luggage' || template === 'both') luggageHtml = `<div style="width:180px; padding:15px; background:#FFF8E7; border-radius:12px; text-align:center; border:1px dashed #F59E0B;"><div style="font-size:12px; font-weight:bold;"> KOPER - ${eventName}</div><div style="font-size:16px; font-weight:bold; margin:8px 0; text-transform:uppercase;">${j.nama_lengkap}</div><div style="font-size:10px;">Paspor: ${paspor}</div><div style="font-size:10px;">WA: ${whatsapp}</div></div>`; 
             if(template === 'nametag') html += nameTagHtml; 
             else if(template === 'luggage') html += luggageHtml; 
             else html += `<div style="display:flex; flex-direction:column; gap:10px;">${nameTagHtml}${luggageHtml}</div>`; 
@@ -4840,10 +4840,10 @@ function aturPengingatOtomatis() {
 function renderScheduledReminders() { 
     const container = document.getElementById('reminderScheduledList'); 
     if(!container) return; 
-    if(scheduledReminders.length === 0) { container.innerHTML = '<h4>📋 Pengingat Terjadwal</h4><p class="text-center">Belum ada pengingat terjadwal</p>'; return; } 
-    let html = '<h4>📋 Pengingat Terjadwal</h4>'; 
+    if(scheduledReminders.length === 0) { container.innerHTML = '<h4> Pengingat Terjadwal</h4><p class="text-center">Belum ada pengingat terjadwal</p>'; return; } 
+    let html = '<h4> Pengingat Terjadwal</h4>'; 
     scheduledReminders.forEach(r => { 
-        html += `<div class="reminder-card"><div class="reminder-jamaah">📅 ${new Date(r.schedule).toLocaleString('id-ID')}</div><div class="reminder-jamaah">👥 ${r.jamaahIds.length === 1 && r.jamaahIds[0] === 'all' ? 'Semua Jamaah' : r.jamaahIds.length + ' jamaah'}</div><div style="font-size:12px;">${r.message.substring(0, 50)}${r.message.length > 50 ? '...' : ''}</div><div><button class="btn-danger-small" onclick="hapusPengingat(${r.id})">Hapus</button></div></div>`; 
+        html += `<div class="reminder-card"><div class="reminder-jamaah"> ${new Date(r.schedule).toLocaleString('id-ID')}</div><div class="reminder-jamaah"> ${r.jamaahIds.length === 1 && r.jamaahIds[0] === 'all' ? 'Semua Jamaah' : r.jamaahIds.length + ' jamaah'}</div><div style="font-size:12px;">${r.message.substring(0, 50)}${r.message.length > 50 ? '...' : ''}</div><div><button class="btn-danger-small" onclick="hapusPengingat(${r.id})">Hapus</button></div></div>`; 
     }); 
     container.innerHTML = html; 
 }
@@ -4858,7 +4858,7 @@ function hapusPengingat(id) {
 
 // ==================== RESET ALL DATA ====================
 function confirmResetAllData() { 
-    if(confirm('⚠️ RESET SEMUA DATA? Semua akan hilang!')) { 
+    if(confirm(' RESET SEMUA DATA? Semua akan hilang!')) { 
         localStorage.clear(); 
         showToast('Data direset, reload halaman'); 
         setTimeout(()=>location.reload(),1500); 
@@ -4988,9 +4988,9 @@ async function generateTiketQR() {
 }
 
 function downloadTiketAsImage() {
-    const tiketCard = document.querySelector('.tiket-card');
-    if(!tiketCard) return;
-    html2canvas(tiketCard).then(canvas => {
+    const qrContainer = document.getElementById('tiketQR');
+    if(!qrContainer) return;
+    html2canvas(qrContainer).then(canvas => {
         const link = document.createElement('a');
         link.download = 'tiket.png';
         link.href = canvas.toDataURL();
@@ -5009,7 +5009,7 @@ function shareTiketWA() {
         if(num.startsWith('0')) num = '62' + num.substring(1);
         if(num.length >= 10) waNumber = num;
     }
-    const text = `🎫 *E-TIKET ${jamaah.nama_lengkap}*\n━━━━━━━━━━━━━━━━━━\n👤 Nama: ${jamaah.nama_lengkap}\n📦 Paket: ${jamaah.paket || '-'}\n📅 Tanggal: ${new Date().toLocaleDateString('id-ID')}\n━━━━━━━━━━━━━━━━━━\n#Safara`;
+    const text = ` *E-TIKET ${jamaah.nama_lengkap}*\n\n Nama: ${jamaah.nama_lengkap}\n Paket: ${jamaah.paket || '-'}\n Tanggal: ${new Date().toLocaleDateString('id-ID')}\n\n#Safara`;
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
 }
 
@@ -5084,7 +5084,7 @@ function cetakTiketLangsung() {
         <body>
             ${printContent.outerHTML}
             <div style="text-align: center; margin-top: 20px;">
-                <button onclick="window.print()" class="no-print" style="padding: 10px 20px; background: #0D5C4A; color: white; border: none; border-radius: 8px; cursor: pointer; margin-right: 10px;">🖨️ PRINT</button>
+                <button onclick="window.print()" class="no-print" style="padding: 10px 20px; background: #0D5C4A; color: white; border: none; border-radius: 8px; cursor: pointer; margin-right: 10px;"> PRINT</button>
                 <button onclick="window.close()" class="no-print" style="padding: 10px 20px; background: #ccc; border: none; border-radius: 8px; cursor: pointer;">TUTUP</button>
             </div>
         </body>
@@ -5186,7 +5186,7 @@ function renderMasterTable() {
             const val = item.additional_fields?.[field.name] || '-';
             bodyHtml += `<td>${escapeHtml(val)}</td>`;
         }
-        bodyHtml += `<td>${item.items?.map(p => `<span class="master-badge">${escapeHtml(p)}</span>`).join('') || '-'}</td><td style="white-space:nowrap;"><button onclick="editMasterData('${item.id}')" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;">✏️</button><button onclick="shareSingleMasterToWA('${item.id}')" style="background:none; border:none; color:var(--wa); font-size:1.1rem; cursor:pointer;">💬</button><button onclick="confirmDeleteMasterData('${item.id}')" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;">🗑️</button></td></tr>`;
+        bodyHtml += `<td>${item.items?.map(p => `<span class="master-badge">${escapeHtml(p)}</span>`).join('') || '-'}</td><td style="white-space:nowrap;"><button onclick="editMasterData('${item.id}')" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;"></button><button onclick="shareSingleMasterToWA('${item.id}')" style="background:none; border:none; color:var(--wa); font-size:1.1rem; cursor:pointer;"></button><button onclick="confirmDeleteMasterData('${item.id}')" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;"></button></td></tr>`;
     });
     tbody.innerHTML = bodyHtml;
 }
@@ -5218,7 +5218,7 @@ function clearBatchSelection() {
 function runBatchWA() {
     const selected = document.querySelectorAll('.master-checkbox:checked');
     const hasWA = Array.from(selected).some(cb => cb.getAttribute('data-wa') && cb.getAttribute('data-wa') !== '');
-    if (!hasWA) { showToast("⚠️ Tidak ada nomor WhatsApp!"); return; }
+    if (!hasWA) { showToast(" Tidak ada nomor WhatsApp!"); return; }
     const template = prompt("Ketik pesan WA (Gunakan [nama]):", "Assalamu'alaikum [nama]...");
     if (!template) return;
     selected.forEach((cb, index) => {
@@ -5246,7 +5246,7 @@ function editMasterData(id) {
         if(input) input.value = item.additional_fields?.[field.name] || '';
     }
     setSelectedItems(item.items || []);
-    document.getElementById('masterFormTitle').innerText = '✏️ EDIT DATA';
+    document.getElementById('masterFormTitle').innerText = ' EDIT DATA';
     document.getElementById('masterFormTitle').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -5261,11 +5261,11 @@ function confirmDeleteMasterData(id) {
 
 function confirmDeleteAllMasterData() {
     if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; }
-    if(confirm(`⚠️ Hapus SEMUA ${masterDataList.length} data?`)) {
+    if(confirm(` Hapus SEMUA ${masterDataList.length} data?`)) {
         masterDataList = [];
         saveMasterDataToLocal();
         renderMasterTable();
-        showToast(`✅ Semua data dihapus`);
+        showToast(` Semua data dihapus`);
     }
 }
 
@@ -5288,26 +5288,26 @@ function deleteSelectedMasterData() {
         saveMasterDataToLocal();
         renderMasterTable();
         clearBatchSelection();
-        showToast(`✅ ${idsToDelete.length} data dihapus`);
+        showToast(` ${idsToDelete.length} data dihapus`);
     }
 }
 
 function shareSingleMasterToWA(id) {
     const item = masterDataList.find(d => d.id == id);
     if(!item) return;
-    let text = `*${getMasterJudul().toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n*Nama:* ${item.nama}\n`;
+    let text = `*${getMasterJudul().toUpperCase()}*\n\n*Nama:* ${item.nama}\n`;
     for(const field of masterDynamicFields) {
         const val = item.additional_fields?.[field.name] || '';
         if(val) text += `*${field.label}:* ${val}\n`;
     }
     if(item.items && item.items.length) text += `*Item:* ${item.items.join(', ')}\n`;
-    text += `━━━━━━━━━━━━━━━━━━\n#Safara`;
+    text += `\n#Safara`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
 }
 
 function shareAllMasterToWA() {
     if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; }
-    let text = `*${getMasterJudul().toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n📊 *Total: ${masterDataList.length} data*\n━━━━━━━━━━━━━━━━━━\n\n`;
+    let text = `*${getMasterJudul().toUpperCase()}*\n\n *Total: ${masterDataList.length} data*\n\n\n`;
     masterDataList.forEach((item, i) => {
         text += `${i+1}. *${item.nama}*\n`;
         for(const field of masterDynamicFields) {
@@ -5317,7 +5317,7 @@ function shareAllMasterToWA() {
         if(item.items && item.items.length) text += `   Item: ${item.items.join(', ')}\n`;
         text += `\n`;
     });
-    text += `━━━━━━━━━━━━━━━━━━\n#Safara`;
+    text += `\n#Safara`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
 }
 
@@ -5512,7 +5512,7 @@ function executeCopyFromJamaah() {
         saveMasterDataToLocal();
         renderMasterTable();
         renderMasterForm();
-        showToast(`✅ ${copiedCount} data disalin`);
+        showToast(` ${copiedCount} data disalin`);
     } else { showToast('Tidak ada data baru.'); }
     closeCopyModal();
 }
@@ -5536,10 +5536,10 @@ function saveModesToStorage() {
 function renderDynamicModeSwitcher() {
     const container = document.getElementById('modeSwitcherContainer');
     if(!container) return;
-    const modeIcons = { 'Semua': '📋', 'Haji': '🕋', 'Toko': '🛒', 'Sekolah': '🎓', 'Umroh': '🕋', 'Donasi': '💰' };
+    const modeIcons = { 'Semua': '', 'Haji': '', 'Toko': '', 'Sekolah': '', 'Umroh': '', 'Donasi': '' };
     let html = `<div class="mode-switcher-container">`;
     activeModes.forEach(mode => {
-        html += `<button class="mode-btn ${currentDisplayMode === mode ? 'active' : ''}" onclick="setDisplayMode('${mode}')">${modeIcons[mode] || '📌'} ${mode}</button>`;
+        html += `<button class="mode-btn ${currentDisplayMode === mode ? 'active' : ''}" onclick="setDisplayMode('${mode}')">${modeIcons[mode] || ''} ${mode}</button>`;
     });
     html += `</div>`;
     container.innerHTML = html;
@@ -5623,7 +5623,7 @@ let konfigurasiPro = {
     watermark: { enabled: true, text: 'Safara', opacity: 0.15, fontsize: 60, position: 'diagonal' },
     qr: { enabled: true, text: 'Dokumen Resmi - Divalidasi oleh Sistem Safara', size: 80 },
     settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/SAFARA' },
-    wa_template: { laporan: '🏢 *LAPORAN KAS KANTOR*\n\n💰 Saldo: [saldo]\n📥 Pemasukan: [masuk]\n📤 Pengeluaran: [keluar]\n\nTerima kasih.' }
+    wa_template: { laporan: ' *LAPORAN KAS KANTOR*\n\n Saldo: [saldo]\n Pemasukan: [masuk]\n Pengeluaran: [keluar]\n\nTerima kasih.' }
 };
 
 function loadKonfigurasiPro() {
@@ -5705,7 +5705,7 @@ function saveKonfigurasiPro() {
     };
     konfigurasiPro.wa_template = { laporan: document.getElementById('cfg_wa_laporan').value };
     localStorage.setItem('safara_konfigurasi_pro', JSON.stringify(konfigurasiPro));
-    showToast('✅ Konfigurasi berhasil disimpan!');
+    showToast(' Konfigurasi berhasil disimpan!');
     updateHeaderFromConfig();
 }
 
@@ -5722,7 +5722,7 @@ function exportKonfigurasiPro() {
     a.href = URL.createObjectURL(blob);
     a.download = `safara_konfigurasi_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
-    showToast('📤 Konfigurasi diexport');
+    showToast(' Konfigurasi diexport');
 }
 
 function importKonfigurasiPro(input) {
@@ -5735,7 +5735,7 @@ function importKonfigurasiPro(input) {
             konfigurasiPro = { ...konfigurasiPro, ...imported };
             localStorage.setItem('safara_konfigurasi_pro', JSON.stringify(konfigurasiPro));
             loadKonfigurasiPro();
-            showToast('📥 Konfigurasi diimport!');
+            showToast(' Konfigurasi diimport!');
         } catch(err) { showToast('File tidak valid!'); }
         input.value = '';
     };
@@ -5799,8 +5799,8 @@ async function generateQRPreview() {
     try {
         await QRCode.toCanvas(canvas, text, { width: size });
         document.getElementById('qrPreviewContainer').classList.remove('hidden');
-        showToast('✅ QR Code digenerate!');
-    } catch(e) { showToast('❌ Gagal generate QR'); }
+        showToast(' QR Code digenerate!');
+    } catch(e) { showToast(' Gagal generate QR'); }
 }
 
 // ==================== LOAD SUMBER HARTA ====================
