@@ -9,12 +9,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Safara">
     
-    <!-- PERBAIKAN: FAVICON dengan 🕋 dan background hijau (gabungan dari Auva) -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white'%3E🕋%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white'%3E🕋%3C/text%3E%3C/svg%3E">
-    
-    <!-- PERBAIKAN: MANIFEST menggunakan data URI (mirip Auva) -->
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Safara%22,%22short_name%22:%22Safara%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%230D5C4A%22,%22theme_color%22:%22%230D5C4A%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white'%3E🕋%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22},{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white'%3E🕋%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22}]}">
+    <!-- ========== FAVICON dengan 🕋 dan background hijau #0D5C4A ========== -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3E🕋%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='72' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3E🕋%3C/text%3E%3C/svg%3E">
     
     <!-- ========== ANTI CACHE TAGS ========== -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, proxy-revalidate">
@@ -27,7 +24,7 @@
     
     <!-- ========== CSS DENGAN VERSIONING ========== -->
     <style>
-        /* CSS Version: 2025.01.15-007 (PWA FIXED - from Auva) */
+        /* CSS Version: 2025.01.15-006 (FINAL - FIXED PWA & INVOICE & PRINT TICKET) */
         :root {
             --primary: #0D5C4A;
             --primary-dark: #0A3D31;
@@ -1592,7 +1589,7 @@
             cursor: pointer;
         }
         
-        /* PERBAIKAN PWA: Install button - text pendek seperti Auva */
+        /* PWA Install Button - DIPERBAIKI: Text lebih pendek */
         .install-pwa-btn {
             position: fixed;
             bottom: 140px;
@@ -1659,26 +1656,45 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://apis.google.com/js/api.js"></script>
     
-    <!-- PERBAIKAN PWA: Service Worker dan Install di dalam script (gabungan dari Auva) -->
+    <!-- PWA Manifest & Service Worker Inline -->
     <script>
-        // PERBAIKAN: Service Worker dengan kode yang lebih stabil (dari Auva)
-        const SW_CODE_STABLE = `const CACHE_NAME='safara-v2';const STATIC_ASSETS=['/','https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&family=Amiri&display=swap','https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css','https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js','https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js','https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE_NAME).then(async c=>{try{await c.addAll(STATIC_ASSETS);}catch(e){}}));self.skipWaiting();});self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;if(e.request.url.startsWith('chrome-extension://'))return;e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request).catch(()=>new Response('Offline mode'))));});`;
-        function registerServiceWorker() { 
-            if(!('serviceWorker' in navigator)) return; 
-            const blob = new Blob([SW_CODE_STABLE], { type:'application/javascript' }); 
-            navigator.serviceWorker.register(URL.createObjectURL(blob), { scope:'./' }).catch(e=>console.log(e)); 
-        }
-        if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', registerServiceWorker); 
-        else registerServiceWorker();
+        (function() {
+            const manifestObj = {
+                name: "Safara",
+                short_name: "Safara",
+                description: "Sahabat Digital Perjalanan & Manajemen Jamaah",
+                start_url: ".",
+                display: "standalone",
+                theme_color: "#0D5C4A",
+                background_color: "#0D5C4A",
+                orientation: "portrait",
+                icons: [
+                    { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230D5C4A'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='white'%3E🕋%3C/text%3E%3C/svg%3E", sizes: "any", type: "image/svg+xml", purpose: "any maskable" }
+                ]
+            };
+            const manifestBlob = new Blob([JSON.stringify(manifestObj)], {type: 'application/json'});
+            const manifestURL = URL.createObjectURL(manifestBlob);
+            const linkManifest = document.createElement('link');
+            linkManifest.rel = 'manifest';
+            linkManifest.href = manifestURL;
+            document.head.appendChild(linkManifest);
+            
+            if ('serviceWorker' in navigator) {
+                const swCode = `const CACHE_NAME='safara-v1';const urlsToCache=['.','index.html'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(urlsToCache)))});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(response=>response||fetch(e.request)))});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(cacheNames=>Promise.all(cacheNames.map(cache=>{if(cache!==CACHE_NAME)return caches.delete(cache)}))))});`;
+                const blob = new Blob([swCode], {type: 'application/javascript'});
+                const swURL = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swURL).catch(err => console.log('SW registration failed:', err));
+            }
+        })();
         
-        // PERBAIKAN: PWA Install Handler (text "Install" singkat seperti Auva)
-        let deferredPrompt = null;
+        let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             setTimeout(() => {
                 const installBtn = document.createElement('button');
                 installBtn.className = 'install-pwa-btn';
+                // PERBAIKAN PWA: Text tombol lebih pendek "Install"
                 installBtn.innerHTML = '<i class="fas fa-download"></i> Install';
                 installBtn.onclick = () => {
                     if (deferredPrompt) {
@@ -1692,14 +1708,6 @@
                 };
                 document.body.appendChild(installBtn);
             }, 3000);
-        });
-        
-        // Deteksi jika sudah di-install sebagai standalone, sembunyikan tombol install
-        window.addEventListener('load', () => {
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                const existingBtn = document.querySelector('.install-pwa-btn');
-                if (existingBtn) existingBtn.style.display = 'none';
-            }
         });
     </script>
 </head>
@@ -2094,9 +2102,9 @@
 <div id="batchFloatingBar" class="batch-floating-bar" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:white; padding:12px 20px; border-radius:50px; box-shadow:0 4px 15px rgba(0,0,0,0.2); display:none; align-items:center; gap:15px; border:2px solid #25d366; z-index:9999;"><span id="batchCount" class="batch-count">0 dipilih</span><button class="btn-batch-wa" onclick="runBatchWA()" style="background:#25d366; color:white; border:none; padding:8px 18px; border-radius:30px;"><i class="fab fa-whatsapp"></i> Kirim WA Massal</button><button class="btn-batch-cancel" onclick="clearBatchSelection()" style="background:none; border:none; color:var(--red); font-size:20px;">✖</button></div>
 
 <script>
-// ==================== SCRIPT ASLI SAFARA (TIDAK DIUBAH, HANYA DITAMBAHKAN PERBAIKAN PWA & CETAK TIKET) ====================
+// ==================== SCRIPT ASLI (DIPERBAIKI UNTUK 4 POIN) ====================
 // Cache buster version
-const APP_VERSION = '2025.01.15.008-PWA-FIXED';
+const APP_VERSION = '2025.01.15.006-FINAL';
 
 // Helper functions
 let lastPage = 'home';
@@ -3849,7 +3857,7 @@ function simpanPembayaran() {
     showToast(`✅ Pembayaran Rp ${nominal.toLocaleString('id-ID')} berhasil!`); 
 }
 
-// PERBAIKAN POIN 2: INVOICE WHATSAPP - Mengambil nama instansi dari Konfigurasi Pro (sudah diperbaiki)
+// PERBAIKAN POIN 2: INVOICE WHATSAPP - Mengambil nama instansi dari Konfigurasi Pro, tanpa hardcode
 function prepareInvoice(idJamaah) { 
     currentInvoiceJamaahId = idJamaah; 
     const jamaah = jamaahList.find(j => j.id == idJamaah); 
@@ -5162,7 +5170,7 @@ function renderMasterTable() {
     const thead = document.getElementById('masterTableHead');
     const tbody = document.getElementById('masterTableBody');
     if(!thead || !tbody) return;
-    let headerHtml = '<tr><th class="checkbox-col"><input type="checkbox" id="selectAllMaster" onchange="toggleAllMasterCheckboxes(this)"></th><th>No</th><th>Nama Lengkap</th>';
+    let headerHtml = '<td><th class="checkbox-col"><input type="checkbox" id="selectAllMaster" onchange="toggleAllMasterCheckboxes(this)"></th><th>No</th><th>Nama Lengkap</th>';
     for(const field of masterDynamicFields) headerHtml += `<th>${escapeHtml(field.label)}</th>`;
     headerHtml += '<th>Item</th><th>Aksi</th></tr>';
     thead.innerHTML = headerHtml;
@@ -5173,7 +5181,7 @@ function renderMasterTable() {
         let whatsappValue = '';
         const whatsappField = masterDynamicFields.find(f => f.name.toLowerCase() === 'whatsapp' || f.label.toLowerCase() === 'whatsapp');
         if(whatsappField) whatsappValue = item.additional_fields?.[whatsappField.name] || '';
-        bodyHtml += `<td><td class="checkbox-col"><input type="checkbox" class="master-checkbox" data-nama="${escapeHtml(item.nama)}" data-wa="${escapeHtml(whatsappValue)}" onchange="updateBatchBar()"></td><td style="text-align:center;">${displayNum}</td><td><strong>${escapeHtml(item.nama)}</strong></td>`;
+        bodyHtml += `<tr><td class="checkbox-col"><input type="checkbox" class="master-checkbox" data-nama="${escapeHtml(item.nama)}" data-wa="${escapeHtml(whatsappValue)}" onchange="updateBatchBar()"></td><td style="text-align:center;">${displayNum}</td><td><strong>${escapeHtml(item.nama)}</strong></td>`;
         for(const field of masterDynamicFields) {
             const val = item.additional_fields?.[field.name] || '-';
             bodyHtml += `<td>${escapeHtml(val)}</td>`;
