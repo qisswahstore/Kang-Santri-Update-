@@ -5328,7 +5328,7 @@ function shareSingleMasterToWA(id) {
         if(val) text += `*${field.label}:* ${val}\n`;
     }
     if(item.items && item.items.length) text += `*Item:* ${item.items.join(', ')}\n`;
-    text += `\n#Safara`;
+    text += `\n#${getKonfigurasiProData().instansi1.nama || 'Safara'}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
 }
 
