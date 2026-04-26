@@ -2687,7 +2687,8 @@ function renderKasTable() {
     dataKas.forEach(i=>{ 
         if(i.tipe==='masuk') masuk+=i.nom; 
         else keluar+=i.nom; 
-        body.innerHTML+=`<tr><td style="vertical-align:middle; padding:10px 5px;">${i.tgl}</td><td style="vertical-align:middle; padding:10px 5px;"><span style="background:var(--teal); color:white; padding:2px 8px; border-radius:12px; font-size:10px;">${escapeHtml(i.kegiatan)}</span></td><td style="vertical-align:middle; padding:10px 5px;">${escapeHtml(i.ket)}</td><td class="${i.tipe==='masuk'?'txt-in':'txt-out'}" style="vertical-align:middle; padding:10px 5px;">Rp ${i.nom.toLocaleString('id-ID')}</td><td style="vertical-align:middle; padding:10px 5px;"><button onclick="editTransaksi(${i.id})" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;"><i class="fas fa-edit"></i></button><button class="btn-del" onclick="confirmHapusTransaksi(${i.id})" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`;
+        body.innerHTML+=`<tr><td style="vertical-align:middle; padding:10px 5px;">${i.tgl}</td><td style="vertical-align:middle; padding:10px 5px;"><span style="background:var(--teal); color:white; padding:2px 8px; border-radius:12px; font-size:10px;">${escapeHtml(i.kegiatan)}</span></td><td style="vertical-align:middle; padding:10px 5px;">${escapeHtml(i.ket)}</td><td class="${i.tipe==='masuk'?'txt-in':'txt-out'}" style="vertical-align:middle; padding:10px 5px;">Rp ${i.nom.toLocaleString('id-ID')}</td><td style="vertical-align:middle; padding:10px 5px;"><button onclick="editTransaksi(${i.id})" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;"><i class="fas fa-edit"></i></button><button class="btn-del" onclick="confirmHapusTransaksi(${i.id})" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`; 
+    }); 
     updateSaldoKas(); 
 }
 
@@ -2711,13 +2712,20 @@ function tambahTransaksi() {
     showToast('Transaksi ditambahkan'); 
 }
 
-function confirmHapusTransaksi(id) { 
-    if(confirm('Hapus transaksi ini?')) { 
-        dataKas=dataKas.filter(x=>x.id!==id); 
-        saveKasData(); 
-        showToast('Transaksi dihapus'); 
-    } 
-    }
+function editTransaksi(id) {
+    const item = dataKas.find(x => x.id === id);
+    if(!item) return;
+    const ket = prompt('Keterangan:', item.ket);
+    if(ket === null) return;
+    const nom = prompt('Nominal:', item.nom);
+    if(nom === null) return;
+    item.ket = ket;
+    item.nom = parseInt(nom) || 0;
+    saveKasData();
+    renderKasTable();
+    showToast('Transaksi diperbarui');
+}
+
 function buatLaporanWA() { 
     if(dataKas.length===0) return showToast("Tidak ada data!"); 
     const judul=document.getElementById('kegiatan').value.trim()||"Laporan Keuangan"; 
@@ -2852,7 +2860,7 @@ function confirmResetKas() {
 }
 
 // ==================== DATABASE JAMAAH ====================
-let jamaahList=[], dynamicFieldsJamaah=[], editingJamaahId=null, currentJamaahPage=1, perPageJamaah=10, jamaahFilteredList=[], currentSort='urutan_asli', currentSearch='';
+let jamaahList=[], dynamicFieldsJamaah=[], ingJamaahId=null, currentJamaahPage=1, perPageJamaah=10, jamaahFilteredList=[], currentSort='urutan_asli', currentSearch='';
 
 function loadJamaahData() { 
     const saved=localStorage.getItem('safara_jamaah_list'); 
