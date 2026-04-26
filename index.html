@@ -2718,8 +2718,7 @@ function confirmHapusTransaksi(id) {
         saveKasData(); 
         showToast('Transaksi dihapus'); 
     } 
-}
-
+    }
 function buatLaporanWA() { 
     if(dataKas.length===0) return showToast("Tidak ada data!"); 
     const judul=document.getElementById('kegiatan').value.trim()||"Laporan Keuangan"; 
