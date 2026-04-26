@@ -2687,8 +2687,7 @@ function renderKasTable() {
     dataKas.forEach(i=>{ 
         if(i.tipe==='masuk') masuk+=i.nom; 
         else keluar+=i.nom; 
-        body.innerHTML+=`<tr><td style="vertical-align:middle; padding:10px 5px;">${i.tgl}</td><td style="vertical-align:middle; padding:10px 5px;"><span style="background:var(--teal); color:white; padding:2px 8px; border-radius:12px; font-size:10px;">${escapeHtml(i.kegiatan)}</span></td><td style="vertical-align:middle; padding:10px 5px;">${escapeHtml(i.ket)}</td><td class="${i.tipe==='masuk'?'txt-in':'txt-out'}" style="vertical-align:middle; padding:10px 5px;">Rp ${i.nom.toLocaleString('id-ID')}</td><td style="vertical-align:middle; padding:10px 5px;"><button class="btn-del" onclick="confirmHapusTransaksi(${i.id})"></button></td></tr>`; 
-    }); 
+        body.innerHTML+=`<tr><td style="vertical-align:middle; padding:10px 5px;">${i.tgl}</td><td style="vertical-align:middle; padding:10px 5px;"><span style="background:var(--teal); color:white; padding:2px 8px; border-radius:12px; font-size:10px;">${escapeHtml(i.kegiatan)}</span></td><td style="vertical-align:middle; padding:10px 5px;">${escapeHtml(i.ket)}</td><td class="${i.tipe==='masuk'?'txt-in':'txt-out'}" style="vertical-align:middle; padding:10px 5px;">Rp ${i.nom.toLocaleString('id-ID')}</td><td style="vertical-align:middle; padding:10px 5px;"><button onclick="editTransaksi(${i.id})" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;"><i class="fas fa-edit"></i></button><button class="btn-del" onclick="confirmHapusTransaksi(${i.id})" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`;
     updateSaldoKas(); 
 }
 
