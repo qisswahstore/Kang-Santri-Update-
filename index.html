@@ -303,12 +303,13 @@
         }
         
         .section-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            padding: 0 8px;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    margin-top: 16px;
+    padding: 0 8px;
+}
         .section-title span,
         .section-title > span {
             font-size: 0.8rem;
@@ -345,9 +346,10 @@
             transform: scale(0.97);
         }
         .menu-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
+    font-size: 32px;
+    margin-bottom: 8px;
+    color: var(--primary);
+}
         .menu-label {
             font-weight: 700;
             font-size: 0.7rem;
@@ -937,9 +939,11 @@
             gap: 6px;
         }
         .rekap-number {
-            font-size: 20px;
-            font-weight: bold;
-        }
+    font-size: 15px;
+    font-weight: bold;
+    word-break: break-word;
+    line-height: 1.3;
+}
         .total-rekap {
             background: #F1F5F9;
             border-radius: 16px;
@@ -1395,9 +1399,10 @@
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
         .fitur-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
+    font-size: 40px;
+    margin-bottom: 10px;
+    color: var(--primary);
+}
         .fitur-title {
             font-weight: 700;
             font-size: 0.9rem;
@@ -1714,7 +1719,7 @@
 <body>
 
 <div id="toastPremium" class="toast-premium"></div>
-<div id="splashScreen" style="position:fixed; inset:0; background:linear-gradient(135deg, var(--primary) 0%, #0a3d31 100%); z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition:opacity 0.5s ease;"><div style="width:120px; height:120px; background:white; border-radius:30px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; animation:pulse 2s infinite;"><div style="font-size:70px;"></div></div><div style="color:white; font-size:28px; font-weight:bold;">Safara</div><div style="color:rgba(255,255,255,0.8); font-size:14px;">Sahabat Digital Perjalanan</div><div style="width:200px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin-top:40px; overflow:hidden;"><div style="height:100%; width:100%; background:var(--accent); border-radius:2px;"></div></div></div>
+<div id="splashScreen" style="position:fixed; inset:0; background:linear-gradient(135deg, var(--primary) 0%, #0a3d31 100%); z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition:opacity 0.5s ease;"><div style="width:120px; height:120px; background:white; border-radius:30px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; animation:pulse 2s infinite;"><div style="font-size:70px;">✈️</div></div><div style="color:white; font-size:28px; font-weight:bold;">Safara</div><div style="color:rgba(255,255,255,0.8); font-size:14px;">Sahabat Digital Perjalanan</div><div style="width:200px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin-top:40px; overflow:hidden;"><div style="height:100%; width:100%; background:var(--accent); border-radius:2px;"></div></div></div>
 
 <!-- HOME PAGE -->
 <div id="page-home" class="page active">
@@ -1734,7 +1739,7 @@
                 <p id="homeDate">Memuat...</p>
             </div>
             <div class="greeting-actions">
-                <button id="darkModeToggle" class="dark-mode-toggle"></button>
+                <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
                 <a href="#" id="adminModeToggleBtn" class="admin-toggle-link"><i class="fas fa-shield-alt"></i> Mode Admin</a>
             </div>
         </div>
@@ -1980,13 +1985,13 @@
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2> Fitur Lengkap</h2><div style="width:30px;"></div></div></div>
     <div class="container">
         <div class="fitur-grid">
-            <div class="fitur-card" onclick="showPage('uploaddokumen')"><div class="fitur-icon"></div><div class="fitur-title">Upload Dokumen</div><div class="fitur-desc">Simpan KTP, Paspor, Foto</div></div>
-            <div class="fitur-card" onclick="showPage('foldervirtual')"><div class="fitur-icon"></div><div class="fitur-title">Folder Virtual</div><div class="fitur-desc">Pisah per rombongan</div></div>
-            <div class="fitur-card" onclick="showPage('pengingatwa')"><div class="fitur-icon"></div><div class="fitur-title">Pengingat WA</div><div class="fitur-desc">Kirim pengingat otomatis</div></div>
-            <div class="fitur-card" onclick="showPage('etikettiket')"><div class="fitur-icon"></div><div class="fitur-title">E-Tiket & QR</div><div class="fitur-desc">Tiket digital dengan QR</div></div>
-            <div class="fitur-card" onclick="showPage('cetaklabel')"><div class="fitur-icon"></div><div class="fitur-title">Cetak Label</div><div class="fitur-desc">Name tag / stiker koper</div></div>
-            <div class="fitur-card" onclick="showPage('cloudstorage')"><div class="fitur-icon"></div><div class="fitur-title">Cloud Storage</div><div class="fitur-desc">Backup & Restore data</div></div>
-            <div class="fitur-card" onclick="showPage('dashboard')"><div class="fitur-icon"></div><div class="fitur-title">Dashboard</div><div class="fitur-desc">Grafik statistik data</div></div>
+           <div class="fitur-card" onclick="showPage('uploaddokumen')"><div class="fitur-icon">📁</div><div class="fitur-title">Upload Dokumen</div><div class="fitur-desc">Simpan KTP, Paspor, Foto</div></div>
+            <div class="fitur-card" onclick="showPage('foldervirtual')"><div class="fitur-icon">📂</div><div class="fitur-title">Folder Virtual</div><div class="fitur-desc">Pisah per rombongan</div></div>
+            <div class="fitur-card" onclick="showPage('pengingatwa')"><div class="fitur-icon">📲</div><div class="fitur-title">Pengingat WA</div><div class="fitur-desc">Kirim pengingat otomatis</div></div>
+            <div class="fitur-card" onclick="showPage('etikettiket')"><div class="fitur-icon">🎫</div><div class="fitur-title">E-Tiket & QR</div><div class="fitur-desc">Tiket digital dengan QR</div></div>
+            <div class="fitur-card" onclick="showPage('cetaklabel')"><div class="fitur-icon">🏷️</div><div class="fitur-title">Cetak Label</div><div class="fitur-desc">Name tag / stiker koper</div></div>
+            <div class="fitur-card" onclick="showPage('cloudstorage')"><div class="fitur-icon">☁️</div><div class="fitur-title">Cloud Storage</div><div class="fitur-desc">Backup & Restore data</div></div>
+            <div class="fitur-card" onclick="showPage('dashboard')"><div class="fitur-icon">📈</div><div class="fitur-title">Dashboard</div><div class="fitur-desc">Grafik statistik data</div></div>
         </div>
     </div>
 </div>
@@ -2059,7 +2064,7 @@
         
         <div class="card-premium">
             <div class="cloud-item">
-                <div class="cloud-info"><div class="cloud-icon"></div><div><div class="cloud-name">Google Drive</div><div class="cloud-status" id="driveStatus"><span class="status-disconnected"> Belum Terhubung</span></div></div></div>
+                <div class="cloud-info"><div class="cloud-icon"><i class="fab fa-google-drive"></i></div><div><div class="cloud-name">Google Drive</div><div class="cloud-status" id="driveStatus"><span class="status-disconnected"> Belum Terhubung</span></div></div></div>
                 <div><button id="driveConnectBtn" class="btn-connect" onclick="connectGoogleDrive()"> Hubungkan</button>
                 <button id="driveBackupBtn" class="btn-connect" style="display:none; background: var(--primary);" onclick="backupToDrive()"> Backup</button>
                 <button id="driveRestoreBtn" class="btn-connect" style="display:none; background: var(--purple);" onclick="restoreFromDrive()"> Restore</button>
@@ -2067,9 +2072,11 @@
             </div>
         </div>
         
-        <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon"></div><div><div class="cloud-name">Dropbox</div><div class="cloud-status"><span class="status-disconnected"> Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast(' Fitur Dropbox akan segera hadir!')"> Hubungkan</button></div></div></div>
+       <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon"><i class="fab fa-dropbox"></i></div><div><div class="cloud-name">Dropbox</div><div class="cloud-status"><span class="status-disconnected"> Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast(' Fitur Dropbox akan segera hadir!')"> Hubungkan</button></div></div></div>
         
-        <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon"></div><div><div class="cloud-name">OneDrive</div><div class="cloud-status"><span class="status-disconnected"> Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast(' Fitur OneDrive akan segera hadir!')"> Hubungkan</button></div></div></div>
+        <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon"><i class="fas fa-cloud"></i></div><div><div class="cloud-name">OneDrive</div><div class="cloud-status"><span class="status-disconnected"> Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast(' Fitur OneDrive akan segera hadir!')"> Hubungkan</button></div></div></div>
+
+        <div class="card-premium"><div class="cloud-item"><div class="cloud-info"><div class="cloud-icon"><i class="fas fa-cloud"></i></div><div><div class="cloud-name">Yandex Drive</div><div class="cloud-status"><span class="status-disconnected"> Belum Terhubung</span></div></div></div><div><button class="btn-connect" onclick="showToast('Fitur Yandex Drive akan segera hadir!')"> Hubungkan</button></div></div></div>
     </div>
 </div>
 
@@ -2219,22 +2226,22 @@ function initDarkMode() {
         document.body.classList.toggle('dark-mode'); 
         const isDark = document.body.classList.contains('dark-mode'); 
         localStorage.setItem('safara_dark_mode', isDark); 
-        this.innerHTML = isDark ? '' : ''; 
+        this.innerHTML = isDark ? '☀️' : '🌙'; 
     });
 }
 
 // Menu Grid
 const menuItemsPremium = [
-    { id: 'estimasi', icon: '', label: 'Cuan Plan', badge: 'Estimasi' }, 
-    { id: 'kas', icon: '', label: 'Uang Kas', badge: 'Kas' }, 
-    { id: 'jamaah', icon: '', label: 'Database', badge: 'Jamaah' }, 
-    { id: 'jamaahkita', icon: '', label: 'Jamaah on proses', badge: 'Proses' }, 
-    { id: 'catatan', icon: '', label: 'Catatan', badge: 'Notes' }, 
-    { id: 'zakat', icon: '', label: 'Zakat', badge: 'Kalkulator' }, 
-    { id: 'pembayaran', icon: '', label: 'Pembayaran', badge: 'Tagihan' }, 
-    { id: 'datamaster', icon: '', label: 'Multi Event', badge: 'Event' }, 
-    { id: 'konfigurasi', icon: '', label: 'Konfigurasi', badge: 'Setting' }, 
-    { id: 'fitur', icon: '', label: 'LENGKAP', badge: 'Fitur' }
+    { id: 'estimasi', icon: '📊', label: 'Cuan Plan', badge: 'Estimasi' }, 
+{ id: 'kas', icon: '💰', label: 'Uang Kas', badge: 'Kas' }, 
+{ id: 'jamaah', icon: '🗂️', label: 'Database', badge: 'Jamaah' }, 
+{ id: 'jamaahkita', icon: '⏳', label: 'Jamaah on proses', badge: 'Proses' }, 
+{ id: 'catatan', icon: '📝', label: 'Catatan', badge: 'Notes' }, 
+{ id: 'zakat', icon: '💸', label: 'Zakat', badge: 'Kalkulator' }, 
+{ id: 'pembayaran', icon: '🧾', label: 'Pembayaran', badge: 'Tagihan' }, 
+{ id: 'datamaster', icon: '🗓️', label: 'Multi Event', badge: 'Event' }, 
+{ id: 'konfigurasi', icon: '⚙️', label: 'Konfigurasi', badge: 'Setting' }, 
+{ id: 'fitur', icon: '🚀', label: 'LENGKAP', badge: 'Fitur' }
 ];
 
 let isAdminModePremium = false;
@@ -2726,7 +2733,7 @@ function buatLaporanWA() {
     dataKas.forEach(i=>{ 
         detail+=`${i.tipe==='masuk'?'':''} ${i.tgl} | [${i.kegiatan}] ${i.ket}\n    ${f(i.nom)}\n\n`; 
     }); 
-    lastWAText=` *LAPORAN KEUANGAN ${judul.toUpperCase()}*\n\n *${judul}*\n ${new Date().toLocaleDateString('id-ID')}\n\n\n *TOTAL MASUK:* ${f(masuk)}\n *TOTAL KELUAR:* ${f(keluar)}\n\n *SALDO AKHIR:* *${f(masuk-keluar)}*\n\n\n *DETAIL TRANSAKSI:*\n\n\n${detail}\n Generated by Safara`; 
+    lastWAText=` *LAPORAN KEUANGAN ${judul.toUpperCase()}*\n\n *${judul}*\n ${new Date().toLocaleDateString('id-ID')}\n\n\n *TOTAL MASUK:* ${f(masuk)}\n *TOTAL KELUAR:* ${f(keluar)}\n\n *SALDO AKHIR:* *${f(masuk-keluar)}*\n\n\n *DETAIL TRANSAKSI:*\n\n\n${detail}\n Generated by ${getKonfigurasiProData().instansi1.nama || 'Safara'}`;
     const hasilWA=document.getElementById('hasilWA'); 
     hasilWA.innerHTML=`<div class="res-item"><span>Total Masuk</span><span style="color:#2ecc71">${f(masuk)}</span></div><div class="res-item"><span>Total Keluar</span><span style="color:#e74c3c">${f(keluar)}</span></div><div class="res-item"><span>SALDO AKHIR</span><span class="highlight">${f(masuk-keluar)}</span></div><button class="btn" onclick="salinLaporanWA()" style="background:#34495e; margin-top:15px;">SALIN LAPORAN WA</button>`; 
     hasilWA.style.display='block'; 
@@ -2953,7 +2960,7 @@ function shareSingleJamaahById(id){
         const val=j.additional_fields?.[field.name]||''; 
         if(val) text+=`*${field.label}:* ${val}\n`; 
     } 
-    text+=`\n *Tgl Input:* ${j.created_at||'-'}\n#Safara`; 
+    text+=`\n *Tgl Input:* ${j.created_at||'-'}\n#${getKonfigurasiProData().instansi1.nama || 'Safara'}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
@@ -3656,7 +3663,7 @@ function hitungZakat(){
     const bersih=totalHarta-totalZakat; 
     const f=n=>"Rp "+n.toLocaleString('id-ID'); 
     const garis=""; 
-    lastZakatText=` *KALKULATOR ZAKAT*\n${garis}\n *Jenis Zakat:* ${jenis==='mal'?'Zakat Mal':(jenis==='pertanian'?'Zakat Pertanian':'Zakat Perdagangan')}\n *Total Harta:* ${f(totalHarta)}\n *Nisab:* ${f(nisab)}\n *Status:* ${status}\n${garis}\n *Total Zakat:* ${f(totalZakat)}\n *Bersih:* ${f(bersih)}\n${garis}\n#Safara`; 
+    lastZakatText=` *KALKULATOR ZAKAT*\n${garis}\n *Jenis Zakat:* ${jenis==='mal'?'Zakat Mal':(jenis==='pertanian'?'Zakat Pertanian':'Zakat Perdagangan')}\n *Total Harta:* ${f(totalHarta)}\n *Nisab:* ${f(nisab)}\n *Status:* ${status}\n${garis}\n *Total Zakat:* ${f(totalZakat)}\n *Bersih:* ${f(bersih)}\n${garis}\n#${getKonfigurasiProData().instansi1.nama || 'Safara'}`;
     let detailHtml=''; 
     for(const d of detailZakat){ 
         detailHtml+=`<div class="res-item"><span></span><span>${d}</span></div>`; 
@@ -4106,7 +4113,7 @@ function renderCatatanList() {
     } 
     let html = ''; 
     catatanList.forEach((item, idx) => { 
-        html += `<div class="catatan-card" onclick="viewDetailCatatan(${idx})"><div class="catatan-header"><div><div class="catatan-judul"> ${escapeHtml(item.judul)}</div><div class="catatan-tgl"> ${item.created_at || '-'}</div></div><div class="catatan-actions" onclick="event.stopPropagation()"><button class="btn-share-wa" onclick="shareCatatanItem(${idx})"></button><button class="btn-edit-jamaah" onclick="editCatatan(${idx})"></button><button class="btn-delete-jamaah" onclick="confirmDeleteCatatan(${idx})"></button></div></div><div class="catatan-isi">${escapeHtml(item.isi).substring(0, 100)}${item.isi.length > 100 ? '...' : ''}</div></div>`; 
+        html += `<div class="catatan-card" onclick="viewDetailCatatan(${idx})"><div class="catatan-header"><div><div class="catatan-judul"> ${escapeHtml(item.judul)}</div><div class="catatan-tgl"> ${item.created_at || '-'}</div></div><div class="catatan-actions" onclick="event.stopPropagation()"><button class="btn-share-wa" onclick="shareCatatanItem(${idx})"><i class="fab fa-whatsapp"></i></button><button class="btn-edit-jamaah" onclick="editCatatan(${idx})"><i class="fas fa-edit"></i></button><button class="btn-delete-jamaah" onclick="confirmDeleteCatatan(${idx})"><i class="fas fa-trash"></i></button></div></div><div class="catatan-isi">${escapeHtml(item.isi).substring(0, 100)}${item.isi.length > 100 ? '...' : ''}</div></div>`;
     }); 
     container.innerHTML = html; 
 }
@@ -4162,13 +4169,13 @@ function viewDetailCatatan(idx) {
 function shareDetailToWA() { 
     const item = catatanList[currentDetailIndex]; 
     if(!item) return; 
-    const text = `*${item.judul}*\n\n${item.isi}\n\n#Safara`; 
+    const text = `*${item.judul}*\n\n${item.isi}\n\n#${getKonfigurasiProData().instansi1.nama || 'Safara'}`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
 function shareCatatanItem(idx) { 
     const item = catatanList[idx]; 
-    const text = `*${item.judul}*\n\n${item.isi}\n\n#Safara`; 
+    const text = `*${item.judul}*\n\n${item.isi}\n\n#${getKonfigurasiProData().instansi1.nama || 'Safara'}`; 
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
@@ -4475,7 +4482,7 @@ function remindAllKurangDokumen() {
         const status = getStatusKelengkapanDokumen(j.id); 
         text += `${i+1}. ${j.nama_lengkap} (${status.ada}/${status.total} dokumen)\n`; 
     }); 
-    text += `\nMohon segera melengkapi dokumen.\n#Safara`; 
+    text += `\nMohon segera melengkapi dokumen.\n#${getKonfigurasiProData().instansi1.nama || 'Safara'}`; 
     navigator.clipboard.writeText(text); 
     showToast(` Teks reminder untuk ${kurang.length} jamaah tersalin! Bisa paste ke WA`); 
 }
@@ -4735,6 +4742,20 @@ function connectGoogleDrive() { showToast(' Fitur Google Drive memerlukan konfi
 function disconnectDrive() { showToast(' Fitur Google Drive memerlukan konfigurasi'); }
 function backupToDrive() { showToast(' Konfigurasi Google Drive belum lengkap'); }
 function restoreFromDrive() { showToast(' Konfigurasi Google Drive belum lengkap'); }
+function connectDropbox() { showToast('Fitur Dropbox akan segera hadir!'); }
+function disconnectDropbox() { showToast('Fitur Dropbox akan segera hadir!'); }
+function backupToDropbox() { showToast('Fitur Dropbox akan segera hadir!'); }
+function restoreFromDropbox() { showToast('Fitur Dropbox akan segera hadir!'); }
+
+function connectOneDrive() { showToast('Fitur OneDrive akan segera hadir!'); }
+function disconnectOneDrive() { showToast('Fitur OneDrive akan segera hadir!'); }
+function backupToOneDrive() { showToast('Fitur OneDrive akan segera hadir!'); }
+function restoreFromOneDrive() { showToast('Fitur OneDrive akan segera hadir!'); }
+
+function connectYandex() { showToast('Fitur Yandex Drive akan segera hadir!'); }
+function disconnectYandex() { showToast('Fitur Yandex Drive akan segera hadir!'); }
+function backupToYandex() { showToast('Fitur Yandex Drive akan segera hadir!'); }
+function restoreFromYandex() { showToast('Fitur Yandex Drive akan segera hadir!'); }
 
 // ==================== CETAK LABEL ====================
 function populateLabelDropdown() { 
@@ -5009,7 +5030,7 @@ function shareTiketWA() {
         if(num.startsWith('0')) num = '62' + num.substring(1);
         if(num.length >= 10) waNumber = num;
     }
-    const text = ` *E-TIKET ${jamaah.nama_lengkap}*\n\n Nama: ${jamaah.nama_lengkap}\n Paket: ${jamaah.paket || '-'}\n Tanggal: ${new Date().toLocaleDateString('id-ID')}\n\n#Safara`;
+    const text = ` *E-TIKET ${jamaah.nama_lengkap}*\n\n Nama: ${jamaah.nama_lengkap}\n Paket: ${jamaah.paket || '-'}\n Tanggal: ${new Date().toLocaleDateString('id-ID')}\n\n#${getKonfigurasiProData().instansi1.nama || 'Safara'}`;
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
 }
 
@@ -5170,7 +5191,7 @@ function renderMasterTable() {
     const thead = document.getElementById('masterTableHead');
     const tbody = document.getElementById('masterTableBody');
     if(!thead || !tbody) return;
-    let headerHtml = '<td><th class="checkbox-col"><input type="checkbox" id="selectAllMaster" onchange="toggleAllMasterCheckboxes(this)"></th><th>No</th><th>Nama Lengkap</th>';
+    let headerHtml = '<tr><th class="checkbox-col"><input type="checkbox" id="selectAllMaster" onchange="toggleAllMasterCheckboxes(this)"></th><th>No</th><th>Nama Lengkap</th>';
     for(const field of masterDynamicFields) headerHtml += `<th>${escapeHtml(field.label)}</th>`;
     headerHtml += '<th>Item</th><th>Aksi</th></tr>';
     thead.innerHTML = headerHtml;
@@ -5186,7 +5207,7 @@ function renderMasterTable() {
             const val = item.additional_fields?.[field.name] || '-';
             bodyHtml += `<td>${escapeHtml(val)}</td>`;
         }
-        bodyHtml += `<td>${item.items?.map(p => `<span class="master-badge">${escapeHtml(p)}</span>`).join('') || '-'}</td><td style="white-space:nowrap;"><button onclick="editMasterData('${item.id}')" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;"></button><button onclick="shareSingleMasterToWA('${item.id}')" style="background:none; border:none; color:var(--wa); font-size:1.1rem; cursor:pointer;"></button><button onclick="confirmDeleteMasterData('${item.id}')" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;"></button></td></tr>`;
+        bodyHtml += `<td>${item.items?.map(p => `<span class="master-badge">${escapeHtml(p)}</span>`).join('') || '-'}</td><td style="white-space:nowrap;"><button onclick="editMasterData('${item.id}')" style="background:none; border:none; color:var(--blue); font-size:1.1rem; cursor:pointer;"><i class="fas fa-edit"></i></button><button onclick="shareSingleMasterToWA('${item.id}')" style="background:none; border:none; color:var(--wa); font-size:1.1rem; cursor:pointer;"><i class="fab fa-whatsapp"></i></button><button onclick="confirmDeleteMasterData('${item.id}')" style="background:none; border:none; color:var(--red); font-size:1.1rem; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`;
     });
     tbody.innerHTML = bodyHtml;
 }
@@ -5317,7 +5338,7 @@ function shareAllMasterToWA() {
         if(item.items && item.items.length) text += `   Item: ${item.items.join(', ')}\n`;
         text += `\n`;
     });
-    text += `\n#Safara`;
+    text += `\n#${getKonfigurasiProData().instansi1.nama || 'Safara'}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
 }
 
