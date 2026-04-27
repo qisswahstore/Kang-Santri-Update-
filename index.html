@@ -10269,11 +10269,58 @@ function cetakTiketLangsung() {
 
             </div>
 
-        </body>
+        
+<!-- Install PWA Popup -->
+<div id="installPopup" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:90%; max-width:360px; background:white; border-radius:20px; padding:20px; box-shadow:0 8px 32px rgba(0,0,0,0.2); z-index:99998;">
+<div style="display:flex; align-items:center; gap:14px;">
+<div style="width:56px; height:56px; background:linear-gradient(135deg, var(--primary), #0a3d31); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0;">✈️</div>
+<div style="flex:1;"><div style="font-weight:700; font-size:15px;">Install Safara</div><div style="font-size:12px; color:var(--gray); margin-top:2px;">Tambahkan ke layar utama untuk akses lebih cepat!</div></div>
+<button onclick="tutupInstallPopup()" style="background:none; border:none; color:var(--gray); font-size:20px; cursor:pointer;">✕</button>
+</div>
+<div style="display:flex; gap:10px; margin-top:16px;">
+<button onclick="tutupInstallPopup()" style="flex:1; padding:12px; background:var(--gray-light); color:var(--gray); border:none; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer;">Nanti</button>
+<button onclick="installPWA()" style="flex:2; padding:12px; background:linear-gradient(135deg, var(--primary), #0a3d31); color:white; border:none; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer;">📲 Install Sekarang</button>
+</div></div>
+<script>
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    setTimeout(() => {
+        const alreadyInstalled = localStorage.getItem('safara_installed');
+        if(!alreadyInstalled) {
+            document.getElementById('installPopup').style.display = 'block';
+        }
+    }, 3000);
+});
 
-        </html>
+function installPWA() {
+    if(deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((result) => {
+            if(result.outcome === 'accepted') {
+                localStorage.setItem('safara_installed', 'true');
+                showToast('Safara berhasil diinstall!');
+            }
+            tutupInstallPopup();
+            deferredPrompt = null;
+        });
+    } else {
+        showToast('Buka menu Chrome lalu pilih Add to Home Screen');
+        tutupInstallPopup();
+    }
+}
 
-    `);
+function tutupInstallPopup() {
+    document.getElementById('installPopup').style.display = 'none';
+}
+
+window.addEventListener('appinstalled', () => {
+    localStorage.setItem('safara_installed', 'true');
+    showToast('Safara berhasil diinstall!');
+});
+</script>
+        `);
 
     printWindow.document.close();
 
@@ -11887,4 +11934,4 @@ document.addEventListener('DOMContentLoaded', initPremium);
 
 </body>
 
-                    </html>
+    </html>
