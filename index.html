@@ -1861,6 +1861,11 @@
 <div id="splashLoading" style="width:100%; max-width:320px;">
 <div style="width:200px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin:0 auto; overflow:hidden;">
 <div style="height:100%; width:100%; background:var(--accent); border-radius:2px;"></div></div>
+<div style="text-align:center;margin-top:30px;">
+<button onclick="resetIndexedDBDarurat()" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.2);padding:8px 16px;border-radius:10px;font-size:11px;cursor:pointer;">
+⚙️ Reset darurat (jika crash)
+</button>
+</div>
 </div>
 <div id="splashChoice" style="display:none; width:100%; max-width:320px;">
 <button onclick="pilihLoginGoogle()" style="width:100%; padding:16px; background:white; color:#333; border:none; border-radius:16px; font-size:16px; font-weight:600; cursor:pointer; margin-bottom:14px; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 20px rgba(0,0,0,0.15);">
@@ -2021,8 +2026,33 @@
             <div class="row">
                 <input type="text" id="jamaahKitaNewFieldName" placeholder="Nama field (contoh: maskapai)" style="flex:2;">
                 <input type="text" id="jamaahKitaNewFieldLabel" placeholder="Label (contoh: Maskapai)" style="flex:2;">
-                <button class="btn btn-primary btn-small" onclick="addJamaahKitaDynamicField()" style="width:auto; padding:0 16px;">+ Tambah</button>
             </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:12px;color:var(--gray);margin-bottom:4px;display:block;">Pilih Icon:</label>
+                <select id="iconSelectKita" style="width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;font-size:16px;margin-bottom:8px;">
+                    <option value="📌">📌 Pin (default)</option>
+                    <option value="🛏️">🛏️ Kamar</option>
+                    <option value="🚌">🚌 Bus</option>
+                    <option value="🏨">🏨 Hotel</option>
+                    <option value="📘">📘 Paspor/Dokumen</option>
+                    <option value="✈️">✈️ Penerbangan</option>
+                    <option value="🗓️">🗓️ Tanggal</option>
+                    <option value="👤">👤 Orang/Jamaah</option>
+                    <option value="📞">📞 Telepon</option>
+                    <option value="🏷️">🏷️ Label/Warna</option>
+                    <option value="💳">💳 Kartu</option>
+                    <option value="🎫">🎫 Tiket</option>
+                    <option value="🕌">🕌 Masjid</option>
+                    <option value="📋">📋 Daftar</option>
+                    <option value="🔑">🔑 Kunci/Akses</option>
+                    <option value="🌙">🌙 Malam</option>
+                    <option value="⭐">⭐ Bintang</option>
+                    <option value="📍">📍 Lokasi</option>
+                    <option value="🗺️">🗺️ Peta</option>
+                    <option value="💼">💼 Koper</option>
+                </select>
+            </div>
+            <button class="btn btn-primary btn-small mt-2" onclick="addJamaahKitaDynamicField()" style="width:100%;">+ Tambah Field</button>
             <div id="jamaahKitaFieldsListContainer" style="margin-top:12px;"></div>
             <p style="font-size: 11px; color: var(--gray); margin-top: 12px;">
                 💡 Tips: Field WhatsApp tidak bisa dihapus. Yang lain bisa ditambah/dihapus.
@@ -2032,16 +2062,26 @@
         <div class="section-title"><span>📋 TAMBAH DATA</span></div>
         <div class="input-group">
             <label>Pilih Jamaah dari database</label>
-            <select id="pilihJamaahKita"></select>
+            <input type="text" id="searchJamaahKitaAdd" placeholder="🔍 Cari nama jamaah..." oninput="filterPilihJamaahKita()" style="margin-bottom:8px;">
+            <div style="display:flex;gap:8px;margin-bottom:8px;">
+                <button onclick="pilihSemuaJamaahKita()" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+                <button onclick="hapusPilihanJamaahKita()" style="flex:1;padding:8px;background:#e2e8f0;color:#333;border:none;border-radius:8px;font-size:12px;cursor:pointer;">❌ Hapus Pilihan</button>
+            </div>
+            <div id="multiSelectJamaahKita" style="max-height:220px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:8px;background:var(--card-bg);"></div>
+            <div id="jumlahDipilihKita" style="font-size:12px;color:#0D5C4A;margin-top:6px;font-weight:bold;"></div>
         </div>
         <div id="jamaahKitaDynamicFields"></div>
-        <button class="btn btn-accent" onclick="tambahJamaahKita()" style="margin-top:16px;">
+        <button class="btn btn-accent" onclick="tambahJamaahKitaMulti()" style="margin-top:16px;">
             <i class="fas fa-plus-circle"></i> TAMBAHKAN KE ON PROSES
         </button>
         <div class="section-title" style="margin-top:24px;"><span>📋 DAFTAR JAMAAH ON PROSES</span></div>
         <div class="search-box">
             <input type="text" id="searchJamaahKitaInput" placeholder="Cari nama jamaah..." onkeyup="filterJamaahKitaList()">
             <button onclick="resetJamaahKitaFilter()" style="width:auto; padding:0 16px; background:var(--gray);">Reset</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+            <button onclick="pilihSemuaOnProses()" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+            <button onclick="hapusPilihanOnProses()" style="flex:1;padding:8px;background:#EF4444;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">🗑️ Hapus Dipilih</button>
         </div>
         <div id="jamaahKitaListContainer"></div>
         <div style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; align-items:stretch;">
@@ -2104,6 +2144,7 @@
         <div id="sumberHartaContainer"></div>
         <button class="btn btn-accent" onclick="tambahSumberHarta()"><i class="fas fa-plus-circle"></i> + TAMBAH SUMBER HARTA</button>
         <button class="btn btn-primary mt-2" onclick="hitungZakat()"><i class="fas fa-calculator"></i> HITUNG ZAKAT</button>
+        <button class="btn btn-teal btn-small mt-2" onclick="cetakLaporanZakat()"><i class="fas fa-print"></i> CETAK LAPORAN ZAKAT</button>
     </div>
     <div id="hasilZakat" class="res-card" style="display:none;"></div>
 </div>
@@ -2197,6 +2238,7 @@
             <div class="row"><div class="config-row"><label>Telepon</label><input type="text" id="cfg_telp1" placeholder="081391485440"></div><div class="config-row"><label>Email</label><input type="email" id="cfg_email1"></div></div>
             <div class="row"><div class="config-row"><label>NPWP</label><input type="text" id="cfg_npwp1"></div><div class="config-row"><label>Website</label><input type="text" id="cfg_web1"></div></div>
             <div class="row"><div class="config-row"><label>Pimpinan</label><input type="text" id="cfg_pimpinan1" placeholder="Ali mashar"></div><div class="config-row"><label>Jabatan</label><input type="text" id="cfg_jabatan1" placeholder="Admin"></div></div>
+            <div class="config-row"><label>Kota (untuk tanda tangan)</label><input type="text" id="cfg_kota1" placeholder="Surabaya"></div>
         </div>
         <div class="config-section"><h3><i class="fas fa-mosque"></i> Data Instansi Kedua</h3>
             <div class="config-row" style="display:flex; justify-content:space-between; align-items:center;"><label>Aktifkan Instansi Kedua</label><label class="switch"><input type="checkbox" id="cfg_instansi2_aktif"><span class="slider"></span></label></div>
@@ -2224,6 +2266,21 @@
         <div class="config-section"><h3><i class="fas fa-file-pdf"></i> Pengaturan Laporan</h3>
             <div class="row"><div class="config-row"><label>Header PDF</label><select id="cfg_header_mode"><option value="both">Keduanya</option><option value="instansi1">Instansi 1 saja</option><option value="instansi2">Instansi 2 saja</option><option value="none">Tidak ada</option></select></div><div class="config-row"><label>Tanda Tangan</label><select id="cfg_ttd_mode"><option value="both">Dua Pihak</option><option value="single">Satu Pihak</option></select></div></div>
             <div class="config-row"><label>Prefix Invoice / No. Dokumen</label><input type="text" id="cfg_invoice_prefix" value="INV/SAFARA"></div>
+            <div class="config-row"><label>🧓 Batas Usia Lansia (tahun)</label><input type="number" id="cfg_batas_lansia" placeholder="60" min="50" max="80" style="width:120px;"></div>
+            <div class="config-row"><label style="font-weight:bold;color:var(--primary);margin-bottom:10px;display:block;">🖨️ Tampilkan di Header Cetak</label>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>Logo Instansi</span><label class="switch"><input type="checkbox" id="cfg_show_logo" checked><span class="slider"></span></label></label>
+                    <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>Nama Instansi Utama</span><label class="switch"><input type="checkbox" id="cfg_show_nama1" checked><span class="slider"></span></label></label>
+                    <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>Nama Instansi Kedua</span><label class="switch"><input type="checkbox" id="cfg_show_nama2" checked><span class="slider"></span></label></label>
+                    <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>Alamat</span><label class="switch"><input type="checkbox" id="cfg_show_alamat" checked><span class="slider"></span></label></label>
+                    <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>Telepon</span><label class="switch"><input type="checkbox" id="cfg_show_telp" checked><span class="slider"></span></label></label>
+                    <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>Email</span><label class="switch"><input type="checkbox" id="cfg_show_email"><span class="slider"></span></label></label>
+                    <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>Website</span><label class="switch"><input type="checkbox" id="cfg_show_web"><span class="slider"></span></label></label>
+                    <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>NPWP</span><label class="switch"><input type="checkbox" id="cfg_show_npwp"><span class="slider"></span></label></label>
+                    <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>No. Izin (Instansi Kedua)</span><label class="switch"><input type="checkbox" id="cfg_show_izin"><span class="slider"></span></label></label>
+                    <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>Pimpinan & Jabatan</span><label class="switch"><input type="checkbox" id="cfg_show_pimpinan"><span class="slider"></span></label></label>
+                </div>
+            </div>
         </div>
         <div class="config-section"><h3><i class="fab fa-whatsapp"></i> Template WhatsApp</h3>
             <div class="config-row"><label>Template Laporan Kas</label><textarea id="cfg_wa_laporan" rows="3" placeholder=" *LAPORAN KAS KANTOR*\n\n Saldo: [saldo]\n Pemasukan: [masuk]\n Pengeluaran: [keluar]\n\nTerima kasih."></textarea><div class="template-variables">Variabel: <code>[saldo]</code> <code>[masuk]</code> <code>[keluar]</code></div></div>
@@ -2309,8 +2366,34 @@
 <div id="page-etikettiket" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> E-Tiket & QR</h2><div style="width:30px;"></div></div></div>
     <div class="container">
-        <div class="card-premium"><div class="input-group"><label> Pilih Jamaah</label><select id="tiketJamaahSelect" onchange="generateTiketQR()"></select></div>
-        <div id="tiketPreview" class="tiket-card" style="display:none;"><div class="tiket-header"><div class="tiket-title" id="tiketNama"></div><div id="tiketPaket" style="font-size:12px;"></div></div><div id="tiketQR" class="tiket-qr"></div><div class="row" style="margin-top:15px;"><button class="btn btn-primary btn-small" onclick="downloadTiketAsImage()"><i class="fas fa-download"></i> Simpan sebagai Gambar</button><button class="btn btn-wa btn-small" onclick="shareTiketWA()"><i class="fab fa-whatsapp"></i> Kirim ke WA</button><button class="btn btn-purple btn-small" onclick="cetakTiketLangsung()"><i class="fas fa-print"></i> CETAK TIKET</button></div></div></div>
+        <div class="card-premium">
+            <div class="input-group">
+                <label>Pilih Jamaah (Satu - untuk QR Preview)</label>
+                <select id="tiketJamaahSelect" onchange="generateTiketQR()"></select>
+            </div>
+            <div id="tiketPreview" class="tiket-card" style="display:none;">
+                <div class="tiket-header"><div class="tiket-title" id="tiketNama"></div><div id="tiketPaket" style="font-size:12px;"></div></div>
+                <div id="tiketQR" class="tiket-qr"></div>
+                <div class="row" style="margin-top:15px;">
+                    <button class="btn btn-primary btn-small" onclick="downloadTiketAsImage()"><i class="fas fa-download"></i> Simpan sebagai Gambar</button>
+                    <button class="btn btn-wa btn-small" onclick="shareTiketWA()"><i class="fab fa-whatsapp"></i> Kirim ke WA</button>
+                    <button class="btn btn-purple btn-small" onclick="cetakTiketLangsung()"><i class="fas fa-print"></i> CETAK TIKET</button>
+                </div>
+            </div>
+            <hr style="margin:20px 0;border-color:#eee;">
+            <div class="input-group">
+                <label>Pilih Banyak Jamaah (Cetak/WA Massal)</label>
+                <input type="text" id="searchTiketJamaah" placeholder="🔍 Cari nama jamaah..." oninput="filterTiketJamaah()" style="margin-bottom:8px;">
+                <div style="display:flex;gap:8px;margin-bottom:8px;">
+                    <button onclick="pilihSemuaTiket()" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+                    <button onclick="hapusPilihanTiket()" style="flex:1;padding:8px;background:#e2e8f0;color:#333;border:none;border-radius:8px;font-size:12px;cursor:pointer;">❌ Hapus Pilihan</button>
+                </div>
+                <div id="multiTiketJamaahSelect" style="max-height:200px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:8px;background:var(--card-bg);"></div>
+                <div id="jumlahDipilihTiket" style="font-size:12px;color:#0D5C4A;margin-top:6px;font-weight:bold;"></div>
+            </div>
+            <button class="btn btn-primary mt-2" onclick="cetakTiketMulti()"><i class="fas fa-print"></i> CETAK TIKET MASSAL</button>
+            <button class="btn btn-wa mt-2" onclick="shareTiketWAMulti()"><i class="fab fa-whatsapp"></i> Kirim ke WA Massal</button>
+        </div>
     </div>
 </div>
 
@@ -2318,7 +2401,21 @@
 <div id="page-cetaklabel" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> Cetak Label</h2><div style="width:30px;"></div></div></div>
     <div class="container">
-        <div class="card-premium"><div class="input-group"><label> Nama Acara / Rombongan</label><input type="text" id="labelEvent" placeholder="Umroh Syawal 2026"></div><div class="input-group"><label> Pilih Jamaah</label><select id="labelJamaahSelect" multiple style="height:100px;"></select></div><div class="row"><div class="input-group"><label>Ukuran Label</label><select id="labelSize"><option value="small">Kecil (40x30mm)</option><option value="medium" selected>Sedang (60x40mm)</option><option value="large">Besar (80x50mm)</option></select></div><div class="input-group"><label>Template</label><select id="labelTemplate"><option value="nametag">Name Tag</option><option value="luggage">Stiker Koper</option><option value="both">Name Tag + Koper</option></select></div></div><button class="btn btn-primary" onclick="cetakLabel()"><i class="fas fa-print"></i> CETAK LABEL</button></div>
+        <div class="card-premium">
+            <div class="input-group"><label>Nama Acara / Rombongan</label><input type="text" id="labelEvent" placeholder="Umroh Syawal 2026"></div>
+            <div class="input-group">
+                <label>Pilih Jamaah</label>
+                <input type="text" id="searchLabelJamaah" placeholder="🔍 Cari nama jamaah..." oninput="filterLabelJamaah()" style="margin-bottom:8px;">
+                <div style="display:flex;gap:8px;margin-bottom:8px;">
+                    <button onclick="pilihSemuaLabel()" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+                    <button onclick="hapusPilihanLabel()" style="flex:1;padding:8px;background:#e2e8f0;color:#333;border:none;border-radius:8px;font-size:12px;cursor:pointer;">❌ Hapus Pilihan</button>
+                </div>
+                <div id="multiLabelJamaahSelect" style="max-height:200px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:8px;background:var(--card-bg);"></div>
+                <div id="jumlahDipilihLabel" style="font-size:12px;color:#0D5C4A;margin-top:6px;font-weight:bold;"></div>
+            </div>
+            <div class="row"><div class="input-group"><label>Ukuran Label</label><select id="labelSize"><option value="small">Kecil (40x30mm)</option><option value="medium" selected>Sedang (60x40mm)</option><option value="large">Besar (80x50mm)</option></select></div><div class="input-group"><label>Template</label><select id="labelTemplate"><option value="nametag">Name Tag</option><option value="luggage">Stiker Koper</option><option value="both">Name Tag + Koper</option></select></div></div>
+            <button class="btn btn-primary" onclick="cetakLabel()"><i class="fas fa-print"></i> CETAK LABEL</button>
+        </div>
         <div id="labelPreviewContainer" class="card-premium" style="display:none;"><h4>Preview Label</h4><div id="labelPreview"></div><button class="btn btn-primary mt-2" onclick="printLabelPreview()"><i class="fas fa-print"></i> Cetak</button></div>
     </div>
 </div>
@@ -2430,32 +2527,40 @@ async function cetakSemuaDokumenJamaah(jamaahId, jamaahNama) {
             .dokumen-gambar img { max-width: 100%; max-height: 500px; object-fit: contain; }
             .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #999; }
             @media print {
-                body { background: white; padding: 0; margin: 0; }
+                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: white; }
                 .no-print { display: none !important; }
-                .header { display: none !important; }
-                .footer { display: none !important; }
-                .dokumen-title { display: none !important; }
-                .dokumen-item { 
-                    background: white; 
-                    border-radius: 0; 
-                    padding: 0; 
-                    margin: 0; 
-                    box-shadow: none; 
+                .dokumen-item {
+                    width: 210mm;
+                    height: 297mm;
+                    margin: 0;
+                    padding: 8mm;
+                    box-shadow: none;
+                    border-radius: 0;
+                    background: white;
                     page-break-after: always;
                     break-after: page;
                     display: flex;
+                    flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    min-height: 100vh;
+                    overflow: hidden;
                 }
                 .dokumen-item:last-child { page-break-after: avoid; break-after: avoid; }
-                .dokumen-gambar { width: 100%; }
-                .dokumen-gambar img { 
-                    max-width: 100%; 
-                    max-height: 100vh; 
-                    width: auto; 
-                    height: auto; 
-                    object-fit: contain; 
+                .dokumen-label {
+                    font-size: 13px;
+                    font-weight: bold;
+                    color: #0D5C4A;
+                    margin-bottom: 8px;
+                    text-align: center;
+                }
+                .dokumen-gambar { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; }
+                .dokumen-gambar img {
+                    max-width: 100%;
+                    max-height: 270mm;
+                    width: auto;
+                    height: auto;
+                    object-fit: contain;
                     display: block;
                     margin: 0 auto;
                 }
@@ -2471,6 +2576,7 @@ async function cetakSemuaDokumenJamaah(jamaahId, jamaahNama) {
     for (const doc of dokumenYangAda) {
         html += `
         <div class="dokumen-item">
+            <div class="dokumen-label">${doc.icon} ${escapeHtml(doc.nama)} — ${escapeHtml(jamaahNama)}</div>
             <div class="dokumen-title no-print">${doc.icon} ${escapeHtml(doc.nama)}</div>
             <div class="dokumen-gambar"><img src="${doc.data}" alt="${doc.nama}"></div>
         </div>`;
@@ -2502,25 +2608,27 @@ async function cetakDokumenPerJenis(jamaahId, jenisId, jenisNama, jamaahNama) {
         <meta charset="UTF-8">
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+            body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
             .no-print { display: block; }
-            .card { background: white; border-radius: 20px; padding: 30px; max-width: 600px; margin: 0 auto; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-            .title { font-size: 20px; font-weight: bold; color: #0D5C4A; margin-bottom: 10px; }
-            .subtitle { color: #666; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-            .gambar img { max-width: 100%; object-fit: contain; }
+            .card { background: white; border-radius: 20px; padding: 20px; width: 100%; max-width: 600px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; }
+            .title { font-size: 18px; font-weight: bold; color: #0D5C4A; margin-bottom: 8px; }
+            .subtitle { color: #666; margin-bottom: 12px; border-bottom: 1px solid #ddd; padding-bottom: 10px; width: 100%; }
+            .doc-label { font-size: 12px; font-weight: bold; color: #0D5C4A; margin-bottom: 8px; }
+            .gambar { width: 100%; }
+            .gambar img { max-width: 100%; height: auto; display: block; margin: 0 auto; object-fit: contain; }
             @media print {
-                body { background: white; padding: 0; margin: 0; }
+                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                html, body { margin: 0; padding: 0; width: 210mm; height: 297mm; background: white; display: block; }
                 .no-print { display: none !important; }
-                .card { box-shadow: none; border-radius: 0; padding: 0; max-width: 100%; margin: 0; }
-                .title { display: none !important; }
-                .subtitle { display: none !important; }
-                .gambar { width: 100%; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-                .gambar img { max-width: 100%; max-height: 100vh; width: auto; height: auto; display: block; margin: 0 auto; }
+                .card { box-shadow: none; border-radius: 0; padding: 10mm; width: 210mm; height: 297mm; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+                .gambar { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; }
+                .gambar img { max-width: 190mm; max-height: 270mm; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; }
             }
         </style>
     </head>
     <body>
         <div class="card">
+            <div class="doc-label">${jenisNama} — ${escapeHtml(jamaahNama)}</div>
             <div class="title no-print">📄 ${escapeHtml(jenisNama)}</div>
             <div class="subtitle no-print">${escapeHtml(jamaahNama)}</div>
             <div class="gambar"><img src="${data}" alt="${jenisNama}"></div>
@@ -2529,6 +2637,7 @@ async function cetakDokumenPerJenis(jamaahId, jenisId, jenisNama, jamaahNama) {
                 <button onclick="window.close()" style="padding:10px 30px; background:#ccc; border:none; border-radius:8px; cursor:pointer;">TUTUP</button>
             </div>
         </div>
+        <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
     </body>
     </html>`;
     printWindow.document.write(html);
@@ -2703,7 +2812,10 @@ function toggleAdminMode() {
     const jamaahPanel = document.getElementById('jamaahAdminPanel'); 
     if(jamaahPanel) jamaahPanel.style.display = isAdminModePremium ? 'block' : 'none'; 
     const jamaahKitaPanel = document.getElementById('jamaahKitaAdminPanel'); 
-    if(jamaahKitaPanel) jamaahKitaPanel.style.display = isAdminModePremium ? 'block' : 'none'; 
+    if(jamaahKitaPanel) {
+        jamaahKitaPanel.style.display = isAdminModePremium ? 'block' : 'none';
+        if(isAdminModePremium) renderOnProsesFieldPrintSelector();
+    }
     const masterPanel = document.getElementById('masterAdminPanel'); 
     if(masterPanel) masterPanel.style.display = isAdminModePremium ? 'block' : 'none'; 
     const dokumenPanel = document.getElementById('dokumenAdminPanel'); 
@@ -2930,7 +3042,7 @@ function renderDashboard() {
     document.getElementById('topPiutangList').innerHTML = topPiutangHtml || '<p class="text-center">Tidak ada data piutang</p>';
 }
 
-function printDashboard() {
+async function printDashboard() {
     const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]');
     const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
     const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
@@ -2950,7 +3062,6 @@ function printDashboard() {
         }
         if (hargaPaket > 0) { if (totalBayar >= hargaPaket) totalLunas++; else totalPiutang += (hargaPaket - totalBayar); }
     });
-    // Top 5 piutang terbesar
     const topPiutang = jamaahData.map(j => {
         const totalBayar = paymentData.filter(t => t.id_jamaah == j.id).reduce((s,t) => s + t.nominal, 0);
         let hargaPaket = 0;
@@ -2966,8 +3077,9 @@ function printDashboard() {
     }).sort((a,b) => b.sisa - a.sisa).slice(0,5);
 
     const cfg = getKonfigurasiProData();
-    const namaInstansi = cfg.instansi1?.nama || 'Safara';
     const tanggal = new Date().toLocaleDateString('id-ID', { day:'2-digit', month:'long', year:'numeric' });
+    const headerHtml = buildPrintHeader(cfg, tanggal);
+    const qrHtml = await buildPrintQR(cfg, `Dashboard ${cfg.instansi1?.nama||'Safara'}\nTotal Jamaah: ${totalJamaah}\nTanggal: ${tanggal}`);
 
     let topHtml = '';
     topPiutang.forEach((j,i) => {
@@ -2975,54 +3087,41 @@ function printDashboard() {
     });
 
     const printWindow = window.open('', '_blank');
-    printWindow.document.write(`<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard - ${namaInstansi}</title>
-    <meta charset="UTF-8">
+    printWindow.document.write(`<!DOCTYPE html><html><head><title>Dashboard</title><meta charset="UTF-8">
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: Arial, sans-serif; padding: 30px; color: #222; }
-        .no-print { display: block; }
-        h1 { color: #0D5C4A; font-size: 22px; margin-bottom: 4px; }
-        .sub { color: #666; font-size: 13px; margin-bottom: 24px; }
-        .stats { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
-        .stat-box { flex:1; min-width: 120px; background: #f0f7f4; border-radius: 10px; padding: 16px; text-align: center; border-left: 4px solid #0D5C4A; }
-        .stat-box .label { font-size: 11px; color: #666; margin-bottom: 6px; }
-        .stat-box .value { font-size: 18px; font-weight: bold; color: #0D5C4A; }
-        h2 { font-size: 15px; color: #0D5C4A; margin-bottom: 12px; border-bottom: 2px solid #0D5C4A; padding-bottom: 6px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #0D5C4A; color: white; padding: 8px 12px; text-align: left; font-size: 13px; }
-        td { padding: 8px 12px; border-bottom: 1px solid #eee; font-size: 13px; }
-        tr:nth-child(even) td { background: #f9f9f9; }
-        .footer { margin-top: 24px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #ddd; padding-top: 12px; }
-        @media print {
-            .no-print { display: none !important; }
-            body { padding: 10px; }
-        }
-    </style>
-</head>
-<body>
-    <h1>Dashboard - ${escapeHtml(namaInstansi)}</h1>
-    <div class="sub">Dicetak: ${tanggal}</div>
-    <div class="stats">
-        <div class="stat-box"><div class="label">TOTAL KAS</div><div class="value">Rp ${formatRupiah(totalKas)}</div></div>
-        <div class="stat-box"><div class="label">TOTAL JAMAAH</div><div class="value">${totalJamaah}</div></div>
-        <div class="stat-box"><div class="label">JAMAAH LUNAS</div><div class="value">${totalLunas}</div></div>
-        <div class="stat-box"><div class="label">TOTAL PIUTANG</div><div class="value">Rp ${formatRupiah(totalPiutang)}</div></div>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}
+        .box{background:white;max-width:800px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);}
+        .tgl{color:#aaa;font-size:11px;margin-bottom:20px;}
+        .stats{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap;}
+        .stat-box{flex:1;min-width:120px;background:#f0f7f4;border-radius:10px;padding:16px;text-align:center;border-left:4px solid #0D5C4A;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        .stat-box .label{font-size:11px;color:#666;margin-bottom:6px;}
+        .stat-box .value{font-size:18px;font-weight:bold;color:#0D5C4A;}
+        h2{font-size:15px;color:#0D5C4A;margin-bottom:12px;border-bottom:2px solid #0D5C4A;padding-bottom:6px;}
+        table{width:100%;border-collapse:collapse;}
+        th{background:#0D5C4A;color:white;padding:8px 12px;text-align:left;font-size:13px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        td{padding:8px 12px;border-bottom:1px solid #eee;font-size:13px;}
+        tr:nth-child(even) td{background:#f9f9f9;}
+        .no-print{text-align:center;margin-top:24px;}
+        .no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}
+    </style></head><body>
+    <div class="box">
+        ${headerHtml}
+        <div class="tgl">Tanggal Cetak: ${tanggal}</div>
+        <div class="stats">
+            <div class="stat-box"><div class="label">TOTAL KAS</div><div class="value">Rp ${formatRupiah(totalKas)}</div></div>
+            <div class="stat-box"><div class="label">TOTAL JAMAAH</div><div class="value">${totalJamaah}</div></div>
+            <div class="stat-box"><div class="label">JAMAAH LUNAS</div><div class="value">${totalLunas}</div></div>
+            <div class="stat-box"><div class="label">TOTAL PIUTANG</div><div class="value">Rp ${formatRupiah(totalPiutang)}</div></div>
+        </div>
+        <h2>5 JAMAAH DENGAN TAGIHAN TERBESAR</h2>
+        <table><thead><tr><th>No</th><th>Nama Jamaah</th><th>Total Paket</th><th>Sisa Tagihan</th></tr></thead><tbody>${topHtml}</tbody></table>
+        ${qrHtml}
     </div>
-    <h2>5 JAMAAH DENGAN TAGIHAN TERBESAR</h2>
-    <table>
-        <thead><tr><th>No</th><th>Nama Jamaah</th><th>Total Paket</th><th>Sisa Tagihan</th></tr></thead>
-        <tbody>${topHtml}</tbody>
-    </table>
-    <div class="footer">${escapeHtml(namaInstansi)} | ${tanggal}</div>
-    <div class="no-print" style="text-align:center; margin-top:24px;">
-        <button onclick="window.print()" style="padding:10px 30px; background:#0D5C4A; color:white; border:none; border-radius:8px; cursor:pointer; margin-right:10px;">PRINT</button>
-        <button onclick="window.close()" style="padding:10px 30px; background:#ccc; border:none; border-radius:8px; cursor:pointer;">TUTUP</button>
-    </div>
-</body>
-</html>`);
+    <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    </body></html>`);
     printWindow.document.close();
 }
 
@@ -3146,19 +3245,39 @@ function salinRingkasan() {
 async function cetakEstimasiPDFJamaah() {
     if(!lastCalculatedPrice) { showToast('Silakan hitung estimasi dulu!'); return; }
     const f = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
-    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+    const cfg = getKonfigurasiProData();
     const tgl = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Harga Paket</title><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;display:flex;justify-content:center;align-items:center;min-height:100vh;}.box{background:white;width:100%;max-width:480px;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);text-align:center;}h2{color:#0D5C4A;font-size:20px;margin-bottom:6px;}h2 span{font-size:12px;color:#888;display:block;margin-top:4px;}.divider{border:none;border-top:2px solid #0D5C4A;margin:20px 0;}.harga{font-size:32px;font-weight:bold;color:#0D5C4A;margin:20px 0;}.info{color:#555;font-size:13px;line-height:1.8;margin-bottom:16px;}.note{font-size:11px;color:#999;margin-top:16px;}.no-print{text-align:center;margin-top:24px;}.no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}@media print{body{background:white;}.box{box-shadow:none;}.no-print{display:none!important;}}</style></head><body><div class="box"><h2>INFORMASI HARGA PAKET<span>${namaInstansi}</span></h2><div class="info"><div><strong>Paket :</strong> ${lastCalculatedPaket}</div><div><strong>Jamaah :</strong> ${lastCalculatedTotalJam} orang</div><div><strong>Tanggal :</strong> ${tgl}</div></div><hr class="divider"><div class="harga">${f(lastCalculatedPrice)}</div><div style="color:#888;font-size:13px;">Harga Per Pax</div><div class="note">*Harga sudah termasuk semua komponen paket<br>*Hubungi admin untuk informasi lebih lanjut</div></div><div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div><script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script></body></html>`;
+    const headerHtml = buildPrintHeader(cfg, tgl);
+    const watermarkHtml = buildPrintWatermark(cfg);
+    const qrHtml = await buildPrintQR(cfg, `Harga Paket: ${lastCalculatedPaket}\nHarga/Pax: ${f(lastCalculatedPrice)}\nTanggal: ${tgl}`);
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Harga Paket</title>
+    <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}.box{background:white;max-width:480px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;}.watermark-wrap{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;}.content{position:relative;z-index:1;text-align:center;}h2{color:#0D5C4A;font-size:20px;margin-bottom:16px;}.divider{border:none;border-top:2px solid #0D5C4A;margin:20px 0;}.harga{font-size:32px;font-weight:bold;color:#0D5C4A;margin:20px 0;}.info{color:#555;font-size:13px;line-height:1.8;margin-bottom:16px;text-align:left;}.note{font-size:11px;color:#999;margin-top:16px;}.no-print{text-align:center;margin-top:24px;}.no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}
+    </style></head><body>
+    <div class="box">
+        <div class="watermark-wrap">${watermarkHtml}</div>
+        <div class="content">
+            ${headerHtml}
+            <h2>INFORMASI HARGA PAKET</h2>
+            <div class="info"><div><strong>Paket &nbsp;&nbsp;:</strong> ${lastCalculatedPaket}</div><div><strong>Jamaah :</strong> ${lastCalculatedTotalJam} orang</div><div><strong>Tanggal :</strong> ${tgl}</div></div>
+            <hr class="divider">
+            <div class="harga">${f(lastCalculatedPrice)}</div>
+            <div style="color:#888;font-size:13px;">Harga Per Pax</div>
+            <div class="note">*Harga sudah termasuk semua komponen paket<br>*Hubungi admin untuk informasi lebih lanjut</div>
+            ${qrHtml}
+        </div>
+    </div>
+    <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
-    win.document.write(html);
-    win.document.close();
+    win.document.write(html); win.document.close();
 }
 
 async function cetakEstimasiPDFInternal() {
     if(!lastCalculatedPrice) { showToast('Silakan hitung estimasi dulu!'); return; }
     const f = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
-    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+    const cfg = getKonfigurasiProData();
     const tgl = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
     const est = JSON.parse(localStorage.getItem('safara_estimasi_data') || '{}');
     const pr = v => parseInt((v||'0').toString().replace(/\./g,'').replace(/[^0-9]/g,'')) || 0;
@@ -3176,11 +3295,64 @@ async function cetakEstimasiPDFInternal() {
     items.forEach(([label, val]) => {
         if(val > 0) komponenHtml += `<tr><td style="padding:8px;border-bottom:1px solid #eee;">${label}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">${f(val)}</td></tr>`;
     });
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Estimasi Internal</title><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}.box{background:white;max-width:520px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);}h2{color:#0D5C4A;font-size:18px;margin-bottom:2px;}.konfidensial{color:#e74c3c;font-size:11px;font-style:italic;margin-bottom:16px;}.info{font-size:13px;color:#555;line-height:2;margin-bottom:16px;}table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px;}th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;}th:last-child{text-align:right;}.summary{background:#f8f8f8;border-radius:10px;padding:16px;font-size:13px;line-height:2.2;}.harga-jual{font-size:18px;font-weight:bold;color:#0D5C4A;margin-top:12px;border-top:2px solid #0D5C4A;padding-top:12px;}.no-print{text-align:center;margin-top:24px;}.no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}@media print{body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}</style></head><body><div class="box"><h2>RINCIAN ESTIMASI INTERNAL</h2><div class="konfidensial">⚠️ Hanya Untuk Internal</div><div class="info"><div><strong>Paket :</strong> ${lastCalculatedPaket}</div><div><strong>Jamaah :</strong> ${nJam} orang (${nFoc} gratis, ${nTL} TL)</div><div><strong>Tanggal :</strong> ${tgl}</div></div><table><thead><tr><th>Komponen Biaya</th><th style="text-align:right;">Per Pax</th></tr></thead><tbody>${komponenHtml}<tr style="font-weight:bold;background:#f0f7f4;"><td style="padding:10px 8px;">Modal Pokok / Pax</td><td style="padding:10px 8px;text-align:right;">${f(sub)}</td></tr></tbody></table><div class="summary"><div>Profit (${est.profitPct||0}%) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <strong>${f(profitKotor)}</strong></div><div>Biaya TL (${nTL} orang) : <strong style="color:#e74c3c;">- ${f(biayaTL)}</strong></div><div>Profit Bersih &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <strong style="color:#10B981;">${f(profitBersih)}</strong></div><div>Profit Per Pax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <strong style="color:#10B981;">${f(profitPerPax)}</strong></div><div class="harga-jual">HARGA JUAL PER PAX: ${f(lastCalculatedPrice)}</div></div></div><div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div><script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script></body></html>`;
+    const headerHtml = buildPrintHeader(cfg, tgl);
+    const ttdHtml = buildPrintTandaTangan(cfg, tgl);
+    const qrHtml = await buildPrintQR(cfg, `Estimasi Internal: ${lastCalculatedPaket}\nHarga Jual: ${f(lastCalculatedPrice)}\nTanggal: ${tgl}`);
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Estimasi Internal</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}
+        .box{background:white;max-width:720px;margin:0 auto;border-radius:16px;padding:36px;box-shadow:0 2px 16px rgba(0,0,0,0.1);}
+        h2{color:#0D5C4A;font-size:22px;margin-bottom:4px;}
+        .konfidensial{color:#e74c3c;font-size:12px;font-style:italic;margin-bottom:20px;}
+        .info{font-size:14px;color:#555;line-height:2.2;margin-bottom:20px;background:#f8f8f8;border-radius:10px;padding:14px;}
+        table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
+        th{background:#0D5C4A;color:white;padding:12px 10px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        th:last-child{text-align:right;}
+        td{padding:10px;border-bottom:1px solid #eee;}
+        tr:nth-child(even) td{background:#f9f9f9;}
+        .summary{background:#f8f8f8;border-radius:10px;padding:20px;font-size:14px;line-height:2.6;}
+        .harga-jual{font-size:20px;font-weight:bold;color:#0D5C4A;margin-top:14px;border-top:2px solid #0D5C4A;padding-top:14px;}
+        .no-print{text-align:center;margin-top:24px;}
+        .no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{
+            *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+            body{background:white;padding:0;}
+            .box{box-shadow:none;border-radius:0;max-width:100%;padding:16mm 20mm;}
+            .no-print{display:none!important;}
+        }
+    </style></head><body>
+    <div class="box">
+        ${headerHtml}
+        <h2>RINCIAN ESTIMASI INTERNAL</h2>
+        <div class="konfidensial">⚠️ Hanya Untuk Internal</div>
+        <div class="info">
+            <div><strong>Paket &nbsp;&nbsp;:</strong> ${lastCalculatedPaket}</div>
+            <div><strong>Jamaah :</strong> ${nJam} orang (${nFoc} gratis, ${nTL} TL)</div>
+            <div><strong>Tanggal :</strong> ${tgl}</div>
+        </div>
+        <table><thead><tr><th>Komponen Biaya</th><th style="text-align:right;">Per Pax</th></tr></thead>
+        <tbody>${komponenHtml}
+        <tr style="font-weight:bold;background:#f0f7f4;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+            <td style="padding:12px 10px;">Modal Pokok / Pax</td>
+            <td style="padding:12px 10px;text-align:right;">${f(sub)}</td>
+        </tr></tbody></table>
+        <div class="summary">
+            <div>Profit (${est.profitPct||0}%) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <strong>${f(profitKotor)}</strong></div>
+            <div>Biaya TL (${nTL} orang) : <strong style="color:#e74c3c;">- ${f(biayaTL)}</strong></div>
+            <div>Profit Bersih &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <strong style="color:#10B981;">${f(profitBersih)}</strong></div>
+            <div>Profit Per Pax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <strong style="color:#10B981;">${f(profitPerPax)}</strong></div>
+            <div class="harga-jual">HARGA JUAL PER PAX: ${f(lastCalculatedPrice)}</div>
+        </div>
+        ${ttdHtml}
+        ${qrHtml}
+    </div>
+    <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
-    win.document.write(html);
-    win.document.close();
+    win.document.write(html); win.document.close();
 }
 
 function resetEstimasiToDefault() { 
@@ -3339,26 +3511,65 @@ function restoreKasData(input) {
     } 
 }
 
-function exportKasPDF() {
+async function exportKasPDF() {
     if(dataKas.length===0) return showToast('Tidak ada data!');
+    const cfg = getKonfigurasiProData();
     const judul = document.getElementById('kegiatan').value.trim() || 'Laporan Kas';
-    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
-    const tanggal = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
+    const tglCetak = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
     let masuk=0, keluar=0;
     dataKas.forEach(i=>{ if(i.tipe==='masuk') masuk+=i.nom; else keluar+=i.nom; });
     const saldo = masuk - keluar;
+    const saldoColor = saldo>=0 ? '#10B981' : '#EF4444';
+    const headerHtml = buildPrintHeader(cfg, tglCetak);
+    const watermarkHtml = buildPrintWatermark(cfg);
+    const ttdHtml = buildPrintTandaTangan(cfg, tglCetak);
+    const qrHtml = await buildPrintQR(cfg, `Laporan Kas: ${judul}\nSaldo: Rp ${saldo.toLocaleString('id-ID')}\nTanggal: ${tglCetak}`);
     let rowsHtml = '';
     dataKas.forEach((i,idx)=>{
         const warna = i.tipe==='masuk' ? '#10B981' : '#EF4444';
         rowsHtml += `<tr><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${idx+1}</td><td style="padding:8px;border-bottom:1px solid #eee;">${i.tgl}</td><td style="padding:8px;border-bottom:1px solid #eee;">${i.kegiatan||'-'}</td><td style="padding:8px;border-bottom:1px solid #eee;">${i.ket}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;color:${warna};font-weight:bold;">${i.tipe==='masuk'?'MASUK':'KELUAR'}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">Rp ${i.nom.toLocaleString('id-ID')}</td></tr>`;
     });
-    const saldoColor = saldo>=0 ? '#10B981' : '#EF4444';
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Laporan Kas</title><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}.box{background:white;max-width:800px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);}h2{color:#0D5C4A;font-size:20px;margin-bottom:4px;}.sub{color:#888;font-size:12px;margin-bottom:20px;}table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;}tr:nth-child(even) td{background:#f9f9f9;}.summary{background:#f8f8f8;border-radius:10px;padding:16px;font-size:13px;line-height:2.2;}.no-print{text-align:center;margin-top:24px;}.no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}@media print{body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}</style></head><body><div class="box"><h2>${judul} — LAPORAN KAS</h2><div class="sub">${namaInstansi} | Dicetak: ${tanggal}</div><table><thead><tr><th style="width:36px;">No</th><th>Tgl</th><th>Kegiatan</th><th>Keterangan</th><th style="text-align:center;">Tipe</th><th style="text-align:right;">Nominal</th></tr></thead><tbody>${rowsHtml}</tbody></table><div class="summary"><div>Total Pemasukan &nbsp;: <strong style="color:#10B981;">Rp ${masuk.toLocaleString('id-ID')}</strong></div><div>Total Pengeluaran : <strong style="color:#EF4444;">Rp ${keluar.toLocaleString('id-ID')}</strong></div><div style="font-size:16px;font-weight:bold;color:${saldoColor};margin-top:8px;">SALDO AKHIR: Rp ${saldo.toLocaleString('id-ID')}</div></div></div><div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div><script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script></body></html>`;
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Laporan Kas</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}
+        .box{background:white;max-width:800px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;}
+        .watermark-wrap{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;overflow:hidden;}
+        .content{position:relative;z-index:1;}
+        h2{color:#0D5C4A;font-size:20px;margin-bottom:2px;}
+        .tgl{color:#aaa;font-size:11px;margin-bottom:20px;}
+        table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+        th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        tr:nth-child(even) td{background:#f9f9f9;}
+        .summary{background:#f8f8f8;border-radius:10px;padding:16px;font-size:13px;line-height:2.2;}
+        .no-print{text-align:center;margin-top:24px;}
+        .no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}
+    </style></head><body>
+    <div class="box">
+        <div class="watermark-wrap">${watermarkHtml}</div>
+        <div class="content">
+            ${headerHtml}
+            <h2>${judul} — LAPORAN KAS</h2>
+            <div class="tgl">Tanggal Cetak: ${tglCetak}</div>
+            <table><thead><tr><th style="width:36px;">No</th><th>Tgl</th><th>Kegiatan</th><th>Keterangan</th><th style="text-align:center;">Tipe</th><th style="text-align:right;">Nominal</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+            <div class="summary">
+                <div>Total Pemasukan &nbsp;: <strong style="color:#10B981;">Rp ${masuk.toLocaleString('id-ID')}</strong></div>
+                <div>Total Pengeluaran : <strong style="color:#EF4444;">Rp ${keluar.toLocaleString('id-ID')}</strong></div>
+                <div style="font-size:16px;font-weight:bold;color:${saldoColor};margin-top:8px;">SALDO AKHIR: Rp ${saldo.toLocaleString('id-ID')}</div>
+            </div>
+            ${ttdHtml}
+            ${qrHtml}
+        </div>
+    </div>
+    <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
-    win.document.write(html);
-    win.document.close();
+    win.document.write(html); win.document.close();
 }
+
 
 function exportKasExcel() { 
     if(dataKas.length===0) return showToast("Tidak ada data!"); 
@@ -3415,7 +3626,35 @@ function saveJamaahData() {
 
 function loadDynamicFieldsJamaah() { 
     const saved=localStorage.getItem('safara_jamaah_fields'); 
-    dynamicFieldsJamaah=saved?JSON.parse(saved):[]; 
+    if (saved) {
+        dynamicFieldsJamaah = JSON.parse(saved);
+    } else {
+        // Default 12 field untuk user baru
+        dynamicFieldsJamaah = [
+            { name: 'nama_paspor',   label: 'Nama Paspor',   type: 'text',     icon: '👤', isRequired: false },
+            { name: 'no_porsi',      label: 'No Porsi',       type: 'text',     icon: '🔢', isRequired: false },
+            { name: 'jenis_kelamin', label: 'Jenis Kelamin',  type: 'text',     icon: '👤', isRequired: false },
+            { name: 'tempat_lahir',  label: 'Tempat Lahir',   type: 'text',     icon: '📍', isRequired: false },
+            { name: 'tgl_lahir',     label: 'Tanggal Lahir',  type: 'date',     icon: '🗓️', isRequired: false },
+            { name: 'no_paspor',     label: 'No Paspor',      type: 'text',     icon: '📘', isRequired: false },
+            { name: 'nik',           label: 'NIK',             type: 'text',     icon: '🪪', isRequired: false },
+            { name: 'kk',            label: 'KK',              type: 'text',     icon: '📋', isRequired: false },
+            { name: 'alamat_kec',    label: 'Alamat Kec',     type: 'text',     icon: '🏘️', isRequired: false },
+            { name: 'kota',          label: 'Kota',            type: 'text',     icon: '🏙️', isRequired: false },
+            { name: 'whatsapp',      label: 'WhatsApp',        type: 'tel',      icon: '📞', isRequired: true  },
+            { name: 'rombongan',     label: 'Rombongan',       type: 'text',     icon: '👥', isRequired: false },
+            { name: 'regu',          label: 'Regu',            type: 'text',     icon: '👥', isRequired: false },
+            { name: 'visa',          label: 'Visa',            type: 'text',     icon: '📘', isRequired: false },
+            { name: 'kamar',         label: 'Kamar',           type: 'text',     icon: '🛏️', isRequired: false },
+            { name: 'bus',           label: 'Bus',             type: 'text',     icon: '🚌', isRequired: false },
+            { name: 'hotel_makkah',  label: 'Hotel Makkah',   type: 'text',     icon: '🏨', isRequired: false },
+            { name: 'hotel_madinah', label: 'Hotel Madinah',  type: 'text',     icon: '🏨', isRequired: false },
+            { name: 'warna',         label: 'Warna',           type: 'text',     icon: '🏷️', isRequired: false },
+            { name: 'keterangan',    label: 'Keterangan',      type: 'textarea', icon: '📝', isRequired: false }
+        ];
+        // Simpan default ke storage
+        localStorage.setItem('safara_jamaah_fields', JSON.stringify(dynamicFieldsJamaah));
+    }
 }
 
 function saveDynamicFieldsJamaah() { 
@@ -3450,7 +3689,7 @@ function renderJamaahListWithPagination() {
     let html=`<div style="margin-bottom:10px; font-size:0.8rem; color:var(--accent);"> Total: ${jamaahFilteredList.length} jamaah (halaman ${currentJamaahPage} dari ${totalPages})</div>`; 
     pageData.forEach((j,idx)=>{ 
         const displayNum=start+idx+1; 
-        html+=`<div class="jamaah-card"><div class="jamaah-header"><div><div class="jamaah-nama"><span style="background:var(--primary); color:white; display:inline-block; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:13px; margin-right:10px;">${displayNum}</span> ${escapeHtml(j.nama_lengkap)}</div><div class="jamaah-tgl"> ${j.created_at||'-'}</div></div><div class="jamaah-actions"><button class="btn-share-wa" onclick="shareSingleJamaahById('${j.id}')"><i class="fab fa-whatsapp"></i></button><button class="btn-edit-jamaah" onclick="editJamaahById('${j.id}')"><i class="fas fa-edit"></i></button><button class="btn-delete-jamaah" onclick="confirmDeleteJamaahById('${j.id}')"><i class="fas fa-trash"></i></button></div></div><div class="jamaah-detail">`; 
+        html+=`<div class="jamaah-card"><div class="jamaah-header"><div style="display:flex;align-items:center;gap:10px;flex:1;"><div id="foto_thumb_${j.id}" style="width:40px;height:40px;border-radius:50%;background:#f0f0f0;border:2px solid #0D5C4A;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;" onclick="editJamaahById('${j.id}')"><span style="font-size:20px;">👤</span></div><div><div class="jamaah-nama"><span style="background:var(--primary); color:white; display:inline-block; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:13px; margin-right:10px;">${displayNum}</span> ${escapeHtml(j.nama_lengkap)}</div><div class="jamaah-tgl"> ${j.created_at||'-'}</div></div></div><div class="jamaah-actions"><button class="btn-share-wa" onclick="shareSingleJamaahById('${j.id}')"><i class="fab fa-whatsapp"></i></button><button class="btn-edit-jamaah" onclick="editJamaahById('${j.id}')"><i class="fas fa-edit"></i></button><button class="btn-delete-jamaah" onclick="confirmDeleteJamaahById('${j.id}')"><i class="fas fa-trash"></i></button></div></div><div class="jamaah-detail">`; 
         for(const field of dynamicFieldsJamaah){ 
             const val=j.additional_fields?.[field.name]||''; 
             if(val) html+=`<div class="jamaah-detail-item"><strong>${escapeHtml(field.label)}:</strong> ${escapeHtml(val)}</div>`; 
@@ -3468,6 +3707,8 @@ function renderJamaahListWithPagination() {
     } 
     document.getElementById('paginationContainer').innerHTML=paginationHtml; 
 }
+
+function renderJamaahList() { renderJamaahListWithPagination(); }
 
 function goToJamaahPage(page){ 
     currentJamaahPage=page; 
@@ -3776,9 +4017,9 @@ function importJamaahFromExcel(input){
         const reader=new FileReader(); 
         reader.onload=function(e){ 
             const data=new Uint8Array(e.target.result); 
-            const workbook=XLSX.read(data,{type:'array'}); 
+            const workbook=XLSX.read(data,{type:'array',cellDates:true}); 
             const sheet=workbook.Sheets[workbook.SheetNames[0]]; 
-            const rows=XLSX.utils.sheet_to_json(sheet,{header:1,defval:""}); 
+            const rows=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:false}); 
             if(!rows||rows.length<2){ 
                 showToast('File Excel kosong!'); 
                 input.value=''; 
@@ -3790,7 +4031,26 @@ function importJamaahFromExcel(input){
                 showToast('Header "Nama" tidak ditemukan!'); 
                 input.value=''; 
                 return; 
-            } 
+            }
+            // Fungsi konversi angka serial Excel ke tanggal YYYY-MM-DD
+            function excelSerialToDate(val) {
+                if (!val) return val;
+                const str = val.toString().trim();
+                // Jika sudah format tanggal valid, kembalikan apa adanya
+                if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.substring(0,10);
+                if (/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}/.test(str)) {
+                    const d = new Date(str);
+                    if (!isNaN(d)) return d.toISOString().substring(0,10);
+                }
+                // Jika angka serial Excel (biasanya 5 digit)
+                const num = parseFloat(str);
+                if (!isNaN(num) && num > 1000 && num < 100000) {
+                    // Excel serial: hari sejak 1 Jan 1900 (dengan bug tahun 1900)
+                    const d = new Date((num - 25569) * 86400 * 1000);
+                    if (!isNaN(d)) return d.toISOString().substring(0,10);
+                }
+                return str;
+            }
             let added=0; 
             const now=new Date().toLocaleDateString('id-ID')+' '+new Date().toLocaleTimeString('id-ID'); 
             for(let i=1;i<rows.length;i++){ 
@@ -3801,14 +4061,24 @@ function importJamaahFromExcel(input){
                 const additional={}; 
                 for(const field of dynamicFieldsJamaah){ 
                     const fieldIndex=headers.findIndex(h=>h&&(h.toLowerCase()===field.label.toLowerCase()||h.toLowerCase()===field.name.toLowerCase())); 
-                    if(fieldIndex!==-1&&row[fieldIndex]){ 
-                        additional[field.name]=row[fieldIndex].toString().trim(); 
+                    if(fieldIndex!==-1&&row[fieldIndex]!==''&&row[fieldIndex]!==undefined){ 
+                        let val = row[fieldIndex].toString().trim();
+                        // Konversi notasi ilmiah Excel (misal 6.28124E+12) ke angka utuh
+                        if (/^-?[\d.]+[eE][+\-]?\d+$/.test(val)) {
+                            val = Math.round(parseFloat(val)).toString();
+                        }
+                        // Konversi serial date Excel ke YYYY-MM-DD
+                        if (field.type==='date' || field.name.includes('lahir') || field.name.includes('tgl')) {
+                            val = excelSerialToDate(val);
+                        }
+                        additional[field.name]=val; 
                     } 
                 } 
                 jamaahList.push({id:Date.now()+i, nama_lengkap:nama, additional_fields:additional, created_at:now}); 
                 added++; 
             } 
             saveJamaahData(); 
+            renderJamaahList();
             showToast(`✅ Import selesai! ${added} jamaah ditambahkan`); 
             input.value=''; 
         }; 
@@ -3820,11 +4090,26 @@ function importJamaahFromExcel(input){
 let jamaahKitaList = [], dynamicFieldsJamaahKita = [], selectedJamaahKitaIds = [], editingJamaahKitaId = null;
 
 const defaultJamaahKitaFields = [
-    { name: "kamar", label: "Kamar", type: "text", icon: "🛏️", isRequired: false },
-    { name: "bus", label: "Bus", type: "text", icon: "🚌", isRequired: false },
-    { name: "hotel", label: "Hotel", type: "text", icon: "🏨", isRequired: false },
-    { name: "paspor", label: "No. Paspor", type: "text", icon: "📘", isRequired: false },
-    { name: "whatsapp", label: "WhatsApp", type: "tel", icon: "📞", isRequired: true }
+    { name: 'nama_paspor',   label: 'Nama Paspor',   type: 'text',     icon: '👤', isRequired: false },
+    { name: 'no_porsi',      label: 'No Porsi',       type: 'text',     icon: '🔢', isRequired: false },
+    { name: 'jenis_kelamin', label: 'Jenis Kelamin',  type: 'text',     icon: '👤', isRequired: false },
+    { name: 'tempat_lahir',  label: 'Tempat Lahir',   type: 'text',     icon: '📍', isRequired: false },
+    { name: 'tgl_lahir',     label: 'Tanggal Lahir',  type: 'date',     icon: '🗓️', isRequired: false },
+    { name: 'no_paspor',     label: 'No Paspor',      type: 'text',     icon: '📘', isRequired: false },
+    { name: 'nik',           label: 'NIK',             type: 'text',     icon: '🪪', isRequired: false },
+    { name: 'kk',            label: 'KK',              type: 'text',     icon: '📋', isRequired: false },
+    { name: 'alamat_kec',    label: 'Alamat Kec',     type: 'text',     icon: '🏘️', isRequired: false },
+    { name: 'kota',          label: 'Kota',            type: 'text',     icon: '🏙️', isRequired: false },
+    { name: 'whatsapp',      label: 'WhatsApp',        type: 'tel',      icon: '📞', isRequired: true  },
+    { name: 'rombongan',     label: 'Rombongan',       type: 'text',     icon: '👥', isRequired: false },
+    { name: 'regu',          label: 'Regu',            type: 'text',     icon: '👥', isRequired: false },
+    { name: 'visa',          label: 'Visa',            type: 'text',     icon: '📘', isRequired: false },
+    { name: 'kamar',         label: 'Kamar',           type: 'text',     icon: '🛏️', isRequired: false },
+    { name: 'bus',           label: 'Bus',             type: 'text',     icon: '🚌', isRequired: false },
+    { name: 'hotel_makkah',  label: 'Hotel Makkah',   type: 'text',     icon: '🏨', isRequired: false },
+    { name: 'hotel_madinah', label: 'Hotel Madinah',  type: 'text',     icon: '🏨', isRequired: false },
+    { name: 'warna',         label: 'Warna',           type: 'text',     icon: '🏷️', isRequired: false },
+    { name: 'keterangan',    label: 'Keterangan',      type: 'textarea', icon: '📝', isRequired: false }
 ];
 
 function loadJamaahKitaData() {
@@ -3832,6 +4117,25 @@ function loadJamaahKitaData() {
     const savedFields = localStorage.getItem('safara_jamaah_kita_fields');
     jamaahKitaList = saved ? JSON.parse(saved) : [];
     dynamicFieldsJamaahKita = savedFields ? JSON.parse(savedFields) : defaultJamaahKitaFields;
+
+    // Sinkronkan urutan + icon + label field On Proses mengikuti Database Jamaah
+    const dbFields = JSON.parse(localStorage.getItem('safara_jamaah_fields') || '[]');
+    if (dbFields.length > 0) {
+        const dbOrder = dbFields.map(f => f.name);
+        // Update icon & label dari Database untuk field yang sama
+        dynamicFieldsJamaahKita = dynamicFieldsJamaahKita.map(kf => {
+            const dbField = dbFields.find(df => df.name === kf.name);
+            if (dbField) {
+                return { ...kf, icon: dbField.icon || kf.icon, label: dbField.label || kf.label };
+            }
+            return kf;
+        });
+        // Urutkan sesuai Database
+        const inDb = dynamicFieldsJamaahKita.filter(f => dbOrder.includes(f.name));
+        const notInDb = dynamicFieldsJamaahKita.filter(f => !dbOrder.includes(f.name));
+        inDb.sort((a, b) => dbOrder.indexOf(a.name) - dbOrder.indexOf(b.name));
+        dynamicFieldsJamaahKita = [...inDb, ...notInDb];
+    }
 }
 
 // ===== STUB FUNGSI JAMAAH KITA COMPAT =====
@@ -3849,13 +4153,92 @@ function saveDynamicFieldsJamaahKita() {
 }
 
 function renderPilihJamaahKita() {
-    const select = document.getElementById('pilihJamaahKita');
-    if (!select) return;
-    let html = '<option value="">-- Pilih Jamaah dari database --</option>';
-    jamaahList.forEach((j, idx) => {
-        html += `<option value="${idx}">${escapeHtml(j.nama_lengkap)}</option>`;
+    filterPilihJamaahKita();
+}
+
+function filterPilihJamaahKita() {
+    const q = (document.getElementById('searchJamaahKitaAdd')?.value || '').toLowerCase();
+    const container = document.getElementById('multiSelectJamaahKita');
+    if (!container) return;
+    const filtered = jamaahList.filter(j => j.nama_lengkap.toLowerCase().includes(q));
+    if (filtered.length === 0) {
+        container.innerHTML = '<div style="padding:10px;color:#999;text-align:center;font-size:13px;">Tidak ada jamaah ditemukan</div>';
+        return;
+    }
+    container.innerHTML = filtered.map((j, idx) => {
+        const sudahAda = jamaahKitaList.some(jk => jk.jamaahId === j.id);
+        return `<label style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #eee;cursor:${sudahAda?'default':'pointer'};">
+            <input type="checkbox" value="${j.id}" ${sudahAda?'disabled checked':''}
+                onchange="updateJumlahDipilihKita()"
+                style="width:18px;height:18px;accent-color:#0D5C4A;cursor:${sudahAda?'default':'pointer'};">
+            <span style="font-size:13px;${sudahAda?'color:#aaa;':''}">
+                ${escapeHtml(j.nama_lengkap)}
+                ${sudahAda?'<span style="color:#10B981;font-size:11px;margin-left:4px;">✅ Sudah ada</span>':''}
+            </span>
+        </label>`;
+    }).join('');
+    updateJumlahDipilihKita();
+}
+
+function updateJumlahDipilihKita() {
+    const checked = document.querySelectorAll('#multiSelectJamaahKita input[type=checkbox]:checked:not(:disabled)');
+    const el = document.getElementById('jumlahDipilihKita');
+    if (el) el.textContent = checked.length > 0 ? `${checked.length} jamaah dipilih` : '';
+}
+
+function pilihSemuaJamaahKita() {
+    document.querySelectorAll('#multiSelectJamaahKita input[type=checkbox]:not(:disabled)').forEach(cb => cb.checked = true);
+    updateJumlahDipilihKita();
+}
+
+function hapusPilihanJamaahKita() {
+    document.querySelectorAll('#multiSelectJamaahKita input[type=checkbox]:not(:disabled)').forEach(cb => cb.checked = false);
+    updateJumlahDipilihKita();
+}
+
+function tambahJamaahKitaMulti() {
+    const checked = document.querySelectorAll('#multiSelectJamaahKita input[type=checkbox]:checked:not(:disabled)');
+    if (checked.length === 0) return showToast('Pilih minimal 1 jamaah!');
+    let berhasil = 0, duplikat = 0;
+    checked.forEach(cb => {
+        const jamaahId = parseInt(cb.value);
+        const jamaah = jamaahList.find(j => j.id === jamaahId);
+        if (!jamaah) return;
+        if (jamaahKitaList.some(j => j.jamaahId === jamaah.id)) { duplikat++; return; }
+        const additional = {};
+        // Auto-fill dari database
+        const dbFields = jamaah.additional_fields || {};
+        dynamicFieldsJamaahKita.forEach(field => {
+            let val = '';
+            if (dbFields[field.name] !== undefined && dbFields[field.name] !== '') {
+                val = dbFields[field.name];
+            } else {
+                const key = Object.keys(dbFields).find(k =>
+                    k.toLowerCase().replace(/[_\s]/g,'') === field.name.toLowerCase().replace(/[_\s]/g,'')
+                    || k.toLowerCase().includes(field.name.toLowerCase())
+                    || field.name.toLowerCase().includes(k.toLowerCase())
+                );
+                if (key) val = dbFields[key];
+            }
+            if (val) additional[field.name] = val;
+        });
+        if (!additional.whatsapp) {
+            additional.whatsapp = jamaah.additional_fields?.whatsapp || jamaah.additional_fields?.no_hp || jamaah.additional_fields?.telepon || '';
+        }
+        const now = new Date().toLocaleDateString('id-ID') + ' ' + new Date().toLocaleTimeString('id-ID');
+        jamaahKitaList.push({ id: Date.now() + berhasil, jamaahId: jamaah.id, nama_lengkap: jamaah.nama_lengkap, additional_fields: additional, created_at: now });
+        berhasil++;
     });
-    select.innerHTML = html;
+    if (berhasil > 0) {
+        saveJamaahKitaData();
+        renderJamaahKitaList();
+        filterPilihJamaahKita();
+        let msg = `✅ ${berhasil} jamaah berhasil ditambahkan!`;
+        if (duplikat > 0) msg += ` (${duplikat} sudah ada, dilewati)`;
+        showToast(msg);
+    } else {
+        showToast(`⚠️ ${duplikat} jamaah sudah ada di On Proses, tidak ada yang ditambahkan.`);
+    }
 }
 
 function renderJamaahKitaDynamicFieldsForm() {
@@ -3868,6 +4251,45 @@ function renderJamaahKitaDynamicFieldsForm() {
         }
     });
     container.innerHTML = html;
+}
+
+function autoFillJamaahKitaFields(selectedIndex) {
+    if (!selectedIndex) {
+        // Reset semua field kalau tidak ada yang dipilih
+        dynamicFieldsJamaahKita.forEach(field => {
+            const input = document.getElementById(`jamaahKitaField_${field.name}`);
+            if (input) input.value = '';
+        });
+        return;
+    }
+    const jamaah = jamaahList[parseInt(selectedIndex)];
+    if (!jamaah) return;
+
+    // Gabungkan semua sumber field dari database jamaah
+    const dbFields = jamaah.additional_fields || {};
+
+    // Auto-fill setiap field On Proses dari database
+    dynamicFieldsJamaahKita.forEach(field => {
+        const input = document.getElementById(`jamaahKitaField_${field.name}`);
+        if (!input) return;
+
+        // Coba cocokkan nama field secara exact, lalu coba fuzzy match
+        let val = '';
+        if (dbFields[field.name] !== undefined && dbFields[field.name] !== '') {
+            val = dbFields[field.name];
+        } else {
+            // Coba cari field dengan nama mirip (case-insensitive)
+            const key = Object.keys(dbFields).find(k =>
+                k.toLowerCase().replace(/[_\s]/g,'') === field.name.toLowerCase().replace(/[_\s]/g,'')
+                || k.toLowerCase().includes(field.name.toLowerCase())
+                || field.name.toLowerCase().includes(k.toLowerCase())
+            );
+            if (key) val = dbFields[key];
+        }
+        input.value = val;
+    });
+
+    showToast('✅ Data jamaah berhasil dimuat!');
 }
 
 function tambahJamaahKita() {
@@ -3922,18 +4344,74 @@ function renderJamaahKitaList() {
     updateJamaahKitaBatchBar();
 }
 
+function hitungUmurDariTanggal(tglLahir) {
+    if (!tglLahir) return null;
+    const lahir = new Date(tglLahir);
+    if (isNaN(lahir)) return null;
+    const today = new Date();
+    let umur = today.getFullYear() - lahir.getFullYear();
+    const m = today.getMonth() - lahir.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < lahir.getDate())) umur--;
+    return umur;
+}
+
+function getStatusLansia(umur) {
+    if (umur === null) return null;
+    const batas = getKonfigurasiProData().settings?.batas_lansia || 60;
+    return umur >= batas ? `🔴 LANSIA (${umur} th)` : `🟢 ${umur} th`;
+}
+
+function getMergedJamaahKitaFields(jk) {
+    // Ambil data terbaru dari Database berdasarkan jamaahId
+    const dbJamaah = jamaahList.find(j => j.id === jk.jamaahId);
+    const dbFields = dbJamaah?.additional_fields || {};
+    // Gabungkan: Database sebagai sumber utama, field khusus On Proses sebagai tambahan
+    const merged = Object.assign({}, jk.additional_fields || {}, dbFields);
+    // Update nama dari database juga
+    if (dbJamaah && dbJamaah.nama_lengkap !== jk.nama_lengkap) {
+        jk.nama_lengkap = dbJamaah.nama_lengkap;
+    }
+    return merged;
+}
+
 function renderJamaahKitaDetailFields(jk) {
     let html = "";
+    const mergedFields = getMergedJamaahKitaFields(jk);
     dynamicFieldsJamaahKita.forEach(field => {
-        const val = jk.additional_fields?.[field.name] || "";
-        if (val && field.name !== "whatsapp") html += `<div class="jamaah-kita-detail-item">${field.icon || '📌'} ${escapeHtml(field.label)}: ${escapeHtml(val)}</div>`;
+        const val = mergedFields[field.name] || "";
+        if (!val || field.name === "whatsapp") return;
+        const isTglLahir = field.type === 'date' || field.name.includes('lahir') || field.name.includes('tgl_lahir');
+        if (isTglLahir) {
+            const umur = hitungUmurDariTanggal(val);
+            const statusLansia = getStatusLansia(umur);
+            html += `<div class="jamaah-kita-detail-item">${field.icon || '📌'} ${escapeHtml(field.label)}: ${escapeHtml(val)}</div>`;
+            if (statusLansia) html += `<div class="jamaah-kita-detail-item">🧓 Umur & Status: ${statusLansia}</div>`;
+        } else {
+            html += `<div class="jamaah-kita-detail-item">${field.icon || '📌'} ${escapeHtml(field.label)}: ${escapeHtml(val)}</div>`;
+        }
     });
-    const wa = jk.additional_fields?.whatsapp || "";
+    const wa = mergedFields.whatsapp || "";
     if (wa) html += `<div class="jamaah-kita-detail-item">📞 WhatsApp: ${escapeHtml(wa)}</div>`;
     return html;
 }
 
 function filterJamaahKitaList() { renderJamaahKitaList(); }
+
+function pilihSemuaOnProses() {
+    document.querySelectorAll('#jamaahKitaListContainer input[type=checkbox]').forEach(cb => cb.checked = true);
+}
+
+function hapusPilihanOnProses() {
+    const checked = document.querySelectorAll('#jamaahKitaListContainer input[type=checkbox]:checked');
+    if (checked.length === 0) return showToast('Pilih jamaah yang mau dihapus dulu!');
+    if (!confirm(`Hapus ${checked.length} jamaah dari On Proses?`)) return;
+    const ids = Array.from(checked).map(cb => parseInt(cb.value));
+    jamaahKitaList = jamaahKitaList.filter(j => !ids.includes(j.id));
+    saveJamaahKitaData();
+    renderJamaahKitaList();
+    filterPilihJamaahKita();
+    showToast(`🗑️ ${ids.length} jamaah berhasil dihapus!`);
+}
 
 function resetJamaahKitaFilter() {
     document.getElementById('searchJamaahKitaInput').value = '';
@@ -3965,14 +4443,25 @@ function clearJamaahKitaSelection() {
 function sendBatchWA() {
     if (selectedJamaahKitaIds.length === 0) return showToast('Pilih jamaah terlebih dahulu!');
     const selected = jamaahKitaList.filter(j => selectedJamaahKitaIds.includes(j.id));
+    const printFieldNames = getOnProsesPrintFields();
+    const printFields = dynamicFieldsJamaahKita.filter(f => printFieldNames.includes(f.name));
     let msg = "📋 *DATA JAMAAH ON PROSES*\n\n━━━━━━━━━━━━━━━━━━\n";
     selected.forEach((jk, i) => {
+        const mergedFields = getMergedJamaahKitaFields(jk);
         msg += `${i+1}. *${jk.nama_lengkap}*\n`;
-        dynamicFieldsJamaahKita.forEach(field => {
-            const val = jk.additional_fields?.[field.name] || "";
-            if (val && field.name !== "whatsapp") msg += `   ${field.icon || '📌'} ${field.label}: ${val}\n`;
+        printFields.forEach(field => {
+            const val = mergedFields[field.name] || "";
+            if (!val || field.name === "whatsapp") return;
+            const isTglLahir = field.type === 'date' || field.name.includes('lahir');
+            if (isTglLahir) {
+                const umur = hitungUmurDariTanggal(val);
+                const status = getStatusLansia(umur);
+                msg += `   ${field.icon || '📌'} ${field.label}: ${val} ${status||''}\n`;
+            } else {
+                msg += `   ${field.icon || '📌'} ${field.label}: ${val}\n`;
+            }
         });
-        const wa = jk.additional_fields?.whatsapp || "";
+        const wa = mergedFields.whatsapp || "";
         if (wa) msg += `   📞 WA: ${wa}\n`;
         msg += "\n";
     });
@@ -4045,32 +4534,72 @@ function shareAllJamaahKitaToWA() {
 
 function cetakLabelJamaahKita() {
     if (jamaahKitaList.length === 0) return showToast('Tidak ada data untuk dicetak!');
-    let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak Label</title>
-    <style>* { margin:0; padding:0; box-sizing:border-box; } body { font-family:'Segoe UI',Arial,sans-serif; padding:20px; background:#f0f0f0; }
-    .print-area { display:flex; flex-wrap:wrap; gap:16px; justify-content:center; }
-    .label-card { background:white; border-radius:16px; padding:16px; width:260px; box-shadow:0 2px 12px rgba(0,0,0,0.1); border:1px solid #0D5C4A; page-break-inside:avoid; break-inside:avoid; }
-    .label-card h3 { color:#0D5C4A; font-size:16px; border-bottom:1px dashed #D4AF37; padding-bottom:8px; margin-bottom:12px; text-align:center; }
-    .label-field { margin:8px 0; font-size:12px; } .label-field strong { color:#0D5C4A; }
-    .label-wa { background:#f0f7f4; padding:8px; border-radius:12px; margin-top:10px; word-break:break-all; font-size:11px; }
-    .no-print { text-align:center; margin-top:20px; padding:20px; }
-    .no-print button { padding:10px 30px; margin:0 10px; background:#0D5C4A; color:white; border:none; border-radius:8px; cursor:pointer; }
-    @media print { body { background:white; padding:0; } .print-area { display:block; padding:10px; } .label-card { box-shadow:none; border:1px solid #ccc; margin-bottom:16px; } .no-print { display:none !important; } }
-    </style></head><body><div class="print-area">`;
+    const cfg = getKonfigurasiProData();
+    const logo = cfg.instansi1?.logo || '';
+    const namaInstansi = cfg.instansi2?.nama || cfg.instansi1?.nama || 'Safara';
+    const printFieldNames = getOnProsesPrintFields();
+    const printFields = dynamicFieldsJamaahKita.filter(f => printFieldNames.includes(f.name) && f.name !== 'whatsapp');
+    const logoHtml = logo
+        ? `<img src="${logo}" style="width:32px;height:32px;object-fit:contain;">`
+        : `<div style="font-size:18px;">🕌</div>`;
+
+    let cardsHtml = '';
     jamaahKitaList.forEach(j => {
         const f = j.additional_fields || {};
-        html += `<div class="label-card"><h3>${escapeHtml(j.nama_lengkap)}</h3>
-            ${f.bus ? `<div class="label-field"><strong>🚌 Bus</strong>: ${escapeHtml(f.bus)}</div>` : ''}
-            ${f.kamar ? `<div class="label-field"><strong>🛏️ Kamar</strong>: ${escapeHtml(f.kamar)}</div>` : ''}
-            ${f.hotel ? `<div class="label-field"><strong>🏨 Hotel</strong>: ${escapeHtml(f.hotel)}</div>` : ''}
-            ${f.paspor ? `<div class="label-field"><strong>📘 Paspor</strong>: ${escapeHtml(f.paspor)}</div>` : ''}
-            ${f.whatsapp ? `<div class="label-wa"><strong>📞 WA</strong><br>${escapeHtml(f.whatsapp)}</div>` : ''}
-            <div style="text-align:center;margin-top:12px;font-size:10px;color:#999;">${getKonfigurasiProData().instansi1.nama || 'Safara'}</div>
+        let fieldsHtml = '';
+        printFields.forEach(field => {
+            const val = f[field.name] || '';
+            if (!val) return;
+            const isTglLahir = field.type === 'date' || field.name.includes('lahir');
+            if (isTglLahir) {
+                const umur = hitungUmurDariTanggal(val);
+                const status = getStatusLansia(umur);
+                fieldsHtml += `<div class="field-row">${field.icon||'📌'} <b>${field.label}</b>: ${escapeHtml(val)} ${status||''}</div>`;
+            } else {
+                fieldsHtml += `<div class="field-row">${field.icon||'📌'} <b>${field.label}</b>: ${escapeHtml(val)}</div>`;
+            }
+        });
+        const wa = f.whatsapp || '';
+        cardsHtml += `<div class="label-card">
+            <div class="card-header">
+                ${logoHtml}
+                <div class="card-nama">${escapeHtml(j.nama_lengkap)}</div>
+            </div>
+            <div class="card-fields">${fieldsHtml}</div>
+            ${wa ? `<div class="card-wa">📞 ${escapeHtml(wa)}</div>` : ''}
+            <div class="card-footer">${namaInstansi}</div>
         </div>`;
     });
-    html += `</div><div class="no-print"><button onclick="window.print()">🖨️ CETAK</button><button onclick="window.close()">✕ TUTUP</button></div>
-    <script>window.onload = function() { setTimeout(function() { window.print(); }, 800); };<\/script>
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak Label</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Segoe UI',Arial,sans-serif;padding:12px;background:#f0f0f0;}
+        .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:780px;margin:0 auto;}
+        .label-card{background:white;border-radius:10px;padding:10px;border:1.5px solid #0D5C4A;page-break-inside:avoid;break-inside:avoid;}
+        .card-header{display:flex;align-items:center;gap:8px;border-bottom:1px dashed #D4AF37;padding-bottom:8px;margin-bottom:6px;}
+        .card-nama{font-size:12px;font-weight:bold;color:#0D5C4A;text-transform:uppercase;line-height:1.3;flex:1;}
+        .card-fields{margin-bottom:4px;}
+        .field-row{font-size:10px;color:#444;margin:2px 0;line-height:1.4;}
+        .card-wa{background:#f0f7f4;padding:4px 8px;border-radius:6px;margin-top:4px;font-size:10px;word-break:break-all;}
+        .card-footer{text-align:center;margin-top:6px;font-size:9px;color:#999;}
+        .no-print{text-align:center;margin-top:16px;padding:12px;}
+        .no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{
+            *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+            body{background:white;padding:6px;}
+            .grid{gap:6px;}
+            .no-print{display:none!important;}
+        }
+    </style></head><body>
+    <div class="grid">${cardsHtml}</div>
+    <div class="no-print">
+        <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
+        <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
+    </div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
     </body></html>`;
-    const win = window.open("", "_blank");
+    const win = window.open('','_blank');
     if (!win) { showToast('Izinkan popup untuk cetak!'); return; }
     win.document.write(html);
     win.document.close();
@@ -4101,45 +4630,98 @@ function closeGroupDialogJamaahKita() {
     if (dialog) dialog.remove();
 }
 
-function printGroupedPDFJamaahKita() {
+async function printGroupedPDFJamaahKita() {
     const select = document.getElementById("groupFieldSelectJamaahKita");
     if (!select) return;
     const fieldName = select.value;
     const groupField = dynamicFieldsJamaahKita.find(f => f.name === fieldName);
     if (!groupField) { showToast('Field tidak ditemukan!'); closeGroupDialogJamaahKita(); return; }
     closeGroupDialogJamaahKita();
+
+    // Gunakan hanya field yang dipilih untuk dicetak
+    const printFieldNames = getOnProsesPrintFields();
+    const printFields = dynamicFieldsJamaahKita.filter(f => printFieldNames.includes(f.name));
+
     const groups = {};
+    const batas = getKonfigurasiProData().settings?.batas_lansia || 60;
     jamaahKitaList.forEach(jk => {
-        const key = jk.additional_fields?.[groupField.name] || "Tidak diisi";
+        const mergedFields = getMergedJamaahKitaFields(jk);
+        const rawVal = mergedFields[groupField.name] || "";
+        let key;
+        // Jika field adalah tanggal lahir → kelompokkan berdasarkan status Lansia
+        const isTglLahir = groupField.type === 'date' || groupField.name.includes('lahir');
+        if (isTglLahir && rawVal) {
+            const umur = hitungUmurDariTanggal(rawVal);
+            if (umur === null) key = "Tidak diisi";
+            else if (umur >= batas) key = `🔴 LANSIA (≥${batas} tahun)`;
+            else key = `🟢 TIDAK LANSIA (<${batas} tahun)`;
+        } else {
+            key = rawVal || "Tidak diisi";
+        }
         if (!groups[key]) groups[key] = [];
         groups[key].push(jk);
     });
-    const sortedGroups = Object.keys(groups).sort((a, b) => { if (a === "Tidak diisi") return 1; if (b === "Tidak diisi") return -1; return a.localeCompare(b); });
+    const sortedGroups = Object.keys(groups).sort((a, b) => {
+        if (a === "Tidak diisi") return 1;
+        if (b === "Tidak diisi") return -1;
+        return a.localeCompare(b);
+    });
+    const cfg = getKonfigurasiProData();
+    const watermarkHtml = buildPrintWatermark(cfg);
     let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak Kelompok</title>
-    <style>body { font-family:Arial,sans-serif; padding:20px; } h1 { color:#0D5C4A; text-align:center; }
-    .date { text-align:center; margin-bottom:20px; color:#666; font-size:12px; }
-    .group { margin-bottom:30px; } .group-title { background:#0D5C4A; color:white; padding:8px 12px; border-radius:8px; margin-bottom:10px; font-weight:bold; }
-    table { width:100%; border-collapse:collapse; margin-bottom:20px; } th,td { border:1px solid #ddd; padding:8px; text-align:left; } th { background:#f0f0f0; }
-    .footer { text-align:center; margin-top:30px; font-size:11px; color:#999; border-top:1px solid #ddd; padding-top:10px; }
-    @media print { button { display:none; } }
-    </style></head><body>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;padding:20px;background:#f0f0f0;}
+        .box{background:white;max-width:900px;margin:0 auto;border-radius:16px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;}
+        .watermark-wrap{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+        .content{position:relative;z-index:1;}
+        h1{color:#0D5C4A;text-align:center;font-size:22px;margin-bottom:6px;}
+        .date{text-align:center;margin-bottom:20px;color:#666;font-size:12px;}
+        .group{margin-bottom:24px;}
+        .group-title{background:#0D5C4A;color:white;padding:10px 14px;border-radius:8px;margin-bottom:10px;font-weight:bold;font-size:13px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        table{width:100%;border-collapse:collapse;margin-bottom:8px;font-size:13px;}
+        thead{display:table-header-group;}
+        th{background:#0D5C4A;color:white;padding:9px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        td{border-bottom:1px solid #eee;padding:8px;}
+        tr{page-break-inside:avoid;}
+        tr:nth-child(even) td{background:#f9f9f9;}
+        .footer{text-align:center;margin-top:20px;font-size:11px;color:#999;border-top:1px solid #ddd;padding-top:10px;}
+        .no-print{text-align:center;margin-top:20px;}
+        .no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}
+    </style></head><body><div class="box"><div class="watermark-wrap">${watermarkHtml}</div><div class="content">
     <h1>📋 DATA KELOMPOK JAMAAH</h1>
     <div class="date">Tanggal Cetak: ${new Date().toLocaleDateString("id-ID")}</div>
     <div class="date">Berdasarkan: ${groupField.icon || '📌'} ${escapeHtml(groupField.label)}</div>`;
-    for (const key of sortedGroups) {
+    sortedGroups.forEach((key, groupIdx) => {
         const members = groups[key];
-        html += `<div class="group"><div class="group-title">${groupField.icon || '📌'} ${escapeHtml(groupField.label)}: ${escapeHtml(key)} (${members.length} orang)</div>
-        <table><thead><tr><th>No</th><th>Nama Jamaah</th>${dynamicFieldsJamaahKita.map(f => `<th>${f.icon || '📌'} ${escapeHtml(f.label)}</th>`).join("")}</tr></thead><tbody>`;
+        const pageBreak = groupIdx > 0 ? 'page-break-before:always;' : '';
+        html += `<div class="group" style="${pageBreak}">
+        <div class="group-title">${groupField.icon || '📌'} ${escapeHtml(groupField.label)}: ${escapeHtml(key)} (${members.length} orang)</div>
+        <table><thead><tr><th>No</th><th>Nama Jamaah</th>${printFields.map(f => `<th>${f.icon || '📌'} ${escapeHtml(f.label)}</th>`).join("")}</tr></thead><tbody>`;
         members.forEach((jk, i) => {
-            html += `<tr><td>${i+1}</td><td>${escapeHtml(jk.nama_lengkap)}</td>${dynamicFieldsJamaahKita.map(f => `<td>${escapeHtml(jk.additional_fields?.[f.name] || "-")}</td>`).join("")}</tr>`;
+            const mergedFields = getMergedJamaahKitaFields(jk);
+            html += `<tr><td>${i+1}</td><td>${escapeHtml(jk.nama_lengkap)}</td>${printFields.map(f => {
+                const val = mergedFields[f.name] || '-';
+                const isTglLahir = f.type === 'date' || f.name.includes('lahir');
+                if (isTglLahir && val !== '-') {
+                    const umur = hitungUmurDariTanggal(val);
+                    const status = getStatusLansia(umur);
+                    return `<td>${escapeHtml(val)}<br><small>${status||''}</small></td>`;
+                }
+                return `<td>${escapeHtml(val)}</td>`;
+            }).join("")}</tr>`;
         });
         html += `</tbody></table></div>`;
-    }
+    });
     html += `<div class="footer">Dicetak dari ${getKonfigurasiProData().instansi1.nama || 'Safara'}</div>
-    <div style="text-align:center;margin-top:20px;">
-        <button onclick="window.print()" style="padding:10px 30px;background:#0D5C4A;color:white;border:none;border-radius:8px;">🖨️ CETAK</button>
-        <button onclick="window.close()" style="padding:10px 30px;background:#ccc;border:none;border-radius:8px;margin-left:10px;">TUTUP</button>
-    </div></body></html>`;
+    </div></div>
+    <div class="no-print">
+        <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
+        <button onclick="window.close()" style="background:#e2e8f0;color:#333;">TUTUP</button>
+    </div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    </body></html>`;
     const win = window.open("", "_blank");
     win.document.write(html);
     win.document.close();
@@ -4148,30 +4730,137 @@ function printGroupedPDFJamaahKita() {
 function renderJamaahKitaFieldsList() {
     const container = document.getElementById('jamaahKitaFieldsListContainer');
     if (!container) return;
-    if (dynamicFieldsJamaahKita.length === 0) { container.innerHTML = '<p style="color:#999;">Belum ada field dinamis.</p>'; return; }
-    let html = '<h4 style="margin-top:10px;">Daftar Field Saat Ini:</h4>';
+    const saved = JSON.parse(localStorage.getItem('safara_onproses_print_fields') || '[]');
+    let html = '<div style="font-size:12px;font-weight:bold;color:var(--primary);margin:10px 0 6px;">Daftar Field & Pilih Cetak:</div>';
+    if (dynamicFieldsJamaahKita.length === 0) { container.innerHTML = '<p style="color:#999;font-size:13px;">Belum ada field.</p>'; return; }
     dynamicFieldsJamaahKita.forEach((f, idx) => {
-        const isProtected = (f.name === "whatsapp");
-        html += `<div class="admin-field-item"><div><strong>${f.icon || '📌'} ${escapeHtml(f.label)}</strong><br><small style="color:#64748B;">${f.name}</small>${f.isRequired ? ' <span class="default-badge">WAJIB</span>' : ''}</div>
-            ${!isProtected ? `<button onclick="confirmDeleteJamaahKitaDynamicField(${idx})" style="background:#ef4444;padding:6px 12px;width:auto;font-size:11px;border:none;border-radius:20px;color:white;cursor:pointer;">Hapus</button>` : '<span style="color:#94a3b8;font-size:11px;">Tidak bisa dihapus</span>'}
+        const isProtected = f.name === 'whatsapp';
+        const checked = saved.length === 0 || saved.includes(f.name);
+        html += `<div style="display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px solid #eee;">
+            <input type="checkbox" value="${f.name}" ${checked?'checked':''} onchange="saveOnProsesPrintFields()"
+                style="width:18px;height:18px;accent-color:#0D5C4A;flex-shrink:0;cursor:pointer;">
+            <div style="flex:1;min-width:0;">
+                <div style="font-weight:bold;font-size:13px;">${f.icon||'📌'} ${escapeHtml(f.label)}</div>
+                <div style="font-size:10px;color:#94a3b8;">${f.name} (${f.type||'text'})${f.isRequired?' · WAJIB':''}</div>
+            </div>
+            <div style="display:flex;gap:4px;flex-shrink:0;">
+                <button onclick="editJamaahKitaDynamicField(${idx})"
+                    style="padding:4px 10px;font-size:11px;background:#3B82F6;color:white;border:none;border-radius:16px;cursor:pointer;">Edit</button>
+                ${!isProtected
+                    ? `<button onclick="confirmDeleteJamaahKitaDynamicField(${idx})"
+                        style="padding:4px 10px;font-size:11px;background:#ef4444;color:white;border:none;border-radius:16px;cursor:pointer;">Hapus</button>`
+                    : '<span style="color:#94a3b8;font-size:10px;">Wajib</span>'}
+            </div>
         </div>`;
     });
     container.innerHTML = html;
+    // Update also the separate print selector if exists
+    const printContainer = document.getElementById('onProsesFieldPrintSelector');
+    if (printContainer) printContainer.innerHTML = '';
+}
+
+function editJamaahKitaDynamicField(idx) {
+    const f = dynamicFieldsJamaahKita[idx];
+    if (!f) return;
+    const modal = document.createElement('div');
+    modal.id = 'editKitaFieldModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+        <div style="background:var(--card-bg);border-radius:16px;padding:24px;width:90%;max-width:400px;">
+            <h3 style="margin-bottom:16px;color:var(--primary);">✏️ Edit Field</h3>
+            <div style="margin-bottom:10px;"><label style="font-size:13px;">Label Field</label>
+                <input type="text" id="editKitaFieldLabel" value="${escapeHtml(f.label)}" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:4px;background:var(--input-bg);color:var(--text);">
+            </div>
+            <div style="margin-bottom:10px;"><label style="font-size:13px;">Icon</label>
+                <select id="editKitaFieldIcon" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:4px;font-size:16px;background:var(--input-bg);color:var(--text);">
+                    ${['📌','🛏️','🚌','🏨','📘','✈️','🗓️','👤','📞','🏷️','💳','🎫','🕌','📋','🔑','🌙','⭐','📍','🗺️','💼'].map(ic =>
+                        `<option value="${ic}" ${f.icon===ic?'selected':''}>${ic} ${ic}</option>`
+                    ).join('')}
+                </select>
+            </div>
+            <div style="margin-bottom:16px;"><label style="font-size:13px;">Tipe Field</label>
+                <select id="editKitaFieldType" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:4px;background:var(--input-bg);color:var(--text);">
+                    <option value="text" ${f.type==='text'||!f.type?'selected':''}>Text</option>
+                    <option value="date" ${f.type==='date'?'selected':''}>Tanggal</option>
+                    <option value="tel" ${f.type==='tel'?'selected':''}>Telepon</option>
+                    <option value="textarea" ${f.type==='textarea'?'selected':''}>Text Area</option>
+                </select>
+            </div>
+            <button onclick="saveEditJamaahKitaField(${idx})" style="width:100%;padding:12px;background:#0D5C4A;color:white;border:none;border-radius:10px;margin-bottom:8px;cursor:pointer;font-weight:bold;">SIMPAN</button>
+            <button onclick="document.getElementById('editKitaFieldModal').remove()" style="width:100%;padding:12px;background:#e2e8f0;color:#333;border:none;border-radius:10px;cursor:pointer;">BATAL</button>
+        </div>`;
+    document.body.appendChild(modal);
+}
+
+function saveEditJamaahKitaField(idx) {
+    const label = document.getElementById('editKitaFieldLabel')?.value.trim();
+    const icon = document.getElementById('editKitaFieldIcon')?.value;
+    const type = document.getElementById('editKitaFieldType')?.value;
+    if (!label) return showToast('Label harus diisi!');
+    dynamicFieldsJamaahKita[idx].label = label;
+    dynamicFieldsJamaahKita[idx].icon = icon;
+    dynamicFieldsJamaahKita[idx].type = type;
+    saveDynamicFieldsJamaahKita();
+    document.getElementById('editKitaFieldModal')?.remove();
+    renderJamaahKitaFieldsList();
+    renderJamaahKitaDynamicFieldsForm();
+    showToast('Field berhasil diupdate!');
+}
+
+function getSelectedIconKita() {
+    return document.getElementById('iconSelectKita')?.value || '📌';
+}
+
+function renderOnProsesFieldPrintSelector() {
+    const container = document.getElementById('onProsesFieldPrintSelector');
+    if (!container) return;
+    const saved = JSON.parse(localStorage.getItem('safara_onproses_print_fields') || '[]');
+    if (dynamicFieldsJamaahKita.length === 0) {
+        container.innerHTML = '<div style="color:#999;font-size:13px;">Belum ada field dinamis.</div>';
+        return;
+    }
+    container.innerHTML = dynamicFieldsJamaahKita.map(f => {
+        const checked = saved.length === 0 || saved.includes(f.name);
+        return `<label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" value="${f.name}" ${checked?'checked':''}
+                onchange="saveOnProsesPrintFields()"
+                style="width:18px;height:18px;accent-color:#0D5C4A;cursor:pointer;">
+            <span>${f.icon||'📌'} ${f.label}</span>
+        </label>`;
+    }).join('');
+}
+
+function saveOnProsesPrintFields() {
+    // Baca dari container field list (yang sudah gabung dengan checkbox cetak)
+    const checked = Array.from(document.querySelectorAll('#jamaahKitaFieldsListContainer input[type=checkbox]:checked')).map(cb => cb.value);
+    localStorage.setItem('safara_onproses_print_fields', JSON.stringify(checked));
+    showToast('Pilihan field cetak disimpan!');
+}
+
+function getOnProsesPrintFields() {
+    const saved = JSON.parse(localStorage.getItem('safara_onproses_print_fields') || '[]');
+    if (saved.length === 0) return dynamicFieldsJamaahKita.map(f => f.name);
+    return saved;
 }
 
 function addJamaahKitaDynamicField() {
     const name = document.getElementById('jamaahKitaNewFieldName').value.trim().toLowerCase();
     const label = document.getElementById('jamaahKitaNewFieldLabel').value.trim();
+    const icon = getSelectedIconKita();
     if (!/^[a-z0-9_]+$/.test(name)) return showToast('Nama field: huruf kecil, angka, underscore!');
     if (!label) return showToast('Label harus diisi!');
     if (dynamicFieldsJamaahKita.some(f => f.name === name)) return showToast('Field sudah ada!');
-    dynamicFieldsJamaahKita.push({ name, label, type: 'text', icon: "📌", isRequired: false });
+    dynamicFieldsJamaahKita.push({ name, label, type: 'text', icon, isRequired: false });
     saveDynamicFieldsJamaahKita();
     document.getElementById('jamaahKitaNewFieldName').value = '';
     document.getElementById('jamaahKitaNewFieldLabel').value = '';
+    // Reset icon ke default
+    const iconSelect = document.getElementById('iconSelectKita');
+    if(iconSelect) iconSelect.value = '📌';
     renderJamaahKitaFieldsList();
     renderJamaahKitaDynamicFieldsForm();
-    showToast('Field ditambahkan');
+    renderOnProsesFieldPrintSelector();
+    showToast('Field ditambahkan!');
 }
 
 function confirmDeleteJamaahKitaDynamicField(idx) {
@@ -4336,7 +5025,6 @@ function hitungZakat(){
 
 function salinRingkasanZakat(){ 
     if(!lastZakatText) return showToast('Silakan hitung zakat dulu!');
-    // Kompatibel iPhone Safari
     if(navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(lastZakatText)
             .then(()=>showToast('Ringkasan zakat tersalin!'))
@@ -4344,6 +5032,77 @@ function salinRingkasanZakat(){
     } else {
         salinFallback(lastZakatText);
     }
+}
+
+async function cetakLaporanZakat() {
+    if(sumberHartaList.length === 0) return showToast('Tambah dan hitung zakat dulu!');
+    const cfg = getKonfigurasiProData();
+    const tgl = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
+    const jenis = document.getElementById('jenisZakat').value;
+    const jenisLabel = jenis==='mal'?'Zakat Mal (Harta/Uang)':jenis==='pertanian'?'Zakat Pertanian':'Zakat Perdagangan';
+    const hargaEmas = parseInt((document.getElementById('hargaEmas')?.value||'1200000').replace(/\./g,'').replace(/[^0-9]/g,''));
+    const nisab = 85 * hargaEmas;
+    let totalHarta = 0, totalZakat = 0;
+    let rowsHtml = '';
+    sumberHartaList.forEach((s, i) => {
+        if(s.jumlah > 0 && s.persen > 0) {
+            const zakat = (s.jumlah * s.persen) / 100;
+            totalHarta += s.jumlah;
+            totalZakat += zakat;
+            rowsHtml += `<tr><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${i+1}</td><td style="padding:8px;border-bottom:1px solid #eee;">${s.nama||'Sumber'}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">Rp ${s.jumlah.toLocaleString('id-ID')}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${s.persen}%</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;font-weight:bold;color:#0D5C4A;">Rp ${zakat.toLocaleString('id-ID')}</td></tr>`;
+        }
+    });
+    const statusWajib = totalHarta >= nisab;
+    const statusColor = statusWajib ? '#10B981' : '#EF4444';
+    const statusLabel = statusWajib ? '✅ WAJIB ZAKAT' : '❌ BELUM MENCAPAI NISAB';
+    const headerHtml = buildPrintHeader(cfg, tgl);
+    const ttdHtml = buildPrintTandaTangan(cfg, tgl);
+    const qrHtml = await buildPrintQR(cfg, `Laporan Zakat ${cfg.instansi1?.nama||'Safara'}\nTotal Zakat: Rp ${totalZakat.toLocaleString('id-ID')}\nTanggal: ${tgl}`);
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Laporan Zakat</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}
+        .box{background:white;max-width:680px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);}
+        h2{color:#0D5C4A;font-size:20px;margin-bottom:2px;text-align:center;}
+        .tgl{text-align:center;color:#aaa;font-size:11px;margin-bottom:20px;}
+        .info{font-size:13px;color:#555;line-height:2;margin-bottom:16px;background:#f8f8f8;border-radius:10px;padding:12px;}
+        table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+        th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        tr:nth-child(even) td{background:#f9f9f9;}
+        .summary{background:#f8f8f8;border-radius:10px;padding:16px;font-size:13px;line-height:2.4;}
+        .status{font-size:18px;font-weight:bold;color:${statusColor};margin-top:10px;}
+        .no-print{text-align:center;margin-top:24px;}
+        .no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}
+    </style></head><body>
+    <div class="box">
+        ${headerHtml}
+        <h2>LAPORAN ZAKAT PERUSAHAAN</h2>
+        <div class="tgl">Tanggal Cetak: ${tgl}</div>
+        <div class="info">
+            <div><strong>Jenis Zakat &nbsp;:</strong> ${jenisLabel}</div>
+            <div><strong>Harga Emas &nbsp;:</strong> Rp ${hargaEmas.toLocaleString('id-ID')} / gram</div>
+            <div><strong>Nisab (85gr) :</strong> Rp ${nisab.toLocaleString('id-ID')}</div>
+        </div>
+        <table>
+            <thead><tr><th style="width:36px;">No</th><th>Sumber Harta</th><th style="text-align:right;">Jumlah</th><th style="text-align:center;">%</th><th style="text-align:right;">Zakat</th></tr></thead>
+            <tbody>${rowsHtml}</tbody>
+        </table>
+        <div class="summary">
+            <div>Total Harta &nbsp;&nbsp;: <strong>Rp ${totalHarta.toLocaleString('id-ID')}</strong></div>
+            <div>Total Zakat &nbsp;&nbsp;: <strong style="color:#0D5C4A;">Rp ${totalZakat.toLocaleString('id-ID')}</strong></div>
+            <div>Harta Bersih : <strong>Rp ${(totalHarta-totalZakat).toLocaleString('id-ID')}</strong></div>
+            <div class="status">${statusLabel}</div>
+        </div>
+        ${ttdHtml}
+        ${qrHtml}
+    </div>
+    <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    </body></html>`;
+    const win = window.open('','_blank');
+    if(!win) return showToast('Izinkan popup untuk cetak!');
+    win.document.write(html); win.document.close();
 }
 
 function salinFallback(text) {
@@ -4651,98 +5410,83 @@ async function cetakInvoiceLangsung(jamaahId) {
     try {
         const jamaah = jamaahList.find(j => j.id == jamaahId);
         if (!jamaah) return showToast('Data jamaah tidak ditemukan');
+        const cfg = getKonfigurasiProData();
         const transaksiList = paymentTransaksiList.filter(t => t.id_jamaah == jamaahId).sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal));
         const totalBayar = hitungTotalBayarJamaah(jamaahId);
         const totalHargaPaket = getTotalHargaPaket(jamaah) || 0;
         const sisa = totalHargaPaket - totalBayar;
-        const status = sisa <= 0 ? 'LUNAS' : 'BELUM LUNAS';
         const statusColor = sisa <= 0 ? '#10B981' : '#EF4444';
-        const prefix = getKonfigurasiProData().settings.invoice_prefix || 'INV/SAFARA';
-        const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+        const prefix = cfg.settings?.invoice_prefix || 'INV/SAFARA';
         const tglCetak = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
         const noInvoice = `${prefix}/${jamaah.id}/${new Date().toLocaleDateString('id-ID').replace(/\//g,'')}`;
-
+        const headerHtml = buildPrintHeader(cfg, tglCetak);
+        const watermarkHtml = buildPrintWatermark(cfg);
+        const ttdHtml = buildPrintTandaTangan(cfg, tglCetak);
+        const qrHtml = await buildPrintQR(cfg, `Invoice:${noInvoice}\nJamaah:${jamaah.nama_lengkap}\nStatus:${sisa<=0?'LUNAS':'BELUM LUNAS'}`);
         let rowsHtml = '';
-        transaksiList.forEach((t, i) => {
-            rowsHtml += `<tr>
-                <td style="padding:8px; border-bottom:1px solid #eee; text-align:center;">${i+1}</td>
-                <td style="padding:8px; border-bottom:1px solid #eee;">${t.tanggal}</td>
-                <td style="padding:8px; border-bottom:1px solid #eee;">${t.keterangan || '-'}</td>
-                <td style="padding:8px; border-bottom:1px solid #eee;">${t.metode || '-'}</td>
-                <td style="padding:8px; border-bottom:1px solid #eee; text-align:right;">${formatRupiah(t.nominal)}</td>
-            </tr>`;
+        transaksiList.forEach((t,i) => {
+            rowsHtml += `<tr><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${i+1}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.tanggal}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.keterangan||'-'}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.metode||'-'}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">${formatRupiah(t.nominal)}</td></tr>`;
         });
-        if (transaksiList.length === 0) {
-            rowsHtml = `<tr><td colspan="5" style="padding:12px; text-align:center; color:#999;">Belum ada transaksi</td></tr>`;
-        }
-
+        if(!transaksiList.length) rowsHtml = `<tr><td colspan="5" style="padding:12px;text-align:center;color:#999;">Belum ada transaksi</td></tr>`;
         const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Invoice - ${jamaah.nama_lengkap}</title>
         <style>
-            * { margin:0; padding:0; box-sizing:border-box; }
-            body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f0f0; padding:20px; }
-            .invoice-box { background:white; max-width:600px; margin:0 auto; border-radius:16px; padding:30px; box-shadow:0 2px 16px rgba(0,0,0,0.1); }
-            .invoice-header { text-align:center; border-bottom:3px solid #0D5C4A; padding-bottom:16px; margin-bottom:20px; }
-            .invoice-header h2 { color:#0D5C4A; font-size:22px; margin-bottom:4px; }
-            .invoice-header p { color:#888; font-size:12px; }
-            .invoice-info { display:flex; justify-content:space-between; margin-bottom:20px; font-size:13px; }
-            .invoice-info div { line-height:1.8; }
-            .invoice-info strong { color:#0D5C4A; }
-            table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:20px; }
-            th { background:#0D5C4A; color:white; padding:10px 8px; text-align:left; }
-            th:last-child { text-align:right; }
-            .summary { background:#f8f8f8; border-radius:10px; padding:14px; font-size:13px; line-height:2; }
-            .summary .status { font-size:16px; font-weight:bold; color:${statusColor}; margin-top:8px; }
-            .no-print { text-align:center; margin-top:24px; }
-            .no-print button { padding:12px 32px; margin:0 8px; border:none; border-radius:10px; font-size:14px; font-weight:bold; cursor:pointer; }
-            .btn-cetak { background:#0D5C4A; color:white; }
-            .btn-tutup { background:#e2e8f0; color:#333; }
-            @media print {
-                body { background:white; padding:0; }
-                .invoice-box { box-shadow:none; border-radius:0; }
-                .no-print { display:none !important; }
+            *{margin:0;padding:0;box-sizing:border-box;}
+            body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f0f0;padding:20px;position:relative;}
+            .box{background:white;max-width:680px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;}
+            .watermark-wrap{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;overflow:hidden;}
+            .content{position:relative;z-index:1;}
+            h2{color:#0D5C4A;font-size:22px;text-align:center;margin-bottom:4px;}
+            .inv-sub{text-align:center;color:#888;font-size:12px;margin-bottom:20px;}
+            .info-row{display:flex;justify-content:space-between;margin-bottom:20px;font-size:13px;line-height:2;}
+            table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+            th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+            th:last-child{text-align:right;}
+            tr:nth-child(even) td{background:#f9f9f9;}
+            .summary{background:#f8f8f8;border-radius:10px;padding:14px;font-size:13px;line-height:2.2;}
+            .status{font-size:16px;font-weight:bold;color:${statusColor};margin-top:8px;}
+            .no-print{text-align:center;margin-top:24px;}
+            .no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+            @media print{
+                *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+                body{background:white;padding:0;}
+                .box{box-shadow:none;border-radius:0;}
+                .no-print{display:none!important;}
             }
         </style></head><body>
-        <div class="invoice-box">
-            <div class="invoice-header">
+        <div class="box">
+            <div class="watermark-wrap">${watermarkHtml}</div>
+            <div class="content">
+                ${headerHtml}
                 <h2>INVOICE PEMBAYARAN</h2>
-                <p>${namaInstansi}</p>
-                <p>No: ${noInvoice}</p>
-            </div>
-            <div class="invoice-info">
-                <div>
-                    <strong>Nama Jamaah</strong><br>${jamaah.nama_lengkap}<br>
-                    <strong>Tanggal Cetak</strong><br>${tglCetak}
+                <div class="inv-sub">No: ${noInvoice}</div>
+                <div class="info-row">
+                    <div><strong>Nama Jamaah</strong><br>${jamaah.nama_lengkap}</div>
+                    <div style="text-align:right;"><strong>Total Paket</strong><br>${formatRupiah(totalHargaPaket)}</div>
                 </div>
-                <div style="text-align:right;">
-                    <strong>Total Paket</strong><br>${formatRupiah(totalHargaPaket)}
+                <table>
+                    <thead><tr><th style="width:36px;">No</th><th>Tanggal</th><th>Keterangan</th><th>Metode</th><th style="text-align:right;">Nominal</th></tr></thead>
+                    <tbody>${rowsHtml}</tbody>
+                </table>
+                <div class="summary">
+                    <div>Total Paket &nbsp;&nbsp;: <strong>${formatRupiah(totalHargaPaket)}</strong></div>
+                    <div>Total Dibayar : <strong>${formatRupiah(totalBayar)}</strong></div>
+                    <div>Sisa Tagihan &nbsp;: <strong>${formatRupiah(sisa>0?sisa:0)}</strong></div>
+                    <div class="status">${sisa<=0?'✅ LUNAS':'⚠️ BELUM LUNAS'}</div>
                 </div>
-            </div>
-            <table>
-                <thead><tr><th style="width:36px;">No</th><th>Tanggal</th><th>Keterangan</th><th>Metode</th><th style="text-align:right;">Nominal</th></tr></thead>
-                <tbody>${rowsHtml}</tbody>
-            </table>
-            <div class="summary">
-                <div>Total Paket &nbsp;&nbsp;: <strong>${formatRupiah(totalHargaPaket)}</strong></div>
-                <div>Total Dibayar : <strong>${formatRupiah(totalBayar)}</strong></div>
-                <div>Sisa Tagihan &nbsp;: <strong>${formatRupiah(sisa > 0 ? sisa : 0)}</strong></div>
-                <div class="status">${sisa <= 0 ? '✅ LUNAS' : '⚠️ BELUM LUNAS'}</div>
+                ${ttdHtml}
+                ${qrHtml}
             </div>
         </div>
         <div class="no-print">
-            <button class="btn-cetak" onclick="window.print()">🖨️ CETAK</button>
-            <button class="btn-tutup" onclick="window.close()">✕ TUTUP</button>
+            <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
+            <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
         </div>
-        <script>window.onload = function() { setTimeout(function() { window.print(); }, 800); };<\/script>
+        <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
         </body></html>`;
-
-        const win = window.open('', '_blank');
-        if (!win) { showToast('Izinkan popup untuk cetak!'); return; }
-        win.document.write(html);
-        win.document.close();
-    } catch(e) {
-        showToast('Gagal cetak: ' + e.message);
-        console.error(e);
-    }
+        const win = window.open('','_blank');
+        if(!win){showToast('Izinkan popup untuk cetak!');return;}
+        win.document.write(html); win.document.close();
+    } catch(e){showToast('Gagal cetak: '+e.message);console.error(e);}
 }
 
 function openEditHargaModal(jamaahId) { 
@@ -4849,21 +5593,56 @@ function filterPaymentJamaahList() {
     renderPaymentJamaahList(); 
 }
 
-function exportPaymentPDF() {
-    if(paymentTransaksiList.length === 0) { showToast('Tidak ada data transaksi!'); return; }
-    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
-    const tanggal = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
+async function exportPaymentPDF() {
+    if(paymentTransaksiList.length===0) return showToast('Tidak ada data transaksi!');
+    const cfg = getKonfigurasiProData();
+    const tglCetak = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
     const totalMasuk = paymentTransaksiList.reduce((s,t)=>s+t.nominal,0);
+    const headerHtml = buildPrintHeader(cfg, tglCetak);
+    const watermarkHtml = buildPrintWatermark(cfg);
+    const ttdHtml = buildPrintTandaTangan(cfg, tglCetak);
+    const qrHtml = await buildPrintQR(cfg, `Laporan Pembayaran\nTotal: ${formatRupiah(totalMasuk)}\nTanggal: ${tglCetak}`);
     let rowsHtml = '';
     paymentTransaksiList.forEach((t,i) => {
         rowsHtml += `<tr><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${i+1}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.tanggal}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.nama_jamaah||'-'}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.keterangan||'-'}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.metode||'-'}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">${formatRupiah(t.nominal)}</td></tr>`;
     });
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Laporan Pembayaran</title><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}.box{background:white;max-width:900px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);}h2{color:#0D5C4A;font-size:20px;margin-bottom:4px;}.sub{color:#888;font-size:12px;margin-bottom:20px;}table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;}tr:nth-child(even) td{background:#f9f9f9;}.summary{background:#f8f8f8;border-radius:10px;padding:16px;font-size:14px;}.no-print{text-align:center;margin-top:24px;}.no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}@media print{body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}</style></head><body><div class="box"><h2>LAPORAN PEMBAYARAN JAMAAH</h2><div class="sub">${namaInstansi} | Dicetak: ${tanggal}</div><table><thead><tr><th style="width:36px;">No</th><th>Tanggal</th><th>Jamaah</th><th>Keterangan</th><th>Metode</th><th style="text-align:right;">Nominal</th></tr></thead><tbody>${rowsHtml}</tbody></table><div class="summary"><strong>TOTAL PEMASUKAN: <span style="color:#0D5C4A;">${formatRupiah(totalMasuk)}</span></strong></div></div><div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div><script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script></body></html>`;
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Laporan Pembayaran</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}
+        .box{background:white;max-width:900px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;}
+        .watermark-wrap{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;overflow:hidden;}
+        .content{position:relative;z-index:1;}
+        h2{color:#0D5C4A;font-size:20px;margin-bottom:2px;}
+        .tgl{color:#aaa;font-size:11px;margin-bottom:20px;}
+        table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+        th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        tr:nth-child(even) td{background:#f9f9f9;}
+        .summary{background:#f8f8f8;border-radius:10px;padding:16px;font-size:14px;}
+        .no-print{text-align:center;margin-top:24px;}
+        .no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}
+    </style></head><body>
+    <div class="box">
+        <div class="watermark-wrap">${watermarkHtml}</div>
+        <div class="content">
+            ${headerHtml}
+            <h2>LAPORAN PEMBAYARAN JAMAAH</h2>
+            <div class="tgl">Tanggal Cetak: ${tglCetak}</div>
+            <table><thead><tr><th style="width:36px;">No</th><th>Tanggal</th><th>Jamaah</th><th>Keterangan</th><th>Metode</th><th style="text-align:right;">Nominal</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+            <div class="summary"><strong>TOTAL PEMASUKAN: <span style="color:#0D5C4A;">${formatRupiah(totalMasuk)}</span></strong></div>
+            ${ttdHtml}
+            ${qrHtml}
+        </div>
+    </div>
+    <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
-    win.document.write(html);
-    win.document.close();
+    win.document.write(html); win.document.close();
 }
+
 
 function exportPaymentExcel() { 
     if (paymentTransaksiList.length === 0) { showToast('Tidak ada data transaksi!'); return; } 
@@ -5019,10 +5798,30 @@ function openFolderDetail(folderId) {
     const allJamaahFolder = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
     let jamaahInFolder = folder.jamaahIds.map(id => allJamaahFolder.find(j => j.id == id)).filter(j => j); 
     let availableJamaah = allJamaahFolder.filter(j => !folder.jamaahIds.includes(j.id)); 
-    let html = `<div class="card-premium"><div class="back-header" style="margin-bottom:15px;"><i class="fas fa-arrow-left" onclick="renderFolderList()" style="cursor:pointer;"></i><h3 style="flex:1; text-align:center;">📁 ${escapeHtml(folder.nama)}</h3><div style="width:30px;"></div></div><div class="input-group"><label>➕ Tambah Jamaah ke Folder</label><select id="addJamaahToFolderSelect"><option value="">-- Pilih Jamaah --</option>${availableJamaah.map(j => `<option value="${j.id}">${escapeHtml(j.nama_lengkap)}</option>`).join('')}</select><button class="btn btn-primary btn-small mt-2" onclick="addJamaahToFolder('${folderId}')">Tambah</button></div><div class="section-title">📋 Daftar Jamaah dalam Folder</div><div id="folderJamaahList">`; 
+    let html = `<div class="card-premium"><div class="back-header" style="margin-bottom:15px;"><i class="fas fa-arrow-left" onclick="renderFolderList()" style="cursor:pointer;"></i><h3 style="flex:1; text-align:center;">📁 ${escapeHtml(folder.nama)}</h3><div style="width:30px;"></div></div>
+    <div class="input-group"><label>➕ Tambah Jamaah ke Folder</label>
+    <input type="text" id="searchFolderJamaah" placeholder="🔍 Cari nama jamaah..." oninput="filterFolderJamaahSelect()" style="margin-bottom:8px;">
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <button onclick="pilihSemuaFolderJamaah()" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+        <button onclick="hapusPilihanFolderJamaah()" style="flex:1;padding:8px;background:#e2e8f0;color:#333;border:none;border-radius:8px;font-size:12px;cursor:pointer;">❌ Hapus Pilihan</button>
+    </div>
+    <div id="multiFolderJamaahSelect" style="max-height:200px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:8px;background:var(--card-bg);">${availableJamaah.map(j => `
+        <label style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #eee;cursor:pointer;">
+            <input type="checkbox" value="${j.id}" onchange="updateJumlahDipilihFolder()" style="width:18px;height:18px;accent-color:#0D5C4A;cursor:pointer;">
+            <span style="font-size:13px;">${escapeHtml(j.nama_lengkap)}</span>
+        </label>`).join('')}</div>
+    <div id="jumlahDipilihFolder" style="font-size:12px;color:#0D5C4A;margin-top:6px;font-weight:bold;"></div>
+    <button class="btn btn-primary btn-small mt-2" onclick="addJamaahToFolderMulti('${folderId}')">➕ Tambahkan ke Folder</button>
+    </div>
+    <div class="section-title">📋 Daftar Jamaah dalam Folder</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <button onclick="pilihSemuaFolderList('${folderId}')" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+        <button onclick="hapusPilihanFolder('${folderId}')" style="flex:1;padding:8px;background:#EF4444;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">🗑️ Hapus Dipilih</button>
+    </div>
+    <div id="folderJamaahList">`; 
     if(jamaahInFolder.length === 0) html += '<p class="text-center">Belum ada jamaah</p>'; 
     else jamaahInFolder.forEach(j => { 
-        html += `<div class="jamaah-card"><div class="jamaah-header"><div class="jamaah-nama">👤 ${escapeHtml(j.nama_lengkap)}</div><button class="btn-delete-jamaah" onclick="removeJamaahFromFolder('${folderId}', ${j.id})">🗑️ Hapus dari folder</button></div></div>`; 
+        html += `<div class="jamaah-card"><div class="jamaah-header"><label style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;"><input type="checkbox" value="${j.id}" style="width:18px;height:18px;accent-color:#EF4444;cursor:pointer;"><div class="jamaah-nama">👤 ${escapeHtml(j.nama_lengkap)}</div></label><button class="btn-delete-jamaah" onclick="removeJamaahFromFolder('${folderId}', ${j.id})">🗑️ Hapus</button></div></div>`; 
     }); 
     html += `</div>`;
     // FIELD DINAMIS
@@ -5036,21 +5835,101 @@ function openFolderDetail(folderId) {
     // Section pilih field untuk PDF/Excel
     const allDynFields = JSON.parse(localStorage.getItem('safara_jamaah_fields') || '[]');
     const selectedFields = folder.selectedFields || [];
-    html += `<div class="card-premium" style="padding:12px;margin-bottom:12px;"><div style="font-weight:bold;margin-bottom:10px;color:#0D5C4A;">📋 Pilih Field untuk PDF/Excel</div>`;
+    html += `<div class="card-premium" style="padding:12px;margin-bottom:12px;" onclick="event.stopPropagation();">
+        <div style="font-weight:bold;margin-bottom:10px;color:#0D5C4A;">📋 Pilih Field untuk PDF/Excel</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+            <button onclick="event.stopPropagation();pilihSemuaFolderField('${folderId}')" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+            <button onclick="event.stopPropagation();hapusPilihanFolderField('${folderId}')" style="flex:1;padding:8px;background:#e2e8f0;color:#333;border:none;border-radius:8px;font-size:12px;cursor:pointer;">❌ Hapus Pilihan</button>
+        </div>`;
     if(allDynFields.length === 0) {
         html += `<p style="color:#999;font-size:13px;">Belum ada field dinamis jamaah.</p>`;
     } else {
         allDynFields.forEach(fd => {
             const checked = selectedFields.includes(fd.name) ? 'checked' : '';
-            html += `<label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;"><input type="checkbox" value="${fd.name}" ${checked} onchange="toggleFolderField('${folderId}', '${fd.name}', this.checked)" style="width:18px;height:18px;cursor:pointer;accent-color:#0D5C4A;"><span style="font-weight:bold;">${escapeHtml(fd.label)}</span></label>`;
+            html += `<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid #eee;" onclick="event.stopPropagation();event.preventDefault();">
+                <input type="checkbox" value="${fd.name}" ${checked}
+                    onclick="event.stopPropagation();"
+                    onchange="event.stopPropagation();toggleFolderField('${folderId}', '${fd.name}', this.checked);"
+                    style="width:20px;height:20px;cursor:pointer;accent-color:#0D5C4A;flex-shrink:0;">
+                <span style="font-weight:bold;font-size:14px;">${escapeHtml(fd.label)}</span>
+            </div>`;
         });
     }
     html += `</div><button class="btn btn-purple btn-small mt-2" onclick="exportFolderToPDF('${folderId}')"><i class="fas fa-file-pdf"></i> Export Folder ke PDF</button><button class="btn btn-teal btn-small mt-2" onclick="exportFolderToExcel('${folderId}')"><i class="fas fa-file-excel"></i> Export Folder ke Excel</button></div>`; 
     document.getElementById('folderListContainer').innerHTML = html; 
 }
 
+function pilihSemuaFolderList(folderId) {
+    document.querySelectorAll('#folderJamaahList input[type=checkbox]').forEach(cb => cb.checked = true);
+}
+
+function hapusPilihanFolder(folderId) {
+    const checked = document.querySelectorAll('#folderJamaahList input[type=checkbox]:checked');
+    if (checked.length === 0) return showToast('Pilih jamaah yang mau dihapus dulu!');
+    if (!confirm(`Hapus ${checked.length} jamaah dari folder ini?`)) return;
+    const ids = Array.from(checked).map(cb => parseInt(cb.value));
+    const folder = folderList.find(f => f.id == folderId);
+    if (!folder) return;
+    folder.jamaahIds = folder.jamaahIds.filter(id => !ids.includes(id));
+    saveFolderData();
+    openFolderDetail(folderId);
+    showToast(`🗑️ ${ids.length} jamaah berhasil dihapus dari folder!`);
+}
+
+function filterFolderJamaahSelect() {
+    const q = (document.getElementById('searchFolderJamaah')?.value || '').toLowerCase();
+    document.querySelectorAll('#multiFolderJamaahSelect label').forEach(label => {
+        const nama = label.querySelector('span')?.textContent.toLowerCase() || '';
+        label.style.display = nama.includes(q) ? '' : 'none';
+    });
+}
+
+function pilihSemuaFolderJamaah() {
+    document.querySelectorAll('#multiFolderJamaahSelect input[type=checkbox]').forEach(cb => {
+        const label = cb.closest('label');
+        if (!label || label.style.display === 'none') return;
+        cb.checked = true;
+    });
+    updateJumlahDipilihFolder();
+}
+
+function hapusPilihanFolderJamaah() {
+    document.querySelectorAll('#multiFolderJamaahSelect input[type=checkbox]').forEach(cb => cb.checked = false);
+    updateJumlahDipilihFolder();
+}
+
+function updateJumlahDipilihFolder() {
+    const checked = document.querySelectorAll('#multiFolderJamaahSelect input[type=checkbox]:checked');
+    const el = document.getElementById('jumlahDipilihFolder');
+    if (el) el.textContent = checked.length > 0 ? `${checked.length} jamaah dipilih` : '';
+}
+
+function addJamaahToFolderMulti(folderId) {
+    const checked = document.querySelectorAll('#multiFolderJamaahSelect input[type=checkbox]:checked');
+    if (checked.length === 0) return showToast('Pilih minimal 1 jamaah!');
+    const folder = folderList.find(f => f.id == folderId);
+    if (!folder) return;
+    let berhasil = 0, duplikat = 0;
+    checked.forEach(cb => {
+        const jamaahId = parseInt(cb.value);
+        if (folder.jamaahIds.includes(jamaahId)) { duplikat++; return; }
+        folder.jamaahIds.push(jamaahId);
+        berhasil++;
+    });
+    if (berhasil > 0) {
+        saveFolderData();
+        openFolderDetail(folderId);
+        let msg = `✅ ${berhasil} jamaah ditambahkan ke folder!`;
+        if (duplikat > 0) msg += ` (${duplikat} sudah ada, dilewati)`;
+        showToast(msg);
+    } else {
+        showToast(`⚠️ Semua jamaah sudah ada di folder ini.`);
+    }
+}
+
 function addJamaahToFolder(folderId) { 
     const select = document.getElementById('addJamaahToFolderSelect'); 
+    if (!select) return;
     const jamaahId = parseInt(select.value); 
     if(!jamaahId) return showToast('Pilih jamaah!'); 
     const folder = folderList.find(f => f.id == folderId); 
@@ -5095,6 +5974,24 @@ function confirmDeleteFolder(folderId) {
     } 
 }
 
+function pilihSemuaFolderField(folderId) {
+    document.querySelectorAll(`input[id^="fld_${folderId}_"]`).forEach(cb => {
+        if(!cb.checked) {
+            cb.checked = true;
+            toggleFolderField(folderId, cb.value, true);
+        }
+    });
+}
+
+function hapusPilihanFolderField(folderId) {
+    document.querySelectorAll(`input[id^="fld_${folderId}_"]`).forEach(cb => {
+        if(cb.checked) {
+            cb.checked = false;
+            toggleFolderField(folderId, cb.value, false);
+        }
+    });
+}
+
 function toggleFolderField(folderId, fieldKey, checked) {
     const folderIdx = folderList.findIndex(f => f.id == folderId);
     if(folderIdx === -1) return;
@@ -5106,8 +6003,8 @@ function toggleFolderField(folderId, fieldKey, checked) {
     } else {
         folderList[folderIdx].selectedFields = folderList[folderIdx].selectedFields.filter(k => k !== fieldKey);
     }
+    // Simpan diam-diam tanpa render ulang agar posisi scroll tidak berubah
     saveFolderData();
-    showToast(checked ? '✅ Field ditambahkan' : '❌ Field dihapus');
 }
 
 function addFolderField(folderId) {
@@ -5154,7 +6051,9 @@ async function exportFolderToPDF(folderId) {
     const allJamaah = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
     const jamaahInFolder = folder.jamaahIds.map(id => allJamaah.find(j => j.id == id)).filter(j => j);
     if(jamaahInFolder.length === 0) { showToast('Tidak ada jamaah dalam folder ini'); return; }
-    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+    const cfgFolder = getKonfigurasiProData();
+    const namaInstansi = cfgFolder.instansi1.nama || 'Safara';
+    const watermarkHtmlFolder = buildPrintWatermark(cfgFolder);
     const tanggal = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
     const allDynFields = JSON.parse(localStorage.getItem('safara_jamaah_fields') || '[]');
     const selectedFields = folder.selectedFields || [];
@@ -5164,7 +6063,7 @@ async function exportFolderToPDF(folderId) {
     thHtml += '<th>Tgl Input</th>';
     let rowsHtml = '';
     jamaahInFolder.forEach((j,i) => {
-        rowsHtml += `<tr><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${i+1}</td><td style="padding:8px;border-bottom:1px solid #eee;">${j.nama_lengkap}</td>`;
+        rowsHtml += `<tr style="page-break-inside:avoid;"><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${i+1}</td><td style="padding:8px;border-bottom:1px solid #eee;">${j.nama_lengkap}</td>`;
         chosenFields.forEach(fd => {
             const val = (j.additional_fields && j.additional_fields[fd.name]) ? j.additional_fields[fd.name] : '-';
             rowsHtml += `<td style="padding:8px;border-bottom:1px solid #eee;">${val}</td>`;
@@ -5175,7 +6074,38 @@ async function exportFolderToPDF(folderId) {
     if(folder.fields && folder.fields.length > 0) {
         folder.fields.forEach(fd => { folderInfoHtml += `<div><strong>${fd.label}:</strong> ${fd.value}</div>`; });
     }
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Folder ${folder.nama}</title><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}.box{background:white;max-width:900px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);}h2{color:#0D5C4A;font-size:20px;margin-bottom:4px;}.sub{color:#888;font-size:12px;margin-bottom:12px;}.folder-info{background:#f0f7f4;border-radius:10px;padding:12px;font-size:13px;line-height:1.9;margin-bottom:16px;color:#555;}table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px;}th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;}tr:nth-child(even) td{background:#f9f9f9;}.footer{text-align:center;font-size:11px;color:#999;margin-top:16px;}.no-print{text-align:center;margin-top:24px;}.no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}@media print{body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}</style></head><body><div class="box"><h2>Folder: ${folder.nama}</h2><div class="sub">${namaInstansi} | Total: ${jamaahInFolder.length} jamaah | Dicetak: ${tanggal}</div>${folderInfoHtml?`<div class="folder-info">${folderInfoHtml}</div>`:''}<table><thead><tr>${thHtml}</tr></thead><tbody>${rowsHtml}</tbody></table><div class="footer">${namaInstansi} | ${tanggal}</div></div><div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div><script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script></body></html>`;
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Folder ${folder.nama}</title><style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}
+        .box{background:white;max-width:900px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;}
+        .watermark-wrap{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+        .content{position:relative;z-index:1;}
+        h2{color:#0D5C4A;font-size:20px;margin-bottom:4px;}
+        .sub{color:#888;font-size:12px;margin-bottom:12px;}
+        .folder-info{background:#f0f7f4;border-radius:10px;padding:12px;font-size:13px;line-height:1.9;margin-bottom:16px;color:#555;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px;}
+        thead{display:table-header-group;}
+        th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        tr{page-break-inside:avoid;}
+        tr:nth-child(even) td{background:#f9f9f9;}
+        .footer{text-align:center;font-size:11px;color:#999;margin-top:16px;}
+        .no-print{text-align:center;margin-top:24px;}
+        .no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}
+    </style></head><body>
+    <div class="box">
+        <div class="watermark-wrap">${watermarkHtmlFolder}</div>
+        <div class="content">
+            <h2>Folder: ${folder.nama}</h2>
+            <div class="sub">${namaInstansi} | Total: ${jamaahInFolder.length} jamaah | Dicetak: ${tanggal}</div>
+            ${folderInfoHtml?`<div class="folder-info">${folderInfoHtml}</div>`:''}
+            <table><thead><tr>${thHtml}</tr></thead><tbody>${rowsHtml}</tbody></table>
+            <div class="footer">${namaInstansi} | ${tanggal}</div>
+        </div>
+    </div>
+    <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
     win.document.write(html);
@@ -5224,12 +6154,38 @@ function exportFolderToExcel(folderId) {
 let dokumenJenisList = [], dokumenData = {}, db = null;
 const DB_NAME = 'SafaraDokumenDB', DB_VERSION = 2, STORE_NAME = 'dokumen', JENIS_STORE_NAME = 'dokumenJenis';
 
+function resetIndexedDBDarurat() {
+    if (!confirm('Reset database foto? Data teks jamaah TIDAK akan terhapus. Hanya foto profil yang direset.')) return;
+    // Hapus IndexedDB lama
+    const req = indexedDB.deleteDatabase('SafaraDokumenDB');
+    req.onsuccess = () => {
+        db = null;
+        showToast('✅ Database direset! Memuat ulang...');
+        setTimeout(() => window.location.reload(), 1000);
+    };
+    req.onerror = () => {
+        showToast('Gagal reset, coba refresh manual');
+        window.location.reload();
+    };
+    req.onblocked = () => {
+        window.location.reload();
+    };
+}
+
 function openIndexedDB() { 
     return new Promise((resolve, reject) => { 
         if (db) { resolve(db); return; } 
         const request = indexedDB.open(DB_NAME, DB_VERSION); 
-        request.onerror = () => reject(request.error); 
+        request.onerror = (e) => { 
+            console.error('IndexedDB error:', e);
+            reject(request.error); 
+        }; 
         request.onsuccess = () => { db = request.result; resolve(db); }; 
+        request.onblocked = () => {
+            // Ada tab lain yang masih pakai DB versi lama
+            db = null;
+            window.location.reload();
+        };
         request.onupgradeneeded = (event) => { 
             const dbEvent = event.target.result; 
             if (!dbEvent.objectStoreNames.contains(STORE_NAME)) dbEvent.createObjectStore(STORE_NAME, { keyPath: 'id' }); 
@@ -5347,6 +6303,8 @@ function renderDokumenList() {
                 <div>
                     ${hasDoc ? `<button class="btn-preview-doc" onclick="previewDokumen(${j.id}, '${jenis.id}')"><i class="fas fa-eye"></i></button>
                     <button class="btn-print-doc" onclick="cetakDokumenPerJenis(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}', '${escapeHtml(j.nama_lengkap)}')"><i class="fas fa-print"></i></button>
+                    <button class="btn-share-wa" onclick="downloadDokumen(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}', '${escapeHtml(j.nama_lengkap)}')" title="Download"><i class="fas fa-download"></i></button>
+                    <button class="btn-edit-jamaah" onclick="bagikanDokumen(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}', '${escapeHtml(j.nama_lengkap)}')" title="Bagikan"><i class="fas fa-share-alt"></i></button>
                     <button class="btn-delete-doc" onclick="confirmDeleteDokumen(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}')"><i class="fas fa-trash-alt"></i></button>` : ''}
                     <button class="btn-upload-doc" onclick="uploadDokumen(${j.id}, '${jenis.id}', '${escapeHtml(jenis.nama)}')"><i class="fas fa-upload"></i></button>
                 </div>
@@ -5372,6 +6330,44 @@ function getStatusKelengkapanDokumen(jamaahId) {
     let total = dokumenJenisList.length, ada = 0; 
     for(const jenis of dokumenJenisList) { if(docs[jenis.id] && docs[jenis.id] !== '') ada++; } 
     return { ada, total, lengkap: ada === total }; 
+}
+
+async function downloadDokumen(jamaahId, jenisId, jenisNama, jamaahNama) {
+    const data = dokumenData[jamaahId]?.[jenisId];
+    if (!data) return showToast('Dokumen tidak ditemukan!');
+    const ext = data.startsWith('data:image/png') ? 'png' : data.startsWith('data:image/gif') ? 'gif' : 'jpg';
+    const a = document.createElement('a');
+    a.href = data;
+    a.download = jenisNama + '_' + jamaahNama.replace(/ /g,'_') + '.' + ext;
+    a.click();
+    showToast('⬇️ Dokumen didownload!');
+}
+
+async function bagikanDokumen(jamaahId, jenisId, jenisNama, jamaahNama) {
+    const data = dokumenData[jamaahId]?.[jenisId];
+    if (!data) return showToast('Dokumen tidak ditemukan!');
+    try {
+        const res = await fetch(data);
+        const blob = await res.blob();
+        const ext = blob.type.includes('png') ? 'png' : blob.type.includes('gif') ? 'gif' : 'jpg';
+        const file = new File([blob], jenisNama + '_' + jamaahNama + '.' + ext, { type: blob.type });
+        if (navigator.share && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: jenisNama + ' - ' + jamaahNama,
+                text: jenisNama + ' atas nama ' + jamaahNama
+            });
+        } else {
+            // Fallback ke download
+            const a = document.createElement('a');
+            a.href = data;
+            a.download = jenisNama + '_' + jamaahNama.replace(/ /g,'_') + '.' + ext;
+            a.click();
+            showToast('Bagikan tidak didukung, dokumen didownload');
+        }
+    } catch(err) {
+        if (err.name !== 'AbortError') showToast('Gagal membagikan dokumen!');
+    }
 }
 
 function previewDokumen(jamaahId, jenisId) { 
@@ -5667,21 +6663,151 @@ function backupToDrive() { showToast('🔐 Konfigurasi Google Drive belum lengka
 function restoreFromDrive() { showToast('🔐 Konfigurasi Google Drive belum lengkap'); }
 
 // ==================== CETAK LABEL ====================
-function populateLabelDropdown() { 
-    const select = document.getElementById('labelJamaahSelect'); 
-    if(!select) return; 
-    select.innerHTML = ''; 
-    jamaahList.forEach(j => { select.innerHTML += `<option value="${j.id}">${escapeHtml(j.nama_lengkap)}</option>`; }); 
+function populateLabelDropdown() {
+    renderMultiLabelJamaah();
+    renderMultiTiketJamaah();
+}
+
+function renderMultiLabelJamaah() {
+    const container = document.getElementById('multiLabelJamaahSelect');
+    if (!container) return;
+    container.innerHTML = jamaahList.map(j => `
+        <label style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #eee;cursor:pointer;">
+            <input type="checkbox" value="${j.id}" onchange="updateJumlahDipilihLabel()"
+                style="width:18px;height:18px;accent-color:#0D5C4A;cursor:pointer;">
+            <span style="font-size:13px;">${escapeHtml(j.nama_lengkap)}</span>
+        </label>`).join('');
+}
+
+function filterLabelJamaah() {
+    const q = (document.getElementById('searchLabelJamaah')?.value || '').toLowerCase();
+    document.querySelectorAll('#multiLabelJamaahSelect label').forEach(label => {
+        label.style.display = label.querySelector('span')?.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+}
+
+function pilihSemuaLabel() {
+    document.querySelectorAll('#multiLabelJamaahSelect input[type=checkbox]').forEach(cb => {
+        if(cb.closest('label')?.style.display !== 'none') cb.checked = true;
+    });
+    updateJumlahDipilihLabel();
+}
+
+function hapusPilihanLabel() {
+    document.querySelectorAll('#multiLabelJamaahSelect input[type=checkbox]').forEach(cb => cb.checked = false);
+    updateJumlahDipilihLabel();
+}
+
+function updateJumlahDipilihLabel() {
+    const n = document.querySelectorAll('#multiLabelJamaahSelect input:checked').length;
+    const el = document.getElementById('jumlahDipilihLabel');
+    if(el) el.textContent = n > 0 ? `${n} jamaah dipilih` : '';
+}
+
+// ==================== E-TIKET ====================
+function renderMultiTiketJamaah() {
+    const container = document.getElementById('multiTiketJamaahSelect');
+    if (!container) return;
+    container.innerHTML = jamaahList.map(j => `
+        <label style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #eee;cursor:pointer;">
+            <input type="checkbox" value="${j.id}" onchange="updateJumlahDipilihTiket()"
+                style="width:18px;height:18px;accent-color:#0D5C4A;cursor:pointer;">
+            <span style="font-size:13px;">${escapeHtml(j.nama_lengkap)}</span>
+        </label>`).join('');
+}
+
+function filterTiketJamaah() {
+    const q = (document.getElementById('searchTiketJamaah')?.value || '').toLowerCase();
+    document.querySelectorAll('#multiTiketJamaahSelect label').forEach(label => {
+        label.style.display = label.querySelector('span')?.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+}
+
+function pilihSemuaTiket() {
+    document.querySelectorAll('#multiTiketJamaahSelect input[type=checkbox]').forEach(cb => {
+        if(cb.closest('label')?.style.display !== 'none') cb.checked = true;
+    });
+    updateJumlahDipilihTiket();
+}
+
+function hapusPilihanTiket() {
+    document.querySelectorAll('#multiTiketJamaahSelect input[type=checkbox]').forEach(cb => cb.checked = false);
+    updateJumlahDipilihTiket();
+}
+
+function updateJumlahDipilihTiket() {
+    const n = document.querySelectorAll('#multiTiketJamaahSelect input:checked').length;
+    const el = document.getElementById('jumlahDipilihTiket');
+    if(el) el.textContent = n > 0 ? `${n} jamaah dipilih` : '';
+}
+
+async function cetakTiketMulti() {
+    const checked = document.querySelectorAll('#multiTiketJamaahSelect input:checked');
+    if(checked.length === 0) return showToast('Pilih minimal 1 jamaah!');
+    showToast('Menyiapkan tiket...');
+    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+    let cardsHtml = '';
+    for(const cb of checked) {
+        const jamaah = jamaahList.find(j => j.id == cb.value);
+        if(!jamaah) continue;
+        const paket = jamaah.paket || '-';
+        const canvas = document.createElement('canvas');
+        const qrText = 'Nama: ' + jamaah.nama_lengkap + '\nID: ' + jamaah.id + '\nPaket: ' + paket + '\nTanggal: ' + new Date().toLocaleDateString('id-ID') + '\nSafara';
+        await QRCode.toCanvas(canvas, qrText, { width: 120, height: 120 });
+        const qrDataUrl = canvas.toDataURL('image/png');
+        cardsHtml += '<div class="tiket-card">'
+            + '<div class="tiket-nama">' + escapeHtml(jamaah.nama_lengkap) + '</div>'
+            + '<div class="tiket-paket">\uD83D\uDCE6 Paket: ' + paket + '</div>'
+            + '<div class="tiket-qr"><img src="' + qrDataUrl + '" width="120" height="120"></div>'
+            + '<div class="tiket-footer">' + namaInstansi + '</div>'
+            + '</div>';
+    }
+    const win = window.open('', '_blank');
+    if(!win) { showToast('Izinkan popup untuk cetak!'); return; }
+    const htmlAll = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak Tiket Massal</title>'
+        + '<style>'
+        + '*{margin:0;padding:0;box-sizing:border-box;}'
+        + 'body{font-family:Arial,sans-serif;padding:16px;background:#f0f0f0;}'
+        + '.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:780px;margin:0 auto;}'
+        + '.tiket-card{background:white;border:2px solid #0D5C4A;border-radius:12px;padding:16px;text-align:center;page-break-inside:avoid;break-inside:avoid;}'
+        + '.tiket-nama{font-size:13px;font-weight:bold;color:#0D5C4A;text-transform:uppercase;margin-bottom:6px;}'
+        + '.tiket-paket{font-size:11px;color:#888;border-bottom:1px dashed #ccc;padding-bottom:8px;margin-bottom:10px;}'
+        + '.tiket-qr img{display:block;margin:0 auto;}'
+        + '.tiket-footer{margin-top:8px;font-size:10px;color:#999;}'
+        + '.no-print{text-align:center;margin-top:20px;padding:12px;}'
+        + '.no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}'
+        + '@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:6px;}.no-print{display:none!important;}}'
+        + '</style></head><body>'
+        + '<div class="grid">' + cardsHtml + '</div>'
+        + '<div class="no-print">'
+        + '<button onclick="window.print()" style="background:#0D5C4A;color:white;">\uD83D\uDDA8\uFE0F CETAK</button>'
+        + '<button onclick="window.close()" style="background:#e2e8f0;color:#333;">\u2715 TUTUP</button>'
+        + '</div>'
+        + '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr' + 'ipt>'
+        + '</body></html>';
+    win.document.write(htmlAll);
+    win.document.close();
+}
+
+async function shareTiketWAMulti() {
+    const checked = document.querySelectorAll('#multiTiketJamaahSelect input:checked');
+    if(checked.length === 0) return showToast('Pilih minimal 1 jamaah!');
+    showToast(`Mengirim tiket untuk ${checked.length} jamaah...`);
+    for(const cb of checked) {
+        const jamaah = jamaahList.find(j => j.id == cb.value);
+        if(!jamaah) continue;
+        await generateAndShareTiketWA(jamaah);
+    }
 }
 
 function cetakLabel() { 
-    const selectedOptions = Array.from(document.getElementById('labelJamaahSelect').selectedOptions); 
-    if(selectedOptions.length === 0) return showToast('Pilih jamaah terlebih dahulu!'); 
+    const checked = document.querySelectorAll('#multiLabelJamaahSelect input:checked');
+    if(checked.length === 0) return showToast('Pilih jamaah terlebih dahulu!'); 
     const eventName = document.getElementById('labelEvent').value.trim() || 'Acara'; 
     const template = document.getElementById('labelTemplate').value; 
     let html = '<div style="display:flex; flex-wrap:wrap; gap:20px; padding:20px; justify-content:center;">'; 
-    selectedOptions.forEach(opt => { 
-        const j = jamaahList.find(j => j.id == opt.value); 
+    checked.forEach(cb => { 
+        const j = jamaahList.find(j => j.id == cb.value); 
         if(j) { 
             const paspor = j.additional_fields?.no_paspor || j.additional_fields?.paspor || '-'; 
             const whatsapp = j.additional_fields?.whatsapp || j.additional_fields?.wa || '-'; 
@@ -5913,6 +7039,119 @@ async function applyPDFConfig(doc, options = {}) {
     return doc;
 }
 
+// ==================== HEADER CETAK RESMI ====================
+function buildPrintHeader(cfg, tanggal) {
+    const i1 = cfg.instansi1 || {};
+    const i2 = cfg.instansi2 || {};
+    const s = cfg.settings || {};
+
+    const showLogo     = s.show_logo     !== false;
+    const showNama1    = s.show_nama1    !== false;
+    const showNama2    = s.show_nama2    !== false;
+    const showAlamat   = s.show_alamat   !== false;
+    const showTelp     = s.show_telp     !== false;
+    const showEmail    = s.show_email    === true;
+    const showWeb      = s.show_web      === true;
+    const showNpwp     = s.show_npwp     === true;
+    const showIzin     = s.show_izin     === true;
+
+    const logo = i1.logo || '';
+    const logoHtml = showLogo
+        ? (logo
+            ? `<img src="${logo}" style="width:72px;height:72px;object-fit:contain;border-radius:8px;background:white;padding:4px;">`
+            : `<div style="width:72px;height:72px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;">🕌</div>`)
+        : '';
+
+    let infoHtml = '';
+    if(showNama1 && i1.nama)             infoHtml += `<div style="font-size:17px;font-weight:bold;">${i1.nama}</div>`;
+    if(showNama2 && i2.aktif && i2.nama) infoHtml += `<div style="font-size:13px;opacity:0.9;">${i2.nama}</div>`;
+    if(showAlamat && i1.alamat)          infoHtml += `<div style="font-size:11px;opacity:0.8;margin-top:3px;">${i1.alamat}</div>`;
+    if(showTelp && i1.telp)              infoHtml += `<div style="font-size:11px;opacity:0.8;">Telp: ${i1.telp}</div>`;
+    if(showEmail && i1.email)            infoHtml += `<div style="font-size:11px;opacity:0.8;">Email: ${i1.email}</div>`;
+    if(showWeb && i1.web)                infoHtml += `<div style="font-size:11px;opacity:0.8;">Web: ${i1.web}</div>`;
+    if(showNpwp && i1.npwp)             infoHtml += `<div style="font-size:11px;opacity:0.8;">NPWP: ${i1.npwp}</div>`;
+    if(showIzin && i2.izin)             infoHtml += `<div style="font-size:11px;opacity:0.8;">No. Izin: ${i2.izin}</div>`;
+
+    return `
+    <div style="background:#0D5C4A;color:white;padding:18px 22px;display:flex;align-items:center;gap:18px;margin-bottom:24px;border-radius:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+        ${logoHtml}
+        <div style="flex:1;">${infoHtml}</div>
+    </div>`;
+}
+
+function buildPrintWatermark(cfg) {
+    if (!cfg.watermark || !cfg.watermark.enabled) return '';
+    const text = cfg.watermark.text || cfg.instansi1?.nama || 'DOKUMEN RESMI';
+    const opacity = cfg.watermark.opacity || 0.15;
+    const fontSize = cfg.watermark.fontsize || 60;
+    const posisi = cfg.watermark.position || 'diagonal';
+
+    if (posisi === 'diagonal') {
+        return `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:${fontSize}px;font-weight:bold;color:rgba(13,92,74,${opacity});pointer-events:none;white-space:nowrap;z-index:0;user-select:none;width:150%;text-align:center;">${text}</div>`;
+    } else if (posisi === 'center') {
+        return `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:${fontSize}px;font-weight:bold;color:rgba(13,92,74,${opacity});pointer-events:none;white-space:nowrap;z-index:0;user-select:none;text-align:center;">${text}</div>`;
+    } else if (posisi === 'tile') {
+        // Tile: watermark berulang
+        let tiles = '';
+        for(let r=0; r<6; r++) {
+            for(let c=0; c<3; c++) {
+                tiles += `<div style="position:absolute;top:${r*18}%;left:${c*35}%;font-size:${Math.round(fontSize*0.5)}px;font-weight:bold;color:rgba(13,92,74,${opacity});transform:rotate(-25deg);white-space:nowrap;user-select:none;">${text}</div>`;
+            }
+        }
+        return `<div style="position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0;">${tiles}</div>`;
+    }
+    return '';
+}
+
+function buildPrintTandaTangan(cfg, tglCetak) {
+    const i1 = cfg.instansi1 || {};
+    const i2 = cfg.instansi2 || {};
+    const s = cfg.settings || {};
+    const showPimpinan = s.show_pimpinan === true;
+    if (!showPimpinan) return '';
+
+    const ttdMode = s.ttd_mode || 'both';
+    const kota = i1.kota || '';
+    const lokasiTgl = kota ? `${kota}, ${tglCetak}` : tglCetak;
+
+    let pihak1 = '';
+    let pihak2 = '';
+
+    if (ttdMode === 'both' || ttdMode === 'single') {
+        pihak1 = `
+        <div style="text-align:center;flex:1;">
+            <div style="font-size:12px;color:#555;">${lokasiTgl}</div>
+            <div style="font-size:12px;color:#555;margin-bottom:60px;">Hormat kami,</div>
+            <div style="border-top:1px solid #333;padding-top:6px;font-size:13px;font-weight:bold;">${i1.pimpinan||'Pimpinan'}</div>
+            <div style="font-size:11px;color:#666;">${i1.jabatan||''}</div>
+            <div style="font-size:11px;color:#666;">${i1.nama||''}</div>
+        </div>`;
+    }
+
+    if (ttdMode === 'both' && i2.aktif && i2.pimpinan) {
+        pihak2 = `
+        <div style="text-align:center;flex:1;">
+            <div style="font-size:12px;color:#555;">${lokasiTgl}</div>
+            <div style="font-size:12px;color:#555;margin-bottom:60px;">Mengetahui,</div>
+            <div style="border-top:1px solid #333;padding-top:6px;font-size:13px;font-weight:bold;">${i2.pimpinan}</div>
+            <div style="font-size:11px;color:#666;">${i2.jabatan||''}</div>
+            <div style="font-size:11px;color:#666;">${i2.nama||''}</div>
+        </div>`;
+    }
+
+    return `<div style="display:flex;justify-content:space-around;margin-top:40px;padding-top:20px;border-top:1px dashed #ddd;">${pihak1}${pihak2}</div>`;
+}
+
+async function buildPrintQR(cfg, qrText) {
+    if (!cfg.qr || !cfg.qr.enabled) return '';
+    try {
+        const canvas = document.createElement('canvas');
+        await QRCode.toCanvas(canvas, qrText, { width: 90, height: 90 });
+        const dataUrl = canvas.toDataURL('image/png');
+        return `<div style="text-align:right;margin-top:24px;"><img src="${dataUrl}" style="width:80px;height:80px;"><div style="font-size:10px;color:#999;margin-top:4px;">Dokumen Resmi</div></div>`;
+    } catch(e) { return ''; }
+}
+
 function getKonfigurasiProData() {
     const saved = localStorage.getItem('safara_konfigurasi_pro');
     if(saved) { try { return JSON.parse(saved); } catch(e) {} }
@@ -5921,7 +7160,7 @@ function getKonfigurasiProData() {
         instansi2: { aktif: true, nama: 'Safara', alamat: 'Jl. Siwalankerto Utara II No. 30, Wonocolo, Surabaya' },
         watermark: { enabled: true, text: 'DOKUMEN RESMI', opacity: 0.15, fontsize: 60, position: 'diagonal' },
         qr: { enabled: true, text: 'Dokumen Resmi - Divalidasi oleh Sistem Safara', size: 80 },
-        settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/SAFARA' }
+        settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/SAFARA', show_logo: true, show_nama1: true, show_nama2: true, show_alamat: true, show_telp: true, show_email: false, show_web: false, show_npwp: false, show_izin: false, show_pimpinan: false, batas_lansia: 60 }
     };
 }
 
@@ -5948,6 +7187,55 @@ async function generateTiketQR() {
     await QRCode.toCanvas(canvas, qrText, { width: 150, height: 150 });
     qrContainer.appendChild(canvas);
     document.getElementById('tiketPreview').style.display = 'block';
+}
+
+async function generateAndCetakTiket(jamaah) {
+    const paket = jamaah.paket || '-';
+    const canvas = document.createElement('canvas');
+    const qrText = 'Nama: ' + jamaah.nama_lengkap + '\nID: ' + jamaah.id + '\nPaket: ' + paket + '\nTanggal: ' + new Date().toLocaleDateString('id-ID') + '\nSafara';
+    await QRCode.toCanvas(canvas, qrText, { width: 150, height: 150 });
+    const qrDataUrl = canvas.toDataURL('image/png');
+    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+    const win = window.open('', '_blank');
+    if(!win) { showToast('Izinkan popup untuk cetak!'); return; }
+    const htmlTiket = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Tiket - ' + escapeHtml(jamaah.nama_lengkap) + '</title>'
+        + '<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:white;padding:20px;}'
+        + '.card{max-width:360px;width:100%;border:2px solid #0D5C4A;border-radius:24px;padding:24px;text-align:center;}'
+        + '.nama{font-size:20px;font-weight:bold;color:#0D5C4A;margin-bottom:8px;}'
+        + '.paket{font-size:13px;color:#888;border-bottom:2px dashed #ccc;padding-bottom:12px;margin-bottom:16px;}'
+        + '.qr img{width:150px;height:150px;}'
+        + '.footer{margin-top:16px;font-size:11px;color:#999;}'
+        + '.no-print{text-align:center;margin-top:20px;}'
+        + '.no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}'
+        + '@media print{.no-print{display:none!important;}}'
+        + '</style></head><body>'
+        + '<div class="card">'
+        + '<div class="nama">' + escapeHtml(jamaah.nama_lengkap) + '</div>'
+        + '<div class="paket">\uD83D\uDCE6 Paket: ' + paket + '</div>'
+        + '<div class="qr"><img src="' + qrDataUrl + '"></div>'
+        + '<div class="footer">' + namaInstansi + ' | ' + new Date().toLocaleDateString('id-ID') + '</div>'
+        + '</div>'
+        + '<div class="no-print">'
+        + '<button onclick="window.print()" style="background:#0D5C4A;color:white;">\uD83D\uDDA8\uFE0F CETAK</button>'
+        + '<button onclick="window.close()" style="background:#e2e8f0;color:#333;">\u2715 TUTUP</button>'
+        + '</div>'
+        + '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr' + 'ipt>'
+        + '</body></html>';
+    win.document.write(htmlTiket);
+    win.document.close();
+}
+
+async function generateAndShareTiketWA(jamaah) {
+    let waNumber = '';
+    if(jamaah.additional_fields?.whatsapp) {
+        let num = jamaah.additional_fields.whatsapp.replace(/\D/g, '');
+        if(num.startsWith('0')) num = '62' + num.substring(1);
+        if(num.length >= 10) waNumber = num;
+    }
+    if(!waNumber) { showToast(`${jamaah.nama_lengkap}: No WA tidak ada, dilewati`); return; }
+    const text = `🎫 *E-TIKET ${jamaah.nama_lengkap}*\n\n👤 Nama: ${jamaah.nama_lengkap}\n📦 Paket: ${jamaah.paket || '-'}\n📅 Tanggal: ${new Date().toLocaleDateString('id-ID')}\n\n#${getKonfigurasiProData().instansi1.nama || 'Safara'}`;
+    window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
+    await new Promise(r => setTimeout(r, 1000));
 }
 
 function downloadTiketAsImage() {
@@ -6283,21 +7571,52 @@ function shareAllMasterToWA() {
 
 async function exportMasterPDF() {
     if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; }
+    const cfgMaster = getKonfigurasiProData();
     const judul = getMasterJudul();
-    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+    const namaInstansi = cfgMaster.instansi1.nama || 'Safara';
+    const watermarkHtmlMaster = buildPrintWatermark(cfgMaster);
     const tanggal = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
     let thHtml = '<th style="width:36px;">No</th><th>Nama Lengkap</th>';
     masterDynamicFields.forEach(f => { thHtml += `<th>${f.label}</th>`; });
     thHtml += '<th>Item</th>';
     let rowsHtml = '';
     masterDataList.forEach((item, i) => {
-        rowsHtml += `<tr><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${i+1}</td><td style="padding:8px;border-bottom:1px solid #eee;">${item.nama}</td>`;
+        rowsHtml += `<tr style="page-break-inside:avoid;"><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${i+1}</td><td style="padding:8px;border-bottom:1px solid #eee;">${item.nama}</td>`;
         masterDynamicFields.forEach(f => {
             rowsHtml += `<td style="padding:8px;border-bottom:1px solid #eee;">${item.additional_fields?.[f.name]||'-'}</td>`;
         });
         rowsHtml += `<td style="padding:8px;border-bottom:1px solid #eee;">${item.items?.join(', ')||'-'}</td></tr>`;
     });
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${judul}</title><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}.box{background:white;max-width:900px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);}h2{color:#0D5C4A;font-size:20px;margin-bottom:4px;}.sub{color:#888;font-size:12px;margin-bottom:20px;}table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px;}th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;}tr:nth-child(even) td{background:#f9f9f9;}.footer{text-align:center;font-size:11px;color:#999;margin-top:16px;border-top:1px solid #eee;padding-top:12px;}.no-print{text-align:center;margin-top:24px;}.no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}@media print{body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}</style></head><body><div class="box"><h2>${judul}</h2><div class="sub">${namaInstansi} | Total: ${masterDataList.length} data | Dicetak: ${tanggal}</div><table><thead><tr>${thHtml}</tr></thead><tbody>${rowsHtml}</tbody></table><div class="footer">${namaInstansi} | ${tanggal}</div></div><div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div><script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script></body></html>`;
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${judul}</title><style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}
+        .box{background:white;max-width:900px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;}
+        .watermark-wrap{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+        .content{position:relative;z-index:1;}
+        h2{color:#0D5C4A;font-size:20px;margin-bottom:4px;}
+        .sub{color:#888;font-size:12px;margin-bottom:20px;}
+        table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px;}
+        thead{display:table-header-group;}
+        th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        tr{page-break-inside:avoid;}
+        tr:nth-child(even) td{background:#f9f9f9;}
+        .footer{text-align:center;font-size:11px;color:#999;margin-top:16px;border-top:1px solid #eee;padding-top:12px;}
+        .no-print{text-align:center;margin-top:24px;}
+        .no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}
+    </style></head><body>
+    <div class="box">
+        <div class="watermark-wrap">${watermarkHtmlMaster}</div>
+        <div class="content">
+            <h2>${judul}</h2>
+            <div class="sub">${namaInstansi} | Total: ${masterDataList.length} data | Dicetak: ${tanggal}</div>
+            <table><thead><tr>${thHtml}</tr></thead><tbody>${rowsHtml}</tbody></table>
+            <div class="footer">${namaInstansi} | ${tanggal}</div>
+        </div>
+    </div>
+    <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
+    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
     win.document.write(html);
@@ -6594,6 +7913,7 @@ function loadKonfigurasiPro() {
     document.getElementById('cfg_web1').value = konfigurasiPro.instansi1.web || '';
     document.getElementById('cfg_pimpinan1').value = konfigurasiPro.instansi1.pimpinan || '';
     document.getElementById('cfg_jabatan1').value = konfigurasiPro.instansi1.jabatan || '';
+    document.getElementById('cfg_kota1').value = konfigurasiPro.instansi1.kota || '';
     if(konfigurasiPro.instansi1.logo) document.getElementById('previewLogo1').src = konfigurasiPro.instansi1.logo;
     document.getElementById('cfg_instansi2_aktif').checked = konfigurasiPro.instansi2.aktif || false;
     document.getElementById('cfg_nama2').value = konfigurasiPro.instansi2.nama || '';
@@ -6616,6 +7936,18 @@ function loadKonfigurasiPro() {
     document.getElementById('cfg_header_mode').value = konfigurasiPro.settings.header_mode || 'both';
     document.getElementById('cfg_ttd_mode').value = konfigurasiPro.settings.ttd_mode || 'both';
     document.getElementById('cfg_invoice_prefix').value = konfigurasiPro.settings.invoice_prefix || 'INV/SAFARA';
+    const s = konfigurasiPro.settings;
+    document.getElementById('cfg_show_logo').checked = s.show_logo !== false;
+    document.getElementById('cfg_show_nama1').checked = s.show_nama1 !== false;
+    document.getElementById('cfg_show_nama2').checked = s.show_nama2 !== false;
+    document.getElementById('cfg_show_alamat').checked = s.show_alamat !== false;
+    document.getElementById('cfg_show_telp').checked = s.show_telp !== false;
+    document.getElementById('cfg_show_email').checked = s.show_email === true;
+    document.getElementById('cfg_show_web').checked = s.show_web === true;
+    document.getElementById('cfg_show_npwp').checked = s.show_npwp === true;
+    document.getElementById('cfg_show_izin').checked = s.show_izin === true;
+    document.getElementById('cfg_show_pimpinan').checked = s.show_pimpinan === true;
+    document.getElementById('cfg_batas_lansia').value = s.batas_lansia || 60;
     document.getElementById('cfg_wa_laporan').value = konfigurasiPro.wa_template.laporan || '';
     updateHeaderFromConfig();
 }
@@ -6630,6 +7962,7 @@ function saveKonfigurasiPro() {
         web: document.getElementById('cfg_web1').value,
         pimpinan: document.getElementById('cfg_pimpinan1').value,
         jabatan: document.getElementById('cfg_jabatan1').value,
+        kota: document.getElementById('cfg_kota1').value,
         logo: document.getElementById('previewLogo1').src || ''
     };
     konfigurasiPro.instansi2 = {
@@ -6658,7 +7991,18 @@ function saveKonfigurasiPro() {
     konfigurasiPro.settings = {
         header_mode: document.getElementById('cfg_header_mode').value,
         ttd_mode: document.getElementById('cfg_ttd_mode').value,
-        invoice_prefix: document.getElementById('cfg_invoice_prefix').value
+        invoice_prefix: document.getElementById('cfg_invoice_prefix').value,
+        show_logo: document.getElementById('cfg_show_logo').checked,
+        show_nama1: document.getElementById('cfg_show_nama1').checked,
+        show_nama2: document.getElementById('cfg_show_nama2').checked,
+        show_alamat: document.getElementById('cfg_show_alamat').checked,
+        show_telp: document.getElementById('cfg_show_telp').checked,
+        show_email: document.getElementById('cfg_show_email').checked,
+        show_web: document.getElementById('cfg_show_web').checked,
+        show_npwp: document.getElementById('cfg_show_npwp').checked,
+        show_izin: document.getElementById('cfg_show_izin').checked,
+        show_pimpinan: document.getElementById('cfg_show_pimpinan').checked,
+        batas_lansia: parseInt(document.getElementById('cfg_batas_lansia').value) || 60
     };
     konfigurasiPro.wa_template = { laporan: document.getElementById('cfg_wa_laporan').value };
     localStorage.setItem('safara_konfigurasi_pro', JSON.stringify(konfigurasiPro));
@@ -6776,8 +8120,8 @@ let deferredPrompt;
 const isAppInstalled = localStorage.getItem('safara_installed') === 'true';
 const installPopupClosed = localStorage.getItem('safara_install_popup_closed') === 'true';
 
-// Service Worker
-if ('serviceWorker' in navigator) {
+// Service Worker - hanya daftarkan jika bukan dari blob URL
+if ('serviceWorker' in navigator && !location.href.startsWith('blob')) {
     const swCode = `
         const CACHE_NAME = 'safara-v202605030628';
         const urlsToCache = ['.', 'index.html'];
@@ -6793,9 +8137,15 @@ if ('serviceWorker' in navigator) {
             e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
         });
     `
-    const blob = new Blob([swCode], {type:'application/javascript'});
-    const swURL = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(swURL).then(reg => console.log('✅ SW registered')).catch(err => console.log('SW failed:', err));
+    try {
+        const blob = new Blob([swCode], {type:'application/javascript'});
+        const swURL = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swURL)
+            .then(reg => console.log('✅ SW registered'))
+            .catch(err => console.log('SW skip:', err.message));
+    } catch(e) {
+        console.log('SW not available');
+    }
 }
 
 window.addEventListener('beforeinstallprompt', (e) => {
