@@ -1847,6 +1847,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 </head>
 <body>
 
@@ -2328,6 +2329,7 @@
             <div class="fitur-card" onclick="showPage('foldervirtual')"><div class="fitur-icon">📂</div><div class="fitur-title">Folder Virtual</div><div class="fitur-desc">Pisah per rombongan</div></div>
             <div class="fitur-card" onclick="showPage('pengingatwa')"><div class="fitur-icon">📲</div><div class="fitur-title">Pengingat WA</div><div class="fitur-desc">Kirim pengingat otomatis</div></div>
             <div class="fitur-card" onclick="showPage('etikettiket')"><div class="fitur-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="48" height="48"><rect x="4" y="14" width="56" height="36" rx="6" fill="#f5a623"/><rect x="4" y="14" width="56" height="10" rx="4" fill="#e08000"/><circle cx="20" cy="38" r="4" fill="white"/><rect x="28" y="30" width="20" height="3" rx="2" fill="white"/><rect x="28" y="36" width="14" height="3" rx="2" fill="white"/><rect x="28" y="42" width="17" height="3" rx="2" fill="white"/></svg></div><div class="fitur-title">E-Tiket & QR</div><div class="fitur-desc">Tiket digital dengan QR</div></div>
+            <div class="fitur-card" onclick="showPage('scanqr')"><div class="fitur-icon" style="font-size:40px;">📷</div><div class="fitur-title">Scan QR</div><div class="fitur-desc">Absensi & cek data jamaah</div></div>
             <div class="fitur-card" onclick="showPage('cetaklabel')"><div class="fitur-icon">🏷️</div><div class="fitur-title">Cetak Label</div><div class="fitur-desc">Name tag / stiker koper</div></div>
             <div class="fitur-card" onclick="showPage('cloudstorage')"><div class="fitur-icon">☁️</div><div class="fitur-title">Cloud Storage</div><div class="fitur-desc">Backup & Restore data</div></div>
             <div class="fitur-card" onclick="showPage('dashboard')"><div class="fitur-icon">📈</div><div class="fitur-title">Dashboard</div><div class="fitur-desc">Grafik statistik data</div></div>
@@ -2363,6 +2365,62 @@
 </div>
 
 <!-- E-TIKET & QR PAGE -->
+<div id="page-scanqr" class="page">
+    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur');stopScanner();"></i><h2>📷 Scan QR Absensi</h2><div style="width:30px;"></div></div></div>
+    <div class="container">
+        <!-- Scanner -->
+        <div class="card-premium" style="text-align:center;">
+            <div id="scannerArea" style="position:relative;width:100%;max-width:340px;margin:0 auto;border-radius:16px;overflow:hidden;background:#000;">
+                <video id="scannerVideo" style="width:100%;display:block;" playsinline></video>
+                <canvas id="scannerCanvas" style="display:none;"></canvas>
+                <!-- Frame overlay -->
+                <div style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;border:3px solid #0D5C4A;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.4);"></div>
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;">
+                        <div style="position:absolute;top:0;left:0;width:30px;height:30px;border-top:4px solid #FFD700;border-left:4px solid #FFD700;border-radius:4px 0 0 0;"></div>
+                        <div style="position:absolute;top:0;right:0;width:30px;height:30px;border-top:4px solid #FFD700;border-right:4px solid #FFD700;border-radius:0 4px 0 0;"></div>
+                        <div style="position:absolute;bottom:0;left:0;width:30px;height:30px;border-bottom:4px solid #FFD700;border-left:4px solid #FFD700;border-radius:0 0 0 4px;"></div>
+                        <div style="position:absolute;bottom:0;right:0;width:30px;height:30px;border-bottom:4px solid #FFD700;border-right:4px solid #FFD700;border-radius:0 0 4px 0;"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="scannerStatus" style="margin:12px 0;font-size:13px;color:#888;">Tekan tombol untuk mulai scan</div>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;">
+                <button id="btnStartScan" onclick="startScanner()" class="btn btn-primary" style="flex:1;">📷 Mulai Scan</button>
+                <button id="btnStopScan" onclick="stopScanner()" class="btn" style="flex:1;display:none;background:#EF4444;color:white;">⏹ Stop</button>
+            </div>
+        </div>
+
+        <!-- Hasil Scan -->
+        <div id="hasilScanCard" style="display:none;" class="card-premium">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                <div id="hasilFotoProfil" style="width:70px;height:70px;border-radius:50%;background:#f0f0f0;border:3px solid #0D5C4A;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <span style="font-size:32px;">👤</span>
+                </div>
+                <div>
+                    <div id="hasilNama" style="font-size:18px;font-weight:bold;color:var(--primary);"></div>
+                    <div id="hasilNoPorsi" style="font-size:13px;color:#888;"></div>
+                    <div id="hasilStatusAbsen" style="font-size:13px;font-weight:bold;margin-top:4px;"></div>
+                </div>
+            </div>
+            <div id="hasilDataJamaah" style="background:var(--bg);border-radius:10px;padding:12px;margin-bottom:14px;font-size:13px;line-height:2;"></div>
+            <div style="display:flex;gap:8px;">
+                <button id="btnTandaiHadir" onclick="tandaiHadir()" style="flex:1;padding:12px;background:#10B981;color:white;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;">✅ Tandai Hadir</button>
+                <button onclick="resetScanResult()" style="flex:1;padding:12px;background:#e2e8f0;color:#333;border:none;border-radius:10px;cursor:pointer;">🔄 Scan Lagi</button>
+            </div>
+        </div>
+
+        <!-- Rekap Absensi -->
+        <div class="card-premium">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                <div style="font-weight:bold;color:var(--primary);">📋 Rekap Absensi</div>
+                <button onclick="eksporAbsensi()" style="padding:6px 12px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">📤 Ekspor</button>
+            </div>
+            <div id="rekapAbsensi" style="font-size:13px;"></div>
+        </div>
+    </div>
+</div>
+
 <div id="page-etikettiket" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> E-Tiket & QR</h2><div style="width:30px;"></div></div></div>
     <div class="container">
@@ -2686,6 +2744,7 @@ function internalShowPage(pageId) {
     }
     if (pageId === 'foldervirtual') { if(window.renderFolderList) window.renderFolderList(); }
     if (pageId === 'pengingatwa') { if(window.loadPengingatData) window.loadPengingatData(); }
+    if (pageId === 'scanqr') { renderRekapAbsensi(); }
     if (pageId === 'etikettiket') { if(window.populateTiketDropdown) window.populateTiketDropdown(); }
     if (pageId === 'cetaklabel') { if(window.populateLabelDropdown) window.populateLabelDropdown(); }
     if (pageId === 'cloudstorage') { if(window.updateStorageInfo) window.updateStorageInfo(); }
@@ -2697,7 +2756,7 @@ window.addEventListener('popstate', function(event) {
     let pageId = 'home';
     if (event.state && event.state.page) pageId = event.state.page;
     else { const hash = window.location.hash; if (hash && hash.startsWith('#page-')) pageId = hash.replace('#page-', ''); }
-    const validPages = ['home', 'estimasi', 'kas', 'jamaah', 'jamaahkita', 'catatan', 'zakat', 'pembayaran', 'datamaster', 'konfigurasi', 'setting', 'fitur', 'uploaddokumen', 'foldervirtual', 'pengingatwa', 'etikettiket', 'cetaklabel', 'cloudstorage', 'dashboard'];
+    const validPages = ['home', 'estimasi', 'kas', 'jamaah', 'jamaahkita', 'catatan', 'zakat', 'pembayaran', 'datamaster', 'konfigurasi', 'setting', 'fitur', 'uploaddokumen', 'foldervirtual', 'pengingatwa', 'etikettiket', 'cetaklabel', 'cloudstorage', 'dashboard', 'scanqr'];
     if (!validPages.includes(pageId)) pageId = 'home';
     internalShowPage(pageId);
     document.querySelectorAll('.nav-item-premium').forEach(nav => { nav.classList.remove('active'); if (nav.getAttribute('data-page') === pageId) nav.classList.add('active'); });
@@ -2720,10 +2779,10 @@ function showToast(msg) {
 
 function updateHomeStats() {
     document.getElementById('homeDate').innerHTML = new Date().toLocaleDateString('id-ID', { weekday: 'long', year:'numeric', month:'long', day:'numeric' });
-    const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]');
+    const kasData = dataKas;
     const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
     document.getElementById('homeStatKas').innerHTML = 'Rp ' + totalKas.toLocaleString('id-ID');
-    const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
+    const jamaahData = jamaahList;
     document.getElementById('homeStatJamaah').innerHTML = jamaahData.length;
     const lastZakatTotal = localStorage.getItem('safara_last_zakat_total');
     if (lastZakatTotal && lastZakatTotal !== '0') document.getElementById('homeStatZakat').innerHTML = 'Rp ' + formatRupiah(parseInt(lastZakatTotal));
@@ -2911,12 +2970,12 @@ function updateHeaderFromConfig() {
 let kasChart = null, paymentChart = null;
 
 function renderDashboard() {
-    const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]');
+    const kasData = dataKas;
     const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
     document.getElementById('dashTotalKas').innerHTML = 'Rp ' + formatRupiah(totalKas);
-    const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
+    const jamaahData = jamaahList;
     document.getElementById('dashTotalJamaah').innerHTML = jamaahData.length;
-    const paymentData = JSON.parse(localStorage.getItem('safara_pembayaran_transaksi') || '[]');
+    const paymentData = paymentTransaksiList;
     let lunasCount = 0, totalPiutang = 0;
     jamaahData.forEach(j => {
         const totalBayar = paymentData.filter(t => t.id_jamaah == j.id).reduce((s,t) => s + t.nominal, 0);
@@ -3043,10 +3102,10 @@ function renderDashboard() {
 }
 
 async function printDashboard() {
-    const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]');
+    const kasData = dataKas;
     const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
-    const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
-    const paymentData = JSON.parse(localStorage.getItem('safara_pembayaran_transaksi') || '[]');
+    const jamaahData = jamaahList;
+    const paymentData = paymentTransaksiList;
     const totalJamaah = jamaahData.length;
     let totalLunas = 0, totalPiutang = 0;
     jamaahData.forEach(j => {
@@ -3135,9 +3194,9 @@ function exportDashboardPDF() {
             doc.setFontSize(16);
             doc.setTextColor(26, 93, 74);
             doc.text('DASHBOARD APLIKASI SAFARA', 148.5, 65, { align: 'center' });
-            const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]');
+            const kasData = dataKas;
             const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
-            const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
+            const jamaahData = jamaahList;
             doc.setFontSize(12);
             doc.setTextColor(0,0,0);
             doc.text(`Total Kas: Rp ${formatRupiah(totalKas)}`, 20, 80);
@@ -3149,9 +3208,9 @@ function exportDashboardPDF() {
 }
 
 function exportDashboardExcel() {
-    const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
-    const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]');
-    const paymentData = JSON.parse(localStorage.getItem('safara_pembayaran_transaksi') || '[]');
+    const jamaahData = jamaahList;
+    const kasData = dataKas;
+    const paymentData = paymentTransaksiList;
     const wsJamaah = XLSX.utils.json_to_sheet(jamaahData.map(j => ({ Nama: j.nama_lengkap, Tanggal: j.created_at })));
     const wsKas = XLSX.utils.json_to_sheet(kasData);
     const wsPayment = XLSX.utils.json_to_sheet(paymentData);
@@ -3379,17 +3438,18 @@ function resetEstimasiToDefault() {
 // ==================== KAS ====================
 let dataKas=[], lastWAText='';
 
-function loadKasData() { 
-    const saved=localStorage.getItem('safara_kas_data'); 
-    dataKas=saved?JSON.parse(saved):[]; 
+async function loadKasData() { 
+    let saved = await idbGet(STORE_KAS, 'kas_data');
+    if (!saved) saved = dataKas;
+    dataKas = saved || [];
     renderKasTable(); 
     updateSaldoKas(); 
-    const savedKegiatan=localStorage.getItem('safara_kegiatan'); 
-    if(savedKegiatan) document.getElementById('kegiatan').value=savedKegiatan; 
+    const savedKegiatan = await idbGet(STORE_KAS, 'kegiatan') || localStorage.getItem('safara_kegiatan') || '';
+    if(savedKegiatan && document.getElementById('kegiatan')) document.getElementById('kegiatan').value = savedKegiatan;
 }
 
-function saveKasData() { 
-    localStorage.setItem('safara_kas_data',JSON.stringify(dataKas)); 
+async function saveKasData() { 
+    await idbSet(STORE_KAS, 'kas_data', dataKas);
     renderKasTable(); 
     updateSaldoKas(); 
 }
@@ -3613,23 +3673,24 @@ function confirmResetKas() {
 // ==================== DATABASE JAMAAH ====================
 let jamaahList=[], dynamicFieldsJamaah=[], ingJamaahId=null, currentJamaahPage=1, perPageJamaah=10, jamaahFilteredList=[], currentSort='urutan_asli', currentSearch='';
 
-function loadJamaahData() { 
-    const saved=localStorage.getItem('safara_jamaah_list'); 
-    jamaahList=saved?JSON.parse(saved):[]; 
+async function loadJamaahData() { 
+    let saved = await idbGet(STORE_JAMAAH, 'jamaah_list');
+    if (!saved) saved = jamaahList;
+    jamaahList = saved || [];
     applyJamaahFilterAndSort(); 
 }
 
-function saveJamaahData() { 
-    localStorage.setItem('safara_jamaah_list',JSON.stringify(jamaahList)); 
+async function saveJamaahData() { 
+    await idbSet(STORE_JAMAAH, 'jamaah_list', jamaahList);
     applyJamaahFilterAndSort(); 
 }
 
-function loadDynamicFieldsJamaah() { 
-    const saved=localStorage.getItem('safara_jamaah_fields'); 
+async function loadDynamicFieldsJamaah() { 
+    let saved = await idbGet(STORE_JAMAAH, 'jamaah_fields');
+    if (!saved) saved = JSON.parse(localStorage.getItem('safara_jamaah_fields') || 'null');
     if (saved) {
-        dynamicFieldsJamaah = JSON.parse(saved);
+        dynamicFieldsJamaah = saved;
     } else {
-        // Default 12 field untuk user baru
         dynamicFieldsJamaah = [
             { name: 'nama_paspor',   label: 'Nama Paspor',   type: 'text',     icon: '👤', isRequired: false },
             { name: 'no_porsi',      label: 'No Porsi',       type: 'text',     icon: '🔢', isRequired: false },
@@ -3639,8 +3700,9 @@ function loadDynamicFieldsJamaah() {
             { name: 'no_paspor',     label: 'No Paspor',      type: 'text',     icon: '📘', isRequired: false },
             { name: 'nik',           label: 'NIK',             type: 'text',     icon: '🪪', isRequired: false },
             { name: 'kk',            label: 'KK',              type: 'text',     icon: '📋', isRequired: false },
-            { name: 'alamat_kec',    label: 'Alamat Kec',     type: 'text',     icon: '🏘️', isRequired: false },
-            { name: 'kota',          label: 'Kota',            type: 'text',     icon: '🏙️', isRequired: false },
+            { name: 'alamat',        label: 'Alamat',          type: 'text',     icon: '🏠', isRequired: false },
+            { name: 'kec',           label: 'Kec',             type: 'text',     icon: '🏘️', isRequired: false },
+            { name: 'kab_kota',      label: 'Kab / Kota',     type: 'text',     icon: '🏙️', isRequired: false },
             { name: 'whatsapp',      label: 'WhatsApp',        type: 'tel',      icon: '📞', isRequired: true  },
             { name: 'rombongan',     label: 'Rombongan',       type: 'text',     icon: '👥', isRequired: false },
             { name: 'regu',          label: 'Regu',            type: 'text',     icon: '👥', isRequired: false },
@@ -3652,13 +3714,12 @@ function loadDynamicFieldsJamaah() {
             { name: 'warna',         label: 'Warna',           type: 'text',     icon: '🏷️', isRequired: false },
             { name: 'keterangan',    label: 'Keterangan',      type: 'textarea', icon: '📝', isRequired: false }
         ];
-        // Simpan default ke storage
-        localStorage.setItem('safara_jamaah_fields', JSON.stringify(dynamicFieldsJamaah));
+        await idbSet(STORE_JAMAAH, 'jamaah_fields', dynamicFieldsJamaah);
     }
 }
 
-function saveDynamicFieldsJamaah() { 
-    localStorage.setItem('safara_jamaah_fields',JSON.stringify(dynamicFieldsJamaah)); 
+async function saveDynamicFieldsJamaah() { 
+    await idbSet(STORE_JAMAAH, 'jamaah_fields', dynamicFieldsJamaah);
 }
 
 function applyJamaahFilterAndSort() { 
@@ -3689,7 +3750,7 @@ function renderJamaahListWithPagination() {
     let html=`<div style="margin-bottom:10px; font-size:0.8rem; color:var(--accent);"> Total: ${jamaahFilteredList.length} jamaah (halaman ${currentJamaahPage} dari ${totalPages})</div>`; 
     pageData.forEach((j,idx)=>{ 
         const displayNum=start+idx+1; 
-        html+=`<div class="jamaah-card"><div class="jamaah-header"><div style="display:flex;align-items:center;gap:10px;flex:1;"><div id="foto_thumb_${j.id}" style="width:40px;height:40px;border-radius:50%;background:#f0f0f0;border:2px solid #0D5C4A;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;" onclick="editJamaahById('${j.id}')"><span style="font-size:20px;">👤</span></div><div><div class="jamaah-nama"><span style="background:var(--primary); color:white; display:inline-block; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:13px; margin-right:10px;">${displayNum}</span> ${escapeHtml(j.nama_lengkap)}</div><div class="jamaah-tgl"> ${j.created_at||'-'}</div></div></div><div class="jamaah-actions"><button class="btn-share-wa" onclick="shareSingleJamaahById('${j.id}')"><i class="fab fa-whatsapp"></i></button><button class="btn-edit-jamaah" onclick="editJamaahById('${j.id}')"><i class="fas fa-edit"></i></button><button class="btn-delete-jamaah" onclick="confirmDeleteJamaahById('${j.id}')"><i class="fas fa-trash"></i></button></div></div><div class="jamaah-detail">`; 
+        html+=`<div class="jamaah-card"><div class="jamaah-header"><div style="display:flex;align-items:center;gap:10px;flex:1;"><div id="foto_thumb_${j.id}" style="width:44px;height:44px;border-radius:50%;background:#f0f0f0;border:2px solid #0D5C4A;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;" onclick="showFotoProfilModal(${j.id},'${escapeHtml(j.nama_lengkap).replace(/'/g,"\\'")}')"><span style="font-size:22px;">👤</span></div><div><div class="jamaah-nama"><span style="background:var(--primary); color:white; display:inline-block; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:13px; margin-right:10px;">${displayNum}</span> ${escapeHtml(j.nama_lengkap)}</div><div class="jamaah-tgl"> ${j.created_at||'-'}</div></div></div><div class="jamaah-actions"><button class="btn-share-wa" onclick="shareSingleJamaahById('${j.id}')"><i class="fab fa-whatsapp"></i></button><button class="btn-edit-jamaah" onclick="editJamaahById('${j.id}')"><i class="fas fa-edit"></i></button><button class="btn-delete-jamaah" onclick="confirmDeleteJamaahById('${j.id}')"><i class="fas fa-trash"></i></button></div></div><div class="jamaah-detail">`; 
         for(const field of dynamicFieldsJamaah){ 
             const val=j.additional_fields?.[field.name]||''; 
             if(val) html+=`<div class="jamaah-detail-item"><strong>${escapeHtml(field.label)}:</strong> ${escapeHtml(val)}</div>`; 
@@ -3705,7 +3766,11 @@ function renderJamaahListWithPagination() {
         } 
         paginationHtml+=`<button onclick="goToJamaahPage(${currentJamaahPage+1})" ${currentJamaahPage===totalPages?'disabled':''}>›</button><button onclick="goToJamaahPage(${totalPages})" ${currentJamaahPage===totalPages?'disabled':''}>»</button>`; 
     } 
-    document.getElementById('paginationContainer').innerHTML=paginationHtml; 
+    document.getElementById('paginationContainer').innerHTML=paginationHtml;
+    // Lazy load foto thumbnail hanya untuk halaman ini
+    setTimeout(() => {
+        pageItems.forEach(j => loadFotoThumbnail(j.id));
+    }, 50);
 }
 
 function renderJamaahList() { renderJamaahListWithPagination(); }
@@ -3724,6 +3789,418 @@ function changePerPage(){
 function filterJamaahList(){ 
     currentSearch=document.getElementById('searchJamaahInput').value; 
     applyJamaahFilterAndSort(); 
+}
+
+// ==================== SCAN QR ABSENSI ====================
+let scannerStream = null;
+let scannerAnimFrame = null;
+let lastScannedResult = null;
+let absensiList = [];
+
+async function loadAbsensiData() {
+    const saved = await idbGet(STORE_ABSENSI, 'absensi_list');
+    absensiList = saved || [];
+}
+
+async function saveAbsensiData() {
+    await idbSet(STORE_ABSENSI, 'absensi_list', absensiList);
+}
+
+async function startScanner() {
+    const video = document.getElementById('scannerVideo');
+    const statusEl = document.getElementById('scannerStatus');
+    if (!video) return;
+    try {
+        scannerStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+        });
+        video.srcObject = scannerStream;
+        video.play();
+        document.getElementById('btnStartScan').style.display = 'none';
+        document.getElementById('btnStopScan').style.display = 'block';
+        statusEl.textContent = '🔍 Arahkan ke QR Code...';
+        statusEl.style.color = '#0D5C4A';
+        scanFrames();
+    } catch(e) {
+        statusEl.textContent = '❌ Kamera tidak bisa diakses. Izinkan akses kamera!';
+        statusEl.style.color = '#EF4444';
+    }
+}
+
+function stopScanner() {
+    if (scannerStream) {
+        scannerStream.getTracks().forEach(t => t.stop());
+        scannerStream = null;
+    }
+    if (scannerAnimFrame) { cancelAnimationFrame(scannerAnimFrame); scannerAnimFrame = null; }
+    const video = document.getElementById('scannerVideo');
+    if (video) { video.srcObject = null; }
+    document.getElementById('btnStartScan').style.display = 'block';
+    document.getElementById('btnStopScan').style.display = 'none';
+    const statusEl = document.getElementById('scannerStatus');
+    if (statusEl) { statusEl.textContent = 'Scanner dihentikan'; statusEl.style.color = '#888'; }
+}
+
+function scanFrames() {
+    const video = document.getElementById('scannerVideo');
+    const canvas = document.getElementById('scannerCanvas');
+    if (!video || !canvas || !scannerStream) return;
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
+        if (code && code.data) {
+            prosesHasilScan(code.data);
+            return; // Stop scanning setelah berhasil
+        }
+    }
+    scannerAnimFrame = requestAnimationFrame(scanFrames);
+}
+
+async function prosesHasilScan(qrData) {
+    stopScanner();
+    const statusEl = document.getElementById('scannerStatus');
+    statusEl.textContent = '✅ QR terbaca! Mencari data...';
+    statusEl.style.color = '#10B981';
+
+    // Cari jamaah berdasarkan No Porsi
+    const noPorsi = qrData.trim();
+    const jamaah = jamaahList.find(j =>
+        (j.additional_fields?.no_porsi || '').trim().toLowerCase() === noPorsi.toLowerCase() ||
+        (j.additional_fields?.no_porsi || '').trim() === noPorsi
+    );
+
+    if (!jamaah) {
+        statusEl.textContent = '❌ Jamaah tidak ditemukan! No Porsi: ' + noPorsi;
+        statusEl.style.color = '#EF4444';
+        document.getElementById('hasilScanCard').style.display = 'none';
+        return;
+    }
+
+    lastScannedResult = jamaah;
+    await tampilHasilScan(jamaah);
+}
+
+async function tampilHasilScan(jamaah) {
+    // Tampil foto profil
+    const fotoEl = document.getElementById('hasilFotoProfil');
+    const foto = await idbGet(STORE_FOTO, 'foto_' + jamaah.id);
+    if (foto) {
+        fotoEl.innerHTML = '<img src="' + foto + '" style="width:100%;height:100%;object-fit:cover;">';
+    } else {
+        fotoEl.innerHTML = '<span style="font-size:32px;">👤</span>';
+    }
+
+    // Tampil nama dan no porsi
+    document.getElementById('hasilNama').textContent = jamaah.nama_lengkap;
+    document.getElementById('hasilNoPorsi').textContent = 'No Porsi: ' + (jamaah.additional_fields?.no_porsi || '-');
+
+    // Cek status absensi
+    const sudahHadir = absensiList.find(a => a.jamaahId === jamaah.id);
+    const statusEl = document.getElementById('hasilStatusAbsen');
+    const btnHadir = document.getElementById('btnTandaiHadir');
+    if (sudahHadir) {
+        statusEl.textContent = '✅ Sudah Hadir — ' + sudahHadir.waktu;
+        statusEl.style.color = '#10B981';
+        btnHadir.textContent = '✅ Sudah Tercatat';
+        btnHadir.style.background = '#6B7280';
+        btnHadir.disabled = true;
+    } else {
+        statusEl.textContent = '⏳ Belum Hadir';
+        statusEl.style.color = '#F59E0B';
+        btnHadir.textContent = '✅ Tandai Hadir';
+        btnHadir.style.background = '#10B981';
+        btnHadir.disabled = false;
+    }
+
+    // Tampil data lengkap
+    const fields = jamaah.additional_fields || {};
+    let dataHtml = '';
+    dynamicFieldsJamaah.forEach(f => {
+        const val = fields[f.name];
+        if (val && f.name !== 'no_porsi') {
+            dataHtml += `<div><span style="color:#888;">${f.icon||'📌'} ${f.label}:</span> <strong>${escapeHtml(val)}</strong></div>`;
+        }
+    });
+    document.getElementById('hasilDataJamaah').innerHTML = dataHtml || '<div style="color:#888;">Tidak ada data tambahan</div>';
+    document.getElementById('hasilScanCard').style.display = 'block';
+    renderRekapAbsensi();
+}
+
+async function tandaiHadir() {
+    if (!lastScannedResult) return;
+    const jamaah = lastScannedResult;
+    const sudah = absensiList.find(a => a.jamaahId === jamaah.id);
+    if (sudah) return showToast('Sudah tercatat hadir!');
+    const waktu = new Date().toLocaleString('id-ID');
+    absensiList.push({
+        jamaahId: jamaah.id,
+        nama: jamaah.nama_lengkap,
+        no_porsi: jamaah.additional_fields?.no_porsi || '-',
+        waktu,
+        kamar: jamaah.additional_fields?.kamar || '-',
+        bus: jamaah.additional_fields?.bus || '-',
+        rombongan: jamaah.additional_fields?.rombongan || '-'
+    });
+    await saveAbsensiData();
+    showToast('✅ ' + jamaah.nama_lengkap + ' ditandai hadir!');
+    await tampilHasilScan(jamaah);
+    renderRekapAbsensi();
+}
+
+function resetScanResult() {
+    lastScannedResult = null;
+    document.getElementById('hasilScanCard').style.display = 'none';
+    document.getElementById('scannerStatus').textContent = 'Tekan tombol untuk mulai scan';
+    document.getElementById('scannerStatus').style.color = '#888';
+    startScanner();
+}
+
+function renderRekapAbsensi() {
+    const el = document.getElementById('rekapAbsensi');
+    if (!el) return;
+    const total = jamaahList.length;
+    const hadir = absensiList.length;
+    const belum = total - hadir;
+    let html = `<div style="display:flex;gap:8px;margin-bottom:12px;">
+        <div style="flex:1;background:#f0fdf4;border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-size:20px;font-weight:bold;color:#10B981;">${hadir}</div>
+            <div style="font-size:11px;color:#888;">Hadir</div>
+        </div>
+        <div style="flex:1;background:#fff7ed;border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-size:20px;font-weight:bold;color:#F59E0B;">${belum}</div>
+            <div style="font-size:11px;color:#888;">Belum</div>
+        </div>
+        <div style="flex:1;background:#f0f7ff;border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-size:20px;font-weight:bold;color:#3B82F6;">${total}</div>
+            <div style="font-size:11px;color:#888;">Total</div>
+        </div>
+    </div>`;
+    if (absensiList.length > 0) {
+        html += '<div style="font-size:12px;font-weight:bold;margin-bottom:8px;">Daftar Hadir:</div>';
+        absensiList.slice().reverse().forEach((a, i) => {
+            html += `<div style="padding:8px;border-bottom:1px solid #eee;font-size:12px;">
+                <div style="font-weight:bold;">✅ ${escapeHtml(a.nama)}</div>
+                <div style="color:#888;">No Porsi: ${a.no_porsi} | ${a.waktu}</div>
+            </div>`;
+        });
+    } else {
+        html += '<div style="text-align:center;color:#888;padding:16px;">Belum ada absensi</div>';
+    }
+    el.innerHTML = html;
+}
+
+function eksporAbsensi() {
+    if (absensiList.length === 0) return showToast('Belum ada data absensi!');
+    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+    const tanggal = new Date().toLocaleDateString('id-ID');
+    let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rekap Absensi</title>
+    <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;padding:20px;}
+    h2{color:#0D5C4A;margin-bottom:4px;}
+    .sub{color:#888;font-size:12px;margin-bottom:16px;}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    thead{display:table-header-group;}
+    th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    td{padding:9px 8px;border-bottom:1px solid #eee;}
+    tr:nth-child(even) td{background:#f9f9f9;}
+    .no-print{text-align:center;margin-top:20px;}
+    .no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}.no-print{display:none!important;}}
+    </style></head><body>
+    <h2>📋 REKAP ABSENSI JAMAAH</h2>
+    <div class="sub">${namaInstansi} | Tanggal: ${tanggal} | Total Hadir: ${absensiList.length} jamaah</div>
+    <table><thead><tr><th>No</th><th>Nama Jamaah</th><th>No Porsi</th><th>Kamar</th><th>Bus</th><th>Rombongan</th><th>Waktu Hadir</th></tr></thead><tbody>`;
+    absensiList.forEach((a, i) => {
+        html += `<tr><td>${i+1}</td><td>${escapeHtml(a.nama)}</td><td>${a.no_porsi}</td><td>${a.kamar||'-'}</td><td>${a.bus||'-'}</td><td>${a.rombongan||'-'}</td><td>${a.waktu}</td></tr>`;
+    });
+    html += `</tbody></table>
+    <div class="no-print">
+        <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
+        <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
+    </div>
+    <scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr` + `ipt>
+    </body></html>`;
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+}
+let _fotoPreviewData = null;
+
+function kompresiFoto(file, maxPx, quality, callback) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let w = img.width, h = img.height;
+            if (w > h && w > maxPx) { h = Math.round(h * maxPx / w); w = maxPx; }
+            else if (h > maxPx) { w = Math.round(w * maxPx / h); h = maxPx; }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            callback(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+async function loadFotoThumbnail(jamaahId) {
+    const dataUrl = await idbGet(STORE_FOTO, 'foto_' + jamaahId);
+    const el = document.getElementById('foto_thumb_' + jamaahId);
+    if (!el) return;
+    if (dataUrl) {
+        el.innerHTML = '<img src="' + dataUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    }
+}
+
+function showFotoProfilModal(jamaahId, jamaahNama) {
+    document.getElementById('fotoProfilModal')?.remove();
+    const modal = document.createElement('div');
+    modal.id = 'fotoProfilModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML = `
+        <div style="background:var(--card-bg);border-radius:20px;padding:24px;width:100%;max-width:360px;text-align:center;">
+            <h3 style="color:var(--primary);margin-bottom:6px;">📷 Foto Profil</h3>
+            <div style="font-size:12px;color:#888;margin-bottom:16px;">${escapeHtml(jamaahNama)}</div>
+            <div id="fotoPreviewArea" style="width:150px;height:150px;border-radius:50%;background:#f0f0f0;margin:0 auto 12px;overflow:hidden;border:3px solid #0D5C4A;display:flex;align-items:center;justify-content:center;">
+                <span id="fotoPlaceholder" style="font-size:52px;">👤</span>
+                <img id="fotoPreviewImg" style="display:none;width:100%;height:100%;object-fit:cover;">
+            </div>
+            <div id="fotoStatusText" style="font-size:12px;color:#888;margin-bottom:14px;">Belum ada foto</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <label style="background:#0D5C4A;color:white;padding:11px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px;">
+                    📤 Pilih Foto
+                    <input type="file" accept="image/*" style="display:none;" onchange="previewFotoProfil(event,${jamaahId})">
+                </label>
+                <button id="btnSimpanFoto" onclick="simpanFotoProfil(${jamaahId})" style="display:none;background:#10B981;color:white;border:none;padding:11px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px;">✅ Simpan Foto</button>
+                <button id="btnBatalFoto" onclick="batalPreviewFoto(${jamaahId})" style="display:none;background:#6B7280;color:white;border:none;padding:11px;border-radius:10px;cursor:pointer;font-size:14px;">✕ Batal</button>
+                <button id="btnBagikanFoto" onclick="bagikanFotoProfil(${jamaahId},'${escapeHtml(jamaahNama).replace(/'/g,"\\'")}');" style="display:none;background:#3B82F6;color:white;border:none;padding:11px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px;">📤 Bagikan</button>
+                <button id="btnDownloadFoto" onclick="downloadFotoProfil('${escapeHtml(jamaahNama).replace(/'/g,"\\'")}');" style="display:none;background:#8B5CF6;color:white;border:none;padding:11px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px;">⬇️ Download</button>
+                <button id="btnHapusFoto" onclick="konfirmasiHapusFoto(${jamaahId})" style="display:none;background:#EF4444;color:white;border:none;padding:11px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px;">🗑️ Hapus Foto</button>
+                <button onclick="document.getElementById('fotoProfilModal').remove();_fotoPreviewData=null;" style="background:#e2e8f0;color:#333;border:none;padding:11px;border-radius:10px;cursor:pointer;font-size:14px;">✕ Tutup</button>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+    // Load foto yang sudah ada
+    idbGet(STORE_FOTO, 'foto_' + jamaahId).then(dataUrl => {
+        if (dataUrl) {
+            window._currentFotoData = dataUrl;
+            document.getElementById('fotoPreviewImg').src = dataUrl;
+            document.getElementById('fotoPreviewImg').style.display = 'block';
+            document.getElementById('fotoPlaceholder').style.display = 'none';
+            document.getElementById('fotoStatusText').textContent = 'Foto tersimpan ✅';
+            document.getElementById('btnHapusFoto').style.display = 'block';
+            document.getElementById('btnBagikanFoto').style.display = 'block';
+            document.getElementById('btnDownloadFoto').style.display = 'block';
+        }
+    });
+}
+
+function previewFotoProfil(event, jamaahId) {
+    const file = event.target.files[0];
+    if (!file) return;
+    document.getElementById('fotoStatusText').textContent = 'Mengompres foto...';
+    kompresiFoto(file, 300, 0.70, (dataUrl) => {
+        _fotoPreviewData = dataUrl;
+        window._currentFotoData = dataUrl;
+        document.getElementById('fotoPreviewImg').src = dataUrl;
+        document.getElementById('fotoPreviewImg').style.display = 'block';
+        document.getElementById('fotoPlaceholder').style.display = 'none';
+        // Tampilkan ukuran setelah kompres
+        const kb = Math.round(dataUrl.length * 0.75 / 1024);
+        document.getElementById('fotoStatusText').textContent = 'Preview (' + kb + ' KB) — belum disimpan';
+        document.getElementById('btnSimpanFoto').style.display = 'block';
+        document.getElementById('btnBatalFoto').style.display = 'block';
+        document.getElementById('btnHapusFoto').style.display = 'none';
+        document.getElementById('btnBagikanFoto').style.display = 'none';
+        document.getElementById('btnDownloadFoto').style.display = 'none';
+    });
+}
+
+function batalPreviewFoto(jamaahId) {
+    _fotoPreviewData = null;
+    document.getElementById('btnSimpanFoto').style.display = 'none';
+    document.getElementById('btnBatalFoto').style.display = 'none';
+    // Kembalikan ke foto lama atau placeholder
+    idbGet(STORE_FOTO, 'foto_' + jamaahId).then(dataUrl => {
+        if (dataUrl) {
+            window._currentFotoData = dataUrl;
+            document.getElementById('fotoPreviewImg').src = dataUrl;
+            document.getElementById('fotoPreviewImg').style.display = 'block';
+            document.getElementById('fotoPlaceholder').style.display = 'none';
+            document.getElementById('fotoStatusText').textContent = 'Foto tersimpan ✅';
+            document.getElementById('btnHapusFoto').style.display = 'block';
+            document.getElementById('btnBagikanFoto').style.display = 'block';
+            document.getElementById('btnDownloadFoto').style.display = 'block';
+        } else {
+            document.getElementById('fotoPreviewImg').style.display = 'none';
+            document.getElementById('fotoPlaceholder').style.display = 'block';
+            document.getElementById('fotoStatusText').textContent = 'Belum ada foto';
+        }
+    });
+}
+
+async function simpanFotoProfil(jamaahId) {
+    if (!_fotoPreviewData) return showToast('Pilih foto dulu!');
+    await idbSet(STORE_FOTO, 'foto_' + jamaahId, _fotoPreviewData);
+    _fotoPreviewData = null;
+    const kb = Math.round(window._currentFotoData.length * 0.75 / 1024);
+    document.getElementById('fotoStatusText').textContent = 'Foto tersimpan ✅ (' + kb + ' KB)';
+    document.getElementById('btnSimpanFoto').style.display = 'none';
+    document.getElementById('btnBatalFoto').style.display = 'none';
+    document.getElementById('btnHapusFoto').style.display = 'block';
+    document.getElementById('btnBagikanFoto').style.display = 'block';
+    document.getElementById('btnDownloadFoto').style.display = 'block';
+    // Update thumbnail di kartu
+    loadFotoThumbnail(jamaahId);
+    showToast('✅ Foto berhasil disimpan!');
+}
+
+async function konfirmasiHapusFoto(jamaahId) {
+    if (!confirm('Hapus foto profil?')) return;
+    await idbDelete(STORE_FOTO, 'foto_' + jamaahId);
+    window._currentFotoData = null;
+    document.getElementById('fotoPreviewImg').style.display = 'none';
+    document.getElementById('fotoPlaceholder').style.display = 'block';
+    document.getElementById('fotoStatusText').textContent = 'Foto dihapus';
+    document.getElementById('btnHapusFoto').style.display = 'none';
+    document.getElementById('btnBagikanFoto').style.display = 'none';
+    document.getElementById('btnDownloadFoto').style.display = 'none';
+    // Reset thumbnail
+    const el = document.getElementById('foto_thumb_' + jamaahId);
+    if (el) el.innerHTML = '<span style="font-size:22px;">👤</span>';
+    showToast('🗑️ Foto dihapus!');
+}
+
+function downloadFotoProfil(jamaahNama) {
+    const dataUrl = window._currentFotoData;
+    if (!dataUrl) return showToast('Tidak ada foto!');
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = 'foto_' + jamaahNama.replace(/ /g,'_') + '.jpg';
+    a.click();
+    showToast('⬇️ Foto didownload!');
+}
+
+async function bagikanFotoProfil(jamaahId, jamaahNama) {
+    const dataUrl = window._currentFotoData;
+    if (!dataUrl) return showToast('Tidak ada foto!');
+    try {
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], 'foto_' + jamaahNama + '.jpg', { type: 'image/jpeg' });
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: 'Foto ' + jamaahNama, text: jamaahNama });
+        } else {
+            downloadFotoProfil(jamaahNama);
+            showToast('Share tidak didukung, foto didownload');
+        }
+    } catch(err) {
+        if (err.name !== 'AbortError') downloadFotoProfil(jamaahNama);
+    }
 }
 
 function sortJamaahList(){ 
@@ -4098,8 +4575,9 @@ const defaultJamaahKitaFields = [
     { name: 'no_paspor',     label: 'No Paspor',      type: 'text',     icon: '📘', isRequired: false },
     { name: 'nik',           label: 'NIK',             type: 'text',     icon: '🪪', isRequired: false },
     { name: 'kk',            label: 'KK',              type: 'text',     icon: '📋', isRequired: false },
-    { name: 'alamat_kec',    label: 'Alamat Kec',     type: 'text',     icon: '🏘️', isRequired: false },
-    { name: 'kota',          label: 'Kota',            type: 'text',     icon: '🏙️', isRequired: false },
+    { name: 'alamat',        label: 'Alamat',          type: 'text',     icon: '🏠', isRequired: false },
+    { name: 'kec',           label: 'Kec',             type: 'text',     icon: '🏘️', isRequired: false },
+    { name: 'kab_kota',      label: 'Kab / Kota',     type: 'text',     icon: '🏙️', isRequired: false },
     { name: 'whatsapp',      label: 'WhatsApp',        type: 'tel',      icon: '📞', isRequired: true  },
     { name: 'rombongan',     label: 'Rombongan',       type: 'text',     icon: '👥', isRequired: false },
     { name: 'regu',          label: 'Regu',            type: 'text',     icon: '👥', isRequired: false },
@@ -4112,25 +4590,24 @@ const defaultJamaahKitaFields = [
     { name: 'keterangan',    label: 'Keterangan',      type: 'textarea', icon: '📝', isRequired: false }
 ];
 
-function loadJamaahKitaData() {
-    const saved = localStorage.getItem('safara_jamaah_kita_list');
-    const savedFields = localStorage.getItem('safara_jamaah_kita_fields');
-    jamaahKitaList = saved ? JSON.parse(saved) : [];
-    dynamicFieldsJamaahKita = savedFields ? JSON.parse(savedFields) : defaultJamaahKitaFields;
+async function loadJamaahKitaData() {
+    let saved = await idbGet(STORE_JAMAAH_KITA, 'kita_list');
+    if (!saved) saved = JSON.parse(localStorage.getItem('safara_jamaah_kita_list') || '[]');
+    let savedFields = await idbGet(STORE_JAMAAH_KITA, 'kita_fields');
+    if (!savedFields) savedFields = JSON.parse(localStorage.getItem('safara_jamaah_kita_fields') || 'null');
+    jamaahKitaList = saved || [];
+    dynamicFieldsJamaahKita = savedFields || defaultJamaahKitaFields;
 
     // Sinkronkan urutan + icon + label field On Proses mengikuti Database Jamaah
-    const dbFields = JSON.parse(localStorage.getItem('safara_jamaah_fields') || '[]');
+    const dbFields = dynamicFieldsJamaah.length > 0 ? dynamicFieldsJamaah : 
+        JSON.parse(localStorage.getItem('safara_jamaah_fields') || '[]');
     if (dbFields.length > 0) {
         const dbOrder = dbFields.map(f => f.name);
-        // Update icon & label dari Database untuk field yang sama
         dynamicFieldsJamaahKita = dynamicFieldsJamaahKita.map(kf => {
             const dbField = dbFields.find(df => df.name === kf.name);
-            if (dbField) {
-                return { ...kf, icon: dbField.icon || kf.icon, label: dbField.label || kf.label };
-            }
+            if (dbField) return { ...kf, icon: dbField.icon || kf.icon, label: dbField.label || kf.label };
             return kf;
         });
-        // Urutkan sesuai Database
         const inDb = dynamicFieldsJamaahKita.filter(f => dbOrder.includes(f.name));
         const notInDb = dynamicFieldsJamaahKita.filter(f => !dbOrder.includes(f.name));
         inDb.sort((a, b) => dbOrder.indexOf(a.name) - dbOrder.indexOf(b.name));
@@ -4138,18 +4615,16 @@ function loadJamaahKitaData() {
     }
 }
 
-// ===== STUB FUNGSI JAMAAH KITA COMPAT =====
 function loadDynamicFieldsJamaahKita() { loadJamaahKitaData(); }
 
-
-function saveJamaahKitaData() {
-    localStorage.setItem('safara_jamaah_kita_list', JSON.stringify(jamaahKitaList));
-    localStorage.setItem('safara_jamaah_kita_fields', JSON.stringify(dynamicFieldsJamaahKita));
+async function saveJamaahKitaData() {
+    await idbSet(STORE_JAMAAH_KITA, 'kita_list', jamaahKitaList);
+    await idbSet(STORE_JAMAAH_KITA, 'kita_fields', dynamicFieldsJamaahKita);
     renderJamaahKitaList();
 }
 
-function saveDynamicFieldsJamaahKita() {
-    localStorage.setItem('safara_jamaah_kita_fields', JSON.stringify(dynamicFieldsJamaahKita));
+async function saveDynamicFieldsJamaahKita() {
+    await idbSet(STORE_JAMAAH_KITA, 'kita_fields', dynamicFieldsJamaahKita);
 }
 
 function renderPilihJamaahKita() {
@@ -5125,13 +5600,14 @@ function salinFallback(text) {
 // ==================== PEMBAYARAN ====================
 let paymentTransaksiList = [], currentInvoiceJamaahId = null, currentInvoiceText = '', currentEditJamaahId = null, currentRiwayatJamaahId = null, currentPaymentFilter = 'semua', currentPaymentSearch = '';
 
-function loadPaymentData() { 
-    const saved = localStorage.getItem('safara_pembayaran_transaksi'); 
-    paymentTransaksiList = saved ? JSON.parse(saved) : []; 
+async function loadPaymentData() { 
+    let saved = await idbGet(STORE_PEMBAYARAN, 'pembayaran_list');
+    if (!saved) saved = paymentTransaksiList;
+    paymentTransaksiList = saved || []; 
 }
 
-function savePaymentData() { 
-    localStorage.setItem('safara_pembayaran_transaksi', JSON.stringify(paymentTransaksiList)); 
+async function savePaymentData() { 
+    await idbSet(STORE_PEMBAYARAN, 'pembayaran_list', paymentTransaksiList);
 }
 
 function getTotalHargaPaket(jamaah) { 
@@ -5756,14 +6232,15 @@ function closeDetailModal() {
 // ==================== FOLDER VIRTUAL ====================
 let folderList = [];
 
-function loadFolderData() { 
-    const saved = localStorage.getItem('safara_folder_list'); 
-    folderList = saved ? JSON.parse(saved) : []; 
+async function loadFolderData() { 
+    let saved = await idbGet(STORE_FOLDER, 'folder_list');
+    if (!saved) saved = folderList;
+    folderList = saved || []; 
     renderFolderList(); 
 }
 
-function saveFolderData() { 
-    localStorage.setItem('safara_folder_list', JSON.stringify(folderList)); 
+async function saveFolderData() { 
+    await idbSet(STORE_FOLDER, 'folder_list', folderList);
     renderFolderList(); 
 }
 
@@ -5795,9 +6272,9 @@ function renderFolderList() {
 function openFolderDetail(folderId) { 
     const folder = folderList.find(f => f.id == folderId); 
     if(!folder) return; 
-    const allJamaahFolder = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
-    let jamaahInFolder = folder.jamaahIds.map(id => allJamaahFolder.find(j => j.id == id)).filter(j => j); 
-    let availableJamaah = allJamaahFolder.filter(j => !folder.jamaahIds.includes(j.id)); 
+    // Gunakan jamaahList yang sudah ada di memory (sudah di-load dari IndexedDB)
+    let jamaahInFolder = folder.jamaahIds.map(id => jamaahList.find(j => j.id == id)).filter(j => j); 
+    let availableJamaah = jamaahList.filter(j => !folder.jamaahIds.includes(j.id)); 
     let html = `<div class="card-premium"><div class="back-header" style="margin-bottom:15px;"><i class="fas fa-arrow-left" onclick="renderFolderList()" style="cursor:pointer;"></i><h3 style="flex:1; text-align:center;">📁 ${escapeHtml(folder.nama)}</h3><div style="width:30px;"></div></div>
     <div class="input-group"><label>➕ Tambah Jamaah ke Folder</label>
     <input type="text" id="searchFolderJamaah" placeholder="🔍 Cari nama jamaah..." oninput="filterFolderJamaahSelect()" style="margin-bottom:8px;">
@@ -5833,7 +6310,7 @@ function openFolderDetail(folderId) {
     });
     html += `</div><div class="card-premium" style="padding:12px;margin-bottom:12px;"><div style="font-weight:bold;margin-bottom:8px;color:#0D5C4A;">+ Tambah Field Baru</div><input type="text" id="newFieldLabel" placeholder="Nama field (contoh: Hotel, Maskapai)" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd;margin-bottom:8px;"><input type="text" id="newFieldValue" placeholder="Isi/nilai field" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd;margin-bottom:8px;"><button class="btn btn-primary btn-small" onclick="addFolderField('${folderId}')">+ Tambah Field</button></div>`;
     // Section pilih field untuk PDF/Excel
-    const allDynFields = JSON.parse(localStorage.getItem('safara_jamaah_fields') || '[]');
+    const allDynFields = dynamicFieldsJamaah.length > 0 ? dynamicFieldsJamaah : [];
     const selectedFields = folder.selectedFields || [];
     html += `<div class="card-premium" style="padding:12px;margin-bottom:12px;" onclick="event.stopPropagation();">
         <div style="font-weight:bold;margin-bottom:10px;color:#0D5C4A;">📋 Pilih Field untuk PDF/Excel</div>
@@ -5848,6 +6325,7 @@ function openFolderDetail(folderId) {
             const checked = selectedFields.includes(fd.name) ? 'checked' : '';
             html += `<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid #eee;" onclick="event.stopPropagation();event.preventDefault();">
                 <input type="checkbox" value="${fd.name}" ${checked}
+                    class="folder-field-cb"
                     onclick="event.stopPropagation();"
                     onchange="event.stopPropagation();toggleFolderField('${folderId}', '${fd.name}', this.checked);"
                     style="width:20px;height:20px;cursor:pointer;accent-color:#0D5C4A;flex-shrink:0;">
@@ -5975,21 +6453,26 @@ function confirmDeleteFolder(folderId) {
 }
 
 function pilihSemuaFolderField(folderId) {
-    document.querySelectorAll(`input[id^="fld_${folderId}_"]`).forEach(cb => {
-        if(!cb.checked) {
-            cb.checked = true;
-            toggleFolderField(folderId, cb.value, true);
-        }
+    const folder = folderList.find(f => f.id == folderId);
+    if(!folder) return;
+    if(!folder.selectedFields) folder.selectedFields = [];
+    dynamicFieldsJamaah.forEach(fd => {
+        if(!folder.selectedFields.includes(fd.name)) folder.selectedFields.push(fd.name);
     });
+    // Update checkbox UI
+    document.querySelectorAll('.folder-field-cb').forEach(cb => cb.checked = true);
+    saveFolderData();
+    showToast('✅ Semua field dipilih!');
 }
 
 function hapusPilihanFolderField(folderId) {
-    document.querySelectorAll(`input[id^="fld_${folderId}_"]`).forEach(cb => {
-        if(cb.checked) {
-            cb.checked = false;
-            toggleFolderField(folderId, cb.value, false);
-        }
-    });
+    const folder = folderList.find(f => f.id == folderId);
+    if(!folder) return;
+    folder.selectedFields = [];
+    // Update checkbox UI
+    document.querySelectorAll('.folder-field-cb').forEach(cb => cb.checked = false);
+    saveFolderData();
+    showToast('❌ Semua field dihapus!');
 }
 
 function toggleFolderField(folderId, fieldKey, checked) {
@@ -6048,14 +6531,14 @@ function deleteFolderField(folderId, index) {
 async function exportFolderToPDF(folderId) {
     const folder = folderList.find(f => f.id == folderId);
     if(!folder) return;
-    const allJamaah = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
+    const allJamaah = jamaahList;
     const jamaahInFolder = folder.jamaahIds.map(id => allJamaah.find(j => j.id == id)).filter(j => j);
     if(jamaahInFolder.length === 0) { showToast('Tidak ada jamaah dalam folder ini'); return; }
     const cfgFolder = getKonfigurasiProData();
     const namaInstansi = cfgFolder.instansi1.nama || 'Safara';
     const watermarkHtmlFolder = buildPrintWatermark(cfgFolder);
     const tanggal = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
-    const allDynFields = JSON.parse(localStorage.getItem('safara_jamaah_fields') || '[]');
+    const allDynFields = dynamicFieldsJamaah.length > 0 ? dynamicFieldsJamaah : [];
     const selectedFields = folder.selectedFields || [];
     const chosenFields = allDynFields.filter(fd => selectedFields.includes(fd.name));
     let thHtml = '<th style="width:36px;">No</th><th>Nama Lengkap</th>';
@@ -6116,7 +6599,7 @@ function exportFolderToExcel(folderId) {
     const folder = folderList.find(f => f.id == folderId); 
     if(!folder) return; 
     // Ambil langsung dari localStorage supaya data selalu fresh
-    const allJamaah = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]');
+    const allJamaah = jamaahList;
     const jamaahInFolder = folder.jamaahIds.map(id => allJamaah.find(j => j.id == id)).filter(j => j); 
     if(jamaahInFolder.length === 0) { showToast('Tidak ada jamaah dalam folder ini'); return; } 
     const fields = folder.fields || [];
@@ -6129,7 +6612,7 @@ function exportFolderToExcel(folderId) {
         wsData.push({ 'Folder': '', '': '' });
     }
     // Pakai selectedFields dari folder
-    const allDynFieldsXLS = JSON.parse(localStorage.getItem('safara_jamaah_fields') || '[]');
+    const allDynFieldsXLS = dynamicFieldsJamaah.length > 0 ? dynamicFieldsJamaah : [];
     const selectedFieldsXLS = folder.selectedFields || [];
     const chosenFieldsXLS = allDynFieldsXLS.filter(fd => selectedFieldsXLS.includes(fd.name));
     // Buat header row pakai label
@@ -6152,46 +6635,82 @@ function exportFolderToExcel(folderId) {
 
 // ==================== UPLOAD DOKUMEN ====================
 let dokumenJenisList = [], dokumenData = {}, db = null;
-const DB_NAME = 'SafaraDokumenDB', DB_VERSION = 2, STORE_NAME = 'dokumen', JENIS_STORE_NAME = 'dokumenJenis';
+// ==================== INDEXEDDB TERPUSAT ====================
+const DB_NAME = 'SafaraDB', DB_VERSION = 3, 
+    STORE_NAME = 'dokumen', 
+    JENIS_STORE_NAME = 'dokumenJenis',
+    STORE_JAMAAH = 'jamaahData',
+    STORE_JAMAAH_KITA = 'jamaahKitaData', 
+    STORE_FOLDER = 'folderData',
+    STORE_KAS = 'kasData',
+    STORE_PEMBAYARAN = 'pembayaranData',
+    STORE_KONFIGURASI = 'konfigurasiData',
+    STORE_MASTER = 'masterData',
+    STORE_FOTO = 'fotoProfil',
+    STORE_ABSENSI = 'absensiData';
 
 function resetIndexedDBDarurat() {
-    if (!confirm('Reset database foto? Data teks jamaah TIDAK akan terhapus. Hanya foto profil yang direset.')) return;
-    // Hapus IndexedDB lama
-    const req = indexedDB.deleteDatabase('SafaraDokumenDB');
-    req.onsuccess = () => {
+    if (!confirm('Reset database? Data akan direset.')) return;
+    const req = indexedDB.deleteDatabase('SafaraDB');
+    const req2 = indexedDB.deleteDatabase('SafaraDokumenDB');
+    req.onsuccess = req2.onsuccess = () => {
         db = null;
         showToast('✅ Database direset! Memuat ulang...');
         setTimeout(() => window.location.reload(), 1000);
     };
-    req.onerror = () => {
-        showToast('Gagal reset, coba refresh manual');
-        window.location.reload();
-    };
-    req.onblocked = () => {
-        window.location.reload();
-    };
+    req.onerror = () => { showToast('Gagal reset'); window.location.reload(); };
+    req.onblocked = req2.onblocked = () => window.location.reload();
 }
 
 function openIndexedDB() { 
     return new Promise((resolve, reject) => { 
         if (db) { resolve(db); return; } 
         const request = indexedDB.open(DB_NAME, DB_VERSION); 
-        request.onerror = (e) => { 
-            console.error('IndexedDB error:', e);
-            reject(request.error); 
-        }; 
+        request.onerror = (e) => { console.error('IndexedDB error:', e); reject(request.error); }; 
         request.onsuccess = () => { db = request.result; resolve(db); }; 
-        request.onblocked = () => {
-            // Ada tab lain yang masih pakai DB versi lama
-            db = null;
-            window.location.reload();
-        };
+        request.onblocked = () => { db = null; window.location.reload(); };
         request.onupgradeneeded = (event) => { 
-            const dbEvent = event.target.result; 
-            if (!dbEvent.objectStoreNames.contains(STORE_NAME)) dbEvent.createObjectStore(STORE_NAME, { keyPath: 'id' }); 
-            if (!dbEvent.objectStoreNames.contains(JENIS_STORE_NAME)) dbEvent.createObjectStore(JENIS_STORE_NAME, { keyPath: 'id' }); 
+            const d = event.target.result; 
+            [STORE_NAME, JENIS_STORE_NAME, STORE_JAMAAH, STORE_JAMAAH_KITA, 
+             STORE_FOLDER, STORE_KAS, STORE_PEMBAYARAN, STORE_KONFIGURASI, 
+             STORE_MASTER, STORE_FOTO, STORE_ABSENSI].forEach(name => {
+                if (!d.objectStoreNames.contains(name)) d.createObjectStore(name, { keyPath: 'id' });
+            });
         }; 
     }); 
+}
+
+// Helper: simpan ke IndexedDB
+async function idbSet(storeName, key, value) {
+    const d = await openIndexedDB();
+    return new Promise((resolve, reject) => {
+        const tx = d.transaction([storeName], 'readwrite');
+        tx.objectStore(storeName).put({ id: key, data: value });
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+}
+
+// Helper: baca dari IndexedDB
+async function idbGet(storeName, key) {
+    const d = await openIndexedDB();
+    return new Promise((resolve) => {
+        const tx = d.transaction([storeName], 'readonly');
+        const req = tx.objectStore(storeName).get(key);
+        req.onsuccess = () => resolve(req.result?.data ?? null);
+        req.onerror = () => resolve(null);
+    });
+}
+
+// Helper: hapus dari IndexedDB  
+async function idbDelete(storeName, key) {
+    const d = await openIndexedDB();
+    return new Promise((resolve) => {
+        const tx = d.transaction([storeName], 'readwrite');
+        tx.objectStore(storeName).delete(key);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => resolve();
+    });
 }
 
 async function loadDokumenJenisFromIndexedDB() { 
@@ -6203,13 +6722,29 @@ async function loadDokumenJenisFromIndexedDB() {
         return new Promise((resolve, reject) => { 
             request.onsuccess = () => { 
                 if (request.result && request.result.data && request.result.data.length > 0) dokumenJenisList = request.result.data; 
-                else dokumenJenisList = [ { id: 'ktp', nama: 'KTP', icon: '🪪' }, { id: 'paspor', nama: 'Paspor', icon: '📘' }, { id: 'foto', nama: 'Foto', icon: '📷' }, { id: 'vaksin', nama: 'Vaksin', icon: '💉' } ]; 
+                else dokumenJenisList = [ 
+                    { id: 'ktp',       nama: 'KTP',       icon: '🪪' }, 
+                    { id: 'kk',        nama: 'KK',        icon: '📋' }, 
+                    { id: 'spph',      nama: 'SPPH',      icon: '📄' }, 
+                    { id: 'bpih',      nama: 'BPIH',      icon: '📄' }, 
+                    { id: 'foto_pas',  nama: 'Foto Pas',  icon: '📷' }, 
+                    { id: 'paspor',    nama: 'Paspor',    icon: '📘' }, 
+                    { id: 'biometrik', nama: 'Biometrik', icon: '🔏' } 
+                ]; 
                 resolve(); 
             }; 
             request.onerror = () => reject(request.error); 
         }); 
     } catch(e) { 
-        dokumenJenisList = [ { id: 'ktp', nama: 'KTP', icon: '🪪' }, { id: 'paspor', nama: 'Paspor', icon: '📘' }, { id: 'foto', nama: 'Foto', icon: '📷' }, { id: 'vaksin', nama: 'Vaksin', icon: '💉' } ]; 
+        dokumenJenisList = [ 
+            { id: 'ktp',       nama: 'KTP',       icon: '🪪' }, 
+            { id: 'kk',        nama: 'KK',        icon: '📋' }, 
+            { id: 'spph',      nama: 'SPPH',      icon: '📄' }, 
+            { id: 'bpih',      nama: 'BPIH',      icon: '📄' }, 
+            { id: 'foto_pas',  nama: 'Foto Pas',  icon: '📷' }, 
+            { id: 'paspor',    nama: 'Paspor',    icon: '📘' }, 
+            { id: 'biometrik', nama: 'Biometrik', icon: '🔏' } 
+        ]; 
         return Promise.resolve(); 
     } 
 }
@@ -6434,9 +6969,51 @@ function renderDokumenFieldsList() {
     if(dokumenJenisList.length === 0) { container.innerHTML = '<p>Belum ada jenis dokumen</p>'; return; } 
     let html = '<h4>📋 Jenis Dokumen Aktif:</h4>'; 
     dokumenJenisList.forEach((jenis, idx) => { 
-        html += `<div class="field-item"><div><span style="font-size:20px;">${jenis.icon}</span> <strong>${escapeHtml(jenis.nama)}</strong><br><small>${jenis.id}</small></div><button class="btn-danger-small" onclick="confirmDeleteDokumenField(${idx})">Hapus</button></div>`; 
+        html += `<div class="field-item"><div><span style="font-size:20px;">${jenis.icon}</span> <strong>${escapeHtml(jenis.nama)}</strong><br><small>${jenis.id}</small></div>
+        <div style="display:flex;gap:6px;">
+            <button class="btn-edit-jamaah" onclick="editDokumenJenis(${idx})" style="padding:4px 10px;font-size:11px;">Edit</button>
+            <button class="btn-danger-small" onclick="confirmDeleteDokumenField(${idx})">Hapus</button>
+        </div></div>`; 
     }); 
     container.innerHTML = html; 
+}
+
+function editDokumenJenis(idx) {
+    const jenis = dokumenJenisList[idx];
+    if (!jenis) return;
+    const modal = document.createElement('div');
+    modal.id = 'editJenisModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML = `
+        <div style="background:var(--card-bg);border-radius:16px;padding:24px;width:100%;max-width:360px;">
+            <h3 style="color:var(--primary);margin-bottom:16px;">✏️ Edit Jenis Dokumen</h3>
+            <div style="margin-bottom:10px;"><label style="font-size:13px;">Nama Dokumen</label>
+                <input type="text" id="editJenisNama" value="${escapeHtml(jenis.nama)}" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:4px;background:var(--input-bg);color:var(--text);">
+            </div>
+            <div style="margin-bottom:16px;"><label style="font-size:13px;">Icon</label>
+                <select id="editJenisIcon" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:4px;font-size:16px;background:var(--input-bg);color:var(--text);">
+                    ${['🪪','📋','📄','📘','📷','🔏','📑','🗒️','📃','🔖','📌','✅','🏷️','📎','🗂️'].map(ic => 
+                        `<option value="${ic}" ${jenis.icon===ic?'selected':''}>${ic} ${ic}</option>`
+                    ).join('')}
+                </select>
+            </div>
+            <button onclick="simpanEditJenisModal(${idx})" style="width:100%;padding:12px;background:#0D5C4A;color:white;border:none;border-radius:10px;margin-bottom:8px;cursor:pointer;font-weight:bold;">SIMPAN</button>
+            <button onclick="document.getElementById('editJenisModal').remove()" style="width:100%;padding:12px;background:#e2e8f0;color:#333;border:none;border-radius:10px;cursor:pointer;">BATAL</button>
+        </div>`;
+    document.body.appendChild(modal);
+}
+
+async function simpanEditJenisModal(idx) {
+    const nama = document.getElementById('editJenisNama')?.value.trim();
+    const icon = document.getElementById('editJenisIcon')?.value;
+    if (!nama) return showToast('Nama harus diisi!');
+    dokumenJenisList[idx].nama = nama;
+    dokumenJenisList[idx].icon = icon;
+    document.getElementById('editJenisModal')?.remove();
+    await saveDokumenJenisToIndexedDB();
+    renderDokumenList();
+    renderDokumenFieldsList();
+    showToast('✅ Jenis dokumen diupdate!');
 }
 
 async function confirmDeleteDokumenField(idx) { 
@@ -6578,10 +7155,10 @@ async function downloadFullZip() {
     showToast('Mempersiapkan data...'); 
     try { 
         const zip = new JSZip(); 
-        const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list') || '[]'); 
-        const kasData = JSON.parse(localStorage.getItem('safara_kas_data') || '[]'); 
-        const paymentData = JSON.parse(localStorage.getItem('safara_pembayaran_transaksi') || '[]'); 
-        const masterData = JSON.parse(localStorage.getItem('safara_master_data') || '[]'); 
+        const jamaahData = jamaahList; 
+        const kasData = dataKas; 
+        const paymentData = paymentTransaksiList; 
+        const masterData = masterDataList; 
         const catatanData = JSON.parse(localStorage.getItem('safara_catatan_list') || '[]'); 
         zip.file('jamaah.json', JSON.stringify(jamaahData, null, 2)); 
         zip.file('kas.json', JSON.stringify(kasData, null, 2)); 
@@ -6752,7 +7329,8 @@ async function cetakTiketMulti() {
         if(!jamaah) continue;
         const paket = jamaah.paket || '-';
         const canvas = document.createElement('canvas');
-        const qrText = 'Nama: ' + jamaah.nama_lengkap + '\nID: ' + jamaah.id + '\nPaket: ' + paket + '\nTanggal: ' + new Date().toLocaleDateString('id-ID') + '\nSafara';
+        const noPorsiQR = jamaah.additional_fields?.no_porsi || jamaah.id.toString();
+        const qrText = noPorsiQR;
         await QRCode.toCanvas(canvas, qrText, { width: 120, height: 120 });
         const qrDataUrl = canvas.toDataURL('image/png');
         cardsHtml += '<div class="tiket-card">'
@@ -7183,8 +7761,8 @@ async function generateTiketQR() {
     const qrContainer = document.getElementById('tiketQR');
     qrContainer.innerHTML = '';
     const canvas = document.createElement('canvas');
-    const qrText = `Nama: ${jamaah.nama_lengkap}\nID: ${jamaah.id}\nPaket: ${paket}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\nSafara`;
-    await QRCode.toCanvas(canvas, qrText, { width: 150, height: 150 });
+    const noPorsiQR = jamaah.additional_fields?.no_porsi || jamaah.id.toString();
+    await QRCode.toCanvas(canvas, noPorsiQR, { width: 150, height: 150 });
     qrContainer.appendChild(canvas);
     document.getElementById('tiketPreview').style.display = 'block';
 }
@@ -7192,8 +7770,8 @@ async function generateTiketQR() {
 async function generateAndCetakTiket(jamaah) {
     const paket = jamaah.paket || '-';
     const canvas = document.createElement('canvas');
-    const qrText = 'Nama: ' + jamaah.nama_lengkap + '\nID: ' + jamaah.id + '\nPaket: ' + paket + '\nTanggal: ' + new Date().toLocaleDateString('id-ID') + '\nSafara';
-    await QRCode.toCanvas(canvas, qrText, { width: 150, height: 150 });
+    const noPorsiQR = jamaah.additional_fields?.no_porsi || jamaah.id.toString();
+    await QRCode.toCanvas(canvas, noPorsiQR, { width: 150, height: 150 });
     const qrDataUrl = canvas.toDataURL('image/png');
     const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
     const win = window.open('', '_blank');
@@ -7344,21 +7922,24 @@ function cetakTiketLangsung() {
 // ==================== MULTI EVENT (SINGKAT) ====================
 let masterDataList = [], masterDynamicFields = [], masterItemList = ['Kain Ihram', 'Sendal', 'Obat-obatan', 'Tas', 'Air Zamzam', 'Kopyah'], editingMasterId = null, availableModes = ['Semua', 'Haji', 'Toko', 'Sekolah', 'Umroh', 'Donasi'], activeModes = ['Semua', 'Haji', 'Toko', 'Sekolah', 'Umroh', 'Donasi'], currentDisplayMode = 'Semua';
 
-function loadMasterData() {
-    const saved = localStorage.getItem('safara_master_data');
-    masterDataList = saved ? JSON.parse(saved) : [];
-    const savedFields = localStorage.getItem('safara_master_fields');
-    if(savedFields) masterDynamicFields = JSON.parse(savedFields);
-    const savedItems = localStorage.getItem('safara_master_items');
-    if(savedItems) masterItemList = JSON.parse(savedItems);
+async function loadMasterData() {
+    let saved = await idbGet(STORE_MASTER, 'master_data');
+    if (!saved) saved = masterDataList;
+    masterDataList = saved || [];
+    let savedFields = await idbGet(STORE_MASTER, 'master_fields');
+    if (!savedFields) savedFields = JSON.parse(localStorage.getItem('safara_master_fields') || 'null');
+    if(savedFields) masterDynamicFields = savedFields;
+    let savedItems = await idbGet(STORE_MASTER, 'master_items');
+    if (!savedItems) savedItems = JSON.parse(localStorage.getItem('safara_master_items') || 'null');
+    if(savedItems) masterItemList = savedItems;
     renderMasterForm();
     renderMasterTable();
 }
 
-function saveMasterDataToLocal() {
-    localStorage.setItem('safara_master_data', JSON.stringify(masterDataList));
-    localStorage.setItem('safara_master_fields', JSON.stringify(masterDynamicFields));
-    localStorage.setItem('safara_master_items', JSON.stringify(masterItemList));
+async function saveMasterDataToLocal() {
+    await idbSet(STORE_MASTER, 'master_data', masterDataList);
+    await idbSet(STORE_MASTER, 'master_fields', masterDynamicFields);
+    await idbSet(STORE_MASTER, 'master_items', masterItemList);
 }
 
 function getMasterJudul() { return document.getElementById('masterJudul')?.value.trim() || 'Multi Event'; }
@@ -7771,11 +8352,10 @@ function closeCopyModal() { document.getElementById('copyModal').classList.remov
 
 function executeCopyFromJamaah() {
     const category = document.getElementById('copyCategory').value;
-    const jamaahData = JSON.parse(localStorage.getItem('safara_jamaah_list')) || [];
-    if(jamaahData.length === 0) { showToast('Tidak ada data di database!'); closeCopyModal(); return; }
+    if(jamaahList.length === 0) { showToast('Tidak ada data di database!'); closeCopyModal(); return; }
     let copiedCount = 0;
     const now = new Date().toLocaleDateString('id-ID') + ' ' + new Date().toLocaleTimeString('id-ID');
-    for(const j of jamaahData) {
+    for(const j of jamaahList) {
         const existing = masterDataList.find(m => m.nama === j.nama_lengkap);
         if(existing) continue;
         const additional = {};
@@ -7902,9 +8482,10 @@ let konfigurasiPro = {
     wa_template: { laporan: '📊 *LAPORAN KAS KANTOR*\n\n💰 Saldo: [saldo]\n📈 Pemasukan: [masuk]\n📉 Pengeluaran: [keluar]\n\nTerima kasih.' }
 };
 
-function loadKonfigurasiPro() {
-    const saved = localStorage.getItem('safara_konfigurasi_pro');
-    if(saved) { try { const parsed = JSON.parse(saved); konfigurasiPro = { ...konfigurasiPro, ...parsed }; } catch(e) {} }
+async function loadKonfigurasiPro() {
+    let saved = await idbGet(STORE_KONFIGURASI, 'konfigurasi_pro');
+    if (!saved) saved = JSON.parse(localStorage.getItem('safara_konfigurasi_pro') || 'null');
+    if(saved) { try { konfigurasiPro = { ...konfigurasiPro, ...saved }; } catch(e) {} }
     document.getElementById('cfg_nama1').value = konfigurasiPro.instansi1.nama || '';
     document.getElementById('cfg_alamat1').value = konfigurasiPro.instansi1.alamat || '';
     document.getElementById('cfg_telp1').value = konfigurasiPro.instansi1.telp || '';
@@ -7952,7 +8533,7 @@ function loadKonfigurasiPro() {
     updateHeaderFromConfig();
 }
 
-function saveKonfigurasiPro() {
+async function saveKonfigurasiPro() {
     konfigurasiPro.instansi1 = {
         nama: document.getElementById('cfg_nama1').value,
         alamat: document.getElementById('cfg_alamat1').value,
@@ -8005,7 +8586,8 @@ function saveKonfigurasiPro() {
         batas_lansia: parseInt(document.getElementById('cfg_batas_lansia').value) || 60
     };
     konfigurasiPro.wa_template = { laporan: document.getElementById('cfg_wa_laporan').value };
-    localStorage.setItem('safara_konfigurasi_pro', JSON.stringify(konfigurasiPro));
+    localStorage.setItem('safara_konfigurasi_pro', JSON.stringify(konfigurasiPro)); // keep for compat
+    await idbSet(STORE_KONFIGURASI, 'konfigurasi_pro', konfigurasiPro);
     showToast('✅ Konfigurasi berhasil disimpan!');
     updateHeaderFromConfig();
 }
@@ -8013,6 +8595,7 @@ function saveKonfigurasiPro() {
 function resetKonfigurasiPro() {
     if(confirm('Reset semua konfigurasi ke default?')) {
         localStorage.removeItem('safara_konfigurasi_pro');
+        idbDelete(STORE_KONFIGURASI, 'konfigurasi_pro');
         location.reload();
     }
 }
@@ -8207,20 +8790,22 @@ async function initPremium() {
     
     updateHomeStats();
     loadEstimasiData();
-    loadKasData();
-    loadJamaahData();
-    loadDynamicFieldsJamaah();
-    loadJamaahKitaData();
-    // loadDynamicFieldsJamaahKita sudah include di loadJamaahKitaData()
-    loadPaymentData();
-    loadMasterData();
+    // Load semua data dari IndexedDB secara berurutan
+    await openIndexedDB(); // Pastikan DB terbuka dulu
+    await loadKonfigurasiPro();
+    await loadDynamicFieldsJamaah();
+    await loadJamaahData();
+    await loadJamaahKitaData();
+    await loadKasData();
+    await loadPaymentData();
+    await loadMasterData();
+    await loadFolderData();
     loadModesFromStorage();
     renderDynamicModeSwitcher();
-    loadKonfigurasiPro();
     loadCatatanData();
     await loadDokumenData();
-    loadFolderData();
     loadPengingatData();
+    await loadAbsensiData();
     loadSumberHartaList();
     
     document.getElementById('adminModeToggleBtn')?.addEventListener('click', (e) => { e.preventDefault(); toggleAdminMode(); });
