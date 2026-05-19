@@ -6207,6 +6207,7 @@ function hitungZakat(){
     hasil.style.display='block'; 
     hasil.scrollIntoView({behavior:"smooth"}); 
     localStorage.setItem('safara_last_zakat_total', totalZakat); 
+    updateHomeStats(); // Update statistik di halaman home
 }
 
 function salinRingkasanZakat(){ 
