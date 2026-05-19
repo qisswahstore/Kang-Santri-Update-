@@ -2000,7 +2000,7 @@
 <div id="page-jamaah" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('home')"></i><h2>Database Jamaah</h2><div style="width:30px;"></div></div></div>
     <div class="card-premium">
-        <div id="jamaahAdminPanel" class="setting-card" style="display:none"><h3 style="color:var(--primary);"> Panel Admin Jamaah</h3><button class="btn btn-primary btn-small mt-2" onclick="openTambahJamaahModal()"> + Tambah database</button><button class="btn btn-blue btn-small mt-2" onclick="openManageFieldsModal()"> Kelola Field Dinamis</button><button class="btn btn-teal btn-small mt-2" onclick="exportJamaahToExcel()"> Export ke Excel</button><button class="btn btn-orange btn-small mt-2" onclick="document.getElementById('importExcelFile').click()"> IMPORT EXCEL</button><input type="file" id="importExcelFile" accept=".xlsx,.xls" style="display:none" onchange="importJamaahFromExcel(this)"><button class="btn btn-danger btn-small mt-2" onclick="confirmDeleteAllJamaah()"> HAPUS SEMUA database</button></div>
+        <div id="jamaahAdminPanel" class="setting-card" style="display:none"><h3 style="color:var(--primary);"> Panel Admin Jamaah</h3><button class="btn btn-primary btn-small mt-2" onclick="openTambahJamaahModal()"> + Tambah database</button><button class="btn btn-blue btn-small mt-2" onclick="openManageFieldsModal()"> Kelola Field Dinamis</button><button class="btn btn-teal btn-small mt-2" onclick="downloadTemplateExcel()" style="background:#1D6F42;">⬇️ Download Template Excel</button><button class="btn btn-teal btn-small mt-2" onclick="exportJamaahToExcel()"> Export ke Excel</button><button class="btn btn-orange btn-small mt-2" onclick="document.getElementById('importExcelFile').click()"> IMPORT EXCEL</button><input type="file" id="importExcelFile" accept=".xlsx,.xls" style="display:none" onchange="importJamaahFromExcel(this)"><button class="btn btn-danger btn-small mt-2" onclick="confirmDeleteAllJamaah()"> HAPUS SEMUA database</button></div>
         <div class="section-title"><span>DAFTAR JAMAAH</span></div>
         <div class="search-box"><input type="text" id="searchJamaahInput" placeholder=" Cari nama jamaah..." onkeyup="filterJamaahList()"><select id="sortJamaahSelect" onchange="sortJamaahList()"><option value="urutan_asli">Urutan asli</option><option value="nama_asc">Nama A-Z</option><option value="nama_desc">Nama Z-A</option><option value="tgl_asc">Tanggal lama ke baru</option><option value="tgl_desc">Tanggal baru ke lama</option></select><button onclick="resetJamaahFilter()">Reset</button></div>
         <div class="sort-buttons"><span style="font-size:12px; color:var(--gray);">Jumlah per halaman:</span><select id="perPageJamaah" onchange="changePerPage()"><option value="10">10</option><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="all">Semua</option></select></div>
@@ -2008,6 +2008,8 @@
         <button class="btn btn-wa" onclick="shareAllJamaahToWA()"><i class="fab fa-whatsapp"></i> SHARE SEMUA JAMAAH KE WA</button>
         <div class="section-title" style="margin-top:20px;"><span>Backup & Restore database</span></div>
         <div class="row"><button class="btn btn-blue btn-small" onclick="backupJamaahData()" style="flex:1"><i class="fas fa-download"></i> BACKUP JAMAAH</button><button class="btn btn-orange btn-small" onclick="document.getElementById('restoreJamaahFile').click()" style="flex:1"><i class="fas fa-upload"></i> RESTORE JAMAAH</button></div>
+        <div class="row" style="margin-top:8px;"><button class="btn btn-small mt-2" onclick="downloadTemplateExcel()" style="flex:1;background:#1D6F42;color:white;">⬇️ Download Template Excel</button><button class="btn btn-small mt-2" onclick="document.getElementById('importExcelFile2').click()" style="flex:1;background:#F59E0B;color:white;">⬆️ Import Excel</button></div>
+        <input type="file" id="importExcelFile2" accept=".xlsx,.xls" style="display:none" onchange="importJamaahFromExcel(this)">
         <input type="file" id="restoreJamaahFile" accept=".json" style="display:none" onchange="restoreJamaahData(this)">
     </div>
 </div>
@@ -2268,6 +2270,25 @@
             <div class="row"><div class="config-row"><label>Header PDF</label><select id="cfg_header_mode"><option value="both">Keduanya</option><option value="instansi1">Instansi 1 saja</option><option value="instansi2">Instansi 2 saja</option><option value="none">Tidak ada</option></select></div><div class="config-row"><label>Tanda Tangan</label><select id="cfg_ttd_mode"><option value="both">Dua Pihak</option><option value="single">Satu Pihak</option></select></div></div>
             <div class="config-row"><label>Prefix Invoice / No. Dokumen</label><input type="text" id="cfg_invoice_prefix" value="INV/SAFARA"></div>
             <div class="config-row"><label>🧓 Batas Usia Lansia (tahun)</label><input type="number" id="cfg_batas_lansia" placeholder="60" min="50" max="80" style="width:120px;"></div>
+            <div style="background:var(--bg);border-radius:12px;padding:14px;margin-top:10px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                    <div>
+                        <div style="font-weight:bold;font-size:14px;">💰 Harga Paket Seragam</div>
+                        <div style="font-size:11px;color:#888;margin-top:2px;">ON = semua jamaah pakai harga ini<br>OFF = harga per jamaah dari field Database</div>
+                    </div>
+                    <label style="position:relative;display:inline-block;width:50px;height:26px;">
+                        <input type="checkbox" id="cfg_harga_seragam_aktif" style="opacity:0;width:0;height:0;" onchange="toggleHargaSeragamInput()">
+                        <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:26px;transition:.3s;" id="sliderHargaSeragam"></span>
+                    </label>
+                </div>
+                <div id="inputHargaSeragamWrap" style="display:none;">
+                    <label style="font-size:12px;color:#888;">Harga Paket (Rp)</label>
+                    <input type="text" id="cfg_harga_seragam_nominal" placeholder="Contoh: 45000000"
+                        oninput="formatHargaInput(this)"
+                        style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:14px;font-weight:bold;color:#0D5C4A;background:var(--input-bg);margin-top:4px;">
+                    <div id="previewHargaSeragam" style="font-size:12px;color:#0D5C4A;margin-top:4px;"></div>
+                </div>
+            </div>
             <div class="config-row"><label style="font-weight:bold;color:var(--primary);margin-bottom:10px;display:block;">🖨️ Tampilkan di Header Cetak</label>
                 <div style="display:flex;flex-direction:column;gap:10px;">
                     <label style="display:flex;justify-content:space-between;align-items:center;font-weight:normal;"><span>Logo Instansi</span><label class="switch"><input type="checkbox" id="cfg_show_logo" checked><span class="slider"></span></label></label>
@@ -2330,6 +2351,7 @@
             <div class="fitur-card" onclick="showPage('pengingatwa')"><div class="fitur-icon">📲</div><div class="fitur-title">Pengingat WA</div><div class="fitur-desc">Kirim pengingat otomatis</div></div>
             <div class="fitur-card" onclick="showPage('etikettiket')"><div class="fitur-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="48" height="48"><rect x="4" y="14" width="56" height="36" rx="6" fill="#f5a623"/><rect x="4" y="14" width="56" height="10" rx="4" fill="#e08000"/><circle cx="20" cy="38" r="4" fill="white"/><rect x="28" y="30" width="20" height="3" rx="2" fill="white"/><rect x="28" y="36" width="14" height="3" rx="2" fill="white"/><rect x="28" y="42" width="17" height="3" rx="2" fill="white"/></svg></div><div class="fitur-title">E-Tiket & QR</div><div class="fitur-desc">Tiket digital dengan QR</div></div>
             <div class="fitur-card" onclick="showPage('scanqr')"><div class="fitur-icon" style="font-size:40px;">📷</div><div class="fitur-title">Scan QR</div><div class="fitur-desc">Absensi & cek data jamaah</div></div>
+            <div class="fitur-card" onclick="showPage('suratresmi')"><div class="fitur-icon" style="font-size:40px;">📄</div><div class="fitur-title">Surat Resmi</div><div class="fitur-desc">Buat surat otomatis dari data jamaah</div></div>
             <div class="fitur-card" onclick="showPage('cetaklabel')"><div class="fitur-icon">🏷️</div><div class="fitur-title">Cetak Label</div><div class="fitur-desc">Name tag / stiker koper</div></div>
             <div class="fitur-card" onclick="showPage('cloudstorage')"><div class="fitur-icon">☁️</div><div class="fitur-title">Cloud Storage</div><div class="fitur-desc">Backup & Restore data</div></div>
             <div class="fitur-card" onclick="showPage('dashboard')"><div class="fitur-icon">📈</div><div class="fitur-title">Dashboard</div><div class="fitur-desc">Grafik statistik data</div></div>
@@ -2359,21 +2381,120 @@
 <div id="page-pengingatwa" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2> Pengingat WA</h2><div style="width:30px;"></div></div></div>
     <div class="container">
-        <div class="card-premium"><div class="input-group"><label> Pesan Pengingat</label><textarea id="reminderMessage" rows="4" placeholder="Contoh: Yth. [nama], jadwal pembayaran Anda jatuh tempo pada [tanggal]. Sisa tagihan: [sisa]"></textarea></div><div class="input-group"><label> Pilih Jamaah</label><select id="reminderJamaahSelect" multiple style="height:100px;"><option value="all">-- Semua Jamaah --</option></select></div><div class="input-group"><label> Jadwal Pengingat (opsional)</label><input type="datetime-local" id="reminderSchedule"></div><button class="btn btn-wa" onclick="kirimPengingatWA()"><i class="fab fa-whatsapp"></i> KIRIM SEKARANG</button><button class="btn btn-primary mt-2" onclick="aturPengingatOtomatis()"> ATUR PENGGINGAT OTOMATIS</button></div>
-        <div id="reminderScheduledList" class="card-premium"><h4> Pengingat Terjadwal</h4><p class="text-center">Belum ada pengingat terjadwal</p></div>
+        <div class="card-premium">
+            <div class="input-group">
+                <label>Pesan Pengingat</label>
+                <textarea id="reminderMessage" rows="4" placeholder="Contoh: Yth. [nama], jadwal pembayaran Anda jatuh tempo pada [tanggal]. Sisa tagihan: [sisa]"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Pilih Jamaah</label>
+                <input type="text" id="searchPengingatJamaah" placeholder="🔍 Cari nama jamaah..." oninput="filterPengingatJamaah()" style="margin-bottom:8px;">
+                <div style="display:flex;gap:8px;margin-bottom:8px;">
+                    <button onclick="pilihSemuaPengingat()" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+                    <button onclick="hapusPilihanPengingat()" style="flex:1;padding:8px;background:#e2e8f0;color:#333;border:none;border-radius:8px;font-size:12px;cursor:pointer;">❌ Hapus Pilihan</button>
+                </div>
+                <div id="multiPengingatJamaahSelect" style="max-height:200px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:8px;background:var(--card-bg);"></div>
+                <div id="jumlahDipilihPengingat" style="font-size:12px;color:#0D5C4A;margin-top:6px;font-weight:bold;"></div>
+            </div>
+            <div class="input-group">
+                <label>Jadwal Pengingat (opsional)</label>
+                <input type="datetime-local" id="reminderSchedule">
+            </div>
+            <button class="btn btn-wa" onclick="kirimPengingatWA()"><i class="fab fa-whatsapp"></i> KIRIM SEKARANG</button>
+            <button class="btn btn-primary mt-2" onclick="aturPengingatOtomatis()">⏰ ATUR PENGINGAT OTOMATIS</button>
+        </div>
+        <div id="reminderScheduledList" class="card-premium"><h4>⏰ Pengingat Terjadwal</h4><p class="text-center">Belum ada pengingat terjadwal</p></div>
     </div>
 </div>
 
 <!-- E-TIKET & QR PAGE -->
+<div id="page-suratresmi" class="page">
+    <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur')"></i><h2>📄 Surat Resmi</h2><div style="width:30px;"></div></div></div>
+    <div class="container">
+        <!-- Pilih Template & Jamaah -->
+        <div class="card-premium">
+            <div style="font-weight:bold;color:var(--primary);margin-bottom:10px;">📋 Buat Surat Baru</div>
+            <div class="input-group" style="margin-bottom:10px;">
+                <label style="font-size:12px;">Pilih Template Surat</label>
+                <select id="suratTemplateSelect" onchange="previewSurat()" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:13px;">
+                    <option value="">-- Pilih Template --</option>
+                    <option value="rekomendasi_paspor">📘 Rekomendasi Pembuatan Paspor</option>
+                    <option value="keterangan_jamaah">📄 Surat Keterangan Jamaah</option>
+                    <option value="permohonan_cuti">📅 Permohonan Izin Cuti</option>
+                    <option value="pengantar_umum">✉️ Surat Pengantar Umum</option>
+                    <option value="custom">✏️ Surat Kustom</option>
+                </select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px;">
+                <label style="font-size:12px;">Pilih Jamaah</label>
+                <input type="text" id="searchSuratJamaah" placeholder="🔍 Cari nama jamaah..." oninput="filterSuratJamaah()" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:13px;margin-bottom:6px;">
+                <select id="suratJamaahSelect" onchange="previewSurat()" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:13px;max-height:160px;" size="5"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px;">
+                <label style="font-size:12px;">Nomor Surat</label>
+                <input type="text" id="suratNomor" placeholder="Contoh: 001/KBIHU-AU/V/2026" oninput="previewSurat()" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:13px;">
+            </div>
+            <div class="input-group" style="margin-bottom:10px;">
+                <label style="font-size:12px;">Keperluan Tambahan (opsional)</label>
+                <textarea id="suratKeperluan" rows="2" placeholder="Tambahan keterangan jika diperlukan..." oninput="previewSurat()" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:13px;resize:none;"></textarea>
+            </div>
+            <button onclick="previewSurat()" style="width:100%;padding:12px;background:#0D5C4A;color:white;border:none;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:4px;">👁️ Buat & Edit Surat</button>
+        </div>
+
+        <!-- Preview & Edit Surat -->
+        <div id="suratPreviewCard" class="card-premium" style="display:none;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <div style="font-weight:bold;color:var(--primary);">✏️ Edit Surat</div>
+                <button onclick="resetIsiSurat()" style="padding:4px 10px;background:#e2e8f0;color:#333;border:none;border-radius:6px;font-size:11px;cursor:pointer;">🔄 Reset</button>
+            </div>
+            <div style="font-size:11px;color:#888;margin-bottom:8px;">Isi surat bisa diedit sebelum cetak/bagikan</div>
+            <input type="text" id="suratJudulEdit" placeholder="Judul Surat" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:13px;font-weight:bold;text-align:center;margin-bottom:8px;">
+            <textarea id="suratIsiEdit" rows="14" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:13px;line-height:1.8;resize:vertical;font-family:'Times New Roman',serif;"></textarea>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button onclick="cetakSurat()" style="flex:1;padding:12px;background:#0D5C4A;color:white;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">🖨️ Cetak</button>
+                <button onclick="bagikanSurat()" style="flex:1;padding:12px;background:#3B82F6;color:white;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">📤 Bagikan</button>
+            </div>
+        </div>
+
+        <!-- Kelola Template -->
+        <div class="card-premium">
+            <div style="font-weight:bold;color:var(--primary);margin-bottom:10px;">⚙️ Template Kustom</div>
+            <div style="font-size:12px;color:#888;margin-bottom:10px;">Buat template surat sendiri dengan variabel otomatis dari data jamaah.</div>
+            <div class="input-group" style="margin-bottom:8px;">
+                <label style="font-size:12px;">Judul Surat Kustom</label>
+                <input type="text" id="suratKustomJudul" placeholder="Contoh: SURAT PERNYATAAN KESANGGUPAN" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:13px;">
+            </div>
+            <div style="background:var(--bg);border-radius:8px;padding:10px;font-size:11px;color:#666;margin-bottom:10px;">
+                <b>Variabel yang bisa dipakai:</b><br>
+                {nama} {nik} {alamat} {no_paspor} {no_porsi} {tgl_lahir} {tempat_lahir} {jenis_kelamin} {whatsapp} {kamar} {bus} {rombongan} {hotel_makkah} {hotel_madinah} {warna} {nomor_surat} {tanggal} {nama_instansi} {keperluan}
+            </div>
+            <textarea id="suratKustomTemplate" rows="6" placeholder="Tulis template surat Anda di sini menggunakan variabel di atas..." style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:12px;resize:vertical;"></textarea>
+            <button onclick="simpanTemplateSuratKustom()" style="width:100%;padding:10px;background:#10B981;color:white;border:none;border-radius:8px;margin-top:8px;cursor:pointer;font-weight:bold;">💾 Simpan Template Kustom</button>
+        </div>
+    </div>
+</div>
+
 <div id="page-scanqr" class="page">
     <div class="header-premium header-premium-small"><div class="back-header"><i class="fas fa-arrow-left" onclick="showPage('fitur');stopScanner();"></i><h2>📷 Scan QR Absensi</h2><div style="width:30px;"></div></div></div>
     <div class="container">
+
+        <!-- Kelola Sesi -->
+        <div class="card-premium">
+            <div style="font-weight:bold;color:var(--primary);margin-bottom:10px;">📅 Sesi Absensi</div>
+            <div id="sesiAktifInfo" style="background:var(--bg);border-radius:10px;padding:12px;margin-bottom:10px;font-size:13px;">
+                <span style="color:#888;">Belum ada sesi aktif</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <button onclick="showBuatSesiModal()" style="flex:1;padding:10px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:13px;cursor:pointer;">➕ Buat Sesi Baru</button>
+                <button onclick="showPilihSesiModal()" style="flex:1;padding:10px;background:#3B82F6;color:white;border:none;border-radius:8px;font-size:13px;cursor:pointer;">📋 Pilih Sesi</button>
+            </div>
+        </div>
+
         <!-- Scanner -->
         <div class="card-premium" style="text-align:center;">
             <div id="scannerArea" style="position:relative;width:100%;max-width:340px;margin:0 auto;border-radius:16px;overflow:hidden;background:#000;">
                 <video id="scannerVideo" style="width:100%;display:block;" playsinline></video>
                 <canvas id="scannerCanvas" style="display:none;"></canvas>
-                <!-- Frame overlay -->
                 <div style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
                     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;border:3px solid #0D5C4A;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.4);"></div>
                     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;">
@@ -2384,7 +2505,7 @@
                     </div>
                 </div>
             </div>
-            <div id="scannerStatus" style="margin:12px 0;font-size:13px;color:#888;">Tekan tombol untuk mulai scan</div>
+            <div id="scannerStatus" style="margin:12px 0;font-size:13px;color:#888;">Pilih atau buat sesi dulu</div>
             <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;">
                 <button id="btnStartScan" onclick="startScanner()" class="btn btn-primary" style="flex:1;">📷 Mulai Scan</button>
                 <button id="btnStopScan" onclick="stopScanner()" class="btn" style="flex:1;display:none;background:#EF4444;color:white;">⏹ Stop</button>
@@ -2413,8 +2534,12 @@
         <!-- Rekap Absensi -->
         <div class="card-premium">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                <div style="font-weight:bold;color:var(--primary);">📋 Rekap Absensi</div>
-                <button onclick="eksporAbsensi()" style="padding:6px 12px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">📤 Ekspor</button>
+                <div style="font-weight:bold;color:var(--primary);">📋 Rekap Sesi Aktif</div>
+                <div style="display:flex;gap:6px;">
+                    <button onclick="eksporAbsensi()" style="padding:6px 10px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:11px;cursor:pointer;">🖨️ PDF</button>
+                    <button onclick="eksporAbsensiExcel()" style="padding:6px 10px;background:#1D6F42;color:white;border:none;border-radius:8px;font-size:11px;cursor:pointer;">📊 Excel</button>
+                    <button onclick="eksporAbsensiCSV()" style="padding:6px 10px;background:#3B82F6;color:white;border:none;border-radius:8px;font-size:11px;cursor:pointer;">📄 CSV</button>
+                </div>
             </div>
             <div id="rekapAbsensi" style="font-size:13px;"></div>
         </div>
@@ -2426,31 +2551,17 @@
     <div class="container">
         <div class="card-premium">
             <div class="input-group">
-                <label>Pilih Jamaah (Satu - untuk QR Preview)</label>
-                <select id="tiketJamaahSelect" onchange="generateTiketQR()"></select>
-            </div>
-            <div id="tiketPreview" class="tiket-card" style="display:none;">
-                <div class="tiket-header"><div class="tiket-title" id="tiketNama"></div><div id="tiketPaket" style="font-size:12px;"></div></div>
-                <div id="tiketQR" class="tiket-qr"></div>
-                <div class="row" style="margin-top:15px;">
-                    <button class="btn btn-primary btn-small" onclick="downloadTiketAsImage()"><i class="fas fa-download"></i> Simpan sebagai Gambar</button>
-                    <button class="btn btn-wa btn-small" onclick="shareTiketWA()"><i class="fab fa-whatsapp"></i> Kirim ke WA</button>
-                    <button class="btn btn-purple btn-small" onclick="cetakTiketLangsung()"><i class="fas fa-print"></i> CETAK TIKET</button>
-                </div>
-            </div>
-            <hr style="margin:20px 0;border-color:#eee;">
-            <div class="input-group">
-                <label>Pilih Banyak Jamaah (Cetak/WA Massal)</label>
+                <label>Pilih Jamaah</label>
                 <input type="text" id="searchTiketJamaah" placeholder="🔍 Cari nama jamaah..." oninput="filterTiketJamaah()" style="margin-bottom:8px;">
                 <div style="display:flex;gap:8px;margin-bottom:8px;">
                     <button onclick="pilihSemuaTiket()" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
                     <button onclick="hapusPilihanTiket()" style="flex:1;padding:8px;background:#e2e8f0;color:#333;border:none;border-radius:8px;font-size:12px;cursor:pointer;">❌ Hapus Pilihan</button>
                 </div>
-                <div id="multiTiketJamaahSelect" style="max-height:200px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:8px;background:var(--card-bg);"></div>
+                <div id="multiTiketJamaahSelect" style="max-height:220px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:8px;background:var(--card-bg);"></div>
                 <div id="jumlahDipilihTiket" style="font-size:12px;color:#0D5C4A;margin-top:6px;font-weight:bold;"></div>
             </div>
-            <button class="btn btn-primary mt-2" onclick="cetakTiketMulti()"><i class="fas fa-print"></i> CETAK TIKET MASSAL</button>
-            <button class="btn btn-wa mt-2" onclick="shareTiketWAMulti()"><i class="fab fa-whatsapp"></i> Kirim ke WA Massal</button>
+            <button class="btn btn-primary mt-2" onclick="cetakTiketMulti()"><i class="fas fa-print"></i> CETAK TIKET</button>
+            <button class="btn btn-wa mt-2" onclick="shareTiketWAMulti()"><i class="fab fa-whatsapp"></i> Kirim ke WA</button>
         </div>
     </div>
 </div>
@@ -2491,12 +2602,17 @@
         
         <div class="card-premium">
             <div class="section-title"><span> BACKUP LOKAL</span></div>
-            <div class="row" style="margin-bottom: 8px;">
-                <button class="btn btn-primary btn-small" onclick="downloadFullZip()" style="flex:1"><i class="fas fa-download"></i> DOWNLOAD FULL ZIP</button>
-                <button class="btn btn-orange btn-small" onclick="document.getElementById('restoreZipFileInput').click()" style="flex:1"><i class="fas fa-upload"></i> RESTORE DARI ZIP</button>
+            <div style="font-size:11px;color:#888;margin-bottom:8px;">⬇️ ZIP = lengkap termasuk foto &amp; dokumen | 📤 JSON = data teks saja, bisa dibagikan</div>
+            <div class="row" style="margin-bottom:6px;">
+                <button class="btn btn-primary btn-small" onclick="downloadFullZip()" style="flex:1;font-size:12px;"><i class="fas fa-download"></i> Download ZIP</button>
+                <button class="btn btn-small" onclick="bagikanFullZip()" style="flex:1;background:#3B82F6;color:white;font-size:12px;"><i class="fas fa-share-alt"></i> Bagikan JSON</button>
+            </div>
+            <div class="row">
+                <button class="btn btn-orange btn-small" onclick="document.getElementById('restoreZipFileInput').click()" style="flex:1;font-size:12px;"><i class="fas fa-upload"></i> Restore ZIP</button>
+                <button class="btn btn-small" onclick="document.getElementById('restoreJsonFileInput').click()" style="flex:1;background:#8B5CF6;color:white;font-size:12px;"><i class="fas fa-upload"></i> Restore JSON</button>
             </div>
             <input type="file" id="restoreZipFileInput" accept=".zip" style="display:none" onchange="restoreFromZip(this)">
-            <div class="text-muted text-center mt-2" style="font-size: 11px;"> Backup semua data (Jamaah, Kas, Pembayaran, Dokumen) ke file ZIP</div>
+            <input type="file" id="restoreJsonFileInput" accept=".json" style="display:none" onchange="restoreFromJson(this)">
         </div>
         
         <div class="card-premium">
@@ -2567,137 +2683,78 @@ async function cetakSemuaDokumenJamaah(jamaahId, jamaahNama) {
     }
     showToast(`📄 Menyiapkan cetak untuk ${jamaahNama}...`);
     const printWindow = window.open('', '_blank');
-    let html = `<!DOCTYPE html>
-    <html>
-    <head>
+    let html = `<!DOCTYPE html><html><head>
         <title>Cetak Dokumen - ${jamaahNama}</title>
         <meta charset="UTF-8">
         <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background: #f0f0f0; }
-            .no-print { display: block; }
-            .header { text-align: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #0D5C4A; }
-            .header h1 { color: #0D5C4A; font-size: 24px; }
-            .header p { color: #666; margin-top: 5px; }
-            .dokumen-item { background: white; border-radius: 16px; margin-bottom: 30px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); page-break-inside: avoid; }
-            .dokumen-title { font-size: 18px; font-weight: bold; color: #0D5C4A; border-left: 4px solid #0D5C4A; padding-left: 12px; margin-bottom: 15px; }
-            .dokumen-gambar { text-align: center; }
-            .dokumen-gambar img { max-width: 100%; max-height: 500px; object-fit: contain; }
-            .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #999; }
-            @media print {
-                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-                html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: white; }
-                .no-print { display: none !important; }
-                .dokumen-item {
-                    width: 210mm;
-                    height: 297mm;
-                    margin: 0;
-                    padding: 8mm;
-                    box-shadow: none;
-                    border-radius: 0;
-                    background: white;
-                    page-break-after: always;
-                    break-after: page;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    overflow: hidden;
-                }
-                .dokumen-item:last-child { page-break-after: avoid; break-after: avoid; }
-                .dokumen-label {
-                    font-size: 13px;
-                    font-weight: bold;
-                    color: #0D5C4A;
-                    margin-bottom: 8px;
-                    text-align: center;
-                }
-                .dokumen-gambar { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; }
-                .dokumen-gambar img {
-                    max-width: 100%;
-                    max-height: 270mm;
-                    width: auto;
-                    height: auto;
-                    object-fit: contain;
-                    display: block;
-                    margin: 0 auto;
-                }
+            *{margin:0;padding:0;box-sizing:border-box;}
+            body{font-family:Arial,sans-serif;background:white;}
+            .dokumen-item{
+                width:210mm;height:297mm;
+                display:flex;flex-direction:column;
+                align-items:center;justify-content:center;
+                page-break-after:always;break-after:page;
+                overflow:hidden;padding:10mm;
+            }
+            .dokumen-item:last-child{page-break-after:avoid;break-after:avoid;}
+            .dokumen-label{font-size:13px;font-weight:bold;color:#0D5C4A;margin-bottom:8px;text-align:center;}
+            .dokumen-gambar{flex:1;display:flex;align-items:center;justify-content:center;width:100%;}
+            .dokumen-gambar img{max-width:190mm;max-height:270mm;width:auto;height:auto;object-fit:contain;display:block;margin:0 auto;}
+            .no-print{text-align:center;padding:20px;background:#f0f0f0;}
+            .no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+            @media print{
+                *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+                html,body{margin:0;padding:0;background:white;}
+                .no-print{display:none!important;}
             }
         </style>
-    </head>
-    <body>
-        <div class="header no-print">
-            <h1>📄 DOKUMEN JAMAAH</h1>
-            <p><strong>${escapeHtml(jamaahNama)}</strong></p>
-            <p>Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}</p>
-        </div>`;
+    </head><body>`;
     for (const doc of dokumenYangAda) {
-        html += `
-        <div class="dokumen-item">
+        html += `<div class="dokumen-item">
             <div class="dokumen-label">${doc.icon} ${escapeHtml(doc.nama)} — ${escapeHtml(jamaahNama)}</div>
-            <div class="dokumen-title no-print">${doc.icon} ${escapeHtml(doc.nama)}</div>
             <div class="dokumen-gambar"><img src="${doc.data}" alt="${doc.nama}"></div>
         </div>`;
     }
-    html += `
-        <div class="footer no-print">Dokumen resmi - Safara | ${new Date().toLocaleString('id-ID')}</div>
-        <div class="no-print" style="text-align:center; margin-top:20px; padding-bottom:30px;">
-            <button onclick="window.print()" style="padding:10px 30px; background:#0D5C4A; color:white; border:none; border-radius:8px; margin-right:10px; cursor:pointer;">🖨️ CETAK</button>
-            <button onclick="window.close()" style="padding:10px 30px; background:#ccc; border:none; border-radius:8px; cursor:pointer;">TUTUP</button>
-        </div>
-    </body>
-    </html>`;
+    html += `<div class="no-print">
+        <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
+        <button onclick="window.close()" style="background:#e2e8f0;color:#333;margin-left:8px;">TUTUP</button>
+    </div>
+    <scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr` + `ipt>
+    </body></html>`;
     printWindow.document.write(html);
     printWindow.document.close();
 }
 
-// CETAK PER JENIS DOKUMEN (misal: cetak KTP saja)
 async function cetakDokumenPerJenis(jamaahId, jenisId, jenisNama, jamaahNama) {
     const data = dokumenData[jamaahId]?.[jenisId];
-    if (!data) {
-        showToast(`❌ Tidak ada dokumen ${jenisNama} untuk ${jamaahNama}`);
-        return;
-    }
+    if (!data) { showToast(`❌ Tidak ada dokumen ${jenisNama} untuk ${jamaahNama}`); return; }
     const printWindow = window.open('', '_blank');
-    let html = `<!DOCTYPE html>
-    <html>
-    <head>
+    const html = `<!DOCTYPE html><html><head>
         <title>Cetak ${jenisNama} - ${jamaahNama}</title>
         <meta charset="UTF-8">
         <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-            .no-print { display: block; }
-            .card { background: white; border-radius: 20px; padding: 20px; width: 100%; max-width: 600px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; }
-            .title { font-size: 18px; font-weight: bold; color: #0D5C4A; margin-bottom: 8px; }
-            .subtitle { color: #666; margin-bottom: 12px; border-bottom: 1px solid #ddd; padding-bottom: 10px; width: 100%; }
-            .doc-label { font-size: 12px; font-weight: bold; color: #0D5C4A; margin-bottom: 8px; }
-            .gambar { width: 100%; }
-            .gambar img { max-width: 100%; height: auto; display: block; margin: 0 auto; object-fit: contain; }
-            @media print {
-                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-                html, body { margin: 0; padding: 0; width: 210mm; height: 297mm; background: white; display: block; }
-                .no-print { display: none !important; }
-                .card { box-shadow: none; border-radius: 0; padding: 10mm; width: 210mm; height: 297mm; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
-                .gambar { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; }
-                .gambar img { max-width: 190mm; max-height: 270mm; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; }
+            *{margin:0;padding:0;box-sizing:border-box;}
+            html,body{width:210mm;height:297mm;background:white;overflow:hidden;}
+            body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10mm;}
+            .doc-label{font-size:13px;font-weight:bold;color:#0D5C4A;margin-bottom:8px;text-align:center;}
+            .gambar{flex:1;display:flex;align-items:center;justify-content:center;width:100%;}
+            .gambar img{max-width:190mm;max-height:270mm;width:auto;height:auto;object-fit:contain;display:block;margin:0 auto;}
+            .no-print{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:8px;}
+            .no-print button{padding:10px 28px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+            @media print{
+                *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+                .no-print{display:none!important;}
             }
         </style>
-    </head>
-    <body>
-        <div class="card">
-            <div class="doc-label">${jenisNama} — ${escapeHtml(jamaahNama)}</div>
-            <div class="title no-print">📄 ${escapeHtml(jenisNama)}</div>
-            <div class="subtitle no-print">${escapeHtml(jamaahNama)}</div>
-            <div class="gambar"><img src="${data}" alt="${jenisNama}"></div>
-            <div class="no-print" style="margin-top:20px; padding-bottom:20px;">
-                <button onclick="window.print()" style="padding:10px 30px; background:#0D5C4A; color:white; border:none; border-radius:8px; margin-right:10px; cursor:pointer;">🖨️ CETAK</button>
-                <button onclick="window.close()" style="padding:10px 30px; background:#ccc; border:none; border-radius:8px; cursor:pointer;">TUTUP</button>
-            </div>
+    </head><body>
+        <div class="doc-label">${jenisNama} — ${escapeHtml(jamaahNama)}</div>
+        <div class="gambar"><img src="${data}" alt="${jenisNama}"></div>
+        <div class="no-print">
+            <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
+            <button onclick="window.close()" style="background:#e2e8f0;color:#333;">TUTUP</button>
         </div>
-        <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
-    </body>
-    </html>`;
+        <scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr` + `ipt>
+    </body></html>`;
     printWindow.document.write(html);
     printWindow.document.close();
 }
@@ -2744,8 +2801,11 @@ function internalShowPage(pageId) {
     }
     if (pageId === 'foldervirtual') { if(window.renderFolderList) window.renderFolderList(); }
     if (pageId === 'pengingatwa') { if(window.loadPengingatData) window.loadPengingatData(); }
-    if (pageId === 'scanqr') { renderRekapAbsensi(); }
-    if (pageId === 'etikettiket') { if(window.populateTiketDropdown) window.populateTiketDropdown(); }
+    if (pageId === 'suratresmi') { initSuratPage(); }
+    if (pageId === 'scanqr') { renderSesiAktifInfo(); renderRekapAbsensi(); }
+    if (pageId === 'etikettiket') { renderMultiTiketJamaah(); }
+    if (pageId === 'pengingatwa') { loadPengingatData(); }
+    if (pageId === 'cetaklabel') { renderMultiLabelJamaah(); }
     if (pageId === 'cetaklabel') { if(window.populateLabelDropdown) window.populateLabelDropdown(); }
     if (pageId === 'cloudstorage') { if(window.updateStorageInfo) window.updateStorageInfo(); }
     if (pageId === 'dashboard') { if(window.renderDashboard) window.renderDashboard(); }
@@ -2756,7 +2816,7 @@ window.addEventListener('popstate', function(event) {
     let pageId = 'home';
     if (event.state && event.state.page) pageId = event.state.page;
     else { const hash = window.location.hash; if (hash && hash.startsWith('#page-')) pageId = hash.replace('#page-', ''); }
-    const validPages = ['home', 'estimasi', 'kas', 'jamaah', 'jamaahkita', 'catatan', 'zakat', 'pembayaran', 'datamaster', 'konfigurasi', 'setting', 'fitur', 'uploaddokumen', 'foldervirtual', 'pengingatwa', 'etikettiket', 'cetaklabel', 'cloudstorage', 'dashboard', 'scanqr'];
+    const validPages = ['home', 'estimasi', 'kas', 'jamaah', 'jamaahkita', 'catatan', 'zakat', 'pembayaran', 'datamaster', 'konfigurasi', 'setting', 'fitur', 'uploaddokumen', 'foldervirtual', 'pengingatwa', 'etikettiket', 'cetaklabel', 'cloudstorage', 'dashboard', 'scanqr', 'suratresmi'];
     if (!validPages.includes(pageId)) pageId = 'home';
     internalShowPage(pageId);
     document.querySelectorAll('.nav-item-premium').forEach(nav => { nav.classList.remove('active'); if (nav.getAttribute('data-page') === pageId) nav.classList.add('active'); });
@@ -3310,7 +3370,10 @@ async function cetakEstimasiPDFJamaah() {
     const watermarkHtml = buildPrintWatermark(cfg);
     const qrHtml = await buildPrintQR(cfg, `Harga Paket: ${lastCalculatedPaket}\nHarga/Pax: ${f(lastCalculatedPrice)}\nTanggal: ${tgl}`);
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Harga Paket</title>
-    <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}.box{background:white;max-width:480px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;}.watermark-wrap{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;}.content{position:relative;z-index:1;text-align:center;}h2{color:#0D5C4A;font-size:20px;margin-bottom:16px;}.divider{border:none;border-top:2px solid #0D5C4A;margin:20px 0;}.harga{font-size:32px;font-weight:bold;color:#0D5C4A;margin:20px 0;}.info{color:#555;font-size:13px;line-height:1.8;margin-bottom:16px;text-align:left;}.note{font-size:11px;color:#999;margin-top:16px;}.no-print{text-align:center;margin-top:24px;}.no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}}
+    <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}.box{background:white;max-width:520px;margin:0 auto;border-radius:16px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;}.watermark-wrap{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}.content{position:relative;z-index:1;text-align:center;}h2{color:#0D5C4A;font-size:18px;margin-bottom:12px;}.divider{border:none;border-top:2px solid #0D5C4A;margin:14px 0;}.harga{font-size:28px;font-weight:bold;color:#0D5C4A;margin:14px 0;}.info{color:#555;font-size:12px;line-height:1.8;margin-bottom:12px;text-align:left;}.note{font-size:10px;color:#999;margin-top:12px;}.no-print{text-align:center;margin-top:24px;}.no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:0;margin:0;}
+    .box{box-shadow:none;border-radius:0;max-width:100%;width:210mm;min-height:auto;padding:14mm 18mm;margin:0;}
+    .no-print{display:none!important;}}
     </style></head><body>
     <div class="box">
         <div class="watermark-wrap">${watermarkHtml}</div>
@@ -3360,24 +3423,24 @@ async function cetakEstimasiPDFInternal() {
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Estimasi Internal</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:Arial,sans-serif;background:#f0f0f0;padding:20px;}
-        .box{background:white;max-width:720px;margin:0 auto;border-radius:16px;padding:36px;box-shadow:0 2px 16px rgba(0,0,0,0.1);}
-        h2{color:#0D5C4A;font-size:22px;margin-bottom:4px;}
-        .konfidensial{color:#e74c3c;font-size:12px;font-style:italic;margin-bottom:20px;}
-        .info{font-size:14px;color:#555;line-height:2.2;margin-bottom:20px;background:#f8f8f8;border-radius:10px;padding:14px;}
-        table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
-        th{background:#0D5C4A;color:white;padding:12px 10px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        body{font-family:Arial,sans-serif;background:#f0f0f0;padding:16px;}
+        .box{background:white;max-width:680px;margin:0 auto;border-radius:16px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,0.1);}
+        h2{color:#0D5C4A;font-size:18px;margin-bottom:2px;}
+        .konfidensial{color:#e74c3c;font-size:11px;font-style:italic;margin-bottom:12px;}
+        .info{font-size:12px;color:#555;line-height:1.9;margin-bottom:12px;background:#f8f8f8;border-radius:8px;padding:10px;}
+        table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px;}
+        th{background:#0D5C4A;color:white;padding:8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
         th:last-child{text-align:right;}
-        td{padding:10px;border-bottom:1px solid #eee;}
+        td{padding:7px 8px;border-bottom:1px solid #eee;}
         tr:nth-child(even) td{background:#f9f9f9;}
-        .summary{background:#f8f8f8;border-radius:10px;padding:20px;font-size:14px;line-height:2.6;}
-        .harga-jual{font-size:20px;font-weight:bold;color:#0D5C4A;margin-top:14px;border-top:2px solid #0D5C4A;padding-top:14px;}
-        .no-print{text-align:center;margin-top:24px;}
+        .summary{background:#f8f8f8;border-radius:8px;padding:12px;font-size:12px;line-height:2.2;}
+        .harga-jual{font-size:17px;font-weight:bold;color:#0D5C4A;margin-top:10px;border-top:2px solid #0D5C4A;padding-top:10px;}
+        .no-print{text-align:center;margin-top:20px;}
         .no-print button{padding:12px 32px;margin:0 8px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
         @media print{
             *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-            body{background:white;padding:0;}
-            .box{box-shadow:none;border-radius:0;max-width:100%;padding:16mm 20mm;}
+            body{background:white;padding:0;margin:0;}
+            .box{box-shadow:none;border-radius:0;max-width:100%;width:210mm;padding:12mm 16mm;}
             .no-print{display:none!important;}
         }
     </style></head><body>
@@ -3791,19 +3854,684 @@ function filterJamaahList(){
     applyJamaahFilterAndSort(); 
 }
 
-// ==================== SCAN QR ABSENSI ====================
+// ==================== SURAT RESMI ====================
+const TEMPLATE_SURAT = {
+    rekomendasi_paspor: {
+        judul: 'SURAT REKOMENDASI PEMBUATAN PASPOR',
+        isi: `Yang bertanda tangan di bawah ini:
+
+Nama        : {nama_instansi}
+Alamat      : {alamat_instansi}
+
+Dengan ini menerangkan bahwa:
+
+Nama Lengkap    : {nama}
+NIK             : {nik}
+Tempat/Tgl Lahir: {tempat_lahir}, {tgl_lahir}
+Jenis Kelamin   : {jenis_kelamin}
+Alamat          : {alamat}
+No. Porsi       : {no_porsi}
+
+Adalah benar jamaah kami yang akan melaksanakan ibadah Haji/Umroh pada tahun ini. Oleh karena itu, kami merekomendasikan kepada instansi terkait untuk membantu proses pembuatan paspor yang bersangkutan.
+
+{keperluan}
+
+Demikian surat rekomendasi ini kami buat dengan sebenarnya untuk dapat digunakan sebagaimana mestinya.`
+    },
+    keterangan_jamaah: {
+        judul: 'SURAT KETERANGAN JAMAAH HAJI/UMROH',
+        isi: `Yang bertanda tangan di bawah ini menerangkan bahwa:
+
+Nama Lengkap    : {nama}
+NIK             : {nik}
+Tempat/Tgl Lahir: {tempat_lahir}, {tgl_lahir}
+Jenis Kelamin   : {jenis_kelamin}
+Alamat          : {alamat}
+No. Porsi       : {no_porsi}
+No. Paspor      : {no_paspor}
+Rombongan       : {rombongan}
+Kamar           : {kamar}
+Hotel Makkah    : {hotel_makkah}
+Hotel Madinah   : {hotel_madinah}
+
+Adalah benar terdaftar sebagai jamaah Haji/Umroh pada:
+
+{nama_instansi}
+
+{keperluan}
+
+Demikian surat keterangan ini dibuat untuk digunakan sebagaimana mestinya.`
+    },
+    permohonan_cuti: {
+        judul: 'SURAT PERMOHONAN IZIN CUTI',
+        isi: `Kepada Yth.
+Pimpinan/Atasan
+Di tempat
+
+Dengan hormat,
+
+Yang bertanda tangan di bawah ini:
+
+Nama        : {nama}
+NIK         : {nik}
+Alamat      : {alamat}
+No. HP      : {whatsapp}
+
+Dengan ini mengajukan permohonan izin cuti untuk keperluan ibadah Haji/Umroh yang diselenggarakan oleh:
+
+{nama_instansi}
+
+{keperluan}
+
+Demikian permohonan ini saya sampaikan. Atas perhatian dan kebijaksanaannya, saya ucapkan terima kasih.`
+    },
+    pengantar_umum: {
+        judul: 'SURAT PENGANTAR',
+        isi: `Yang bertanda tangan di bawah ini:
+
+{nama_instansi}
+
+Dengan ini mengantarkan/merekomendasikan:
+
+Nama        : {nama}
+NIK         : {nik}
+Alamat      : {alamat}
+No. Paspor  : {no_paspor}
+No. Porsi   : {no_porsi}
+
+Untuk keperluan:
+{keperluan}
+
+Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.`
+    }
+};
+
+let templateSuratKustom = '';
+
+function initSuratPage() {
+    // Isi dropdown jamaah
+    const select = document.getElementById('suratJamaahSelect');
+    if (!select) return;
+    select.innerHTML = jamaahList.map(j =>
+        `<option value="${j.id}">${escapeHtml(j.nama_lengkap)}</option>`
+    ).join('');
+    // Load template kustom
+    const saved = localStorage.getItem('safara_template_surat_kustom');
+    if (saved && document.getElementById('suratKustomTemplate')) {
+        document.getElementById('suratKustomTemplate').value = saved;
+        templateSuratKustom = saved;
+    }
+    const savedJudul = localStorage.getItem('safara_template_surat_kustom_judul');
+    if (savedJudul && document.getElementById('suratKustomJudul')) {
+        document.getElementById('suratKustomJudul').value = savedJudul;
+    }
+}
+
+function filterSuratJamaah() {
+    const q = (document.getElementById('searchSuratJamaah')?.value || '').toLowerCase();
+    const select = document.getElementById('suratJamaahSelect');
+    if (!select) return;
+    select.innerHTML = jamaahList
+        .filter(j => j.nama_lengkap.toLowerCase().includes(q))
+        .map(j => `<option value="${j.id}">${escapeHtml(j.nama_lengkap)}</option>`)
+        .join('');
+}
+
+function getSuratVariables(jamaah, nomorSurat, keperluan) {
+    const cfg = getKonfigurasiProData();
+    const f = jamaah.additional_fields || {};
+    return {
+        nama: jamaah.nama_lengkap || '-',
+        nik: f.nik || '-',
+        alamat: f.alamat || f.alamat_kec || '-',
+        no_paspor: f.no_paspor || '-',
+        no_porsi: f.no_porsi || '-',
+        tgl_lahir: f.tgl_lahir || '-',
+        tempat_lahir: f.tempat_lahir || '-',
+        jenis_kelamin: f.jenis_kelamin || '-',
+        whatsapp: f.whatsapp || '-',
+        kamar: f.kamar || '-',
+        bus: f.bus || '-',
+        rombongan: f.rombongan || '-',
+        hotel_makkah: f.hotel_makkah || '-',
+        hotel_madinah: f.hotel_madinah || '-',
+        warna: f.warna || '-',
+        nomor_surat: nomorSurat || '___/KBIHU/___/2026',
+        tanggal: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+        nama_instansi: cfg.instansi1?.nama || 'KBIHU',
+        alamat_instansi: cfg.instansi1?.alamat || '-',
+        keperluan: keperluan || ''
+    };
+}
+
+function isiVariabel(template, vars) {
+    return template.replace(/\{(\w+)\}/g, (_, key) => vars[key] || '-');
+}
+
+let _suratJudulAsli = '';
+let _suratIsiAsli = '';
+
+function previewSurat() {
+    const templateKey = document.getElementById('suratTemplateSelect')?.value;
+    const jamaahId = document.getElementById('suratJamaahSelect')?.value;
+    const nomorSurat = document.getElementById('suratNomor')?.value;
+    const keperluan = document.getElementById('suratKeperluan')?.value;
+    const previewCard = document.getElementById('suratPreviewCard');
+    if (!templateKey) return showToast('Pilih template surat dulu!');
+    if (!jamaahId) return showToast('Pilih jamaah dulu!');
+    const jamaah = jamaahList.find(j => j.id == jamaahId);
+    if (!jamaah) { showToast('Jamaah tidak ditemukan!'); return; }
+    const vars = getSuratVariables(jamaah, nomorSurat, keperluan);
+    let judul = '', isi = '';
+    if (templateKey === 'custom') {
+        judul = document.getElementById('suratKustomJudul')?.value || 'SURAT KUSTOM';
+        isi = isiVariabel(templateSuratKustom || document.getElementById('suratKustomTemplate')?.value || '', vars);
+    } else {
+        const tmpl = TEMPLATE_SURAT[templateKey];
+        if (!tmpl) return showToast('Template tidak ditemukan!');
+        judul = tmpl.judul;
+        isi = isiVariabel(tmpl.isi, vars);
+    }
+    // Simpan asli untuk reset
+    _suratJudulAsli = judul;
+    _suratIsiAsli = isi;
+    // Isi textarea yang bisa diedit
+    document.getElementById('suratJudulEdit').value = judul;
+    document.getElementById('suratIsiEdit').value = isi;
+    previewCard.style.display = 'block';
+    // Scroll ke preview
+    previewCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetIsiSurat() {
+    document.getElementById('suratJudulEdit').value = _suratJudulAsli;
+    document.getElementById('suratIsiEdit').value = _suratIsiAsli;
+    showToast('Surat direset ke template awal');
+}
+
+function buildSuratHTML(jamaah) {
+    // Baca dari textarea yang sudah diedit user
+    const judul = document.getElementById('suratJudulEdit')?.value || '';
+    const isi = document.getElementById('suratIsiEdit')?.value || '';
+    const nomorSurat = document.getElementById('suratNomor')?.value;
+    const vars = getSuratVariables(jamaah, nomorSurat, '');
+    const cfg = getKonfigurasiProData();
+    const logoSrc = cfg.instansi1?.logo || '';
+    const logoHtml = logoSrc ? `<img src="${logoSrc}" style="height:60px;object-fit:contain;display:block;margin:0 auto 6px;">` : '';
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${judul}</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Times New Roman',serif;background:white;padding:20px;}
+        .surat{max-width:700px;margin:0 auto;padding:20px;}
+        .kop{text-align:center;border-bottom:3px double #000;padding-bottom:10px;margin-bottom:16px;}
+        .kop-nama{font-size:18px;font-weight:bold;text-transform:uppercase;}
+        .kop-alamat{font-size:12px;margin-top:4px;}
+        .nomor{text-align:left;font-size:13px;margin-bottom:16px;}
+        .judul{text-align:center;font-size:15px;font-weight:bold;text-decoration:underline;margin-bottom:20px;}
+        .isi{font-size:13px;line-height:2;white-space:pre-line;}
+        .ttd{margin-top:40px;text-align:right;font-size:13px;}
+        .ttd-nama{margin-top:60px;font-weight:bold;text-decoration:underline;}
+        .no-print{text-align:center;margin-top:20px;}
+        .no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{
+            *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+            html,body{margin:0;padding:0;background:white;}
+            .surat{padding:15mm 20mm;}
+            .no-print{display:none!important;}
+        }
+    </style></head><body>
+    <div class="surat">
+        <div class="kop">
+            ${logoHtml}
+            <div class="kop-nama">${escapeHtml(cfg.instansi1?.nama || 'KBIHU')}</div>
+            <div class="kop-alamat">${escapeHtml(cfg.instansi1?.alamat || '')}</div>
+        </div>
+        <div class="nomor">Nomor: ${escapeHtml(nomorSurat || '___/KBIHU/___/2026')}<br>${vars.tanggal}</div>
+        <div class="judul">${judul}</div>
+        <div class="isi">${escapeHtml(isi)}</div>
+        <div class="ttd">
+            <div>Hormat kami,</div>
+            <div class="ttd-nama">${escapeHtml(cfg.instansi1?.nama || 'KBIHU')}</div>
+        </div>
+    </div>
+    <div class="no-print">
+        <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
+        <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
+    </div>
+    <scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr` + `ipt>
+    </body></html>`;
+}
+
+function cetakSurat() {
+    const jamaahId = document.getElementById('suratJamaahSelect')?.value;
+    const isi = document.getElementById('suratIsiEdit')?.value;
+    if (!isi) return showToast('Buat surat dulu!');
+    if (!jamaahId) return showToast('Pilih jamaah dulu!');
+    const jamaah = jamaahList.find(j => j.id == jamaahId);
+    if (!jamaah) return;
+    const win = window.open('', '_blank');
+    if (!win) return showToast('Izinkan popup untuk cetak!');
+    win.document.write(buildSuratHTML(jamaah));
+    win.document.close();
+}
+
+async function bagikanSurat() {
+    const jamaahId = document.getElementById('suratJamaahSelect')?.value;
+    const isi = document.getElementById('suratIsiEdit')?.value;
+    const judul = document.getElementById('suratJudulEdit')?.value || 'SURAT';
+    if (!isi) return showToast('Buat surat dulu!');
+    if (!jamaahId) return showToast('Pilih jamaah dulu!');
+    const jamaah = jamaahList.find(j => j.id == jamaahId);
+    if (!jamaah) return;
+    showToast('⏳ Menyiapkan gambar surat...');
+    const nomorSurat = document.getElementById('suratNomor')?.value;
+    const vars = getSuratVariables(jamaah, nomorSurat, '');
+    const cfg = getKonfigurasiProData();
+    const div = document.createElement('div');
+    div.style.cssText = 'position:fixed;left:-9999px;top:0;width:700px;background:white;padding:40px;font-family:Times New Roman,serif;font-size:13px;line-height:2;color:#000;';
+    div.innerHTML = `
+        <div style="text-align:center;border-bottom:3px double #000;padding-bottom:10px;margin-bottom:16px;">
+            <div style="font-size:18px;font-weight:bold;text-transform:uppercase;">${escapeHtml(cfg.instansi1?.nama || 'KBIHU')}</div>
+            <div style="font-size:12px;">${escapeHtml(cfg.instansi1?.alamat || '')}</div>
+        </div>
+        <div style="text-align:left;margin-bottom:16px;">Nomor: ${escapeHtml(vars.nomor_surat)}<br>${vars.tanggal}</div>
+        <div style="text-align:center;font-weight:bold;text-decoration:underline;margin-bottom:20px;">${judul}</div>
+        <div style="white-space:pre-line;">${escapeHtml(isi)}</div>
+        <div style="margin-top:40px;text-align:right;">
+            Hormat kami,<br><br><br><br>
+            <span style="font-weight:bold;text-decoration:underline;">${escapeHtml(cfg.instansi1?.nama || 'KBIHU')}</span>
+        </div>`;
+    document.body.appendChild(div);
+    try {
+        const canvas = await html2canvas(div, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
+        document.body.removeChild(div);
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], 'Surat_' + jamaah.nama_lengkap.replace(/ /g, '_') + '.png', { type: 'image/png' });
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file], title: 'Surat - ' + jamaah.nama_lengkap });
+            } else {
+                // Fallback download gambar
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = file.name;
+                a.click();
+                showToast('⬇️ Surat didownload sebagai gambar');
+            }
+        }, 'image/png');
+    } catch(e) {
+        if (document.body.contains(div)) document.body.removeChild(div);
+        showToast('❌ Gagal: ' + e.message);
+    }
+}
+
+function simpanTemplateSuratKustom() {
+    const val = document.getElementById('suratKustomTemplate')?.value;
+    const judul = document.getElementById('suratKustomJudul')?.value;
+    if (!val) return showToast('Template kosong!');
+    templateSuratKustom = val;
+    localStorage.setItem('safara_template_surat_kustom', val);
+    if (judul) localStorage.setItem('safara_template_surat_kustom_judul', judul);
+    showToast('✅ Template kustom disimpan!');
+}
 let scannerStream = null;
 let scannerAnimFrame = null;
 let lastScannedResult = null;
-let absensiList = [];
+let absensiList = []; // semua sesi
+let sesiAktifId = null; // id sesi yang sedang aktif
 
 async function loadAbsensiData() {
-    const saved = await idbGet(STORE_ABSENSI, 'absensi_list');
+    const saved = await idbGet(STORE_ABSENSI, 'absensi_sesi');
     absensiList = saved || [];
+    const savedSesiId = await idbGet(STORE_ABSENSI, 'sesi_aktif_id');
+    sesiAktifId = savedSesiId || null;
 }
 
 async function saveAbsensiData() {
-    await idbSet(STORE_ABSENSI, 'absensi_list', absensiList);
+    await idbSet(STORE_ABSENSI, 'absensi_sesi', absensiList);
+    await idbSet(STORE_ABSENSI, 'sesi_aktif_id', sesiAktifId);
+}
+
+function getSesiAktif() {
+    if (!sesiAktifId) return null;
+    return absensiList.find(s => s.id === sesiAktifId) || null;
+}
+
+function getAbsensiSesiAktif() {
+    const sesi = getSesiAktif();
+    return sesi ? sesi.absensi : [];
+}
+
+function renderSesiAktifInfo() {
+    const el = document.getElementById('sesiAktifInfo');
+    if (!el) return;
+    const sesi = getSesiAktif();
+    if (!sesi) {
+        el.innerHTML = '<span style="color:#888;">Belum ada sesi aktif — buat sesi baru untuk mulai absensi</span>';
+    } else {
+        const jmlHadir = sesi.absensi.length;
+        el.innerHTML = `
+            <div style="font-weight:bold;color:var(--primary);font-size:14px;">📅 ${escapeHtml(sesi.nama)}</div>
+            <div style="color:#888;font-size:12px;margin-top:2px;">${sesi.tanggal} | ${jmlHadir} jamaah hadir</div>
+            <button onclick="tutupSesiAktif()" style="margin-top:8px;padding:6px 12px;background:#EF4444;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">⏹ Tutup Sesi</button>`;
+    }
+}
+
+function showBuatSesiModal() {
+    document.getElementById('buatSesiModal')?.remove();
+    const modal = document.createElement('div');
+    modal.id = 'buatSesiModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML = `
+        <div style="background:var(--card-bg);border-radius:16px;padding:24px;width:100%;max-width:360px;">
+            <h3 style="color:var(--primary);margin-bottom:16px;">➕ Buat Sesi Absensi</h3>
+            <div style="margin-bottom:12px;">
+                <label style="font-size:13px;">Nama Acara / Sesi</label>
+                <input type="text" id="inputNamaSesi" placeholder="Contoh: Manasik Haji 10 Mei 2026"
+                    style="width:100%;padding:12px;border-radius:8px;border:1px solid #ddd;margin-top:6px;font-size:14px;background:var(--input-bg);color:var(--text);">
+            </div>
+            <button onclick="buatSesiBaru()" style="width:100%;padding:12px;background:#0D5C4A;color:white;border:none;border-radius:10px;margin-bottom:8px;cursor:pointer;font-weight:bold;font-size:14px;">✅ Buat & Aktifkan</button>
+            <button onclick="document.getElementById('buatSesiModal').remove()" style="width:100%;padding:12px;background:#e2e8f0;color:#333;border:none;border-radius:10px;cursor:pointer;">Batal</button>
+        </div>`;
+    document.body.appendChild(modal);
+    setTimeout(() => document.getElementById('inputNamaSesi')?.focus(), 100);
+}
+
+async function buatSesiBaru() {
+    const nama = document.getElementById('inputNamaSesi')?.value.trim();
+    if (!nama) return showToast('Isi nama sesi/acara!');
+    const sesi = {
+        id: Date.now().toString(),
+        nama,
+        tanggal: new Date().toLocaleDateString('id-ID'),
+        absensi: []
+    };
+    absensiList.push(sesi);
+    sesiAktifId = sesi.id;
+    await saveAbsensiData();
+    document.getElementById('buatSesiModal')?.remove();
+    renderSesiAktifInfo();
+    renderRekapAbsensi();
+    document.getElementById('scannerStatus').textContent = 'Sesi aktif! Tekan Mulai Scan';
+    document.getElementById('scannerStatus').style.color = '#0D5C4A';
+    showToast('✅ Sesi "' + nama + '" dibuat!');
+}
+
+function showPilihSesiModal() {
+    document.getElementById('pilihSesiModal')?.remove();
+    if (absensiList.length === 0) return showToast('Belum ada sesi. Buat sesi baru dulu!');
+    const modal = document.createElement('div');
+    modal.id = 'pilihSesiModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    let listHtml = absensiList.slice().reverse().map(s => `
+        <div style="padding:12px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;">
+            <div style="cursor:pointer;flex:1;" onclick="pilihSesi('${s.id}')">
+                <div style="font-weight:bold;${s.id===sesiAktifId?'color:#0D5C4A;':''}">${s.id===sesiAktifId?'▶ ':''}${escapeHtml(s.nama)}</div>
+                <div style="font-size:11px;color:#888;">${s.tanggal} | ${s.absensi.length} hadir</div>
+            </div>
+            <button onclick="hapusSesi('${s.id}')" style="padding:4px 8px;background:#EF4444;color:white;border:none;border-radius:6px;font-size:11px;cursor:pointer;margin-left:8px;">🗑️</button>
+        </div>`).join('');
+    modal.innerHTML = `
+        <div style="background:var(--card-bg);border-radius:16px;padding:24px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto;">
+            <h3 style="color:var(--primary);margin-bottom:12px;">📋 Pilih Sesi</h3>
+            <div style="border:1px solid #eee;border-radius:10px;overflow:hidden;margin-bottom:12px;">${listHtml}</div>
+            <button onclick="document.getElementById('pilihSesiModal').remove()" style="width:100%;padding:12px;background:#e2e8f0;color:#333;border:none;border-radius:10px;cursor:pointer;">Tutup</button>
+        </div>`;
+    document.body.appendChild(modal);
+}
+
+async function pilihSesi(sesiId) {
+    sesiAktifId = sesiId;
+    await saveAbsensiData();
+    document.getElementById('pilihSesiModal')?.remove();
+    renderSesiAktifInfo();
+    renderRekapAbsensi();
+    const sesi = getSesiAktif();
+    showToast('✅ Sesi "' + sesi.nama + '" diaktifkan!');
+    document.getElementById('scannerStatus').textContent = 'Sesi aktif! Tekan Mulai Scan';
+    document.getElementById('scannerStatus').style.color = '#0D5C4A';
+}
+
+async function hapusSesi(sesiId) {
+    if (!confirm('Hapus sesi ini? Data absensi akan hilang!')) return;
+    absensiList = absensiList.filter(s => s.id !== sesiId);
+    if (sesiAktifId === sesiId) sesiAktifId = null;
+    await saveAbsensiData();
+    document.getElementById('pilihSesiModal')?.remove();
+    showPilihSesiModal();
+    renderSesiAktifInfo();
+    renderRekapAbsensi();
+    showToast('🗑️ Sesi dihapus!');
+}
+
+async function tutupSesiAktif() {
+    if (!confirm('Tutup sesi aktif? Bisa dibuka lagi lewat Pilih Sesi.')) return;
+    sesiAktifId = null;
+    await saveAbsensiData();
+    renderSesiAktifInfo();
+    renderRekapAbsensi();
+    document.getElementById('scannerStatus').textContent = 'Pilih atau buat sesi dulu';
+    document.getElementById('scannerStatus').style.color = '#888';
+    showToast('Sesi ditutup!');
+}
+
+async function startScanner() {
+    if (!sesiAktifId) return showToast('Pilih atau buat sesi absensi dulu!');
+    const video = document.getElementById('scannerVideo');
+    const statusEl = document.getElementById('scannerStatus');
+    if (!video) return;
+    try {
+        scannerStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+        });
+        video.srcObject = scannerStream;
+        video.play();
+        document.getElementById('btnStartScan').style.display = 'none';
+        document.getElementById('btnStopScan').style.display = 'block';
+        statusEl.textContent = '🔍 Arahkan ke QR Code...';
+        statusEl.style.color = '#0D5C4A';
+        scanFrames();
+    } catch(e) {
+        statusEl.textContent = '❌ Izinkan akses kamera!';
+        statusEl.style.color = '#EF4444';
+    }
+}
+
+function stopScanner() {
+    if (scannerStream) { scannerStream.getTracks().forEach(t => t.stop()); scannerStream = null; }
+    if (scannerAnimFrame) { cancelAnimationFrame(scannerAnimFrame); scannerAnimFrame = null; }
+    const video = document.getElementById('scannerVideo');
+    if (video) video.srcObject = null;
+    document.getElementById('btnStartScan').style.display = 'block';
+    document.getElementById('btnStopScan').style.display = 'none';
+    const statusEl = document.getElementById('scannerStatus');
+    if (statusEl) { statusEl.textContent = 'Scanner dihentikan'; statusEl.style.color = '#888'; }
+}
+
+function scanFrames() {
+    const video = document.getElementById('scannerVideo');
+    const canvas = document.getElementById('scannerCanvas');
+    if (!video || !canvas || !scannerStream) return;
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
+        if (code && code.data) { prosesHasilScan(code.data); return; }
+    }
+    scannerAnimFrame = requestAnimationFrame(scanFrames);
+}
+
+async function prosesHasilScan(qrData) {
+    stopScanner();
+    const statusEl = document.getElementById('scannerStatus');
+    statusEl.textContent = '✅ QR terbaca! Mencari data...';
+    statusEl.style.color = '#10B981';
+    const noPorsi = qrData.trim();
+    const jamaah = jamaahList.find(j =>
+        (j.additional_fields?.no_porsi || '').trim().toLowerCase() === noPorsi.toLowerCase()
+    );
+    if (!jamaah) {
+        statusEl.textContent = '❌ Jamaah tidak ditemukan! No Porsi: ' + noPorsi;
+        statusEl.style.color = '#EF4444';
+        document.getElementById('hasilScanCard').style.display = 'none';
+        return;
+    }
+    lastScannedResult = jamaah;
+    await tampilHasilScan(jamaah);
+}
+
+async function tampilHasilScan(jamaah) {
+    const fotoEl = document.getElementById('hasilFotoProfil');
+    const foto = await idbGet(STORE_FOTO, 'foto_' + jamaah.id);
+    fotoEl.innerHTML = foto
+        ? '<img src="' + foto + '" style="width:100%;height:100%;object-fit:cover;">'
+        : '<span style="font-size:32px;">👤</span>';
+    document.getElementById('hasilNama').textContent = jamaah.nama_lengkap;
+    document.getElementById('hasilNoPorsi').textContent = 'No Porsi: ' + (jamaah.additional_fields?.no_porsi || '-');
+    const absensiSesi = getAbsensiSesiAktif();
+    const sudahHadir = absensiSesi.find(a => a.jamaahId === jamaah.id);
+    const statusEl = document.getElementById('hasilStatusAbsen');
+    const btnHadir = document.getElementById('btnTandaiHadir');
+    if (sudahHadir) {
+        statusEl.textContent = '✅ Sudah Hadir — ' + sudahHadir.waktu;
+        statusEl.style.color = '#10B981';
+        btnHadir.textContent = '❌ Batalkan Hadir';
+        btnHadir.style.background = '#EF4444';
+        btnHadir.disabled = false;
+        btnHadir.onclick = () => batalkanHadir(jamaah.id);
+    } else {
+        statusEl.textContent = '⏳ Belum Hadir';
+        statusEl.style.color = '#F59E0B';
+        btnHadir.textContent = '✅ Tandai Hadir';
+        btnHadir.style.background = '#10B981';
+        btnHadir.disabled = false;
+        btnHadir.onclick = tandaiHadir;
+    }
+    const fields = jamaah.additional_fields || {};
+    let dataHtml = '';
+    dynamicFieldsJamaah.forEach(f => {
+        const val = fields[f.name];
+        if (val && f.name !== 'no_porsi') dataHtml += `<div><span style="color:#888;">${f.icon||'📌'} ${f.label}:</span> <strong>${escapeHtml(val)}</strong></div>`;
+    });
+    document.getElementById('hasilDataJamaah').innerHTML = dataHtml || '<div style="color:#888;">Tidak ada data tambahan</div>';
+    document.getElementById('hasilScanCard').style.display = 'block';
+}
+
+async function tandaiHadir() {
+    if (!lastScannedResult) return;
+    if (!sesiAktifId) return showToast('Pilih sesi absensi dulu!');
+    const jamaah = lastScannedResult;
+    const sesi = getSesiAktif();
+    if (!sesi) return;
+    if (sesi.absensi.find(a => a.jamaahId === jamaah.id)) return showToast('Sudah tercatat hadir!');
+    sesi.absensi.push({
+        jamaahId: jamaah.id,
+        nama: jamaah.nama_lengkap,
+        no_porsi: jamaah.additional_fields?.no_porsi || '-',
+        waktu: new Date().toLocaleString('id-ID'),
+        kamar: jamaah.additional_fields?.kamar || '-',
+        bus: jamaah.additional_fields?.bus || '-',
+        rombongan: jamaah.additional_fields?.rombongan || '-'
+    });
+    await saveAbsensiData();
+    showToast('✅ ' + jamaah.nama_lengkap + ' ditandai hadir!');
+    await tampilHasilScan(jamaah);
+    renderRekapAbsensi();
+    renderSesiAktifInfo();
+}
+
+async function batalkanHadir(jamaahId) {
+    if (!confirm('Batalkan kehadiran jamaah ini?')) return;
+    const sesi = getSesiAktif();
+    if (!sesi) return;
+    sesi.absensi = sesi.absensi.filter(a => a.jamaahId !== jamaahId);
+    await saveAbsensiData();
+    showToast('❌ Kehadiran dibatalkan!');
+    if (lastScannedResult) await tampilHasilScan(lastScannedResult);
+    renderRekapAbsensi();
+    renderSesiAktifInfo();
+}
+
+function resetScanResult() {
+    lastScannedResult = null;
+    document.getElementById('hasilScanCard').style.display = 'none';
+    document.getElementById('scannerStatus').textContent = 'Tekan Mulai Scan';
+    document.getElementById('scannerStatus').style.color = '#0D5C4A';
+    startScanner();
+}
+
+function renderRekapAbsensi() {
+    const el = document.getElementById('rekapAbsensi');
+    if (!el) return;
+    const sesi = getSesiAktif();
+    if (!sesi) {
+        el.innerHTML = '<div style="text-align:center;color:#888;padding:16px;">Pilih atau buat sesi untuk melihat rekap</div>';
+        return;
+    }
+    const total = jamaahList.length;
+    const hadir = sesi.absensi.length;
+    const belum = total - hadir;
+    let html = `<div style="display:flex;gap:8px;margin-bottom:12px;">
+        <div style="flex:1;background:#f0fdf4;border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-size:20px;font-weight:bold;color:#10B981;">${hadir}</div>
+            <div style="font-size:11px;color:#888;">Hadir</div>
+        </div>
+        <div style="flex:1;background:#fff7ed;border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-size:20px;font-weight:bold;color:#F59E0B;">${belum}</div>
+            <div style="font-size:11px;color:#888;">Belum</div>
+        </div>
+        <div style="flex:1;background:#f0f7ff;border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-size:20px;font-weight:bold;color:#3B82F6;">${total}</div>
+            <div style="font-size:11px;color:#888;">Total</div>
+        </div>
+    </div>`;
+    if (sesi.absensi.length > 0) {
+        html += '<div style="font-size:12px;font-weight:bold;margin-bottom:8px;">Daftar Hadir:</div>';
+        sesi.absensi.slice().reverse().forEach(a => {
+            html += `<div style="padding:8px;border-bottom:1px solid #eee;font-size:12px;display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                    <div style="font-weight:bold;">✅ ${escapeHtml(a.nama)}</div>
+                    <div style="color:#888;">No Porsi: ${a.no_porsi} | ${a.waktu}</div>
+                </div>
+                <button onclick="batalkanHadir(${a.jamaahId})" style="padding:4px 8px;background:#EF4444;color:white;border:none;border-radius:6px;font-size:11px;cursor:pointer;flex-shrink:0;">Batal</button>
+            </div>`;
+        });
+    } else {
+        html += '<div style="text-align:center;color:#888;padding:16px;">Belum ada absensi</div>';
+    }
+    el.innerHTML = html;
+}
+
+function eksporAbsensi() {
+    const sesi = getSesiAktif();
+    if (!sesi) return showToast('Pilih sesi dulu!');
+    if (sesi.absensi.length === 0) return showToast('Belum ada data absensi!');
+    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+    let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rekap Absensi</title>
+    <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;padding:20px;}
+    h2{color:#0D5C4A;margin-bottom:4px;}.sub{color:#888;font-size:12px;margin-bottom:16px;}
+    table{width:100%;border-collapse:collapse;font-size:13px;}thead{display:table-header-group;}
+    th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    td{padding:9px 8px;border-bottom:1px solid #eee;}tr:nth-child(even) td{background:#f9f9f9;}
+    .no-print{text-align:center;margin-top:20px;}
+    .no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}.no-print{display:none!important;}}
+    </style></head><body>
+    <h2>📋 REKAP ABSENSI — ${escapeHtml(sesi.nama)}</h2>
+    <div class="sub">${namaInstansi} | ${sesi.tanggal} | Total Hadir: ${sesi.absensi.length} jamaah</div>
+    <table><thead><tr><th>No</th><th>Nama Jamaah</th><th>No Porsi</th><th>Kamar</th><th>Bus</th><th>Rombongan</th><th>Waktu Hadir</th></tr></thead><tbody>`;
+    sesi.absensi.forEach((a, i) => {
+        html += `<tr><td>${i+1}</td><td>${escapeHtml(a.nama)}</td><td>${a.no_porsi}</td><td>${a.kamar||'-'}</td><td>${a.bus||'-'}</td><td>${a.rombongan||'-'}</td><td>${a.waktu}</td></tr>`;
+    });
+    html += `</tbody></table><div class="no-print">
+        <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
+        <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
+    </div><scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr` + `ipt></body></html>`;
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
 }
 
 async function startScanner() {
@@ -3884,73 +4612,6 @@ async function prosesHasilScan(qrData) {
     await tampilHasilScan(jamaah);
 }
 
-async function tampilHasilScan(jamaah) {
-    // Tampil foto profil
-    const fotoEl = document.getElementById('hasilFotoProfil');
-    const foto = await idbGet(STORE_FOTO, 'foto_' + jamaah.id);
-    if (foto) {
-        fotoEl.innerHTML = '<img src="' + foto + '" style="width:100%;height:100%;object-fit:cover;">';
-    } else {
-        fotoEl.innerHTML = '<span style="font-size:32px;">👤</span>';
-    }
-
-    // Tampil nama dan no porsi
-    document.getElementById('hasilNama').textContent = jamaah.nama_lengkap;
-    document.getElementById('hasilNoPorsi').textContent = 'No Porsi: ' + (jamaah.additional_fields?.no_porsi || '-');
-
-    // Cek status absensi
-    const sudahHadir = absensiList.find(a => a.jamaahId === jamaah.id);
-    const statusEl = document.getElementById('hasilStatusAbsen');
-    const btnHadir = document.getElementById('btnTandaiHadir');
-    if (sudahHadir) {
-        statusEl.textContent = '✅ Sudah Hadir — ' + sudahHadir.waktu;
-        statusEl.style.color = '#10B981';
-        btnHadir.textContent = '✅ Sudah Tercatat';
-        btnHadir.style.background = '#6B7280';
-        btnHadir.disabled = true;
-    } else {
-        statusEl.textContent = '⏳ Belum Hadir';
-        statusEl.style.color = '#F59E0B';
-        btnHadir.textContent = '✅ Tandai Hadir';
-        btnHadir.style.background = '#10B981';
-        btnHadir.disabled = false;
-    }
-
-    // Tampil data lengkap
-    const fields = jamaah.additional_fields || {};
-    let dataHtml = '';
-    dynamicFieldsJamaah.forEach(f => {
-        const val = fields[f.name];
-        if (val && f.name !== 'no_porsi') {
-            dataHtml += `<div><span style="color:#888;">${f.icon||'📌'} ${f.label}:</span> <strong>${escapeHtml(val)}</strong></div>`;
-        }
-    });
-    document.getElementById('hasilDataJamaah').innerHTML = dataHtml || '<div style="color:#888;">Tidak ada data tambahan</div>';
-    document.getElementById('hasilScanCard').style.display = 'block';
-    renderRekapAbsensi();
-}
-
-async function tandaiHadir() {
-    if (!lastScannedResult) return;
-    const jamaah = lastScannedResult;
-    const sudah = absensiList.find(a => a.jamaahId === jamaah.id);
-    if (sudah) return showToast('Sudah tercatat hadir!');
-    const waktu = new Date().toLocaleString('id-ID');
-    absensiList.push({
-        jamaahId: jamaah.id,
-        nama: jamaah.nama_lengkap,
-        no_porsi: jamaah.additional_fields?.no_porsi || '-',
-        waktu,
-        kamar: jamaah.additional_fields?.kamar || '-',
-        bus: jamaah.additional_fields?.bus || '-',
-        rombongan: jamaah.additional_fields?.rombongan || '-'
-    });
-    await saveAbsensiData();
-    showToast('✅ ' + jamaah.nama_lengkap + ' ditandai hadir!');
-    await tampilHasilScan(jamaah);
-    renderRekapAbsensi();
-}
-
 function resetScanResult() {
     lastScannedResult = null;
     document.getElementById('hasilScanCard').style.display = 'none';
@@ -3959,74 +4620,48 @@ function resetScanResult() {
     startScanner();
 }
 
-function renderRekapAbsensi() {
-    const el = document.getElementById('rekapAbsensi');
-    if (!el) return;
-    const total = jamaahList.length;
-    const hadir = absensiList.length;
-    const belum = total - hadir;
-    let html = `<div style="display:flex;gap:8px;margin-bottom:12px;">
-        <div style="flex:1;background:#f0fdf4;border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-size:20px;font-weight:bold;color:#10B981;">${hadir}</div>
-            <div style="font-size:11px;color:#888;">Hadir</div>
-        </div>
-        <div style="flex:1;background:#fff7ed;border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-size:20px;font-weight:bold;color:#F59E0B;">${belum}</div>
-            <div style="font-size:11px;color:#888;">Belum</div>
-        </div>
-        <div style="flex:1;background:#f0f7ff;border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-size:20px;font-weight:bold;color:#3B82F6;">${total}</div>
-            <div style="font-size:11px;color:#888;">Total</div>
-        </div>
-    </div>`;
-    if (absensiList.length > 0) {
-        html += '<div style="font-size:12px;font-weight:bold;margin-bottom:8px;">Daftar Hadir:</div>';
-        absensiList.slice().reverse().forEach((a, i) => {
-            html += `<div style="padding:8px;border-bottom:1px solid #eee;font-size:12px;">
-                <div style="font-weight:bold;">✅ ${escapeHtml(a.nama)}</div>
-                <div style="color:#888;">No Porsi: ${a.no_porsi} | ${a.waktu}</div>
-            </div>`;
-        });
-    } else {
-        html += '<div style="text-align:center;color:#888;padding:16px;">Belum ada absensi</div>';
-    }
-    el.innerHTML = html;
+function eksporAbsensiExcel() {
+    const sesi = getSesiAktif();
+    if (!sesi) return showToast('Pilih sesi dulu!');
+    if (sesi.absensi.length === 0) return showToast('Belum ada data absensi!');
+    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+    const ws_data = [
+        ['REKAP ABSENSI — ' + sesi.nama],
+        [namaInstansi + ' | ' + sesi.tanggal + ' | Total Hadir: ' + sesi.absensi.length],
+        [],
+        ['No', 'Nama Jamaah', 'No Porsi', 'Kamar', 'Bus', 'Rombongan', 'Waktu Hadir']
+    ];
+    sesi.absensi.forEach((a, i) => {
+        ws_data.push([i+1, a.nama, a.no_porsi, a.kamar||'-', a.bus||'-', a.rombongan||'-', a.waktu]);
+    });
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    ws['!cols'] = [{wch:5},{wch:30},{wch:15},{wch:10},{wch:10},{wch:15},{wch:20}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Absensi');
+    XLSX.writeFile(wb, 'Absensi_' + sesi.nama.replace(/[^a-zA-Z0-9]/g,'_') + '.xlsx');
+    showToast('📊 File Excel didownload!');
 }
 
-function eksporAbsensi() {
-    if (absensiList.length === 0) return showToast('Belum ada data absensi!');
-    const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
-    const tanggal = new Date().toLocaleDateString('id-ID');
-    let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rekap Absensi</title>
-    <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;padding:20px;}
-    h2{color:#0D5C4A;margin-bottom:4px;}
-    .sub{color:#888;font-size:12px;margin-bottom:16px;}
-    table{width:100%;border-collapse:collapse;font-size:13px;}
-    thead{display:table-header-group;}
-    th{background:#0D5C4A;color:white;padding:10px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-    td{padding:9px 8px;border-bottom:1px solid #eee;}
-    tr:nth-child(even) td{background:#f9f9f9;}
-    .no-print{text-align:center;margin-top:20px;}
-    .no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
-    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}.no-print{display:none!important;}}
-    </style></head><body>
-    <h2>📋 REKAP ABSENSI JAMAAH</h2>
-    <div class="sub">${namaInstansi} | Tanggal: ${tanggal} | Total Hadir: ${absensiList.length} jamaah</div>
-    <table><thead><tr><th>No</th><th>Nama Jamaah</th><th>No Porsi</th><th>Kamar</th><th>Bus</th><th>Rombongan</th><th>Waktu Hadir</th></tr></thead><tbody>`;
-    absensiList.forEach((a, i) => {
-        html += `<tr><td>${i+1}</td><td>${escapeHtml(a.nama)}</td><td>${a.no_porsi}</td><td>${a.kamar||'-'}</td><td>${a.bus||'-'}</td><td>${a.rombongan||'-'}</td><td>${a.waktu}</td></tr>`;
+function eksporAbsensiCSV() {
+    const sesi = getSesiAktif();
+    if (!sesi) return showToast('Pilih sesi dulu!');
+    if (sesi.absensi.length === 0) return showToast('Belum ada data absensi!');
+    let csv = 'No,Nama Jamaah,No Porsi,Kamar,Bus,Rombongan,Waktu Hadir\n';
+    sesi.absensi.forEach((a, i) => {
+        csv += [i+1, '"'+(a.nama||'').replace(/"/g,'""')+'"', '"'+(a.no_porsi||'-')+'"',
+            '"'+(a.kamar||'-')+'"', '"'+(a.bus||'-')+'"', '"'+(a.rombongan||'-')+'"',
+            '"'+(a.waktu||'-')+'"'].join(',') + '\n';
     });
-    html += `</tbody></table>
-    <div class="no-print">
-        <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
-        <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
-    </div>
-    <scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr` + `ipt>
-    </body></html>`;
-    const win = window.open('', '_blank');
-    win.document.write(html);
-    win.document.close();
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Absensi_' + sesi.nama.replace(/[^a-zA-Z0-9]/g,'_') + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('📄 File CSV didownload!');
 }
+
 let _fotoPreviewData = null;
 
 function kompresiFoto(file, maxPx, quality, callback) {
@@ -4319,6 +4954,62 @@ function shareAllJamaahToWA(){
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`); 
 }
 
+function downloadTemplateExcel() {
+    // Header = Nama Lengkap + semua field dinamis
+    const headers = ['Nama Lengkap'];
+    const fieldKeys = ['nama_lengkap'];
+    dynamicFieldsJamaah.forEach(f => {
+        headers.push(f.label);
+        fieldKeys.push(f.name);
+    });
+
+    // Baris contoh agar user tahu format isian
+    const contohRow = ['MOHAMMAD SUPRIYADI'];
+    dynamicFieldsJamaah.forEach(f => {
+        if (f.name === 'tgl_lahir') contohRow.push('1980-10-08');
+        else if (f.name === 'jenis_kelamin') contohRow.push('L / P');
+        else if (f.name === 'whatsapp') contohRow.push('08123456789');
+        else if (f.name === 'no_porsi') contohRow.push('1234567890');
+        else contohRow.push('');
+    });
+
+    // Baris kosong untuk diisi user
+    const emptyRows = Array(9).fill(null).map(() => Array(headers.length).fill(''));
+
+    const ws_data = [headers, contohRow, ...emptyRows];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+    // Style lebar kolom
+    ws['!cols'] = headers.map((h, i) => ({
+        wch: i === 0 ? 30 : h.length < 10 ? 15 : 22
+    }));
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Data Jamaah');
+
+    // Sheet petunjuk
+    const petunjuk = [
+        ['PETUNJUK PENGISIAN TEMPLATE IMPORT JAMAAH'],
+        [''],
+        ['1. Isi data jamaah mulai dari baris ke-3 (baris 2 adalah contoh, boleh dihapus)'],
+        ['2. Kolom "Nama Lengkap" wajib diisi'],
+        ['3. Format Tanggal Lahir: YYYY-MM-DD (contoh: 1980-10-08)'],
+        ['4. Jenis Kelamin: isi L atau P'],
+        ['5. WhatsApp: awali dengan 08 atau 628'],
+        ['6. Jangan ubah nama kolom di baris pertama'],
+        ['7. Simpan dalam format .xlsx sebelum diupload'],
+        [''],
+        ['Kolom yang tersedia:'],
+        ...headers.map((h, i) => [i + 1 + '. ' + h])
+    ];
+    const wsPetunjuk = XLSX.utils.aoa_to_sheet(petunjuk);
+    wsPetunjuk['!cols'] = [{wch: 60}];
+    XLSX.utils.book_append_sheet(wb, wsPetunjuk, 'Petunjuk');
+
+    XLSX.writeFile(wb, 'Template_Import_Jamaah_Safara.xlsx');
+    showToast('⬇️ Template Excel berhasil didownload!');
+}
+
 function exportJamaahToExcel(){ 
     if(jamaahList.length===0) return showToast('Tidak ada data!'); 
     const headers=['No','Nama Lengkap','Tanggal Input']; 
@@ -4474,16 +5165,36 @@ function confirmDeleteDynamicField(idx){
     } 
 }
 
-function confirmDeleteAllJamaah(){ 
+async function confirmDeleteAllJamaah(){ 
     if(jamaahList.length===0){ 
         showToast('Tidak ada data!'); 
         return; 
     } 
-    if(confirm(`⚠️ PERINGATAN: Semua ${jamaahList.length} data akan dihapus PERMANEN! Lanjutkan?`)){ 
-        jamaahList=[]; 
-        saveJamaahData(); 
-        showToast('✅ Semua database telah dihapus'); 
-        renderJamaahListWithPagination(); 
+    if(confirm(`⚠️ PERINGATAN!\n\nSemua ${jamaahList.length} data jamaah akan dihapus PERMANEN termasuk:\n- Data jamaah\n- Foto profil\n- Dokumen jamaah\n- On Proses\n- Folder Virtual\n\nField dinamis & konfigurasi TIDAK dihapus.\nLanjutkan?`)){ 
+        // Reset data jamaah saja, field tetap
+        jamaahList = [];
+        jamaahKitaList = [];
+        folderList = [];
+        dokumenData = {};
+
+        // Hapus dari IndexedDB - data saja
+        await idbSet(STORE_JAMAAH, 'jamaah_list', []);
+        await idbSet(STORE_JAMAAH_KITA, 'kita_list', []);
+        await idbSet(STORE_FOLDER, 'folder_list', []);
+
+        // Hapus semua foto profil dan dokumen dari IndexedDB
+        const database = await openIndexedDB();
+        const tx = database.transaction([STORE_FOTO, STORE_NAME], 'readwrite');
+        tx.objectStore(STORE_FOTO).clear();
+        tx.objectStore(STORE_NAME).clear();
+
+        // Hapus dari localStorage (fallback lama)
+        ['safara_jamaah_list','safara_jamaah_kita_list','safara_folder_list'].forEach(k => localStorage.removeItem(k));
+
+        showToast('✅ Semua data jamaah telah dihapus');
+        renderJamaahListWithPagination();
+        renderJamaahKitaList();
+        renderFolderList();
     } 
 }
 
@@ -5019,8 +5730,8 @@ function cetakLabelJamaahKita() {
         : `<div style="font-size:18px;">🕌</div>`;
 
     let cardsHtml = '';
-    jamaahKitaList.forEach(j => {
-        const f = j.additional_fields || {};
+    jamaahKitaList.forEach(jk => {
+        const f = getMergedJamaahKitaFields(jk); // Pakai data terbaru dari Database
         let fieldsHtml = '';
         printFields.forEach(field => {
             const val = f[field.name] || '';
@@ -5038,7 +5749,7 @@ function cetakLabelJamaahKita() {
         cardsHtml += `<div class="label-card">
             <div class="card-header">
                 ${logoHtml}
-                <div class="card-nama">${escapeHtml(j.nama_lengkap)}</div>
+                <div class="card-nama">${escapeHtml(jk.nama_lengkap)}</div>
             </div>
             <div class="card-fields">${fieldsHtml}</div>
             ${wa ? `<div class="card-wa">📞 ${escapeHtml(wa)}</div>` : ''}
@@ -5049,21 +5760,21 @@ function cetakLabelJamaahKita() {
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak Label</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Segoe UI',Arial,sans-serif;padding:12px;background:#f0f0f0;}
-        .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:780px;margin:0 auto;}
-        .label-card{background:white;border-radius:10px;padding:10px;border:1.5px solid #0D5C4A;page-break-inside:avoid;break-inside:avoid;}
-        .card-header{display:flex;align-items:center;gap:8px;border-bottom:1px dashed #D4AF37;padding-bottom:8px;margin-bottom:6px;}
-        .card-nama{font-size:12px;font-weight:bold;color:#0D5C4A;text-transform:uppercase;line-height:1.3;flex:1;}
-        .card-fields{margin-bottom:4px;}
-        .field-row{font-size:10px;color:#444;margin:2px 0;line-height:1.4;}
-        .card-wa{background:#f0f7f4;padding:4px 8px;border-radius:6px;margin-top:4px;font-size:10px;word-break:break-all;}
-        .card-footer{text-align:center;margin-top:6px;font-size:9px;color:#999;}
+        body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f0f0;padding:10px;}
+        .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-width:190mm;margin:0 auto;}
+        .label-card{background:white;border-radius:8px;padding:8px;border:1.5px solid #0D5C4A;page-break-inside:avoid;break-inside:avoid;}
+        .card-header{display:flex;align-items:center;gap:6px;border-bottom:1px dashed #D4AF37;padding-bottom:6px;margin-bottom:5px;}
+        .card-nama{font-size:11px;font-weight:bold;color:#0D5C4A;text-transform:uppercase;line-height:1.3;flex:1;}
+        .card-fields{margin-bottom:3px;}
+        .field-row{font-size:9.5px;color:#444;margin:1px 0;line-height:1.4;}
+        .card-wa{background:#f0f7f4;padding:3px 6px;border-radius:4px;margin-top:3px;font-size:9.5px;word-break:break-all;}
+        .card-footer{text-align:center;margin-top:5px;font-size:8px;color:#999;}
         .no-print{text-align:center;margin-top:16px;padding:12px;}
         .no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
         @media print{
             *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-            body{background:white;padding:6px;}
-            .grid{gap:6px;}
+            html,body{margin:0;padding:0;background:white;width:210mm;}
+            .grid{gap:5px;max-width:190mm;padding:5mm;}
             .no-print{display:none!important;}
         }
     </style></head><body>
@@ -5610,7 +6321,30 @@ async function savePaymentData() {
     await idbSet(STORE_PEMBAYARAN, 'pembayaran_list', paymentTransaksiList);
 }
 
+function toggleHargaSeragamInput() {
+    const cb = document.getElementById('cfg_harga_seragam_aktif');
+    const wrap = document.getElementById('inputHargaSeragamWrap');
+    const slider = document.getElementById('sliderHargaSeragam');
+    if (cb && wrap && slider) {
+        wrap.style.display = cb.checked ? 'block' : 'none';
+        slider.style.background = cb.checked ? '#0D5C4A' : '#ccc';
+    }
+}
+
+function formatHargaInput(el) {
+    const raw = el.value.replace(/\./g,'').replace(/[^0-9]/g,'');
+    const num = parseInt(raw) || 0;
+    el.value = num > 0 ? num.toLocaleString('id-ID') : '';
+    const preview = document.getElementById('previewHargaSeragam');
+    if (preview) preview.textContent = num > 0 ? 'Rp ' + num.toLocaleString('id-ID') : '';
+}
+
 function getTotalHargaPaket(jamaah) { 
+    // Cek dulu apakah harga seragam aktif di konfigurasi
+    const hp = getKonfigurasiProData().harga_paket || { seragam: false, nominal: 0 };
+    if (hp.seragam && hp.nominal > 0) return hp.nominal;
+
+    // Kalau tidak seragam, baca dari field jamaah
     const fields = jamaah.additional_fields || {}; 
     const possibleNames = ['total_harga_paket', 'total_harga', 'harga_paket', 'paket', 'total harga', 'harga total', 'tagihan', 'nominal']; 
     for (const name of possibleNames) { 
@@ -6650,11 +7384,14 @@ const DB_NAME = 'SafaraDB', DB_VERSION = 3,
     STORE_ABSENSI = 'absensiData';
 
 function resetIndexedDBDarurat() {
-    if (!confirm('Reset database? Data akan direset.')) return;
+    if (!confirm('Reset SEMUA database? Semua data akan dihapus permanen!')) return;
+    // Hapus semua localStorage keys Safara
+    Object.keys(localStorage).filter(k => k.startsWith('safara_')).forEach(k => localStorage.removeItem(k));
+    // Hapus IndexedDB
     const req = indexedDB.deleteDatabase('SafaraDB');
     const req2 = indexedDB.deleteDatabase('SafaraDokumenDB');
-    req.onsuccess = req2.onsuccess = () => {
-        db = null;
+    db = null;
+    req.onsuccess = () => {
         showToast('✅ Database direset! Memuat ulang...');
         setTimeout(() => window.location.reload(), 1000);
     };
@@ -7151,79 +7888,258 @@ function updateStorageInfo() {
     document.getElementById('storageFill').style.width = Math.min(percent, 100) + '%'; 
 }
 
+async function bagikanFullZip() {
+    try {
+        showToast('⏳ Menyiapkan file...');
+        const backupData = {
+            app: 'Safara',
+            version: '2.0',
+            created: new Date().toISOString(),
+            jamaah: { data: jamaahList, fields: dynamicFieldsJamaah },
+            jamaah_kita: { data: jamaahKitaList, fields: dynamicFieldsJamaahKita },
+            folder: folderList,
+            kas: dataKas,
+            pembayaran: paymentTransaksiList,
+            multi_event: masterDataList,
+            dokumen_jenis: dokumenJenisList,
+            konfigurasi: konfigurasiPro,
+            catatan: JSON.parse(localStorage.getItem('safara_catatan_list') || '[]')
+        };
+        const json = JSON.stringify(backupData);
+        const date = new Date().toISOString().slice(0, 10);
+        const fileName = `Safara_Backup_${date}.json`;
+        const file = new File([json], fileName, { type: 'application/json' });
+
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: 'Backup Safara',
+                text: 'Backup data Safara - ' + date
+            });
+        } else {
+            // Fallback ke download
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+            a.download = fileName;
+            a.click();
+            showToast('⬇️ File JSON didownload');
+        }
+    } catch(err) {
+        if (err.name !== 'AbortError') showToast('❌ Gagal: ' + err.message);
+    }
+}
+
 async function downloadFullZip() { 
     showToast('Mempersiapkan data...'); 
     try { 
         const zip = new JSZip(); 
-        const jamaahData = jamaahList; 
-        const kasData = dataKas; 
-        const paymentData = paymentTransaksiList; 
-        const masterData = masterDataList; 
-        const catatanData = JSON.parse(localStorage.getItem('safara_catatan_list') || '[]'); 
-        zip.file('jamaah.json', JSON.stringify(jamaahData, null, 2)); 
-        zip.file('kas.json', JSON.stringify(kasData, null, 2)); 
-        zip.file('pembayaran.json', JSON.stringify(paymentData, null, 2)); 
-        zip.file('multi_event.json', JSON.stringify(masterData, null, 2)); 
-        zip.file('catatan.json', JSON.stringify(catatanData, null, 2)); 
+        // Data utama
+        zip.file('jamaah.json', JSON.stringify({ data: jamaahList, fields: dynamicFieldsJamaah }, null, 2)); 
+        zip.file('kas.json', JSON.stringify(dataKas, null, 2)); 
+        zip.file('pembayaran.json', JSON.stringify(paymentTransaksiList, null, 2)); 
+        zip.file('multi_event.json', JSON.stringify(masterDataList, null, 2)); 
+        zip.file('catatan.json', JSON.stringify(JSON.parse(localStorage.getItem('safara_catatan_list') || '[]'), null, 2)); 
+        zip.file('jamaah_kita.json', JSON.stringify({ data: jamaahKitaList, fields: dynamicFieldsJamaahKita }, null, 2));
+        zip.file('folder.json', JSON.stringify(folderList, null, 2));
+        zip.file('dokumen_jenis.json', JSON.stringify(dokumenJenisList, null, 2));
+        zip.file('konfigurasi.json', JSON.stringify(konfigurasiPro, null, 2));
+        // Dokumen
         const dokumenFolder = zip.folder('dokumen'); 
-        for (const j of jamaahData) { 
+        for (const j of jamaahList) { 
             const docs = dokumenData[j.id] || {}; 
-            const jamaahFolder = dokumenFolder.folder(j.nama_lengkap.replace(/[^a-z0-9]/gi, '_')); 
+            const jamaahFolder = dokumenFolder.folder(j.id + '_' + j.nama_lengkap.replace(/[^a-z0-9]/gi, '_')); 
             for (const jenis of dokumenJenisList) { 
                 const data = docs[jenis.id]; 
                 if (data && data !== '') { 
-                    const ext = data.startsWith('data:image/png') ? 'png' : (data.startsWith('data:image/jpeg') ? 'jpg' : 'png'); 
-                    const base64Data = data.split(',')[1]; 
-                    jamaahFolder.file(`${jenis.nama}.${ext}`, base64Data, { base64: true }); 
+                    const ext = data.startsWith('data:image/png') ? 'png' : 'jpg'; 
+                    jamaahFolder.file(`${jenis.id}.${ext}`, data.split(',')[1], { base64: true }); 
                 } 
             } 
+        }
+        // Foto profil
+        const fotoFolder = zip.folder('foto_profil');
+        for (const j of jamaahList) {
+            const foto = await idbGet(STORE_FOTO, 'foto_' + j.id);
+            if (foto) {
+                const ext = foto.startsWith('data:image/png') ? 'png' : 'jpg';
+                fotoFolder.file(`${j.id}.${ext}`, foto.split(',')[1], { base64: true });
+            }
         } 
         const content = await zip.generateAsync({ type: 'blob' }); 
-        const date = new Date().toISOString().slice(0,19).replace(/:/g, '-'); 
+        const date = new Date().toISOString().slice(0,10); 
         saveAs(content, `Safara_Full_Backup_${date}.zip`); 
-        showToast('✅ Download ZIP berhasil!'); 
+        showToast('✅ Backup ZIP berhasil! Termasuk semua data.'); 
     } catch(e) { showToast('❌ Gagal membuat ZIP: ' + e.message); } 
+}
+
+function restoreFromJson(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (!confirm('Restore JSON akan menimpa semua data yang ada (kecuali foto & dokumen). Lanjutkan?')) { input.value = ''; return; }
+    showToast('⏳ Memulihkan data...');
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        try {
+            const backup = JSON.parse(e.target.result);
+            // Jamaah
+            if (backup.jamaah) {
+                jamaahList = backup.jamaah.data || [];
+                if (backup.jamaah.fields) dynamicFieldsJamaah = backup.jamaah.fields;
+                await idbSet(STORE_JAMAAH, 'jamaah_list', jamaahList);
+                await idbSet(STORE_JAMAAH, 'jamaah_fields', dynamicFieldsJamaah);
+            }
+            // On Proses
+            if (backup.jamaah_kita) {
+                jamaahKitaList = backup.jamaah_kita.data || [];
+                if (backup.jamaah_kita.fields) dynamicFieldsJamaahKita = backup.jamaah_kita.fields;
+                await idbSet(STORE_JAMAAH_KITA, 'kita_list', jamaahKitaList);
+                await idbSet(STORE_JAMAAH_KITA, 'kita_fields', dynamicFieldsJamaahKita);
+            }
+            // Folder
+            if (backup.folder) { folderList = backup.folder; await idbSet(STORE_FOLDER, 'folder_list', folderList); }
+            // Kas
+            if (backup.kas) { dataKas = backup.kas; await idbSet(STORE_KAS, 'kas_data', dataKas); }
+            // Pembayaran
+            if (backup.pembayaran) { paymentTransaksiList = backup.pembayaran; await idbSet(STORE_PEMBAYARAN, 'pembayaran_list', paymentTransaksiList); }
+            // Multi Event
+            if (backup.multi_event) { masterDataList = backup.multi_event; await idbSet(STORE_MASTER, 'master_data', masterDataList); }
+            // Jenis Dokumen
+            if (backup.dokumen_jenis) { dokumenJenisList = backup.dokumen_jenis; await saveDokumenJenisToIndexedDB(); }
+            // Konfigurasi
+            if (backup.konfigurasi) { konfigurasiPro = { ...konfigurasiPro, ...backup.konfigurasi }; await idbSet(STORE_KONFIGURASI, 'konfigurasi_pro', konfigurasiPro); }
+            // Catatan
+            if (backup.catatan) localStorage.setItem('safara_catatan_list', JSON.stringify(backup.catatan));
+
+            showToast('✅ Restore JSON berhasil! Memuat ulang...');
+            setTimeout(() => location.reload(), 2000);
+        } catch(err) {
+            showToast('❌ Gagal restore: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+    input.value = '';
 }
 
 function restoreFromZip(input) { 
     const file = input.files[0]; 
     if (!file) return; 
+    if (!confirm('Restore akan menimpa semua data yang ada. Lanjutkan?')) { input.value = ''; return; }
     showToast('Memulihkan data...'); 
     const reader = new FileReader(); 
     reader.onload = async function(e) { 
         try { 
             const zip = await JSZip.loadAsync(e.target.result); 
+
+            // Restore jamaah
             const jamaahFile = zip.file('jamaah.json'); 
+            if (jamaahFile) { 
+                const parsed = JSON.parse(await jamaahFile.async('string'));
+                // Support format lama (array) dan baru (object dengan data & fields)
+                if (Array.isArray(parsed)) {
+                    jamaahList = parsed;
+                } else {
+                    jamaahList = parsed.data || [];
+                    if (parsed.fields) dynamicFieldsJamaah = parsed.fields;
+                }
+                await idbSet(STORE_JAMAAH, 'jamaah_list', jamaahList);
+                if (dynamicFieldsJamaah.length > 0) await idbSet(STORE_JAMAAH, 'jamaah_fields', dynamicFieldsJamaah);
+            }
+
+            // Restore kas
             const kasFile = zip.file('kas.json'); 
+            if (kasFile) { dataKas = JSON.parse(await kasFile.async('string')); await idbSet(STORE_KAS, 'kas_data', dataKas); }
+
+            // Restore pembayaran
             const paymentFile = zip.file('pembayaran.json'); 
+            if (paymentFile) { paymentTransaksiList = JSON.parse(await paymentFile.async('string')); await idbSet(STORE_PEMBAYARAN, 'pembayaran_list', paymentTransaksiList); }
+
+            // Restore multi event
             const masterFile = zip.file('multi_event.json'); 
+            if (masterFile) { masterDataList = JSON.parse(await masterFile.async('string')); await idbSet(STORE_MASTER, 'master_data', masterDataList); }
+
+            // Restore catatan
             const catatanFile = zip.file('catatan.json'); 
-            if (jamaahFile) { const data = JSON.parse(await jamaahFile.async('string')); localStorage.setItem('safara_jamaah_list', JSON.stringify(data)); jamaahList = data; } 
-            if (kasFile) { const data = JSON.parse(await kasFile.async('string')); localStorage.setItem('safara_kas_data', JSON.stringify(data)); dataKas = data; } 
-            if (paymentFile) { const data = JSON.parse(await paymentFile.async('string')); localStorage.setItem('safara_pembayaran_transaksi', JSON.stringify(data)); paymentTransaksiList = data; } 
-            if (masterFile) { const data = JSON.parse(await masterFile.async('string')); localStorage.setItem('safara_master_data', JSON.stringify(data)); masterDataList = data; } 
-            if (catatanFile) { const data = JSON.parse(await catatanFile.async('string')); localStorage.setItem('safara_catatan_list', JSON.stringify(data)); catatanList = data; } 
+            if (catatanFile) { const d = JSON.parse(await catatanFile.async('string')); localStorage.setItem('safara_catatan_list', JSON.stringify(d)); }
+
+            // Restore on proses
+            const kitaFile = zip.file('jamaah_kita.json');
+            if (kitaFile) {
+                const parsed = JSON.parse(await kitaFile.async('string'));
+                jamaahKitaList = parsed.data || [];
+                if (parsed.fields) dynamicFieldsJamaahKita = parsed.fields;
+                await idbSet(STORE_JAMAAH_KITA, 'kita_list', jamaahKitaList);
+                await idbSet(STORE_JAMAAH_KITA, 'kita_fields', dynamicFieldsJamaahKita);
+            }
+
+            // Restore folder virtual
+            const folderFile = zip.file('folder.json');
+            if (folderFile) { folderList = JSON.parse(await folderFile.async('string')); await idbSet(STORE_FOLDER, 'folder_list', folderList); }
+
+            // Restore jenis dokumen
+            const jenisFile = zip.file('dokumen_jenis.json');
+            if (jenisFile) { dokumenJenisList = JSON.parse(await jenisFile.async('string')); await saveDokumenJenisToIndexedDB(); }
+
+            // Restore konfigurasi
+            const cfgFile = zip.file('konfigurasi.json');
+            if (cfgFile) { 
+                const cfg = JSON.parse(await cfgFile.async('string'));
+                konfigurasiPro = { ...konfigurasiPro, ...cfg };
+                await idbSet(STORE_KONFIGURASI, 'konfigurasi_pro', konfigurasiPro);
+            }
+
+            // Restore dokumen per jamaah ke IndexedDB
             dokumenData = {}; 
             const dokumenFolder = zip.folder('dokumen'); 
             if (dokumenFolder) { 
-                const jamaahFolders = Object.keys(dokumenFolder.files).filter(f => f.endsWith('/')).map(f => f.slice(0, -1)); 
-                for (const jamaahName of jamaahFolders) { 
-                    const jamaah = jamaahList.find(j => j.nama_lengkap.replace(/[^a-z0-9]/gi, '_') === jamaahName); 
-                    if (jamaah) { 
-                        const folder = dokumenFolder.folder(jamaahName); 
-                        for (const jenis of dokumenJenisList) { 
-                            const fileInZip = folder.file(`${jenis.nama}.jpg`) || folder.file(`${jenis.nama}.png`); 
-                            if (fileInZip) { 
-                                const base64 = await fileInZip.async('base64'); 
-                                const mime = jenis.nama === 'Foto' ? 'image/jpeg' : 'image/png'; 
-                                dokumenData[jamaah.id] = dokumenData[jamaah.id] || {}; 
-                                dokumenData[jamaah.id][jenis.id] = `data:${mime};base64,${base64}`; 
-                            } 
+                const allFiles = Object.keys(zip.files);
+                for (const j of jamaahList) {
+                    // Coba format baru (id_nama) atau format lama (nama saja)
+                    const prefixBaru = `dokumen/${j.id}_`;
+                    const prefixLama = `dokumen/${j.nama_lengkap.replace(/[^a-z0-9]/gi, '_')}/`;
+                    for (const jenis of dokumenJenisList) {
+                        // Cari file di format baru
+                        const pathBaru = `dokumen/${j.id}_${j.nama_lengkap.replace(/[^a-z0-9]/gi, '_')}/${jenis.id}.jpg`;
+                        const pathBaruPng = `dokumen/${j.id}_${j.nama_lengkap.replace(/[^a-z0-9]/gi, '_')}/${jenis.id}.png`;
+                        // Format lama
+                        const pathLama = `dokumen/${j.nama_lengkap.replace(/[^a-z0-9]/gi, '_')}/${jenis.nama}.jpg`;
+                        const pathLamaPng = `dokumen/${j.nama_lengkap.replace(/[^a-z0-9]/gi, '_')}/${jenis.nama}.png`;
+                        
+                        const fileInZip = zip.file(pathBaru) || zip.file(pathBaruPng) || zip.file(pathLama) || zip.file(pathLamaPng);
+                        if (fileInZip) { 
+                            const base64 = await fileInZip.async('base64'); 
+                            const isJpg = fileInZip.name.endsWith('.jpg');
+                            dokumenData[j.id] = dokumenData[j.id] || {}; 
+                            dokumenData[j.id][jenis.id] = `data:image/${isJpg?'jpeg':'png'};base64,${base64}`; 
                         } 
-                    } 
-                } 
+                    }
+                }
+                // Simpan dokumen ke IndexedDB (bulk)
+                const database2 = await openIndexedDB();
+                const txDok = database2.transaction([STORE_NAME], 'readwrite');
+                const storeDok = txDok.objectStore(STORE_NAME);
+                for (const jamaahId of Object.keys(dokumenData)) {
+                    storeDok.put({ id: `jamaah_${jamaahId}`, jamaahId, data: dokumenData[jamaahId] });
+                }
+                await new Promise((res, rej) => { txDok.oncomplete = res; txDok.onerror = rej; });
+
+                // Restore foto profil
+                const fotoFolder = zip.folder('foto_profil');
+                if (fotoFolder) {
+                    for (const j of jamaahList) {
+                        const fotoJpg = zip.file(`foto_profil/${j.id}.jpg`);
+                        const fotoPng = zip.file(`foto_profil/${j.id}.png`);
+                        const fotoFile = fotoJpg || fotoPng;
+                        if (fotoFile) {
+                            const base64 = await fotoFile.async('base64');
+                            const isJpg = fotoFile.name.endsWith('.jpg');
+                            const dataUrl = `data:image/${isJpg?'jpeg':'png'};base64,${base64}`;
+                            await idbSet(STORE_FOTO, 'foto_' + j.id, dataUrl);
+                        }
+                    }
+                }
             } 
-            showToast('✅ Restore berhasil! Reload halaman...'); 
+
+            showToast('✅ Restore berhasil! Memuat ulang...'); 
             setTimeout(() => location.reload(), 2000); 
         } catch(err) { showToast('❌ Gagal restore: ' + err.message); } 
     }; 
@@ -7285,12 +8201,58 @@ function updateJumlahDipilihLabel() {
 function renderMultiTiketJamaah() {
     const container = document.getElementById('multiTiketJamaahSelect');
     if (!container) return;
-    container.innerHTML = jamaahList.map(j => `
-        <label style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #eee;cursor:pointer;">
-            <input type="checkbox" value="${j.id}" onchange="updateJumlahDipilihTiket()"
-                style="width:18px;height:18px;accent-color:#0D5C4A;cursor:pointer;">
-            <span style="font-size:13px;">${escapeHtml(j.nama_lengkap)}</span>
-        </label>`).join('');
+    const fragment = document.createDocumentFragment();
+    jamaahList.forEach(j => {
+        const label = document.createElement('label');
+        label.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #eee;cursor:pointer;';
+        label.innerHTML = `<input type="checkbox" value="${j.id}" onchange="updateJumlahDipilihTiket()"
+            style="width:18px;height:18px;accent-color:#0D5C4A;cursor:pointer;">
+            <span style="font-size:13px;">${escapeHtml(j.nama_lengkap)}</span>`;
+        fragment.appendChild(label);
+    });
+    container.innerHTML = '';
+    container.appendChild(fragment);
+}
+
+function renderMultiPengingatJamaah() {
+    const container = document.getElementById('multiPengingatJamaahSelect');
+    if (!container) return;
+    const fragment = document.createDocumentFragment();
+    jamaahList.forEach(j => {
+        const label = document.createElement('label');
+        label.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #eee;cursor:pointer;';
+        label.innerHTML = `<input type="checkbox" value="${j.id}" onchange="updateJumlahDipilihPengingat()"
+            style="width:18px;height:18px;accent-color:#0D5C4A;cursor:pointer;">
+            <span style="font-size:13px;">${escapeHtml(j.nama_lengkap)}</span>`;
+        fragment.appendChild(label);
+    });
+    container.innerHTML = '';
+    container.appendChild(fragment);
+}
+
+function filterPengingatJamaah() {
+    const q = (document.getElementById('searchPengingatJamaah')?.value || '').toLowerCase();
+    document.querySelectorAll('#multiPengingatJamaahSelect label').forEach(label => {
+        label.style.display = label.querySelector('span')?.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+}
+
+function pilihSemuaPengingat() {
+    document.querySelectorAll('#multiPengingatJamaahSelect input[type=checkbox]').forEach(cb => {
+        if(cb.closest('label')?.style.display !== 'none') cb.checked = true;
+    });
+    updateJumlahDipilihPengingat();
+}
+
+function hapusPilihanPengingat() {
+    document.querySelectorAll('#multiPengingatJamaahSelect input[type=checkbox]').forEach(cb => cb.checked = false);
+    updateJumlahDipilihPengingat();
+}
+
+function updateJumlahDipilihPengingat() {
+    const n = document.querySelectorAll('#multiPengingatJamaahSelect input:checked').length;
+    const el = document.getElementById('jumlahDipilihPengingat');
+    if(el) el.textContent = n > 0 ? `${n} jamaah dipilih` : '';
 }
 
 function filterTiketJamaah() {
@@ -7342,19 +8304,24 @@ async function cetakTiketMulti() {
     }
     const win = window.open('', '_blank');
     if(!win) { showToast('Izinkan popup untuk cetak!'); return; }
-    const htmlAll = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak Tiket Massal</title>'
+    const htmlAll = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak Tiket</title>'
         + '<style>'
         + '*{margin:0;padding:0;box-sizing:border-box;}'
-        + 'body{font-family:Arial,sans-serif;padding:16px;background:#f0f0f0;}'
-        + '.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:780px;margin:0 auto;}'
-        + '.tiket-card{background:white;border:2px solid #0D5C4A;border-radius:12px;padding:16px;text-align:center;page-break-inside:avoid;break-inside:avoid;}'
-        + '.tiket-nama{font-size:13px;font-weight:bold;color:#0D5C4A;text-transform:uppercase;margin-bottom:6px;}'
-        + '.tiket-paket{font-size:11px;color:#888;border-bottom:1px dashed #ccc;padding-bottom:8px;margin-bottom:10px;}'
+        + 'body{font-family:Arial,sans-serif;background:#f0f0f0;padding:10px;}'
+        + '.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-width:190mm;margin:0 auto;}'
+        + '.tiket-card{background:white;border:2px solid #0D5C4A;border-radius:8px;padding:10px;text-align:center;page-break-inside:avoid;break-inside:avoid;}'
+        + '.tiket-nama{font-size:11px;font-weight:bold;color:#0D5C4A;text-transform:uppercase;margin-bottom:4px;}'
+        + '.tiket-paket{font-size:9.5px;color:#888;border-bottom:1px dashed #ccc;padding-bottom:6px;margin-bottom:6px;}'
         + '.tiket-qr img{display:block;margin:0 auto;}'
-        + '.tiket-footer{margin-top:8px;font-size:10px;color:#999;}'
-        + '.no-print{text-align:center;margin-top:20px;padding:12px;}'
+        + '.tiket-footer{margin-top:6px;font-size:8px;color:#999;}'
+        + '.no-print{text-align:center;margin-top:16px;padding:12px;}'
         + '.no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}'
-        + '@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}body{background:white;padding:6px;}.no-print{display:none!important;}}'
+        + '@media print{'
+        + '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
+        + 'html,body{margin:0;padding:0;background:white;width:210mm;}'
+        + '.grid{gap:5px;max-width:190mm;padding:5mm;}'
+        + '.no-print{display:none!important;}'
+        + '}'
         + '</style></head><body>'
         + '<div class="grid">' + cardsHtml + '</div>'
         + '<div class="no-print">'
@@ -7417,30 +8384,61 @@ function printLabelPreview() {
         return;
     }
     const printWindow = window.open('', '_blank');
-    const html = `<!DOCTYPE html>
-    <html>
-    <head>
+    const html = `<!DOCTYPE html><html><head>
         <title>Cetak Label - Safara</title>
         <meta charset="UTF-8">
         <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { background: white; font-family: 'Segoe UI', Arial, sans-serif; }
-            .no-print { display: block; }
-            @media print {
-                .no-print { display: none !important; }
-                body { margin: 0; padding: 0; }
+            *{margin:0;padding:0;box-sizing:border-box;}
+            body{background:#f0f0f0;font-family:'Segoe UI',Arial,sans-serif;padding:10px;}
+            /* Grid container dari cetakLabel */
+            div[style*="flex-wrap"]{
+                display:grid!important;
+                grid-template-columns:repeat(2,1fr)!important;
+                gap:8px!important;
+                max-width:190mm!important;
+                margin:0 auto!important;
+                padding:0!important;
+                justify-content:unset!important;
+            }
+            /* Kartu nametag */
+            div[style*="width:220px"]{
+                width:auto!important;
+                padding:8px!important;
+                border-radius:8px!important;
+                page-break-inside:avoid!important;
+                break-inside:avoid!important;
+                font-size:11px!important;
+            }
+            div[style*="width:220px"] div[style*="font-size:18px"]{font-size:12px!important;}
+            div[style*="width:220px"] div[style*="font-size:11px"]{font-size:9.5px!important;}
+            div[style*="width:220px"] div[style*="font-size:10px"]{font-size:9px!important;}
+            /* Kartu koper */
+            div[style*="width:180px"]{
+                width:auto!important;
+                padding:8px!important;
+                border-radius:8px!important;
+                page-break-inside:avoid!important;
+                break-inside:avoid!important;
+            }
+            div[style*="width:180px"] div[style*="font-size:16px"]{font-size:12px!important;}
+            div[style*="width:180px"] div[style*="font-size:10px"]{font-size:9.5px!important;}
+            .no-print{text-align:center;padding:20px;}
+            .no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+            @media print{
+                *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+                html,body{margin:0;padding:0;background:white;width:210mm;}
+                div[style*="flex-wrap"]{max-width:190mm!important;padding:5mm!important;gap:5px!important;}
+                .no-print{display:none!important;}
             }
         </style>
-    </head>
-    <body>
+    </head><body>
         ${labelContent.innerHTML}
-        <div class="no-print" style="text-align:center; padding:20px;">
-            <button onclick="window.print()" style="padding:10px 30px; background:#0D5C4A; color:white; border:none; border-radius:8px; cursor:pointer; margin-right:10px;">🖨️ CETAK</button>
-            <button onclick="window.close()" style="padding:10px 30px; background:#ccc; border:none; border-radius:8px; cursor:pointer;">TUTUP</button>
+        <div class="no-print">
+            <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
+            <button onclick="window.close()" style="background:#e2e8f0;color:#333;">TUTUP</button>
         </div>
-        <script>window.onload = function() { setTimeout(function() { window.print(); }, 800); };<\/script>
-    </body>
-    </html>`;
+        <scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};<\/scr` + `ipt>
+    </body></html>`;
     printWindow.document.write(html);
     printWindow.document.close();
 }
@@ -7452,11 +8450,7 @@ function loadPengingatData() {
     const saved = localStorage.getItem('safara_scheduled_reminders'); 
     scheduledReminders = saved ? JSON.parse(saved) : []; 
     renderScheduledReminders(); 
-    const select = document.getElementById('reminderJamaahSelect'); 
-    if(select) { 
-        select.innerHTML = '<option value="all">-- Semua Jamaah --</option>'; 
-        jamaahList.forEach(j => { select.innerHTML += `<option value="${j.id}">${escapeHtml(j.nama_lengkap)}</option>`; }); 
-    } 
+    renderMultiPengingatJamaah();
 }
 
 function saveScheduledReminders() { 
@@ -7467,15 +8461,12 @@ function saveScheduledReminders() {
 function kirimPengingatWA() { 
     const message = document.getElementById('reminderMessage').value; 
     if(!message) return showToast('Isi pesan pengingat!'); 
-    const select = document.getElementById('reminderJamaahSelect'); 
-    const selectedOptions = Array.from(select.selectedOptions); 
-    let jamaahToSend = []; 
-    if(selectedOptions.some(opt => opt.value === 'all')) jamaahToSend = [...jamaahList]; 
-    else jamaahToSend = selectedOptions.map(opt => jamaahList.find(j => j.id == opt.value)).filter(j => j); 
-    if(jamaahToSend.length === 0) return showToast('Pilih jamaah terlebih dahulu!'); 
-    let finalMessage = message; 
+    const checked = document.querySelectorAll('#multiPengingatJamaahSelect input:checked');
+    if(checked.length === 0) return showToast('Pilih jamaah terlebih dahulu!');
+    const jamaahToSend = Array.from(checked).map(cb => jamaahList.find(j => j.id == cb.value)).filter(j => j);
+    if(jamaahToSend.length === 0) return showToast('Jamaah tidak ditemukan!'); 
     for(const j of jamaahToSend) { 
-        let msg = finalMessage.replace(/\[nama\]/gi, j.nama_lengkap); 
+        let msg = message.replace(/\[nama\]/gi, j.nama_lengkap); 
         const statusPembayaran = getStatusPembayaran(j); 
         if(!statusPembayaran.needInput) msg = msg.replace(/\[sisa\]/gi, formatRupiah(statusPembayaran.sisa)); 
         let waNumber = '628123456789'; 
@@ -7524,12 +8515,32 @@ function hapusPengingat(id) {
 }
 
 // ==================== RESET ALL DATA ====================
-function confirmResetAllData() { 
-    if(confirm('⚠️ RESET SEMUA DATA? Semua akan hilang!')) { 
-        localStorage.clear(); 
-        showToast('Data direset, reload halaman'); 
-        setTimeout(()=>location.reload(),1500); 
-    } 
+async function confirmResetAllData() { 
+    if(!confirm('⚠️ RESET SEMUA DATA?\n\nSEMUA data akan dihapus permanen:\n- Jamaah & dokumen\n- Kas & pembayaran\n- On Proses & Folder\n- Konfigurasi instansi\n- Absensi\n- Foto profil\n\nAplikasi kembali seperti pertama kali diinstall!\n\nLanjutkan?')) return;
+    if(!confirm('Yakin? Tindakan ini TIDAK BISA dibatalkan!')) return;
+
+    try {
+        // Hapus semua localStorage keys Safara
+        Object.keys(localStorage)
+            .filter(k => k.startsWith('safara_') || k.startsWith('Safara'))
+            .forEach(k => localStorage.removeItem(k));
+
+        // Hapus IndexedDB
+        db = null;
+        await new Promise((resolve) => {
+            const r1 = indexedDB.deleteDatabase('SafaraDB');
+            const r2 = indexedDB.deleteDatabase('SafaraDokumenDB');
+            r1.onsuccess = r2.onsuccess = resolve;
+            r1.onerror = r2.onerror = resolve;
+        });
+
+        showToast('✅ Semua data dihapus! Memuat ulang...');
+        setTimeout(() => location.reload(), 1200);
+    } catch(e) {
+        // Fallback
+        localStorage.clear();
+        location.reload();
+    }
 }
 
 // ==================== FUNGSI PDF DENGAN KONFIGURASI ====================
@@ -8479,6 +9490,7 @@ let konfigurasiPro = {
     watermark: { enabled: true, text: getKonfigurasiProData().instansi1?.nama || 'Safara', opacity: 0.15, fontsize: 60, position: 'diagonal' },
     qr: { enabled: true, text: 'Dokumen Resmi - Divalidasi oleh Sistem Safara', size: 80 },
     settings: { header_mode: 'both', ttd_mode: 'both', invoice_prefix: 'INV/SAFARA' },
+    harga_paket: { seragam: false, nominal: 0 },
     wa_template: { laporan: '📊 *LAPORAN KAS KANTOR*\n\n💰 Saldo: [saldo]\n📈 Pemasukan: [masuk]\n📉 Pengeluaran: [keluar]\n\nTerima kasih.' }
 };
 
@@ -8529,6 +9541,21 @@ async function loadKonfigurasiPro() {
     document.getElementById('cfg_show_izin').checked = s.show_izin === true;
     document.getElementById('cfg_show_pimpinan').checked = s.show_pimpinan === true;
     document.getElementById('cfg_batas_lansia').value = s.batas_lansia || 60;
+    // Load harga seragam
+    const hp = konfigurasiPro.harga_paket || { seragam: false, nominal: 0 };
+    const cbHarga = document.getElementById('cfg_harga_seragam_aktif');
+    if (cbHarga) {
+        cbHarga.checked = hp.seragam || false;
+        document.getElementById('sliderHargaSeragam').style.background = hp.seragam ? '#0D5C4A' : '#ccc';
+        document.getElementById('inputHargaSeragamWrap').style.display = hp.seragam ? 'block' : 'none';
+        if (hp.nominal) {
+            const el = document.getElementById('cfg_harga_seragam_nominal');
+            if (el) {
+                el.value = hp.nominal.toLocaleString('id-ID');
+                document.getElementById('previewHargaSeragam').textContent = 'Rp ' + hp.nominal.toLocaleString('id-ID');
+            }
+        }
+    }
     document.getElementById('cfg_wa_laporan').value = konfigurasiPro.wa_template.laporan || '';
     updateHeaderFromConfig();
 }
@@ -8584,6 +9611,12 @@ async function saveKonfigurasiPro() {
         show_izin: document.getElementById('cfg_show_izin').checked,
         show_pimpinan: document.getElementById('cfg_show_pimpinan').checked,
         batas_lansia: parseInt(document.getElementById('cfg_batas_lansia').value) || 60
+    };
+    // Simpan harga paket
+    const nominalRaw = (document.getElementById('cfg_harga_seragam_nominal')?.value || '0').replace(/\./g,'').replace(/[^0-9]/g,'');
+    konfigurasiPro.harga_paket = {
+        seragam: document.getElementById('cfg_harga_seragam_aktif')?.checked || false,
+        nominal: parseInt(nominalRaw) || 0
     };
     konfigurasiPro.wa_template = { laporan: document.getElementById('cfg_wa_laporan').value };
     localStorage.setItem('safara_konfigurasi_pro', JSON.stringify(konfigurasiPro)); // keep for compat
