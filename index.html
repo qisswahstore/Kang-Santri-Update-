@@ -10292,73 +10292,106 @@ async function sharePembayaranPDF() {
         const tglCetak = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
         const totalMasuk = paymentTransaksiList.reduce((s,t)=>s+t.nominal,0);
         
-        // Cek apakah html2canvas tersedia
-        if (typeof html2canvas === 'undefined') {
-            showToast('❌ html2canvas tidak tersedia, menggunakan metode alternatif...');
-            // Fallback ke download langsung
-            await exportPaymentPDFDownload();
-            return;
+        const {jsPDF} = window.jspdf;
+        const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+        
+        let y = 20;
+        
+        // Logo (jika ada)
+        if (cfg.instansi1?.logo) {
+            try {
+                doc.addImage(cfg.instansi1.logo, 'PNG', 85, y, 40, 20);
+                y += 25;
+            } catch(e) {
+                console.log('Logo skip');
+            }
         }
         
-        const headerHtml = buildPrintHeader(cfg, tglCetak);
-        const watermarkHtml = buildPrintWatermark(cfg);
-        const ttdHtml = buildPrintTandaTangan(cfg, tglCetak);
-        const qrHtml = await buildPrintQR(cfg, `Laporan Pembayaran\nTotal: ${formatRupiah(totalMasuk)}\nTanggal: ${tglCetak}`);
+        // Header
+        doc.setFont('times', 'bold');
+        doc.setFontSize(16);
+        doc.setTextColor(13, 92, 74);
+        doc.text(cfg.instansi1?.nama || 'KBIHU', 105, y, { align: 'center' });
+        y += 7;
         
-        let rowsHtml = '';
-        paymentTransaksiList.forEach((t,i) => {
-            rowsHtml += `<tr><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${i+1}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.tanggal}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.nama_jamaah||'-'}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.keterangan||'-'}</td><td style="padding:8px;border-bottom:1px solid #eee;">${t.metode||'-'}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">${formatRupiah(t.nominal)}</td></tr>`;
+        doc.setFont('times', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.text(cfg.instansi1?.alamat || '', 105, y, { align: 'center' });
+        y += 10;
+        
+        // Judul
+        doc.setFont('times', 'bold');
+        doc.setFontSize(14);
+        doc.setTextColor(13, 92, 74);
+        doc.text('LAPORAN PEMBAYARAN JAMAAH', 105, y, { align: 'center' });
+        y += 7;
+        
+        // Tanggal
+        doc.setFont('times', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(170, 170, 170);
+        doc.text('Tanggal Cetak: ' + tglCetak, 105, y, { align: 'center' });
+        y += 10;
+        
+        // Table
+        const tableData = paymentTransaksiList.map((t,i)=>[
+            i+1, 
+            t.tanggal, 
+            t.nama_jamaah||'-', 
+            t.keterangan||'-', 
+            t.metode||'-', 
+            formatRupiah(t.nominal)
+        ]);
+        
+        doc.autoTable({
+            startY: y,
+            head: [['No', 'Tanggal', 'Jamaah', 'Keterangan', 'Metode', 'Nominal']],
+            body: tableData,
+            theme: 'striped',
+            headStyles: {
+                fillColor: [13, 92, 74],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold'
+            },
+            columnStyles: {
+                0: { halign: 'center', cellWidth: 10 },
+                5: { halign: 'right' }
+            },
+            styles: {
+                fontSize: 9,
+                cellPadding: 2
+            },
+            alternateRowStyles: {
+                fillColor: [249, 249, 249]
+            }
         });
         
-        // Buat container untuk screenshot
-        const container = document.createElement('div');
-        container.style.cssText = 'position:fixed;left:-9999px;top:0;width:900px;background:#f0f0f0;padding:20px;';
-        container.innerHTML = `
-        <div style="background:white;max-width:900px;margin:0 auto;border-radius:16px;padding:30px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;">
-            <div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;overflow:hidden;">
-                ${watermarkHtml}
-            </div>
-            <div style="position:relative;z-index:1;">
-                ${headerHtml}
-                <h2 style="color:#0D5C4A;font-size:20px;margin-bottom:2px;">LAPORAN PEMBAYARAN JAMAAH</h2>
-                <div style="color:#aaa;font-size:11px;margin-bottom:20px;">Tanggal Cetak: ${tglCetak}</div>
-                <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;">
-                    <thead><tr><th style="background:#0D5C4A;color:white;padding:10px 8px;text-align:left;width:36px;">No</th><th style="background:#0D5C4A;color:white;padding:10px 8px;text-align:left;">Tanggal</th><th style="background:#0D5C4A;color:white;padding:10px 8px;text-align:left;">Jamaah</th><th style="background:#0D5C4A;color:white;padding:10px 8px;text-align:left;">Keterangan</th><th style="background:#0D5C4A;color:white;padding:10px 8px;text-align:left;">Metode</th><th style="background:#0D5C4A;color:white;padding:10px 8px;text-align:right;">Nominal</th></tr></thead>
-                    <tbody>${rowsHtml}</tbody>
-                </table>
-                <div style="background:#f8f8f8;border-radius:10px;padding:16px;font-size:14px;"><strong>TOTAL PEMASUKAN: <span style="color:#0D5C4A;">${formatRupiah(totalMasuk)}</span></strong></div>
-                ${ttdHtml}
-                ${qrHtml}
-            </div>
-        </div>`;
+        y = doc.lastAutoTable.finalY + 10;
         
-        document.body.appendChild(container);
+        // Summary
+        doc.setFont('times', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text('TOTAL PEMASUKAN: ', 20, y);
+        doc.setTextColor(13, 92, 74);
+        doc.text(formatRupiah(totalMasuk), 80, y);
+        y += 15;
         
-        // Screenshot dengan html2canvas
-        const canvas = await html2canvas(container, {
-            scale: 2,
-            backgroundColor: '#f0f0f0',
-            useCORS: true,
-            logging: false,
-            allowTaint: true
-        });
+        // Tanda tangan
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('times', 'normal');
+        doc.setFontSize(11);
+        doc.text('Hormat kami,', 150, y);
+        y += 15;
         
-        document.body.removeChild(container);
+        doc.setFont('times', 'bold');
+        const ttdText = cfg.instansi1?.nama || 'KBIHU';
+        doc.text(ttdText, 150, y);
+        const ttdWidth = doc.getTextWidth(ttdText);
+        doc.line(150, y + 1, 150 + ttdWidth, y + 1);
         
-        // Convert canvas to blob
-        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-        
-        // Buat PDF dari gambar
-        const {jsPDF} = window.jspdf;
-        const imgWidth = 210;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        const doc = new jsPDF('p', 'mm', 'a4');
-        const imgData = canvas.toDataURL('image/png');
-        
-        // Add image to PDF
-        doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-        
-        // Share atau download
+        // Share
         const filename = `Laporan_Pembayaran_${tglCetak.replace(/\s/g, '_')}.pdf`;
         const pdfBlob = doc.output('blob');
         const file = new File([pdfBlob], filename, { type: 'application/pdf' });
@@ -10371,15 +10404,9 @@ async function sharePembayaranPDF() {
             showToast('📥 PDF didownload (share tidak didukung)');
         }
     } catch(e) {
-        console.error('Error sharePembayaranPDF:', e);
         if (e.name !== 'AbortError') {
-            showToast('❌ Gagal: ' + e.message);
-            // Fallback: coba download biasa
-            try {
-                await exportPaymentPDFDownload();
-            } catch(e2) {
-                showToast('❌ Semua metode gagal');
-            }
+            showToast('❌ Error: ' + e.message);
+            console.error('Error:', e);
         }
     }
 }
