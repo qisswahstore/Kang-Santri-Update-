@@ -2716,7 +2716,7 @@ async function cetakSemuaDokumenJamaah(jamaahId, jamaahNama) {
         <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
         <button onclick="window.close()" style="background:#e2e8f0;color:#333;margin-left:8px;">TUTUP</button>
     </div>
-    <scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr` + `ipt>
+    
     </body></html>`;
     printWindow.document.write(html);
     printWindow.document.close();
@@ -2750,7 +2750,7 @@ async function cetakDokumenPerJenis(jamaahId, jenisId, jenisNama, jamaahNama) {
             <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
             <button onclick="window.close()" style="background:#e2e8f0;color:#333;">TUTUP</button>
         </div>
-        <scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr` + `ipt>
+        
     </body></html>`;
     printWindow.document.write(html);
     printWindow.document.close();
@@ -3236,7 +3236,7 @@ async function printDashboard() {
         ${qrHtml}
     </div>
     <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
-    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    <script>// Auto-print removed;<\/script>
     </body></html>`);
     printWindow.document.close();
 }
@@ -3386,7 +3386,7 @@ async function cetakEstimasiPDFJamaah() {
         </div>
     </div>
     <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
-    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    <script>// Auto-print removed;<\/script>
     </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
@@ -3467,7 +3467,7 @@ async function cetakEstimasiPDFInternal() {
         ${qrHtml}
     </div>
     <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
-    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    <script>// Auto-print removed;<\/script>
     </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
@@ -3683,7 +3683,7 @@ async function exportKasPDF() {
         </div>
     </div>
     <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
-    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    <script>// Auto-print removed;<\/script>
     </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
@@ -4103,7 +4103,6 @@ function buildSuratHTML(jamaah) {
         <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
         <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
     </div>
-    <scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr` + `ipt>
     </body></html>`;
 }
 
@@ -4658,7 +4657,7 @@ function eksporAbsensi() {
     html += `</tbody></table><div class="no-print">
         <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
         <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
-    </div><scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr` + `ipt></body></html>`;
+    </div></body></html>`;
     const win = window.open('', '_blank');
     win.document.write(html);
     win.document.close();
@@ -5913,7 +5912,7 @@ function cetakLabelJamaahKita() {
         <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
         <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
     </div>
-    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    <script>// Auto-print removed;<\/script>
     </body></html>`;
     const win = window.open('','_blank');
     if (!win) { showToast('Izinkan popup untuk cetak!'); return; }
@@ -6036,7 +6035,7 @@ async function printGroupedPDFJamaahKita() {
         <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
         <button onclick="window.close()" style="background:#e2e8f0;color:#333;">TUTUP</button>
     </div>
-    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    <script>// Auto-print removed;<\/script>
     </body></html>`;
     const win = window.open("", "_blank");
     win.document.write(html);
@@ -6414,7 +6413,7 @@ async function cetakLaporanZakat() {
         ${qrHtml}
     </div>
     <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
-    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    <script>// Auto-print removed;<\/script>
     </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
@@ -6925,7 +6924,7 @@ async function cetakInvoiceLangsung(jamaahId) {
             <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
             <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
         </div>
-        <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+        <script>// Auto-print removed;<\/script>
         </body></html>`;
         const win = window.open('','_blank');
         if(!win){showToast('Izinkan popup untuk cetak!');return;}
@@ -7080,7 +7079,7 @@ async function exportPaymentPDF() {
         </div>
     </div>
     <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
-    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    <script>// Auto-print removed;<\/script>
     </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
@@ -7555,7 +7554,7 @@ async function exportFolderToPDF(folderId) {
         </div>
     </div>
     <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
-    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    <script>// Auto-print removed;<\/script>
     </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
@@ -8562,7 +8561,7 @@ async function cetakTiketMulti() {
         + '<button onclick="window.print()" style="background:#0D5C4A;color:white;">\uD83D\uDDA8\uFE0F CETAK</button>'
         + '<button onclick="window.close()" style="background:#e2e8f0;color:#333;">\u2715 TUTUP</button>'
         + '</div>'
-        + '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr' + 'ipt>'
+        + '<scr' + 'ipt>// Auto-print removed;</scr' + 'ipt>'
         + '</body></html>';
     win.document.write(htmlAll);
     win.document.close();
@@ -8671,7 +8670,7 @@ function printLabelPreview() {
             <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
             <button onclick="window.close()" style="background:#e2e8f0;color:#333;">TUTUP</button>
         </div>
-        <scr` + `ipt>window.onload=function(){setTimeout(function(){window.print();},800);};<\/scr` + `ipt>
+        <scr` + `ipt>// Auto-print removed;<\/scr` + `ipt>
     </body></html>`;
     printWindow.document.write(html);
     printWindow.document.close();
@@ -9042,7 +9041,7 @@ async function generateAndCetakTiket(jamaah) {
         + '<button onclick="window.print()" style="background:#0D5C4A;color:white;">\uD83D\uDDA8\uFE0F CETAK</button>'
         + '<button onclick="window.close()" style="background:#e2e8f0;color:#333;">\u2715 TUTUP</button>'
         + '</div>'
-        + '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print();},800);};</scr' + 'ipt>'
+        + '<scr' + 'ipt>// Auto-print removed;</scr' + 'ipt>'
         + '</body></html>';
     win.document.write(htmlTiket);
     win.document.close();
@@ -9441,7 +9440,7 @@ async function exportMasterPDF() {
         </div>
     </div>
     <div class="no-print"><button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button><button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button></div>
-    <script>window.onload=function(){setTimeout(function(){window.print();},800);};<\/script>
+    <script>// Auto-print removed;<\/script>
     </body></html>`;
     const win = window.open('','_blank');
     if(!win) return showToast('Izinkan popup untuk cetak!');
