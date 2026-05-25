@@ -6696,34 +6696,138 @@ function copyInvoiceText() {
 async function generateInvoicePDFDoc(jamaahId) {
     const jamaah = jamaahList.find(j => j.id == jamaahId);
     if (!jamaah) { showToast('Data jamaah tidak ditemukan'); return null; }
+    
+    const cfg = getKonfigurasiProData();
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    await applyPDFConfig(doc, { landscape: false });
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    
     const transaksiList = paymentTransaksiList.filter(t => t.id_jamaah == jamaahId).sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal));
     const totalBayar = hitungTotalBayarJamaah(jamaahId);
     let totalHargaPaket = getTotalHargaPaket(jamaah) || 0;
     const sisa = totalHargaPaket - totalBayar;
-    const prefix = getKonfigurasiProData().settings.invoice_prefix || 'INV/SAFARA';
-    doc.setFontSize(16);
-    doc.setTextColor(26,93,74);
-    doc.text('INVOICE PEMBAYARAN', 105, 65, { align: 'center' });
-    doc.setFontSize(10);
-    doc.setTextColor(100,100,100);
-    doc.text(`No: ${prefix}/${jamaah.id}/${new Date().toLocaleDateString('id-ID').replace(/\//g,'')}`, 105, 72, { align: 'center' });
-    doc.setFontSize(11);
-    doc.setTextColor(0,0,0);
-    doc.text(`Nama Jamaah: ${jamaah.nama_lengkap}`, 20, 85);
-    doc.text(`Tanggal: ${new Date().toLocaleDateString('id-ID')}`, 20, 95);
-    doc.text(`Total Paket: ${formatRupiah(totalHargaPaket)}`, 20, 105);
-    const tableData = transaksiList.map((t, i) => [i+1, t.tanggal, t.keterangan, t.metode, formatRupiah(t.nominal)]);
-    if (tableData.length > 0) {
-        doc.autoTable({ startY: 120, head: [['No','Tanggal','Keterangan','Metode','Nominal']], body: tableData, theme: 'striped', headStyles: { fillColor: [26,93,74] }, styles: { fontSize: 9, lineWidth: 0.1 } });
+    const statusColor = sisa <= 0 ? '#10B981' : '#EF4444';
+    const prefix = cfg.settings?.invoice_prefix || 'INV/SAFARA';
+    const tglCetak = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
+    const noInvoice = `${prefix}/${jamaah.id}/${new Date().toLocaleDateString('id-ID').replace(/\//g,'')}`;
+    
+    let y = 20;
+    
+    // Header Box (seperti Cetak - hijau dengan logo di kiri)
+    doc.setFillColor(13, 92, 74); // #0D5C4A
+    doc.roundedRect(15, y, 180, 28, 3, 3, 'F');
+    
+    // Logo di KIRI (dalam box hijau)
+    if (cfg.instansi1?.logo) {
+        try {
+            doc.addImage(cfg.instansi1.logo, 'PNG', 20, y + 4, 20, 20);
+        } catch(e) {
+            console.log('Logo skip');
+        }
     }
-    let finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : 130;
-    doc.text(`Total Dibayar: ${formatRupiah(totalBayar)}`, 20, finalY);
-    doc.text(`Sisa Tagihan: ${formatRupiah(sisa > 0 ? sisa : 0)}`, 20, finalY+10);
-    doc.setTextColor(sisa <= 0 ? '#2ecc71' : '#e74c3c');
-    doc.text(`Status: ${sisa <= 0 ? 'LUNAS' : 'BELUM LUNAS'}`, 20, finalY+20);
+    
+    // Text di KANAN logo (dalam box hijau)
+    doc.setTextColor(255, 255, 255); // Putih
+    doc.setFont('times', 'bold');
+    doc.setFontSize(14);
+    doc.text(cfg.instansi1?.nama || 'KBIHU', 45, y + 10);
+    
+    doc.setFont('times', 'normal');
+    doc.setFontSize(9);
+    doc.text(cfg.instansi1?.alamat || '', 45, y + 16);
+    
+    if (cfg.instansi1?.telp) {
+        doc.text('Telp: ' + cfg.instansi1.telp, 45, y + 21);
+    }
+    
+    y += 35;
+    
+    // Judul Invoice
+    doc.setTextColor(13, 92, 74);
+    doc.setFont('times', 'bold');
+    doc.setFontSize(16);
+    doc.text('INVOICE PEMBAYARAN', 105, y, { align: 'center' });
+    y += 7;
+    
+    // Nomor Invoice
+    doc.setFont('times', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(170, 170, 170);
+    doc.text('No: ' + noInvoice, 105, y, { align: 'center' });
+    y += 5;
+    
+    doc.text('Tanggal Cetak: ' + tglCetak, 105, y, { align: 'center' });
+    y += 10;
+    
+    // Info Jamaah
+    doc.setFontSize(11);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('times', 'bold');
+    doc.text('JAMAAH:', 20, y);
+    y += 6;
+    doc.setFont('times', 'normal');
+    doc.text(jamaah.nama_lengkap, 20, y);
+    y += 6;
+    doc.text('Total Paket: ' + formatRupiah(totalHargaPaket), 20, y);
+    y += 10;
+    
+    // Table Transaksi
+    const tableData = transaksiList.map((t, i) => [i+1, t.tanggal, t.keterangan||'-', t.metode||'-', formatRupiah(t.nominal)]);
+    
+    doc.autoTable({
+        startY: y,
+        head: [['No','Tanggal','Keterangan','Metode','Nominal']],
+        body: tableData.length > 0 ? tableData : [['', '', 'Belum ada transaksi', '', '']],
+        theme: 'striped',
+        headStyles: {
+            fillColor: [13, 92, 74],
+            textColor: [255, 255, 255],
+            fontStyle: 'bold'
+        },
+        columnStyles: {
+            0: { halign: 'center', cellWidth: 10 },
+            4: { halign: 'right' }
+        },
+        styles: {
+            fontSize: 9,
+            cellPadding: 2
+        },
+        alternateRowStyles: {
+            fillColor: [249, 249, 249]
+        }
+    });
+    
+    y = doc.lastAutoTable.finalY + 10;
+    
+    // Summary
+    doc.setFont('times', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Total Dibayar: ', 20, y);
+    doc.text(formatRupiah(totalBayar), 60, y);
+    y += 7;
+    
+    doc.text('Sisa Tagihan: ', 20, y);
+    doc.setTextColor(sisa <= 0 ? 16 : 239, sisa <= 0 ? 185 : 76, sisa <= 0 ? 129 : 68);
+    doc.text(formatRupiah(sisa > 0 ? sisa : 0), 60, y);
+    y += 7;
+    
+    doc.setFontSize(12);
+    doc.text('Status: ' + (sisa <= 0 ? 'LUNAS ✓' : 'BELUM LUNAS'), 20, y);
+    y += 15;
+    
+    // Tanda Tangan
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('times', 'normal');
+    doc.setFontSize(11);
+    doc.text('Hormat kami,', 150, y);
+    y += 15;
+    
+    doc.setFont('times', 'bold');
+    const ttdText = cfg.instansi1?.nama || 'KBIHU';
+    doc.text(ttdText, 150, y);
+    const ttdWidth = doc.getTextWidth(ttdText);
+    doc.line(150, y + 1, 150 + ttdWidth, y + 1);
+    
     return { doc, jamaah };
 }
 
@@ -9951,7 +10055,6 @@ async function initPremium() {
     loadThemePremium();
     initDarkMode();
     
-    updateHomeStats();
     loadEstimasiData();
     // Load semua data dari IndexedDB secara berurutan
     await openIndexedDB(); // Pastikan DB terbuka dulu
@@ -9970,6 +10073,9 @@ async function initPremium() {
     loadPengingatData();
     await loadAbsensiData();
     loadSumberHartaList();
+    
+    // UPDATE STATS SETELAH SEMUA DATA LOAD!
+    updateHomeStats();
     
     document.getElementById('adminModeToggleBtn')?.addEventListener('click', (e) => { e.preventDefault(); toggleAdminMode(); });
     document.getElementById('paymentFabOpen')?.addEventListener('click', () => openPaymentModal());
