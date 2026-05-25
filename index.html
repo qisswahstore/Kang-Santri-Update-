@@ -2167,13 +2167,13 @@
                 <i class="fas fa-download"></i> Export <i class="fas fa-chevron-up" style="font-size:11px;"></i>
             </button>
             <div class="export-dropdown-menu" id="exportMenuPembayaran">
+                <div class="export-menu-item" onclick="sharePembayaranPDF(); toggleExportDropdown('exportMenuPembayaran')">
+                    <div class="export-icon" style="background:#10B981;color:white;">📤</div>
+                    <div><div class="export-label">Share PDF</div><div class="export-desc">Langsung kirim WhatsApp/Email</div></div>
+                </div>
                 <div class="export-menu-item" onclick="exportPaymentPDF(); toggleExportDropdown('exportMenuPembayaran')">
                     <div class="export-icon export-icon-cetak">🖨️</div>
                     <div><div class="export-label">Cetak</div><div class="export-desc">Cetak laporan pembayaran</div></div>
-                </div>
-                <div class="export-menu-item" onclick="exportPaymentPDFDownload(); toggleExportDropdown('exportMenuPembayaran')">
-                    <div class="export-icon export-icon-pdf">📄</div>
-                    <div><div class="export-label">Download PDF</div><div class="export-desc">Laporan pembayaran format PDF</div></div>
                 </div>
                 <div class="export-menu-item" onclick="exportPaymentExcel(); toggleExportDropdown('exportMenuPembayaran')">
                     <div class="export-icon export-icon-excel">📊</div>
@@ -2450,17 +2450,9 @@
             <div style="font-size:11px;color:#888;margin-bottom:8px;">Isi surat bisa diedit sebelum cetak/share</div>
             <input type="text" id="suratJudulEdit" placeholder="Judul Surat" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:13px;font-weight:bold;text-align:center;margin-bottom:8px;">
             <textarea id="suratIsiEdit" rows="14" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;background:var(--input-bg);color:var(--text);font-size:13px;line-height:1.8;resize:vertical;font-family:'Times New Roman',serif;"></textarea>
-            <div style="background:#EFF6FF;border-left:3px solid #3B82F6;padding:10px;border-radius:6px;margin-top:10px;margin-bottom:10px;">
-                <div style="font-size:12px;color:#1E40AF;line-height:1.6;">
-                    <span style="font-weight:bold;">💡 Tip:</span><br>
-                    <strong>Share PDF</strong> = Langsung kirim (3 klik)<br>
-                    <strong>Download</strong> = Simpan file dulu (6 klik)<br>
-                    <strong>Cetak</strong> = Print fisik atau preview
-                </div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-                <button onclick="sharePDFSurat()" style="padding:10px 8px;background:#10B981;color:white;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">📤 Share PDF</button>
-                <button onclick="downloadPDFSurat()" style="padding:10px 8px;background:#3B82F6;color:white;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">📄 Download</button>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;">
+                <button onclick="shareSuratPDF()" style="padding:10px 8px;background:#10B981;color:white;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">📤 Share</button>
+                <button onclick="downloadSuratPDF()" style="padding:10px 8px;background:#3B82F6;color:white;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">📄 Download</button>
                 <button onclick="cetakSurat()" style="padding:10px 8px;background:#0D5C4A;color:white;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">🖨️ Cetak</button>
             </div>
         </div>
@@ -3523,8 +3515,7 @@ async function loadKasData() {
 async function saveKasData() { 
     await idbSet(STORE_KAS, 'kas_data', dataKas);
     renderKasTable(); 
-    updateSaldoKas();
-    updateHomeStats(); // Update statistik di halaman home
+    updateSaldoKas(); 
 }
 
 function renderKasTable() { 
@@ -3755,8 +3746,7 @@ async function loadJamaahData() {
 
 async function saveJamaahData() { 
     await idbSet(STORE_JAMAAH, 'jamaah_list', jamaahList);
-    applyJamaahFilterAndSort();
-    updateHomeStats(); // Update statistik di halaman home
+    applyJamaahFilterAndSort(); 
 }
 
 async function loadDynamicFieldsJamaah() { 
@@ -3991,7 +3981,7 @@ function filterSuratJamaah() {
 function getSuratVariables(jamaah, nomorSurat, keperluan) {
     const cfg = getKonfigurasiProData();
     const f = jamaah.additional_fields || {};
-    const kota = cfg.instansi1?.kota || 'Banda Aceh'; // Ambil kota dari konfigurasi
+    const kota = cfg.instansi1?.kota || 'Banda Aceh';
     const tanggal = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
     return {
         nama: jamaah.nama_lengkap || '-',
@@ -4011,7 +4001,7 @@ function getSuratVariables(jamaah, nomorSurat, keperluan) {
         warna: f.warna || '-',
         nomor_surat: nomorSurat || '___/KBIHU/___/2026',
         tanggal: tanggal,
-        kota_tanggal: kota + ', ' + tanggal, // Format: "Banda Aceh, 19 Mei 2026"
+        kota_tanggal: kota + ', ' + tanggal,
         nama_instansi: cfg.instansi1?.nama || 'KBIHU',
         alamat_instansi: cfg.instansi1?.alamat || '-',
         keperluan: keperluan || ''
@@ -4080,9 +4070,7 @@ function buildSuratHTML(jamaah) {
         .kop{text-align:center;border-bottom:3px double #000;padding-bottom:10px;margin-bottom:16px;}
         .kop-nama{font-size:18px;font-weight:bold;text-transform:uppercase;}
         .kop-alamat{font-size:12px;margin-top:4px;}
-        .nomor-tanggal{display:flex;justify-content:space-between;align-items:flex-start;font-size:13px;margin-bottom:16px;}
-        .nomor{text-align:left;}
-        .tanggal{text-align:right;}
+        .nomor{text-align:left;font-size:13px;margin-bottom:16px;}
         .judul{text-align:center;font-size:15px;font-weight:bold;text-decoration:underline;margin-bottom:20px;}
         .isi{font-size:13px;line-height:2;white-space:pre-line;}
         .ttd{margin-top:40px;text-align:right;font-size:13px;}
@@ -4102,10 +4090,7 @@ function buildSuratHTML(jamaah) {
             <div class="kop-nama">${escapeHtml(cfg.instansi1?.nama || 'KBIHU')}</div>
             <div class="kop-alamat">${escapeHtml(cfg.instansi1?.alamat || '')}</div>
         </div>
-        <div class="nomor-tanggal">
-            <div class="nomor">Nomor: ${escapeHtml(nomorSurat || '___/KBIHU/___/2026')}</div>
-            <div class="tanggal">${vars.kota_tanggal}</div>
-        </div>
+        <div class="nomor">Nomor: ${escapeHtml(nomorSurat || '___/KBIHU/___/2026')}<br>${vars.tanggal}</div>
         <div class="judul">${judul}</div>
         <div class="isi">${escapeHtml(isi)}</div>
         <div class="ttd">
@@ -4134,60 +4119,42 @@ function cetakSurat() {
     win.document.close();
 }
 
-async function generateSuratPDF() {
+// Generate PDF surat dengan jsPDF (simple & reliable)
+async function generateSuratPDFSimple() {
     const jamaahId = document.getElementById('suratJamaahSelect')?.value;
     const judul = document.getElementById('suratJudulEdit')?.value || 'SURAT';
     const isi = document.getElementById('suratIsiEdit')?.value;
-    if (!isi) {
-        showToast('Buat surat dulu!');
-        return null;
-    }
-    if (!jamaahId) {
-        showToast('Pilih jamaah dulu!');
-        return null;
-    }
+    if (!isi) { showToast('Buat surat dulu!'); return null; }
+    if (!jamaahId) { showToast('Pilih jamaah dulu!'); return null; }
     const jamaah = jamaahList.find(j => j.id == jamaahId);
     if (!jamaah) return null;
-    
-    const nomorSurat = document.getElementById('suratNomor')?.value;
-    const vars = getSuratVariables(jamaah, nomorSurat, '');
-    const cfg = getKonfigurasiProData();
     
     try {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        
-        // Setup font
-        doc.setFont('times', 'normal');
+        const nomorSurat = document.getElementById('suratNomor')?.value;
+        const vars = getSuratVariables(jamaah, nomorSurat, '');
+        const cfg = getKonfigurasiProData();
         
         let y = 20;
         
-        // Logo (jika ada)
-        if (cfg.instansi1?.logo) {
-            try {
-                doc.addImage(cfg.instansi1.logo, 'PNG', 85, y, 40, 20);
-                y += 25;
-            } catch(e) {
-                // Skip logo jika gagal
-            }
-        }
-        
         // Kop Surat
-        doc.setFontSize(16);
         doc.setFont('times', 'bold');
+        doc.setFontSize(16);
         doc.text(cfg.instansi1?.nama || 'KBIHU', 105, y, { align: 'center' });
         y += 7;
         
-        doc.setFontSize(10);
         doc.setFont('times', 'normal');
+        doc.setFontSize(10);
         doc.text(cfg.instansi1?.alamat || '', 105, y, { align: 'center' });
         y += 5;
         
-        // Garis kop
+        // Garis
         doc.setLineWidth(0.5);
         doc.line(20, y, 190, y);
+        y += 0.5;
         doc.setLineWidth(0.2);
-        doc.line(20, y + 1, 190, y + 1);
+        doc.line(20, y, 190, y);
         y += 8;
         
         // Nomor dan Tanggal
@@ -4201,105 +4168,70 @@ async function generateSuratPDF() {
         doc.setFontSize(12);
         const judulLines = doc.splitTextToSize(judul, 170);
         doc.text(judulLines, 105, y, { align: 'center' });
-        
-        // Garis bawah judul
-        const judulHeight = judulLines.length * 7;
-        y += judulHeight;
+        y += judulLines.length * 7;
         doc.setLineWidth(0.3);
         doc.line(70, y, 140, y);
         y += 8;
         
-        // Isi surat
+        // Isi
         doc.setFont('times', 'normal');
         doc.setFontSize(11);
         const isiLines = doc.splitTextToSize(isi, 170);
-        
-        // Check if content fits, add page if needed
-        let currentY = y;
-        for (let i = 0; i < isiLines.length; i++) {
-            if (currentY > 270) {
-                doc.addPage();
-                currentY = 20;
-            }
-            doc.text(isiLines[i], 20, currentY);
-            currentY += 6;
+        for (let line of isiLines) {
+            if (y > 270) { doc.addPage(); y = 20; }
+            doc.text(line, 20, y);
+            y += 6;
         }
-        
-        y = currentY + 10;
         
         // Tanda tangan
-        if (y > 250) {
-            doc.addPage();
-            y = 20;
-        }
-        
+        if (y > 250) { doc.addPage(); y = 20; }
+        y += 10;
         doc.text('Hormat kami,', 190, y, { align: 'right' });
         y += 25;
-        
         doc.setFont('times', 'bold');
-        const ttdText = cfg.instansi1?.nama || 'KBIHU';
-        doc.text(ttdText, 190, y, { align: 'right' });
+        const ttd = cfg.instansi1?.nama || 'KBIHU';
+        doc.text(ttd, 190, y, { align: 'right' });
+        const w = doc.getTextWidth(ttd);
+        doc.line(190 - w, y + 1, 190, y + 1);
         
-        // Garis bawah tanda tangan
-        const ttdWidth = doc.getTextWidth(ttdText);
-        doc.line(190 - ttdWidth, y + 1, 190, y + 1);
-        
-        return {
-            doc: doc,
-            filename: 'Surat_' + jamaah.nama_lengkap.replace(/[^a-zA-Z0-9]/g, '_') + '.pdf'
-        };
+        return { doc, filename: 'Surat_' + jamaah.nama_lengkap.replace(/[^a-zA-Z0-9]/g, '_') + '.pdf' };
     } catch(e) {
-        showToast('❌ Error: ' + e.message);
+        showToast('Error: ' + e.message);
         return null;
     }
 }
 
-async function downloadPDFSurat() {
+async function shareSuratPDF() {
     showToast('⏳ Membuat PDF...');
-    const result = await generateSuratPDF();
-    if (!result) return;
-    
-    result.doc.save(result.filename);
-    showToast('✅ PDF berhasil didownload!');
-}
-
-async function sharePDFSurat() {
-    showToast('⏳ Membuat PDF...');
-    const result = await generateSuratPDF();
+    const result = await generateSuratPDFSimple();
     if (!result) return;
     
     try {
-        // Convert PDF to blob
-        const pdfBlob = result.doc.output('blob');
-        const file = new File([pdfBlob], result.filename, { type: 'application/pdf' });
+        const blob = result.doc.output('blob');
+        const file = new File([blob], result.filename, { type: 'application/pdf' });
         
-        // Check if Web Share API is available
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-                files: [file],
-                title: 'Surat - ' + result.filename
-            });
+            await navigator.share({ files: [file], title: 'Surat' });
             showToast('✅ PDF dibagikan!');
         } else {
-            // Fallback: download
             result.doc.save(result.filename);
-            showToast('📥 PDF didownload (share tidak didukung browser ini)');
+            showToast('📥 PDF didownload (share tidak didukung)');
         }
     } catch(e) {
-        if (e.name === 'AbortError') {
-            showToast('Share dibatalkan');
-        } else {
+        if (e.name !== 'AbortError') {
             result.doc.save(result.filename);
-            showToast('📥 PDF didownload sebagai alternatif');
+            showToast('📥 PDF didownload');
         }
     }
 }
 
-/* FUNGSI bagikanSurat() DINONAKTIFKAN
-   Alasan: Tombol "Bagikan" dihapus karena lambat (3-5 detik) dan file besar (2 MB PNG)
-   Alternatif lebih baik: User pakai Cetak → Print to PDF → Share via sistem (lebih cepat, file kecil 50 KB)
-   
-   Fungsi ini disimpan untuk referensi, bisa diaktifkan kembali jika diperlukan.
+async function downloadSuratPDF() {
+    showToast('⏳ Membuat PDF...');
+    const result = await generateSuratPDFSimple();
+    if (!result) return;
+    result.doc.save(result.filename);
+    showToast('✅ PDF berhasil didownload!');
+}
 
 async function bagikanSurat() {
     const jamaahId = document.getElementById('suratJamaahSelect')?.value;
@@ -4320,10 +4252,7 @@ async function bagikanSurat() {
             <div style="font-size:18px;font-weight:bold;text-transform:uppercase;">${escapeHtml(cfg.instansi1?.nama || 'KBIHU')}</div>
             <div style="font-size:12px;">${escapeHtml(cfg.instansi1?.alamat || '')}</div>
         </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-            <div style="text-align:left;">Nomor: ${escapeHtml(vars.nomor_surat)}</div>
-            <div style="text-align:right;">${vars.kota_tanggal}</div>
-        </div>
+        <div style="text-align:left;margin-bottom:16px;">Nomor: ${escapeHtml(vars.nomor_surat)}<br>${vars.tanggal}</div>
         <div style="text-align:center;font-weight:bold;text-decoration:underline;margin-bottom:20px;">${judul}</div>
         <div style="white-space:pre-line;">${escapeHtml(isi)}</div>
         <div style="margin-top:40px;text-align:right;">
@@ -4352,7 +4281,6 @@ async function bagikanSurat() {
         showToast('❌ Gagal: ' + e.message);
     }
 }
-*/
 
 function simpanTemplateSuratKustom() {
     const val = document.getElementById('suratKustomTemplate')?.value;
@@ -6397,7 +6325,6 @@ function hitungZakat(){
     hasil.style.display='block'; 
     hasil.scrollIntoView({behavior:"smooth"}); 
     localStorage.setItem('safara_last_zakat_total', totalZakat); 
-    updateHomeStats(); // Update statistik di halaman home
 }
 
 function salinRingkasanZakat(){ 
@@ -10012,6 +9939,7 @@ async function initPremium() {
     loadThemePremium();
     initDarkMode();
     
+    updateHomeStats();
     loadEstimasiData();
     // Load semua data dari IndexedDB secara berurutan
     await openIndexedDB(); // Pastikan DB terbuka dulu
@@ -10030,9 +9958,6 @@ async function initPremium() {
     loadPengingatData();
     await loadAbsensiData();
     loadSumberHartaList();
-    
-    // Update home stats SETELAH semua data dimuat
-    updateHomeStats();
     
     document.getElementById('adminModeToggleBtn')?.addEventListener('click', (e) => { e.preventDefault(); toggleAdminMode(); });
     document.getElementById('paymentFabOpen')?.addEventListener('click', () => openPaymentModal());
@@ -10340,6 +10265,40 @@ async function exportPaymentPDFDownload() {
         doc.save(`Laporan_Pembayaran_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.pdf`);
         showToast('✅ PDF berhasil didownload');
     } catch(e) { showToast('Gagal download: '+e.message); }
+}
+
+async function sharePembayaranPDF() {
+    if(paymentTransaksiList.length===0) return showToast('Tidak ada data transaksi!');
+    showToast('⏳ Membuat PDF...');
+    try {
+        const {jsPDF} = window.jspdf;
+        const doc = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
+        await applyPDFConfig(doc, { landscape: true });
+        let totalMasuk = paymentTransaksiList.reduce((s,t)=>s+t.nominal,0);
+        doc.setFontSize(16); doc.setTextColor(26,93,74);
+        doc.text('LAPORAN PEMBAYARAN JAMAAH', 148.5, 65, { align: 'center' });
+        const tableData = paymentTransaksiList.map((t,i)=>[i+1, t.tanggal, t.nama_jamaah, t.keterangan, t.metode, formatRupiah(t.nominal)]);
+        doc.autoTable({startY:80, head:[['No','Tanggal','Jamaah','Keterangan','Metode','Nominal']], body:tableData, theme:'striped', headStyles:{fillColor:[26,93,74]}, styles:{fontSize:8, lineWidth:0.1}});
+        let finalY = doc.lastAutoTable.finalY + 10;
+        doc.text('TOTAL PEMASUKAN: '+formatRupiah(totalMasuk), 14, finalY);
+        
+        // Share PDF
+        const filename = `Laporan_Pembayaran_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.pdf`;
+        const blob = doc.output('blob');
+        const file = new File([blob], filename, { type: 'application/pdf' });
+        
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: 'Laporan Pembayaran' });
+            showToast('✅ PDF dibagikan!');
+        } else {
+            doc.save(filename);
+            showToast('📥 PDF didownload (share tidak didukung)');
+        }
+    } catch(e) {
+        if (e.name !== 'AbortError') {
+            showToast('Gagal: ' + e.message);
+        }
+    }
 }
 
 // Download PDF langsung - MULTI EVENT
