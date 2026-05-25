@@ -4070,7 +4070,9 @@ function buildSuratHTML(jamaah) {
         .kop{text-align:center;border-bottom:3px double #000;padding-bottom:10px;margin-bottom:16px;}
         .kop-nama{font-size:18px;font-weight:bold;text-transform:uppercase;}
         .kop-alamat{font-size:12px;margin-top:4px;}
-        .nomor{text-align:left;font-size:13px;margin-bottom:16px;}
+        .nomor-tanggal{display:flex;justify-content:space-between;align-items:flex-start;font-size:13px;margin-bottom:16px;}
+        .nomor{text-align:left;}
+        .tanggal{text-align:right;}
         .judul{text-align:center;font-size:15px;font-weight:bold;text-decoration:underline;margin-bottom:20px;}
         .isi{font-size:13px;line-height:2;white-space:pre-line;}
         .ttd{margin-top:40px;text-align:right;font-size:13px;}
@@ -4090,7 +4092,10 @@ function buildSuratHTML(jamaah) {
             <div class="kop-nama">${escapeHtml(cfg.instansi1?.nama || 'KBIHU')}</div>
             <div class="kop-alamat">${escapeHtml(cfg.instansi1?.alamat || '')}</div>
         </div>
-        <div class="nomor">Nomor: ${escapeHtml(nomorSurat || '___/KBIHU/___/2026')}<br>${vars.tanggal}</div>
+        <div class="nomor-tanggal">
+            <div class="nomor">Nomor: ${escapeHtml(nomorSurat || '___/KBIHU/___/2026')}</div>
+            <div class="tanggal">${vars.kota_tanggal}</div>
+        </div>
         <div class="judul">${judul}</div>
         <div class="isi">${escapeHtml(isi)}</div>
         <div class="ttd">
@@ -4137,6 +4142,17 @@ async function generateSuratPDFSimple() {
         const cfg = getKonfigurasiProData();
         
         let y = 20;
+        
+        // Logo (jika ada)
+        if (cfg.instansi1?.logo) {
+            try {
+                doc.addImage(cfg.instansi1.logo, 'PNG', 85, y, 40, 20);
+                y += 25;
+            } catch(e) {
+                // Skip logo jika gagal
+                console.log('Logo gagal dimuat');
+            }
+        }
         
         // Kop Surat
         doc.setFont('times', 'bold');
