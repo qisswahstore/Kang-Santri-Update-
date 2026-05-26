@@ -293,15 +293,22 @@
             margin-bottom: 28px;
             position: relative;
             z-index: 3;
+            flex-wrap: wrap;
         }
         .stat-mini-card {
             flex: 1;
+            min-width: calc(50% - 6px); /* 2 cards per row on mobile */
             background: white;
             padding: 12px 10px;
             border-radius: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             text-align: center;
             transition: all 0.2s;
+        }
+        @media (min-width: 640px) {
+            .stat-mini-card {
+                min-width: auto; /* 4 cards in a row on desktop */
+            }
         }
         .stat-mini-card i {
             font-size: 18px;
@@ -1920,7 +1927,8 @@
     <div class="stats-row">
         <div class="stat-mini-card"><i class="fas fa-coins"></i><div class="stat-label">Total Kas</div><div class="stat-number" id="homeStatKas">Rp 0</div></div>
         <div class="stat-mini-card"><i class="fas fa-users"></i><div class="stat-label">Jamaah</div><div class="stat-number" id="homeStatJamaah">0</div></div>
-        <div class="stat-mini-card"><i class="fas fa-hand-holding-heart"></i><div class="stat-label">Zakat</div><div class="stat-number" id="homeStatZakat">Rp 0</div></div>
+        <div class="stat-mini-card"><i class="fas fa-money-bill-wave"></i><div class="stat-label">Total Piutang</div><div class="stat-number" id="homeStatPiutang">Rp 0</div></div>
+        <div class="stat-mini-card"><i class="fas fa-user-check"></i><div class="stat-label">Jamaah Lunas</div><div class="stat-number" id="homeStatLunas">0</div></div>
     </div>
     <div class="menu-container">
         <div class="section-title"><span><i class="fas fa-th-large"></i> Menu Utama</span></div>
@@ -1946,9 +1954,9 @@
             <div class="section-title"><span> 5 JAMAAH DENGAN TAGIHAN TERBESAR</span></div>
             <div id="topPiutangList"></div>
             <div class="row" style="margin-top:16px;">
-                <button class="btn btn-purple btn-small" onclick="exportDashboardPDF()" style="flex:1"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="btn btn-purple btn-small" onclick="downloadDashboardPDF()" style="flex:1"><i class="fas fa-download"></i> DOWNLOAD PDF</button>
                 <button class="btn btn-teal btn-small" onclick="exportDashboardExcel()" style="flex:1"><i class="fas fa-file-excel"></i> EXCEL</button>
-                <button class="btn btn-primary btn-small" onclick="printDashboard()" style="flex:1"><i class="fas fa-print"></i> PRINT</button>
+                <button class="btn btn-primary btn-small" onclick="cetakDashboardHTML()" style="flex:1"><i class="fas fa-print"></i> CETAK</button>
             </div>
         </div>
     </div>
@@ -1998,13 +2006,13 @@
                 <i class="fas fa-download"></i> Export <i class="fas fa-chevron-up" style="font-size:11px;"></i>
             </button>
             <div class="export-dropdown-menu" id="exportMenuKas">
-                <div class="export-menu-item" onclick="exportKasPDF(); toggleExportDropdown('exportMenuKas')">
+                <div class="export-menu-item" onclick="cetakKasHTML(); toggleExportDropdown('exportMenuKas')">
                     <div class="export-icon export-icon-cetak">🖨️</div>
-                    <div><div class="export-label">Cetak</div><div class="export-desc">Cetak laporan kas</div></div>
+                    <div><div class="export-label">Cetak</div><div class="export-desc">Buka window cetak</div></div>
                 </div>
-                <div class="export-menu-item" onclick="toggleExportDropdown('exportMenuKas'); exportKasPDFDownload();">
-                    <div class="export-icon export-icon-pdf">📄</div>
-                    <div><div class="export-label">Download PDF</div><div class="export-desc">Laporan kas format PDF</div></div>
+                <div class="export-menu-item" onclick="toggleExportDropdown('exportMenuKas'); downloadKasPDF();">
+                    <div class="export-icon export-icon-pdf">📥</div>
+                    <div><div class="export-label">Download PDF</div><div class="export-desc">Download file PDF</div></div>
                 </div>
                 <div class="export-menu-item" onclick="exportKasExcel(); toggleExportDropdown('exportMenuKas')">
                     <div class="export-icon export-icon-excel">📊</div>
@@ -2191,9 +2199,9 @@
                 <i class="fas fa-download"></i> Export <i class="fas fa-chevron-up" style="font-size:11px;"></i>
             </button>
             <div class="export-dropdown-menu" id="exportMenuPembayaran">
-                <div class="export-menu-item" onclick="exportPaymentPDF(); toggleExportDropdown('exportMenuPembayaran')">
+                <div class="export-menu-item" onclick="cetakPembayaranHTML(); toggleExportDropdown('exportMenuPembayaran')">
                     <div class="export-icon export-icon-cetak">🖨️</div>
-                    <div><div class="export-label">Cetak</div><div class="export-desc">Cetak laporan pembayaran</div></div>
+                    <div><div class="export-label">Cetak</div><div class="export-desc">Buka window cetak</div></div>
                 </div>
                 <div class="export-menu-item" onclick="exportPaymentExcel(); toggleExportDropdown('exportMenuPembayaran')">
                     <div class="export-icon export-icon-excel">📊</div>
@@ -2226,13 +2234,13 @@
                 <i class="fas fa-download"></i> Export <i class="fas fa-chevron-up" style="font-size:11px;"></i>
             </button>
             <div class="export-dropdown-menu" id="exportMenuMaster">
-                <div class="export-menu-item" onclick="exportMasterPDF(); toggleExportDropdown('exportMenuMaster')">
+                <div class="export-menu-item" onclick="cetakMasterHTML(); toggleExportDropdown('exportMenuMaster')">
                     <div class="export-icon export-icon-cetak">🖨️</div>
-                    <div><div class="export-label">Cetak</div><div class="export-desc">Cetak data multi event</div></div>
+                    <div><div class="export-label">Cetak</div><div class="export-desc">Buka window cetak</div></div>
                 </div>
-                <div class="export-menu-item" onclick="exportMasterPDFDownload(); toggleExportDropdown('exportMenuMaster')">
-                    <div class="export-icon export-icon-pdf">📄</div>
-                    <div><div class="export-label">Download PDF</div><div class="export-desc">Data multi event format PDF</div></div>
+                <div class="export-menu-item" onclick="downloadMasterPDF(); toggleExportDropdown('exportMenuMaster')">
+                    <div class="export-icon export-icon-pdf">📥</div>
+                    <div><div class="export-label">Download PDF</div><div class="export-desc">Download file PDF</div></div>
                 </div>
                 <div class="export-menu-item" onclick="exportMasterExcel(); toggleExportDropdown('exportMenuMaster')">
                     <div class="export-icon export-icon-excel">📊</div>
@@ -2816,9 +2824,20 @@ function internalShowPage(pageId) {
     if (pageId === 'konfigurasi') { if(window.loadKonfigurasiPro) window.loadKonfigurasiPro(); }
     if (pageId === 'catatan') { if(window.renderCatatanList) window.renderCatatanList(); }
     if (pageId === 'uploaddokumen') { 
-        if(window.renderDokumenList) window.renderDokumenList(); 
-        if(window.renderDokumenFieldsList) window.renderDokumenFieldsList(); 
-        if(window.updateDokumenStats) window.updateDokumenStats(); 
+        // PENTING: Reload jamaah data DAN dokumen data untuk memastikan semua ter-load
+        Promise.all([
+            window.loadJamaahData ? window.loadJamaahData() : Promise.resolve(),
+            window.loadDokumenDataFromIndexedDB ? window.loadDokumenDataFromIndexedDB() : Promise.resolve()
+        ]).then(() => {
+            console.log('✅ Upload Dokumen Page - Jamaah loaded:', jamaahList.length);
+            if(window.renderDokumenList) window.renderDokumenList(); 
+            if(window.renderDokumenFieldsList) window.renderDokumenFieldsList(); 
+            if(window.updateDokumenStats) window.updateDokumenStats(); 
+        }).catch(err => {
+            console.error('❌ Error loading data for Upload Dokumen:', err);
+            // Tetap render meskipun ada error
+            if(window.renderDokumenList) window.renderDokumenList(); 
+        });
     }
     if (pageId === 'foldervirtual') { if(window.renderFolderList) window.renderFolderList(); }
     if (pageId === 'pengingatwa') { if(window.loadPengingatData) window.loadPengingatData(); }
@@ -2860,14 +2879,51 @@ function showToast(msg) {
 
 function updateHomeStats() {
     document.getElementById('homeDate').innerHTML = new Date().toLocaleDateString('id-ID', { weekday: 'long', year:'numeric', month:'long', day:'numeric' });
+    
+    // Total Kas
     const kasData = dataKas;
     const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
     document.getElementById('homeStatKas').innerHTML = 'Rp ' + totalKas.toLocaleString('id-ID');
+    
+    // Total Jamaah
     const jamaahData = jamaahList;
     document.getElementById('homeStatJamaah').innerHTML = jamaahData.length;
-    const lastZakatTotal = localStorage.getItem('safara_last_zakat_total');
-    if (lastZakatTotal && lastZakatTotal !== '0') document.getElementById('homeStatZakat').innerHTML = 'Rp ' + formatRupiah(parseInt(lastZakatTotal));
-    else document.getElementById('homeStatZakat').innerHTML = 'Rp 0';
+    
+    // Hitung Total Piutang dan Jamaah Lunas
+    const paymentData = paymentTransaksiList;
+    let lunasCount = 0, totalPiutang = 0;
+    
+    jamaahData.forEach(j => {
+        const totalBayar = paymentData.filter(t => t.id_jamaah == j.id).reduce((s,t) => s + t.nominal, 0);
+        let totalHargaPaket = null;
+        
+        // Cari field harga/paket di additional_fields
+        if (j.additional_fields) { 
+            for (const key in j.additional_fields) { 
+                if (key.toLowerCase().includes('harga') || key.toLowerCase().includes('paket') || key.toLowerCase().includes('biaya')) { 
+                    const val = j.additional_fields[key]; 
+                    if (val) { 
+                        const cleaned = val.toString().replace(/\./g, '').replace(/[^0-9]/g, ''); 
+                        totalHargaPaket = parseInt(cleaned); 
+                        if (!isNaN(totalHargaPaket) && totalHargaPaket > 0) break; 
+                    } 
+                } 
+            } 
+        }
+        
+        // Hitung lunas dan piutang
+        if (totalHargaPaket && totalHargaPaket > 0) { 
+            if (totalBayar >= totalHargaPaket) {
+                lunasCount++; // Jamaah sudah lunas
+            } else {
+                totalPiutang += (totalHargaPaket - totalBayar); // Masih ada piutang
+            }
+        }
+    });
+    
+    // Update tampilan
+    document.getElementById('homeStatPiutang').innerHTML = 'Rp ' + formatRupiah(totalPiutang);
+    document.getElementById('homeStatLunas').innerHTML = lunasCount;
 }
 
 function escapeHtml(text) { 
@@ -3182,7 +3238,7 @@ function renderDashboard() {
     document.getElementById('topPiutangList').innerHTML = topPiutangHtml || '<p class="text-center">Tidak ada data piutang</p>';
 }
 
-async function printDashboard() {
+async function cetakDashboardHTML() {
     const kasData = dataKas;
     const totalKas = kasData.reduce((s,i) => s + (i.tipe === 'masuk' ? i.nom : -i.nom), 0);
     const jamaahData = jamaahList;
@@ -3265,7 +3321,7 @@ async function printDashboard() {
     printWindow.document.close();
 }
 
-function exportDashboardPDF() {
+async function downloadDashboardPDF() {
     showToast('Membuat PDF Dashboard...');
     setTimeout(async () => {
         try {
@@ -3368,7 +3424,7 @@ function hitungUmroh() {
     lastCalculatedPaket=lokasi; 
     lastCalculatedTotalJam=nJam; 
     let hasil=document.getElementById('hasilEstimasi'); 
-    hasil.innerHTML=`<div class="res-item"><span>Modal Pokok / Pax</span><b>${f(sub)}</b></div><div class="res-item"><span>Total Omzet Grup</span><b>${f(totalOmzet)}</b></div><div class="res-item"><span>Profit Kotor Grup</span><span>${f(profitKotor)}</span></div><div class="res-item"><span>Biaya TL</span><span>${f(biayaTL)}</span></div><div class="res-item"><span>Profit Per Pax</span><span>${f(profitPerPax)}</span></div><div class="res-item" style="color:#2ecc71"><span>PROFIT BERSIH</span><b>${f(bersih)}</b></div><div class="res-item" style="border-top:2px solid var(--accent); margin-top:10px; padding-top:10px; flex-direction:column; align-items:center;"><span style="font-weight:bold">HARGA BROSUR</span><span class="highlight">${f(jual)}</span><p style="font-size:10px; margin-top:5px;">*Berdasarkan ${nJam-nFoc} jamaah bayar dan ${nFoc} gratis</p></div><div class="action-buttons" style="display:flex; gap:10px; margin-top:15px;"><button class="btn" onclick="salinRingkasan()" style="background:#34495e; margin-top:0; flex:1;">SALIN</button><button class="btn" onclick="cetakEstimasiPDFJamaah()" style="background:#2980b9; margin-top:0; flex:1; font-size:11px;">📄 PDF JAMAAH</button><button class="btn" onclick="cetakEstimasiPDFInternal()" style="background:var(--orange); margin-top:0; flex:1; font-size:11px;">📊 PDF INTERNAL</button></div>`; 
+    hasil.innerHTML=`<div class="res-item"><span>Modal Pokok / Pax</span><b>${f(sub)}</b></div><div class="res-item"><span>Total Omzet Grup</span><b>${f(totalOmzet)}</b></div><div class="res-item"><span>Profit Kotor Grup</span><span>${f(profitKotor)}</span></div><div class="res-item"><span>Biaya TL</span><span>${f(biayaTL)}</span></div><div class="res-item"><span>Profit Per Pax</span><span>${f(profitPerPax)}</span></div><div class="res-item" style="color:#2ecc71"><span>PROFIT BERSIH</span><b>${f(bersih)}</b></div><div class="res-item" style="border-top:2px solid var(--accent); margin-top:10px; padding-top:10px; flex-direction:column; align-items:center;"><span style="font-weight:bold">HARGA BROSUR</span><span class="highlight">${f(jual)}</span><p style="font-size:10px; margin-top:5px;">*Berdasarkan ${nJam-nFoc} jamaah bayar dan ${nFoc} gratis</p></div><div class="action-buttons" style="display:flex; gap:10px; margin-top:15px;"><button class="btn" onclick="salinRingkasan()" style="background:#34495e; margin-top:0; flex:1;">SALIN</button><button class="btn" onclick="cetakEstimasiPDFJamaah()" style="background:#2980b9; margin-top:0; flex:1; font-size:11px;">🖨️ CETAK JAMAAH</button><button class="btn" onclick="cetakEstimasiPDFInternal()" style="background:var(--orange); margin-top:0; flex:1; font-size:11px;">🖨️ CETAK INTERNAL</button></div>`; 
     hasil.style.display='block'; 
     hasil.scrollIntoView({behavior:"smooth"}); 
 }
@@ -3655,7 +3711,7 @@ function restoreKasData(input) {
     } 
 }
 
-async function exportKasPDF() {
+async function cetakKasHTML() {
     if(dataKas.length===0) return showToast('Tidak ada data!');
     const cfg = getKonfigurasiProData();
     const judul = document.getElementById('kegiatan').value.trim() || 'Laporan Kas';
@@ -6603,7 +6659,7 @@ function renderPaymentJamaahList() {
         if (needInput) 
             html += `<div class="payment-jamaah-card" style="border-left-color: #f39c12;"><div class="payment-jamaah-info"><h4>${escapeHtml(j.nama_lengkap)}</h4><div class="payment-price-detail" style="color: #f39c12;">⚠️ Total Harga Paket belum diisi!</div></div><div><button class="payment-btn-bayar" onclick="openEditHargaModal('${j.id}')" style="background:#f39c12; color:white;"><i class="fas fa-tag"></i> Atur Harga</button></div></div>`; 
         else 
-            html += `<div class="payment-jamaah-card" style="border-left-color: ${warna};"><div class="payment-jamaah-info"><h4>${escapeHtml(j.nama_lengkap)}</h4><div class="payment-price-detail">💰 Total Paket: ${formatRupiah(totalHargaPaket)}<br>💸 Dibayar: ${formatRupiah(totalBayar)}</div></div><div style="text-align: right;"><div class="payment-sisa-badge" style="color: ${warna}; margin-bottom: 8px;">${status === 'LUNAS' ? '✅ LUNAS' : '💵 Sisa ' + formatRupiah(sisa)}</div><div><button class="payment-btn-bayar" onclick="openPaymentModalWithJamaah('${j.id}')"><i class="fas fa-plus-circle"></i> Bayar</button><button class="payment-btn-bayar" onclick="prepareInvoice('${j.id}')"><i class="fas fa-file-invoice"></i> WA</button><button class="payment-btn-bayar" onclick="cetakInvoicePDF('${j.id}')"><i class="fas fa-file-pdf"></i> PDF</button><button class="payment-btn-bayar" onclick="cetakInvoiceLangsung('${j.id}')"><i class="fas fa-print"></i> Cetak</button><button class="payment-btn-bayar" onclick="openEditHargaModal('${j.id}')"><i class="fas fa-edit"></i> Harga</button><button class="payment-btn-bayar" onclick="openRiwayatModal('${j.id}')"><i class="fas fa-history"></i> Riwayat</button></div></div></div>`; 
+            html += `<div class="payment-jamaah-card" style="border-left-color: ${warna};"><div class="payment-jamaah-info"><h4>${escapeHtml(j.nama_lengkap)}</h4><div class="payment-price-detail">💰 Total Paket: ${formatRupiah(totalHargaPaket)}<br>💸 Dibayar: ${formatRupiah(totalBayar)}</div></div><div style="text-align: right;"><div class="payment-sisa-badge" style="color: ${warna}; margin-bottom: 8px;">${status === 'LUNAS' ? '✅ LUNAS' : '💵 Sisa ' + formatRupiah(sisa)}</div><div><button class="payment-btn-bayar" onclick="openPaymentModalWithJamaah('${j.id}')"><i class="fas fa-plus-circle"></i> Bayar</button><button class="payment-btn-bayar" onclick="prepareInvoice('${j.id}')"><i class="fas fa-file-invoice"></i> WA</button><button class="payment-btn-bayar" onclick="previewInvoicePDF('${j.id}')"><i class="fas fa-eye"></i> Preview</button><button class="payment-btn-bayar" onclick="cetakInvoiceAuto('${j.id}')"><i class="fas fa-print"></i> Cetak</button><button class="payment-btn-bayar" onclick="openEditHargaModal('${j.id}')"><i class="fas fa-edit"></i> Harga</button><button class="payment-btn-bayar" onclick="openRiwayatModal('${j.id}')"><i class="fas fa-history"></i> Riwayat</button></div></div></div>`; 
     }); 
     if (filteredJamaah.length === 0) html = '<div style="text-align:center; padding:20px; color:#94a3b8;">Tidak ada jamaah yang sesuai dengan filter.</div>'; 
     container.innerHTML = html; 
@@ -6854,7 +6910,7 @@ async function generateInvoicePDFDoc(jamaahId) {
     return { doc, jamaah };
 }
 
-async function cetakInvoicePDF(jamaahId) {
+async function previewInvoicePDF(jamaahId) {
     showToast('Menyiapkan Invoice...');
     try {
         const result = await generateInvoicePDFDoc(jamaahId);
@@ -6872,7 +6928,7 @@ async function cetakInvoicePDF(jamaahId) {
     }
 }
 
-async function cetakInvoiceLangsung(jamaahId) {
+async function cetakInvoiceAuto(jamaahId) {
     showToast('Menyiapkan cetak...');
     try {
         const jamaah = jamaahList.find(j => j.id == jamaahId);
@@ -7060,7 +7116,7 @@ function filterPaymentJamaahList() {
     renderPaymentJamaahList(); 
 }
 
-async function exportPaymentPDF() {
+async function cetakPembayaranHTML() {
     if(paymentTransaksiList.length===0) return showToast('Tidak ada data transaksi!');
     const cfg = getKonfigurasiProData();
     const tglCetak = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
@@ -7762,12 +7818,21 @@ async function loadDokumenDataFromIndexedDB() {
             request.onsuccess = () => { 
                 const items = request.result || []; 
                 dokumenData = {}; 
-                items.forEach(item => { dokumenData[item.jamaahId] = item.data; }); 
+                items.forEach(item => { 
+                    dokumenData[item.jamaahId] = item.data; 
+                }); 
+                console.log('✅ Loaded dokumen data:', Object.keys(dokumenData).length, 'jamaah with documents');
                 resolve(); 
             }; 
-            request.onerror = () => reject(request.error); 
+            request.onerror = () => {
+                console.error('❌ Error loading dokumen data:', request.error);
+                reject(request.error);
+            }; 
         }); 
-    } catch(e) { return Promise.resolve(); } 
+    } catch(e) { 
+        console.error('❌ Error loadDokumenDataFromIndexedDB:', e);
+        return Promise.resolve(); 
+    } 
 }
 
 async function saveDokumenToIndexedDB(jamaahId, jenisId, base64Data) { 
@@ -7775,11 +7840,32 @@ async function saveDokumenToIndexedDB(jamaahId, jenisId, base64Data) {
         const database = await openIndexedDB(); 
         const transaction = database.transaction([STORE_NAME], 'readwrite'); 
         const store = transaction.objectStore(STORE_NAME); 
+        
+        // Update local dokumenData
         if (!dokumenData[jamaahId]) dokumenData[jamaahId] = {}; 
         if (jenisId && base64Data) dokumenData[jamaahId][jenisId] = base64Data; 
-        const request = store.put({ id: `jamaah_${jamaahId}`, jamaahId: jamaahId, data: dokumenData[jamaahId] }); 
-        return new Promise((resolve, reject) => { request.onsuccess = () => resolve(); request.onerror = () => reject(request.error); }); 
-    } catch(e) { return Promise.reject(e); } 
+        
+        // Save to IndexedDB
+        const request = store.put({ 
+            id: `jamaah_${jamaahId}`, 
+            jamaahId: jamaahId, 
+            data: dokumenData[jamaahId] 
+        }); 
+        
+        return new Promise((resolve, reject) => { 
+            request.onsuccess = () => {
+                console.log('✅ Dokumen berhasil disimpan untuk jamaah:', jamaahId, 'jenis:', jenisId);
+                resolve();
+            }; 
+            request.onerror = () => {
+                console.error('❌ Error menyimpan dokumen:', request.error);
+                reject(request.error);
+            }; 
+        }); 
+    } catch(e) { 
+        console.error('❌ Error saveDokumenToIndexedDB:', e);
+        return Promise.reject(e); 
+    } 
 }
 
 async function loadDokumenData() { 
@@ -7792,7 +7878,31 @@ async function loadDokumenData() {
 
 function renderDokumenList() { 
     const container = document.getElementById('dokumenListContainer'); 
-    if(!container) return; 
+    if(!container) {
+        console.warn('⚠️ dokumenListContainer not found');
+        return;
+    }
+    
+    console.log('🔄 Rendering dokumen list...');
+    console.log('📊 Jamaah count:', jamaahList.length);
+    console.log('📊 Dokumen data keys:', Object.keys(dokumenData).length);
+    
+    // PENTING: Cek jika jamaahList kosong
+    if(!jamaahList || jamaahList.length === 0) {
+        console.error('❌ jamaahList is empty! Data jamaah belum ter-load.');
+        container.innerHTML = `
+            <div class="card-premium" style="margin:0; padding: 40px; text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                <h3 style="color: var(--primary); margin-bottom: 12px;">Belum Ada Data Jamaah</h3>
+                <p style="color: var(--gray); margin-bottom: 20px;">Silakan tambah jamaah terlebih dahulu di menu Jamaah</p>
+                <button onclick="showPage('jamaah')" style="padding: 12px 24px; background: var(--primary); color: white; border: none; border-radius: 24px; font-weight: 600; cursor: pointer;">
+                    ➕ Tambah Jamaah
+                </button>
+            </div>
+        `;
+        return;
+    }
+    
     const keyword = document.getElementById('searchDokumenInput')?.value.toLowerCase() || ''; 
     const filterStatus = document.getElementById('filterDokumenStatus')?.value || 'semua'; 
     let filtered = [...jamaahList]; 
@@ -7803,7 +7913,12 @@ function renderDokumenList() {
         if(filterStatus === 'kurang') return !status.lengkap; 
         return true; 
     }); 
-    if(filtered.length === 0) { container.innerHTML = '<div class="card-premium" style="margin:0;"><p class="text-center">Tidak ada jamaah</p></div>'; return; } 
+    
+    if(filtered.length === 0) { 
+        container.innerHTML = '<div class="card-premium" style="margin:0;"><p class="text-center">Tidak ada jamaah</p></div>'; 
+        return; 
+    } 
+    
     let html = ''; 
     filtered.forEach(j => { 
         const status = getStatusKelengkapanDokumen(j.id); 
@@ -7842,6 +7957,7 @@ function renderDokumenList() {
         html += `</div></div>`; 
     }); 
     container.innerHTML = html; 
+    console.log('✅ Dokumen list rendered');
 }
 
 function updateDokumenStats() { 
@@ -8118,17 +8234,37 @@ async function uploadDokumen(jamaahId, jenisId, jenisNama) {
             const reader = new FileReader(); 
             reader.onload = async (event) => { 
                 try { 
+                    // Save dokumen to IndexedDB
                     await saveDokumenToIndexedDB(jamaahId, jenisId, event.target.result); 
+                    
+                    // PENTING: Reload data dari IndexedDB untuk memastikan sinkron
+                    await loadDokumenDataFromIndexedDB();
+                    
+                    // Render ulang list dokumen
                     renderDokumenList(); 
                     updateDokumenStats(); 
+                    
+                    // Show success message
                     if (sizeMB > 0.5) showToast(`✅ ${jenisNama} berhasil! ${originalSizeKB}KB → ${compressedSizeKB}KB (hemat ${hematPersen}%)`); 
                     else showToast(`✅ ${jenisNama} berhasil diupload (${compressedSizeKB} KB)`); 
+                    
+                    // Close modal
                     modal.remove(); 
-                } catch(err) { showToast('❌ Gagal menyimpan. Coba lagi.'); uploadBtn.disabled = false; uploadBtn.innerHTML = 'UPLOAD'; } 
+                } catch(err) { 
+                    console.error('Save error:', err);
+                    showToast('❌ Gagal menyimpan. Coba lagi.'); 
+                    uploadBtn.disabled = false; 
+                    uploadBtn.innerHTML = 'UPLOAD'; 
+                } 
             }; 
             reader.onerror = () => { showToast('❌ Gagal membaca file'); uploadBtn.disabled = false; uploadBtn.innerHTML = 'UPLOAD'; }; 
             reader.readAsDataURL(fileToUpload); 
-        } catch(error) { showToast('❌ Gagal kompres: ' + error); uploadBtn.disabled = false; uploadBtn.innerHTML = 'UPLOAD'; } 
+        } catch(error) { 
+            console.error('Compress error:', error);
+            showToast('❌ Gagal kompres: ' + error); 
+            uploadBtn.disabled = false; 
+            uploadBtn.innerHTML = 'UPLOAD'; 
+        } 
     }; 
     const batalBtn = modal.querySelector('#batalBtn'); 
     batalBtn.onclick = () => modal.remove(); 
@@ -9418,7 +9554,7 @@ function shareAllMasterToWA() {
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
 }
 
-async function exportMasterPDF() {
+async function cetakMasterHTML() {
     if(masterDataList.length === 0) { showToast('Tidak ada data!'); return; }
     const cfgMaster = getKonfigurasiProData();
     const judul = getMasterJudul();
@@ -10364,7 +10500,7 @@ async function cetakDariBlob(generateFn) {
 }
 
 // Download PDF langsung - KAS
-async function exportKasPDFDownload() {
+async function downloadKasPDF() {
     if(dataKas.length===0) return showToast('Tidak ada data!');
     showToast('Menyiapkan download...');
     try {
@@ -10389,7 +10525,7 @@ async function exportKasPDFDownload() {
 }
 
 // Download PDF langsung - PEMBAYARAN
-async function exportPaymentPDFDownload() {
+async function downloadPembayaranPDF() {
     if(paymentTransaksiList.length===0) return showToast('Tidak ada data transaksi!');
     showToast('Menyiapkan download...');
     try {
@@ -10537,7 +10673,7 @@ async function sharePembayaranPDF() {
 }
 
 // Download PDF langsung - MULTI EVENT
-async function exportMasterPDFDownload() {
+async function downloadMasterPDF() {
     if(masterDataList.length===0) return showToast('Tidak ada data!');
     showToast('Menyiapkan download...');
     try {
