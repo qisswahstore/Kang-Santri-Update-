@@ -2094,10 +2094,7 @@
             </p>
             <button class="btn btn-danger btn-small mt-2" onclick="confirmDeleteAllJamaahKita()">🗑️ HAPUS SEMUA JAMAAH ON PROSES</button>
         </div>
-        <div class="section-title" style="display:flex;align-items:center;justify-content:space-between;">
-            <span>📋 TAMBAH DATA</span>
-            <button onclick="openCustomizeKitaFormModal()" title="Pilih field yang ditampilkan" style="background:none;border:1px solid #ccc;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:18px;color:var(--primary);">⚙️</button>
-        </div>
+        <div class="section-title"><span>📋 TAMBAH DATA</span></div>
         <div class="input-group">
             <label>Pilih Jamaah dari database</label>
             <input type="text" id="searchJamaahKitaAdd" placeholder="🔍 Cari nama jamaah..." oninput="filterPilihJamaahKita()" style="margin-bottom:8px;">
@@ -2673,22 +2670,6 @@
             <button class="btn btn-secondary" onclick="closeCustomizeAbsensiModal()" style="flex:1">Batal</button>
             <button class="btn btn-secondary" onclick="resetAbsensiColumns()" style="flex:1">Reset Default</button>
             <button class="btn btn-primary" onclick="saveAbsensiColumns()" style="flex:1">Simpan</button>
-        </div>
-    </div>
-</div>
-
-<!-- CUSTOMIZE KITA FORM MODAL -->
-<div id="customizeKitaFormModal" class="modal" style="display:none;">
-    <div class="modal-content" style="max-width:600px;">
-        <h3>⚙️ Pilih Field Tambah Data</h3>
-        <p style="color:#666;font-size:13px;margin-bottom:16px;">Pilih field yang ingin ditampilkan di form Tambah Data On Proses</p>
-        <div style="margin-bottom:16px;">
-            <div id="kitaFormFieldsList" style="display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow-y:auto;padding-right:4px;"></div>
-        </div>
-        <div style="display:flex;gap:10px;">
-            <button class="btn btn-secondary" onclick="closeCustomizeKitaFormModal()" style="flex:1">Batal</button>
-            <button class="btn btn-secondary" onclick="resetKitaFormFields()" style="flex:1">Reset Default</button>
-            <button class="btn btn-primary" onclick="saveKitaFormFields()" style="flex:1">Simpan</button>
         </div>
     </div>
 </div>
@@ -5913,81 +5894,13 @@ function tambahJamaahKitaMulti() {
 function renderJamaahKitaDynamicFieldsForm() {
     const container = document.getElementById('jamaahKitaDynamicFields');
     if (!container) return;
-    const visibleNames = getKitaFormVisibleFields();
     let html = "";
     dynamicFieldsJamaahKita.forEach(field => {
-        if (field.name === "whatsapp") return; // whatsapp auto-fill, tidak perlu tampil
-        if (!visibleNames.has(field.name)) return; // Hanya tampilkan field yang dipilih
-        html += `<div class="input-group"><label>${field.icon || '📌'} ${escapeHtml(field.label)}</label><input type="text" id="jamaahKitaField_${field.name}" placeholder="${field.icon || '📌'} ${escapeHtml(field.label)}"></div>`;
+        if (field.name !== "whatsapp") {
+            html += `<div class="input-group"><label>${field.icon || '📌'} ${escapeHtml(field.label)}</label><input type="text" id="jamaahKitaField_${field.name}" placeholder="${field.icon || '📌'} ${escapeHtml(field.label)}"></div>`;
+        }
     });
-    if (!html) html = `<p style="color:#888;font-size:13px;text-align:center;padding:12px 0;">Tidak ada field yang dipilih. Klik ⚙️ untuk mengatur.</p>`;
     container.innerHTML = html;
-}
-
-// ===== CUSTOMIZE KITA FORM FIELDS =====
-
-function getKitaFormVisibleFields() {
-    const saved = localStorage.getItem('safara_kita_form_fields');
-    if (saved) {
-        try {
-            const arr = JSON.parse(saved);
-            return new Set(arr.filter(f => f.show).map(f => f.name));
-        } catch(e) {}
-    }
-    // Default: tampilkan kamar, bus, rombongan, no_porsi
-    const DEFAULT_ON = ['kamar', 'bus', 'rombongan', 'no_porsi'];
-    return new Set(dynamicFieldsJamaahKita.filter(f => DEFAULT_ON.includes(f.name)).map(f => f.name));
-}
-
-function openCustomizeKitaFormModal() {
-    const saved = localStorage.getItem('safara_kita_form_fields');
-    let savedMap = {};
-    if (saved) {
-        try { JSON.parse(saved).forEach(f => { savedMap[f.name] = f; }); } catch(e) {}
-    }
-    const DEFAULT_ON = ['kamar', 'bus', 'rombongan', 'no_porsi'];
-    let html = '';
-    dynamicFieldsJamaahKita.forEach(field => {
-        if (field.name === 'whatsapp') return;
-        const s = savedMap[field.name];
-        const isShow = s ? s.show : DEFAULT_ON.includes(field.name);
-        html += `
-        <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card-bg);border:1.5px solid ${isShow ? 'var(--primary)' : '#e2e8f0'};border-radius:10px;transition:all 0.2s;">
-            <input type="checkbox" id="kff_${field.name}" ${isShow ? 'checked' : ''}
-                onchange="this.closest('div').style.borderColor=this.checked?'var(--primary)':'#e2e8f0'"
-                style="width:18px;height:18px;cursor:pointer;accent-color:var(--primary);">
-            <span style="font-size:18px;">${field.icon || '📋'}</span>
-            <span style="font-weight:500;">${escapeHtml(field.label)}</span>
-        </div>`;
-    });
-    document.getElementById('kitaFormFieldsList').innerHTML = html;
-    document.getElementById('customizeKitaFormModal').style.display = 'flex';
-}
-
-function closeCustomizeKitaFormModal() {
-    document.getElementById('customizeKitaFormModal').style.display = 'none';
-}
-
-function saveKitaFormFields() {
-    const result = [];
-    dynamicFieldsJamaahKita.forEach(field => {
-        if (field.name === 'whatsapp') return;
-        const cb = document.getElementById(`kff_${field.name}`);
-        if (cb) result.push({ name: field.name, show: cb.checked });
-    });
-    localStorage.setItem('safara_kita_form_fields', JSON.stringify(result));
-    closeCustomizeKitaFormModal();
-    renderJamaahKitaDynamicFieldsForm();
-    showToast('✅ Pengaturan field berhasil disimpan!');
-}
-
-function resetKitaFormFields() {
-    if (confirm('Reset ke pengaturan default?')) {
-        localStorage.removeItem('safara_kita_form_fields');
-        closeCustomizeKitaFormModal();
-        renderJamaahKitaDynamicFieldsForm();
-        showToast('✅ Pengaturan direset ke default!');
-    }
 }
 
 function autoFillJamaahKitaFields(selectedIndex) {
@@ -6473,12 +6386,20 @@ function renderJamaahKitaFieldsList() {
     dynamicFieldsJamaahKita.forEach((f, idx) => {
         const isProtected = f.name === 'whatsapp';
         const checked = saved.length === 0 || saved.includes(f.name);
+        const isFirst = idx === 0;
+        const isLast = idx === dynamicFieldsJamaahKita.length - 1;
         html += `<div style="display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px solid #eee;">
             <input type="checkbox" value="${f.name}" ${checked?'checked':''} onchange="saveOnProsesPrintFields()"
                 style="width:18px;height:18px;accent-color:#0D5C4A;flex-shrink:0;cursor:pointer;">
             <div style="flex:1;min-width:0;">
                 <div style="font-weight:bold;font-size:13px;">${f.icon||'📌'} ${escapeHtml(f.label)}</div>
                 <div style="font-size:10px;color:#94a3b8;">${f.name} (${f.type||'text'})${f.isRequired?' · WAJIB':''}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0;">
+                <button onclick="moveKitaFieldUp(${idx})" ${isFirst?'disabled':''} title="Geser ke atas"
+                    style="padding:2px 7px;font-size:13px;background:${isFirst?'#e2e8f0':'#0D5C4A'};color:${isFirst?'#aaa':'white'};border:none;border-radius:6px;cursor:${isFirst?'default':'pointer'};">▲</button>
+                <button onclick="moveKitaFieldDown(${idx})" ${isLast?'disabled':''} title="Geser ke bawah"
+                    style="padding:2px 7px;font-size:13px;background:${isLast?'#e2e8f0':'#0D5C4A'};color:${isLast?'#aaa':'white'};border:none;border-radius:6px;cursor:${isLast?'default':'pointer'};">▼</button>
             </div>
             <div style="display:flex;gap:4px;flex-shrink:0;">
                 <button onclick="editJamaahKitaDynamicField(${idx})"
@@ -6491,9 +6412,26 @@ function renderJamaahKitaFieldsList() {
         </div>`;
     });
     container.innerHTML = html;
-    // Update also the separate print selector if exists
     const printContainer = document.getElementById('onProsesFieldPrintSelector');
     if (printContainer) printContainer.innerHTML = '';
+}
+
+function moveKitaFieldUp(idx) {
+    if (idx <= 0) return;
+    [dynamicFieldsJamaahKita[idx - 1], dynamicFieldsJamaahKita[idx]] =
+        [dynamicFieldsJamaahKita[idx], dynamicFieldsJamaahKita[idx - 1]];
+    saveDynamicFieldsJamaahKita();
+    renderJamaahKitaFieldsList();
+    renderJamaahKitaDynamicFieldsForm();
+}
+
+function moveKitaFieldDown(idx) {
+    if (idx >= dynamicFieldsJamaahKita.length - 1) return;
+    [dynamicFieldsJamaahKita[idx], dynamicFieldsJamaahKita[idx + 1]] =
+        [dynamicFieldsJamaahKita[idx + 1], dynamicFieldsJamaahKita[idx]];
+    saveDynamicFieldsJamaahKita();
+    renderJamaahKitaFieldsList();
+    renderJamaahKitaDynamicFieldsForm();
 }
 
 function editJamaahKitaDynamicField(idx) {
