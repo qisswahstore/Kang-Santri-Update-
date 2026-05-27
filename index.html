@@ -7564,6 +7564,11 @@ async function saveFolderData() {
     renderFolderList(); 
 }
 
+// Simpan tanpa render ulang halaman — dipakai saat update field selector agar tidak keluar halaman
+async function saveFolderDataSilent() {
+    await idbSet(STORE_FOLDER, 'folder_list', folderList);
+}
+
 function tambahFolder() { 
     const nama = document.getElementById('newFolderName')?.value.trim(); 
     if(!nama) return showToast('Isi nama folder!'); 
@@ -7797,7 +7802,7 @@ function pilihSemuaFolderField(folderId) {
     dynamicFieldsJamaah.forEach(fd => {
         if(!folder.selectedFields.includes(fd.name)) folder.selectedFields.push(fd.name);
     });
-    saveFolderData();
+    saveFolderDataSilent();
     renderFolderFieldSelector(folderId);
     showToast('✅ Semua field dipilih!');
 }
@@ -7806,7 +7811,7 @@ function hapusPilihanFolderField(folderId) {
     const folder = folderList.find(f => f.id == folderId);
     if(!folder) return;
     folder.selectedFields = [];
-    saveFolderData();
+    saveFolderDataSilent();
     renderFolderFieldSelector(folderId);
     showToast('❌ Semua pilihan dihapus!');
 }
@@ -7823,7 +7828,7 @@ function toggleFolderField(folderId, fieldKey, checked) {
         folderList[folderIdx].selectedFields = folderList[folderIdx].selectedFields.filter(k => k !== fieldKey);
     }
     // Simpan diam-diam tanpa render ulang agar posisi scroll tidak berubah
-    saveFolderData();
+    saveFolderDataSilent();
 }
 
 function addFolderField(folderId) {
@@ -7868,7 +7873,7 @@ function moveFolderFieldUp(folderId, idx) {
     const folder = folderList.find(f => f.id == folderId);
     if (!folder || !folder.fieldOrder || idx <= 0) return;
     [folder.fieldOrder[idx - 1], folder.fieldOrder[idx]] = [folder.fieldOrder[idx], folder.fieldOrder[idx - 1]];
-    saveFolderData();
+    saveFolderDataSilent();
     renderFolderFieldSelector(folderId);
 }
 
@@ -7876,7 +7881,7 @@ function moveFolderFieldDown(folderId, idx) {
     const folder = folderList.find(f => f.id == folderId);
     if (!folder || !folder.fieldOrder || idx >= folder.fieldOrder.length - 1) return;
     [folder.fieldOrder[idx], folder.fieldOrder[idx + 1]] = [folder.fieldOrder[idx + 1], folder.fieldOrder[idx]];
-    saveFolderData();
+    saveFolderDataSilent();
     renderFolderFieldSelector(folderId);
 }
 
