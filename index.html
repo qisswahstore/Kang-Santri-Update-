@@ -2094,7 +2094,10 @@
             </p>
             <button class="btn btn-danger btn-small mt-2" onclick="confirmDeleteAllJamaahKita()">🗑️ HAPUS SEMUA JAMAAH ON PROSES</button>
         </div>
-        <div class="section-title"><span>📋 TAMBAH DATA</span></div>
+        <div class="section-title" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>📋 TAMBAH DATA</span>
+            <button onclick="openCustomizeKitaFormModal()" title="Pilih field yang ditampilkan" style="background:none;border:1px solid #ccc;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:18px;color:var(--primary);">⚙️</button>
+        </div>
         <div class="input-group">
             <label>Pilih Jamaah dari database</label>
             <input type="text" id="searchJamaahKitaAdd" placeholder="🔍 Cari nama jamaah..." oninput="filterPilihJamaahKita()" style="margin-bottom:8px;">
@@ -2565,6 +2568,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
                 <div style="font-weight:bold;color:var(--primary);">📋 Rekap Sesi Aktif</div>
                 <div style="display:flex;gap:6px;">
+                    <button onclick="openCustomizeAbsensiModal()" style="padding:6px 10px;background:#64748B;color:white;border:none;border-radius:8px;font-size:11px;cursor:pointer;">⚙️</button>
                     <button onclick="eksporAbsensi()" style="padding:6px 10px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:11px;cursor:pointer;">🖨️ PDF</button>
                     <button onclick="eksporAbsensiExcel()" style="padding:6px 10px;background:#1D6F42;color:white;border:none;border-radius:8px;font-size:11px;cursor:pointer;">📊 Excel</button>
                     <button onclick="eksporAbsensiCSV()" style="padding:6px 10px;background:#3B82F6;color:white;border:none;border-radius:8px;font-size:11px;cursor:pointer;">📄 CSV</button>
@@ -2612,9 +2616,80 @@
                 <div id="jumlahDipilihLabel" style="font-size:12px;color:#0D5C4A;margin-top:6px;font-weight:bold;"></div>
             </div>
             <div class="row"><div class="input-group"><label>Ukuran Label</label><select id="labelSize"><option value="small">Kecil (40x30mm)</option><option value="medium" selected>Sedang (60x40mm)</option><option value="large">Besar (80x50mm)</option></select></div><div class="input-group"><label>Template</label><select id="labelTemplate"><option value="nametag">Name Tag</option><option value="luggage">Stiker Koper</option><option value="both">Name Tag + Koper</option></select></div></div>
-            <button class="btn btn-primary" onclick="cetakLabel()"><i class="fas fa-print"></i> CETAK LABEL</button>
+            <div style="display:flex;gap:10px;">
+                <button class="btn btn-secondary" onclick="openCustomizeNameTagModal()" style="flex:1"><i class="fas fa-cog"></i> Customize Fields</button>
+                <button class="btn btn-primary" onclick="cetakLabel()" style="flex:2"><i class="fas fa-print"></i> CETAK LABEL</button>
+            </div>
         </div>
         <div id="labelPreviewContainer" class="card-premium" style="display:none;"><h4>Preview Label</h4><div id="labelPreview"></div><button class="btn btn-primary mt-2" onclick="printLabelPreview()"><i class="fas fa-print"></i> Cetak</button></div>
+    </div>
+</div>
+
+<!-- Modal Customize Name Tag Fields -->
+<div id="customizeNameTagModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:600px;">
+        <h3>⚙️ Customize Name Tag Fields</h3>
+        <p style="color:#666;font-size:13px;margin-bottom:16px;">Pilih field mana yang ingin ditampilkan di Name Tag</p>
+        
+        <div style="background:#f8f9fa;padding:12px;border-radius:8px;margin-bottom:16px;">
+            <div style="font-size:12px;color:#666;margin-bottom:8px;">Field Wajib (tidak bisa dinonaktifkan):</div>
+            <div style="background:white;padding:8px;border-radius:6px;font-size:13px;color:#0D5C4A;">
+                ✓ Nama Jamaah
+            </div>
+        </div>
+        
+        <div style="margin-bottom:16px;">
+            <div style="font-size:12px;font-weight:bold;margin-bottom:8px;">Field Opsional:</div>
+            <div id="nameTagFieldsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+        
+        <div style="display:flex;gap:10px;">
+            <button class="btn btn-secondary" onclick="closeCustomizeNameTagModal()" style="flex:1">Batal</button>
+            <button class="btn btn-secondary" onclick="resetNameTagFields()" style="flex:1">Reset Default</button>
+            <button class="btn btn-primary" onclick="saveNameTagFields()" style="flex:1">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Customize Absensi Columns -->
+<div id="customizeAbsensiModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:600px;">
+        <h3>⚙️ Customize Rekap Absensi</h3>
+        <p style="color:#666;font-size:13px;margin-bottom:16px;">Pilih kolom mana yang ingin ditampilkan di Rekap Absensi</p>
+        
+        <div style="background:#f8f9fa;padding:12px;border-radius:8px;margin-bottom:16px;">
+            <div style="font-size:12px;color:#666;margin-bottom:8px;">Kolom Wajib (tidak bisa dinonaktifkan):</div>
+            <div style="background:white;padding:8px;border-radius:6px;font-size:13px;color:#0D5C4A;">
+                ✓ No | ✓ Nama Jamaah | ✓ Waktu Hadir
+            </div>
+        </div>
+        
+        <div style="margin-bottom:16px;">
+            <div style="font-size:12px;font-weight:bold;margin-bottom:8px;">Kolom Opsional:</div>
+            <div id="absensiColumnsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+        
+        <div style="display:flex;gap:10px;">
+            <button class="btn btn-secondary" onclick="closeCustomizeAbsensiModal()" style="flex:1">Batal</button>
+            <button class="btn btn-secondary" onclick="resetAbsensiColumns()" style="flex:1">Reset Default</button>
+            <button class="btn btn-primary" onclick="saveAbsensiColumns()" style="flex:1">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<!-- CUSTOMIZE KITA FORM MODAL -->
+<div id="customizeKitaFormModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:600px;">
+        <h3>⚙️ Pilih Field Tambah Data</h3>
+        <p style="color:#666;font-size:13px;margin-bottom:16px;">Pilih field yang ingin ditampilkan di form Tambah Data On Proses</p>
+        <div style="margin-bottom:16px;">
+            <div id="kitaFormFieldsList" style="display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow-y:auto;padding-right:4px;"></div>
+        </div>
+        <div style="display:flex;gap:10px;">
+            <button class="btn btn-secondary" onclick="closeCustomizeKitaFormModal()" style="flex:1">Batal</button>
+            <button class="btn btn-secondary" onclick="resetKitaFormFields()" style="flex:1">Reset Default</button>
+            <button class="btn btn-primary" onclick="saveKitaFormFields()" style="flex:1">Simpan</button>
+        </div>
     </div>
 </div>
 
@@ -2834,8 +2909,8 @@ function internalShowPage(pageId) {
             if(window.renderDokumenFieldsList) window.renderDokumenFieldsList(); 
             if(window.updateDokumenStats) window.updateDokumenStats(); 
         }).catch(err => {
-            console.error('❌ Error loading data for Upload Dokumen:', err);
-            // Tetap render meskipun ada error
+            console.log('ℹ️ Loading data untuk Upload Dokumen:', err.message || 'Belum ada data');
+            // Tetap render meskipun ada error (normal jika data masih kosong)
             if(window.renderDokumenList) window.renderDokumenList(); 
         });
     }
@@ -4635,14 +4710,38 @@ async function tandaiHadir() {
     const sesi = getSesiAktif();
     if (!sesi) return;
     if (sesi.absensi.find(a => a.jamaahId === jamaah.id)) return showToast('Sudah tercatat hadir!');
+
+    // Cari data jamaahKita berdasarkan jamaahId (sama seperti nametag)
+    const jk = jamaahKitaList.find(jk => jk.jamaahId === jamaah.id);
+
+    // Helper: cari nilai dari fieldNames, cek jamaahKita dulu, fallback ke jamaah
+    function getAbsensiField(fieldNames, fallbackObj) {
+        if (jk && jk.additional_fields) {
+            for (const fn of fieldNames) {
+                const v = jk.additional_fields[fn];
+                if (v && v.toString().trim()) return v;
+            }
+        }
+        if (fallbackObj && fallbackObj.additional_fields) {
+            for (const fn of fieldNames) {
+                const v = fallbackObj.additional_fields[fn];
+                if (v && v.toString().trim()) return v;
+            }
+        }
+        return '-';
+    }
+
+    // Simpan SEMUA dynamic fields agar bisa dipilih di customize rekap absensi
+    const allFields = {};
+    dynamicFieldsJamaah.forEach(df => {
+        allFields[df.name] = getAbsensiField([df.name], jamaah);
+    });
+
     sesi.absensi.push({
         jamaahId: jamaah.id,
         nama: jamaah.nama_lengkap,
-        no_porsi: jamaah.additional_fields?.no_porsi || '-',
         waktu: new Date().toLocaleString('id-ID'),
-        kamar: jamaah.additional_fields?.kamar || '-',
-        bus: jamaah.additional_fields?.bus || '-',
-        rombongan: jamaah.additional_fields?.rombongan || '-'
+        ...allFields
     });
     await saveAbsensiData();
     showToast('✅ ' + jamaah.nama_lengkap + ' ditandai hadir!');
@@ -4713,11 +4812,167 @@ function renderRekapAbsensi() {
     el.innerHTML = html;
 }
 
+// ========================================
+// CUSTOMIZE REKAP ABSENSI COLUMNS
+// ========================================
+
+function getAbsensiColumns() {
+    const saved = localStorage.getItem('safara_absensi_columns');
+    if (saved) {
+        try {
+            const savedCols = JSON.parse(saved);
+            const savedIds = new Set(savedCols.map(c => c.id));
+            const result = [...savedCols];
+            // Tambahkan field baru dari dynamic fields yang belum ada di saved
+            dynamicFieldsJamaah.forEach(df => {
+                if (!savedIds.has(df.name)) {
+                    // Sisipkan sebelum kolom 'waktu' (kolom terakhir)
+                    result.splice(result.length - 1, 0, {
+                        id: df.name,
+                        label: df.label,
+                        fieldNames: [df.name],
+                        show: false,
+                        required: false
+                    });
+                }
+            });
+            return result;
+        } catch(e) {
+            console.error('Error parsing absensi columns:', e);
+        }
+    }
+    // Default: bangun dari dynamicFieldsJamaah
+    const DEFAULT_ON = ['no_porsi', 'kamar', 'bus', 'rombongan'];
+    const cols = [
+        { id: 'no',   label: 'No',          show: true, required: true },
+        { id: 'nama', label: 'Nama Jamaah',  show: true, required: true },
+    ];
+    dynamicFieldsJamaah.forEach(df => {
+        cols.push({
+            id: df.name,
+            label: df.label,
+            fieldNames: [df.name],
+            show: DEFAULT_ON.includes(df.name),
+            required: false
+        });
+    });
+    cols.push({ id: 'waktu', label: 'Waktu Hadir', show: true, required: true });
+    return cols;
+}
+
+function saveAbsensiColumnsConfig(columns) {
+    localStorage.setItem('safara_absensi_columns', JSON.stringify(columns));
+}
+
+function openCustomizeAbsensiModal() {
+    const modal = document.getElementById('customizeAbsensiModal');
+    if (!modal) return;
+    
+    const columns = getAbsensiColumns();
+    const container = document.getElementById('absensiColumnsList');
+    if (!container) return;
+    
+    let html = '';
+    columns.filter(col => !col.required).forEach((col, index) => {
+        const actualIndex = columns.indexOf(col);
+        html += `
+            <div style="background:white;border:1px solid #ddd;border-radius:8px;padding:12px;display:flex;align-items:center;gap:12px;">
+                <input type="checkbox" id="abc_${col.id}" ${col.show ? 'checked' : ''} 
+                    style="width:20px;height:20px;cursor:pointer;">
+                <div style="flex:1;">
+                    <input type="text" id="abc_label_${col.id}" value="${col.label}" 
+                        style="border:1px solid #ddd;border-radius:4px;padding:6px 10px;font-size:13px;width:100%;margin-bottom:4px;"
+                        placeholder="Label kolom">
+                    ${col.fieldNames ? `<div style="font-size:11px;color:#888;">Field: ${col.fieldNames.join(', ')}</div>` : ''}
+                </div>
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                    <button onclick="moveColumnUp(${actualIndex})" 
+                        style="padding:4px 8px;background:#f1f5f9;border:none;border-radius:4px;cursor:pointer;font-size:12px;"
+                        ${actualIndex === 1 ? 'disabled' : ''}>↑</button>
+                    <button onclick="moveColumnDown(${actualIndex})" 
+                        style="padding:4px 8px;background:#f1f5f9;border:none;border-radius:4px;cursor:pointer;font-size:12px;"
+                        ${actualIndex === columns.length - 2 ? 'disabled' : ''}>↓</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    modal.style.display = 'flex';
+}
+
+function closeCustomizeAbsensiModal() {
+    const modal = document.getElementById('customizeAbsensiModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function moveColumnUp(index) {
+    const columns = getAbsensiColumns();
+    const col = columns[index];
+    if (!col.required && index > 1) { // Don't move above "No" and "Nama"
+        const prevIndex = index - 1;
+        const prevCol = columns[prevIndex];
+        if (!prevCol.required) {
+            [columns[index], columns[prevIndex]] = [columns[prevIndex], columns[index]];
+            saveAbsensiColumnsConfig(columns);
+            openCustomizeAbsensiModal();
+        }
+    }
+}
+
+function moveColumnDown(index) {
+    const columns = getAbsensiColumns();
+    const col = columns[index];
+    if (!col.required && index < columns.length - 2) { // Don't move below "Waktu"
+        const nextIndex = index + 1;
+        const nextCol = columns[nextIndex];
+        if (!nextCol.required) {
+            [columns[index], columns[nextIndex]] = [columns[nextIndex], columns[index]];
+            saveAbsensiColumnsConfig(columns);
+            openCustomizeAbsensiModal();
+        }
+    }
+}
+
+function saveAbsensiColumns() {
+    const columns = getAbsensiColumns();
+    
+    columns.forEach(col => {
+        if (!col.required) {
+            const checkbox = document.getElementById(`abc_${col.id}`);
+            const labelInput = document.getElementById(`abc_label_${col.id}`);
+            
+            if (checkbox) col.show = checkbox.checked;
+            if (labelInput) col.label = labelInput.value.trim() || col.label;
+        }
+    });
+    
+    saveAbsensiColumnsConfig(columns);
+    closeCustomizeAbsensiModal();
+    showToast('✅ Pengaturan Rekap Absensi berhasil disimpan!');
+}
+
+function resetAbsensiColumns() {
+    if (confirm('Reset ke pengaturan default?')) {
+        localStorage.removeItem('safara_absensi_columns');
+        openCustomizeAbsensiModal();
+        showToast('✅ Pengaturan direset ke default!');
+    }
+}
+
+// ========================================
+// END CUSTOMIZE REKAP ABSENSI COLUMNS
+// ========================================
+
 function eksporAbsensi() {
     const sesi = getSesiAktif();
     if (!sesi) return showToast('Pilih sesi dulu!');
     if (sesi.absensi.length === 0) return showToast('Belum ada data absensi!');
+    
+    const customColumns = getAbsensiColumns();
+    const activeColumns = customColumns.filter(col => col.show);
     const namaInstansi = getKonfigurasiProData().instansi1.nama || 'Safara';
+    
     let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rekap Absensi</title>
     <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;padding:20px;}
     h2{color:#0D5C4A;margin-bottom:4px;}.sub{color:#888;font-size:12px;margin-bottom:16px;}
@@ -4730,10 +4985,29 @@ function eksporAbsensi() {
     </style></head><body>
     <h2>📋 REKAP ABSENSI — ${escapeHtml(sesi.nama)}</h2>
     <div class="sub">${namaInstansi} | ${sesi.tanggal} | Total Hadir: ${sesi.absensi.length} jamaah</div>
-    <table><thead><tr><th>No</th><th>Nama Jamaah</th><th>No Porsi</th><th>Kamar</th><th>Bus</th><th>Rombongan</th><th>Waktu Hadir</th></tr></thead><tbody>`;
-    sesi.absensi.forEach((a, i) => {
-        html += `<tr><td>${i+1}</td><td>${escapeHtml(a.nama)}</td><td>${a.no_porsi}</td><td>${a.kamar||'-'}</td><td>${a.bus||'-'}</td><td>${a.rombongan||'-'}</td><td>${a.waktu}</td></tr>`;
+    <table><thead><tr>`;
+    
+    // Build table headers dynamically
+    activeColumns.forEach(col => {
+        html += `<th>${col.label}</th>`;
     });
+    
+    html += `</tr></thead><tbody>`;
+    
+    // Build table rows dynamically
+    sesi.absensi.forEach((a, i) => {
+        html += '<tr>';
+        activeColumns.forEach(col => {
+            let value = '';
+            if (col.id === 'no') value = i + 1;
+            else if (col.id === 'nama') value = escapeHtml(a.nama);
+            else if (col.id === 'waktu') value = a.waktu;
+            else value = a[col.id] || '-';
+            html += `<td>${value}</td>`;
+        });
+        html += '</tr>';
+    });
+    
     html += `</tbody></table><div class="no-print">
         <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
         <button onclick="window.close()" style="background:#e2e8f0;color:#333;">✕ TUTUP</button>
@@ -5639,13 +5913,81 @@ function tambahJamaahKitaMulti() {
 function renderJamaahKitaDynamicFieldsForm() {
     const container = document.getElementById('jamaahKitaDynamicFields');
     if (!container) return;
+    const visibleNames = getKitaFormVisibleFields();
     let html = "";
     dynamicFieldsJamaahKita.forEach(field => {
-        if (field.name !== "whatsapp") {
-            html += `<div class="input-group"><label>${field.icon || '📌'} ${escapeHtml(field.label)}</label><input type="text" id="jamaahKitaField_${field.name}" placeholder="${field.icon || '📌'} ${escapeHtml(field.label)}"></div>`;
-        }
+        if (field.name === "whatsapp") return; // whatsapp auto-fill, tidak perlu tampil
+        if (!visibleNames.has(field.name)) return; // Hanya tampilkan field yang dipilih
+        html += `<div class="input-group"><label>${field.icon || '📌'} ${escapeHtml(field.label)}</label><input type="text" id="jamaahKitaField_${field.name}" placeholder="${field.icon || '📌'} ${escapeHtml(field.label)}"></div>`;
     });
+    if (!html) html = `<p style="color:#888;font-size:13px;text-align:center;padding:12px 0;">Tidak ada field yang dipilih. Klik ⚙️ untuk mengatur.</p>`;
     container.innerHTML = html;
+}
+
+// ===== CUSTOMIZE KITA FORM FIELDS =====
+
+function getKitaFormVisibleFields() {
+    const saved = localStorage.getItem('safara_kita_form_fields');
+    if (saved) {
+        try {
+            const arr = JSON.parse(saved);
+            return new Set(arr.filter(f => f.show).map(f => f.name));
+        } catch(e) {}
+    }
+    // Default: tampilkan kamar, bus, rombongan, no_porsi
+    const DEFAULT_ON = ['kamar', 'bus', 'rombongan', 'no_porsi'];
+    return new Set(dynamicFieldsJamaahKita.filter(f => DEFAULT_ON.includes(f.name)).map(f => f.name));
+}
+
+function openCustomizeKitaFormModal() {
+    const saved = localStorage.getItem('safara_kita_form_fields');
+    let savedMap = {};
+    if (saved) {
+        try { JSON.parse(saved).forEach(f => { savedMap[f.name] = f; }); } catch(e) {}
+    }
+    const DEFAULT_ON = ['kamar', 'bus', 'rombongan', 'no_porsi'];
+    let html = '';
+    dynamicFieldsJamaahKita.forEach(field => {
+        if (field.name === 'whatsapp') return;
+        const s = savedMap[field.name];
+        const isShow = s ? s.show : DEFAULT_ON.includes(field.name);
+        html += `
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card-bg);border:1.5px solid ${isShow ? 'var(--primary)' : '#e2e8f0'};border-radius:10px;transition:all 0.2s;">
+            <input type="checkbox" id="kff_${field.name}" ${isShow ? 'checked' : ''}
+                onchange="this.closest('div').style.borderColor=this.checked?'var(--primary)':'#e2e8f0'"
+                style="width:18px;height:18px;cursor:pointer;accent-color:var(--primary);">
+            <span style="font-size:18px;">${field.icon || '📋'}</span>
+            <span style="font-weight:500;">${escapeHtml(field.label)}</span>
+        </div>`;
+    });
+    document.getElementById('kitaFormFieldsList').innerHTML = html;
+    document.getElementById('customizeKitaFormModal').style.display = 'flex';
+}
+
+function closeCustomizeKitaFormModal() {
+    document.getElementById('customizeKitaFormModal').style.display = 'none';
+}
+
+function saveKitaFormFields() {
+    const result = [];
+    dynamicFieldsJamaahKita.forEach(field => {
+        if (field.name === 'whatsapp') return;
+        const cb = document.getElementById(`kff_${field.name}`);
+        if (cb) result.push({ name: field.name, show: cb.checked });
+    });
+    localStorage.setItem('safara_kita_form_fields', JSON.stringify(result));
+    closeCustomizeKitaFormModal();
+    renderJamaahKitaDynamicFieldsForm();
+    showToast('✅ Pengaturan field berhasil disimpan!');
+}
+
+function resetKitaFormFields() {
+    if (confirm('Reset ke pengaturan default?')) {
+        localStorage.removeItem('safara_kita_form_fields');
+        closeCustomizeKitaFormModal();
+        renderJamaahKitaDynamicFieldsForm();
+        showToast('✅ Pengaturan direset ke default!');
+    }
 }
 
 function autoFillJamaahKitaFields(selectedIndex) {
@@ -7889,7 +8231,7 @@ function renderDokumenList() {
     
     // PENTING: Cek jika jamaahList kosong
     if(!jamaahList || jamaahList.length === 0) {
-        console.error('❌ jamaahList is empty! Data jamaah belum ter-load.');
+        console.log('ℹ️ Belum ada data jamaah. Tampilkan pesan untuk user.');
         container.innerHTML = `
             <div class="card-premium" style="margin:0; padding: 40px; text-align: center;">
                 <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
@@ -8738,25 +9080,217 @@ async function shareTiketWAMulti() {
     }
 }
 
+// ========================================
+// CUSTOMIZE NAME TAG FIELDS
+// ========================================
+
+// Default fields untuk name tag
+const DEFAULT_NAME_TAG_FIELDS = [
+    { id: 'paspor', label: 'Paspor', source: 'jamaah', fieldNames: ['no_paspor', 'paspor'], icon: '🛂', show: true },
+    { id: 'whatsapp', label: 'WA', source: 'jamaah', fieldNames: ['whatsapp', 'wa', 'no_wa'], icon: '📱', show: true },
+    { id: 'kamar', label: 'Kamar', source: 'jamaahKita', fieldNames: ['kamar', 'room', 'no_kamar'], icon: '🚪', show: true },
+    { id: 'bus', label: 'Bus', source: 'jamaahKita', fieldNames: ['bus', 'no_bus'], icon: '🚌', show: true },
+    { id: 'rombongan', label: 'Rombongan', source: 'jamaahKita', fieldNames: ['rombongan', 'group', 'kelompok'], icon: '👥', show: false },
+    { id: 'no_porsi', label: 'No Porsi', source: 'jamaah', fieldNames: ['no_porsi', 'nomor_porsi', 'porsi'], icon: '🍽️', show: false }
+];
+
+function getNameTagFields() {
+    const saved = localStorage.getItem('safara_nametag_fields');
+    if (saved) {
+        try {
+            const savedFields = JSON.parse(saved);
+            const savedIds = new Set(savedFields.map(f => f.id));
+            const result = [...savedFields];
+            // Tambahkan field baru dari dynamic fields yang belum ada di saved
+            dynamicFieldsJamaah.forEach(df => {
+                if (!savedIds.has(df.name)) {
+                    result.push({
+                        id: df.name,
+                        label: df.label,
+                        source: 'jamaah',
+                        fieldNames: [df.name],
+                        icon: df.icon || '📋',
+                        show: false
+                    });
+                }
+            });
+            return result;
+        } catch(e) {
+            console.error('Error parsing name tag fields:', e);
+        }
+    }
+    // Default: bangun dari dynamicFieldsJamaah
+    const DEFAULT_ON = ['whatsapp', 'kamar', 'bus', 'no_paspor'];
+    return dynamicFieldsJamaah.map(df => ({
+        id: df.name,
+        label: df.label,
+        source: 'jamaah',
+        fieldNames: [df.name],
+        icon: df.icon || '📋',
+        show: DEFAULT_ON.includes(df.name)
+    }));
+}
+
+function saveNameTagFieldsConfig(fields) {
+    localStorage.setItem('safara_nametag_fields', JSON.stringify(fields));
+}
+
+function openCustomizeNameTagModal() {
+    const modal = document.getElementById('customizeNameTagModal');
+    if (!modal) return;
+    
+    const fields = getNameTagFields();
+    const container = document.getElementById('nameTagFieldsList');
+    if (!container) return;
+    
+    let html = '';
+    fields.forEach((field, index) => {
+        html += `
+            <div style="background:white;border:1px solid #ddd;border-radius:8px;padding:12px;display:flex;align-items:center;gap:12px;">
+                <input type="checkbox" id="ntf_${field.id}" ${field.show ? 'checked' : ''} 
+                    style="width:20px;height:20px;cursor:pointer;">
+                <div style="flex:1;">
+                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                        <span style="font-size:16px;">${field.icon}</span>
+                        <input type="text" id="ntf_label_${field.id}" value="${field.label}" 
+                            style="border:1px solid #ddd;border-radius:4px;padding:4px 8px;font-size:13px;flex:1;"
+                            placeholder="Label field">
+                    </div>
+                    <div style="font-size:11px;color:#888;">
+                        Sumber: ${field.source === 'jamaah' ? 'Data Jamaah' : 'Data Jamaah Kita'} 
+                        (${field.fieldNames.join(', ')})
+                    </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                    <button onclick="moveFieldUp(${index})" 
+                        style="padding:4px 8px;background:#f1f5f9;border:none;border-radius:4px;cursor:pointer;font-size:12px;"
+                        ${index === 0 ? 'disabled' : ''}>↑</button>
+                    <button onclick="moveFieldDown(${index})" 
+                        style="padding:4px 8px;background:#f1f5f9;border:none;border-radius:4px;cursor:pointer;font-size:12px;"
+                        ${index === fields.length - 1 ? 'disabled' : ''}>↓</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    modal.style.display = 'flex';
+}
+
+function closeCustomizeNameTagModal() {
+    const modal = document.getElementById('customizeNameTagModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function moveFieldUp(index) {
+    const fields = getNameTagFields();
+    if (index > 0) {
+        [fields[index], fields[index - 1]] = [fields[index - 1], fields[index]];
+        saveNameTagFieldsConfig(fields);
+        openCustomizeNameTagModal(); // Refresh
+    }
+}
+
+function moveFieldDown(index) {
+    const fields = getNameTagFields();
+    if (index < fields.length - 1) {
+        [fields[index], fields[index + 1]] = [fields[index + 1], fields[index]];
+        saveNameTagFieldsConfig(fields);
+        openCustomizeNameTagModal(); // Refresh
+    }
+}
+
+function saveNameTagFields() {
+    const fields = getNameTagFields();
+    
+    fields.forEach(field => {
+        const checkbox = document.getElementById(`ntf_${field.id}`);
+        const labelInput = document.getElementById(`ntf_label_${field.id}`);
+        
+        if (checkbox) field.show = checkbox.checked;
+        if (labelInput) field.label = labelInput.value.trim() || field.label;
+    });
+    
+    saveNameTagFieldsConfig(fields);
+    closeCustomizeNameTagModal();
+    showToast('✅ Pengaturan Name Tag berhasil disimpan!');
+}
+
+function resetNameTagFields() {
+    if (confirm('Reset ke pengaturan default?')) {
+        localStorage.removeItem('safara_nametag_fields');
+        openCustomizeNameTagModal();
+        showToast('✅ Pengaturan direset ke default!');
+    }
+}
+
+function getFieldValue(jamaah, jamaahKita, field) {
+    // Coba primary source dulu, lalu fallback ke source lainnya
+    const primary = field.source === 'jamaah' ? jamaah : jamaahKita;
+    const secondary = field.source === 'jamaah' ? jamaahKita : jamaah;
+
+    for (const src of [primary, secondary]) {
+        if (!src || !src.additional_fields) continue;
+        for (const fieldName of field.fieldNames) {
+            const value = src.additional_fields[fieldName];
+            if (value && value.toString().trim()) return value;
+        }
+    }
+    return '-';
+}
+
+// ========================================
+// END CUSTOMIZE NAME TAG FIELDS
+// ========================================
+
 function cetakLabel() { 
     const checked = document.querySelectorAll('#multiLabelJamaahSelect input:checked');
     if(checked.length === 0) return showToast('Pilih jamaah terlebih dahulu!'); 
     const eventName = document.getElementById('labelEvent').value.trim() || 'Acara'; 
-    const template = document.getElementById('labelTemplate').value; 
+    const template = document.getElementById('labelTemplate').value;
+    const customFields = getNameTagFields();
+    const activeFields = customFields.filter(f => f.show);
+    
     let html = '<div style="display:flex; flex-wrap:wrap; gap:20px; padding:20px; justify-content:center;">'; 
     checked.forEach(cb => { 
         const j = jamaahList.find(j => j.id == cb.value); 
         if(j) { 
-            const paspor = j.additional_fields?.no_paspor || j.additional_fields?.paspor || '-'; 
-            const whatsapp = j.additional_fields?.whatsapp || j.additional_fields?.wa || '-'; 
             const jk = jamaahKitaList.find(jk => jk.jamaahId == j.id); 
-            const kamar = jk?.additional_fields?.kamar || '-'; 
-            const bus = jk?.additional_fields?.bus || '-'; 
             const cfg = getKonfigurasiProData(); 
             const logo = cfg.instansi1.logo ? `<img src="${cfg.instansi1.logo}" style="height:30px; margin-bottom:8px;">` : '✨ Safara'; 
+            
+            // Build field lines dynamically
+            let fieldLines = '';
+            activeFields.forEach(field => {
+                const value = getFieldValue(j, jk, field);
+                fieldLines += `<div style="font-size:11px; color:#666;">${field.icon} ${field.label}: ${value}</div>`;
+            });
+            
             let nameTagHtml = '', luggageHtml = ''; 
-            if(template === 'nametag' || template === 'both') nameTagHtml = `<div style="width:220px; padding:15px; background:white; border-radius:12px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); border:1px solid #0D5C4A;"><div style="font-size:14px; font-weight:bold; color:#0D5C4A;">${logo}</div><div style="font-size:18px; font-weight:bold; margin:10px 0; text-transform:uppercase;">${j.nama_lengkap}</div><div style="font-size:11px; color:#666;">🛂 Paspor: ${paspor}</div><div style="font-size:11px; color:#666;">📱 WA: ${whatsapp}</div><div style="font-size:11px; color:#666;">🚪 Kamar: ${kamar} | 🚌 Bus: ${bus}</div><div style="font-size:10px; margin-top:8px; color:#888;">${eventName}</div></div>`; 
-            if(template === 'luggage' || template === 'both') luggageHtml = `<div style="width:180px; padding:15px; background:#FFF8E7; border-radius:12px; text-align:center; border:1px dashed #F59E0B;"><div style="font-size:12px; font-weight:bold;">🧳 KOPER - ${eventName}</div><div style="font-size:16px; font-weight:bold; margin:8px 0; text-transform:uppercase;">${j.nama_lengkap}</div><div style="font-size:10px;">🛂 Paspor: ${paspor}</div><div style="font-size:10px;">📱 WA: ${whatsapp}</div></div>`; 
+            if(template === 'nametag' || template === 'both') {
+                nameTagHtml = `<div style="width:220px; padding:15px; background:white; border-radius:12px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); border:1px solid #0D5C4A;">
+                    <div style="font-size:14px; font-weight:bold; color:#0D5C4A;">${logo}</div>
+                    <div style="font-size:18px; font-weight:bold; margin:10px 0; text-transform:uppercase;">${j.nama_lengkap}</div>
+                    ${fieldLines}
+                    <div style="font-size:10px; margin-top:8px; color:#888;">${eventName}</div>
+                </div>`;
+            }
+            
+            if(template === 'luggage' || template === 'both') {
+                // For luggage, use first 2 active fields only
+                let luggageFields = '';
+                activeFields.slice(0, 2).forEach(field => {
+                    const value = getFieldValue(j, jk, field);
+                    luggageFields += `<div style="font-size:10px;">${field.icon} ${field.label}: ${value}</div>`;
+                });
+                
+                luggageHtml = `<div style="width:180px; padding:15px; background:#FFF8E7; border-radius:12px; text-align:center; border:1px dashed #F59E0B;">
+                    <div style="font-size:12px; font-weight:bold;">🧳 KOPER - ${eventName}</div>
+                    <div style="font-size:16px; font-weight:bold; margin:8px 0; text-transform:uppercase;">${j.nama_lengkap}</div>
+                    ${luggageFields}
+                </div>`;
+            }
+            
             if(template === 'nametag') html += nameTagHtml; 
             else if(template === 'luggage') html += luggageHtml; 
             else html += `<div style="display:flex; flex-direction:column; gap:10px;">${nameTagHtml}${luggageHtml}</div>`; 
