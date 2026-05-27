@@ -5892,17 +5892,9 @@ function tambahJamaahKitaMulti() {
 }
 
 function renderJamaahKitaDynamicFieldsForm() {
+    // Field input tidak diperlukan - data auto-fill dari database jamaah saat dipilih
     const container = document.getElementById('jamaahKitaDynamicFields');
-    if (!container) return;
-    const visibleFields = getOnProsesPrintFields(); // gunakan pilihan yang sama dengan cetak
-    let html = "";
-    dynamicFieldsJamaahKita.forEach(field => {
-        if (field.name === "whatsapp") return;
-        if (!visibleFields.includes(field.name)) return;
-        html += `<div class="input-group"><label>${field.icon || '📌'} ${escapeHtml(field.label)}</label><input type="text" id="jamaahKitaField_${field.name}" placeholder="${field.icon || '📌'} ${escapeHtml(field.label)}"></div>`;
-    });
-    if (!html) html = `<p style="color:#888;font-size:13px;text-align:center;padding:12px 0;">⚙️ Aktifkan field di menu Admin untuk ditampilkan di sini.</p>`;
-    container.innerHTML = html;
+    if (container) container.innerHTML = '';
 }
 
 function autoFillJamaahKitaFields(selectedIndex) {
@@ -6383,7 +6375,7 @@ function renderJamaahKitaFieldsList() {
     const container = document.getElementById('jamaahKitaFieldsListContainer');
     if (!container) return;
     const saved = JSON.parse(localStorage.getItem('safara_onproses_print_fields') || '[]');
-    let html = '<div style="font-size:12px;font-weight:bold;color:var(--primary);margin:10px 0 4px;">Daftar Field:</div><div style="font-size:11px;color:#888;margin-bottom:8px;">☑️ = tampil di Form Tambah Data & Cetak Label</div>';
+    let html = '<div style="font-size:12px;font-weight:bold;color:var(--primary);margin:10px 0 6px;">Daftar Field & Pilih Cetak:</div>';
     if (dynamicFieldsJamaahKita.length === 0) { container.innerHTML = '<p style="color:#999;font-size:13px;">Belum ada field.</p>'; return; }
     dynamicFieldsJamaahKita.forEach((f, idx) => {
         const isProtected = f.name === 'whatsapp';
@@ -6510,26 +6502,13 @@ function renderOnProsesFieldPrintSelector() {
 function saveOnProsesPrintFields() {
     const checked = Array.from(document.querySelectorAll('#jamaahKitaFieldsListContainer input[type=checkbox]:checked')).map(cb => cb.value);
     localStorage.setItem('safara_onproses_print_fields', JSON.stringify(checked));
-    renderJamaahKitaDynamicFieldsForm(); // langsung update form tambah data
-    showToast('✅ Pilihan field disimpan!');
+    showToast('Pilihan field cetak disimpan!');
 }
 
 function getOnProsesPrintFields() {
-    const saved = JSON.parse(localStorage.getItem('safara_onproses_print_fields') || 'null');
-    if (saved !== null) return saved;
-    // Default cerdas: sembunyikan field yang sudah ada di database jamaah (auto-fill),
-    // hanya tampilkan field khusus On Proses (kamar, bus, rombongan, dll)
-    const dbFieldNames = new Set(dynamicFieldsJamaah.map(f => f.name));
-    const kitaOnly = dynamicFieldsJamaahKita
-        .filter(f => !dbFieldNames.has(f.name))
-        .map(f => f.name);
-    // Fallback jika semua field sama dengan database
-    if (kitaOnly.length === 0) {
-        return dynamicFieldsJamaahKita
-            .filter(f => ['kamar','bus','rombongan','regu','warna','visa','hotel_makkah','hotel_madinah'].includes(f.name))
-            .map(f => f.name);
-    }
-    return kitaOnly;
+    const saved = JSON.parse(localStorage.getItem('safara_onproses_print_fields') || '[]');
+    if (saved.length === 0) return dynamicFieldsJamaahKita.map(f => f.name);
+    return saved;
 }
 
 function addJamaahKitaDynamicField() {
