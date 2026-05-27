@@ -7601,6 +7601,7 @@ function openFolderDetail(folderId) {
     let jamaahInFolder = folder.jamaahIds.map(id => jamaahList.find(j => j.id == id)).filter(j => j); 
     let availableJamaah = jamaahList.filter(j => !folder.jamaahIds.includes(j.id)); 
     let html = `<div class="card-premium"><div class="back-header" style="margin-bottom:15px;"><i class="fas fa-arrow-left" onclick="renderFolderList()" style="cursor:pointer;"></i><h3 style="flex:1; text-align:center;">📁 ${escapeHtml(folder.nama)}</h3><div style="width:30px;"></div></div>
+    <div id="folderJamaahSection">
     <div class="input-group"><label>➕ Tambah Jamaah ke Folder</label>
     <input type="text" id="searchFolderJamaah" placeholder="🔍 Cari nama jamaah..." oninput="filterFolderJamaahSelect()" style="margin-bottom:8px;">
     <div style="display:flex;gap:8px;margin-bottom:8px;">
@@ -7625,7 +7626,7 @@ function openFolderDetail(folderId) {
     else jamaahInFolder.forEach(j => { 
         html += `<div class="jamaah-card"><div class="jamaah-header"><label style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;"><input type="checkbox" value="${j.id}" style="width:18px;height:18px;accent-color:#EF4444;cursor:pointer;"><div class="jamaah-nama">👤 ${escapeHtml(j.nama_lengkap)}</div></label><button class="btn-delete-jamaah" onclick="removeJamaahFromFolder('${folderId}', ${j.id})">🗑️ Hapus</button></div></div>`; 
     }); 
-    html += `</div>`;
+    html += `</div></div>`;
     // FIELD DINAMIS
     const fields = folder.fields || [];
     html += `<div class="section-title">📝 Informasi Folder</div><div id="folderFieldList" style="margin-bottom:10px;">`;
@@ -7680,8 +7681,44 @@ function openFolderDetail(folderId) {
     document.getElementById('folderListContainer').innerHTML = html; 
 }
 
-function pilihSemuaFolderList(folderId) {
-    document.querySelectorAll('#folderJamaahList input[type=checkbox]').forEach(cb => cb.checked = true);
+function renderFolderJamaahSection(folderId) {
+    const container = document.getElementById('folderJamaahSection');
+    if (!container) return;
+    const folder = folderList.find(f => f.id == folderId);
+    if (!folder) return;
+    const jamaahInFolder = folder.jamaahIds.map(id => jamaahList.find(j => j.id == id)).filter(j => j);
+    const availableJamaah = jamaahList.filter(j => !folder.jamaahIds.includes(j.id));
+    let html = `
+    <div class="input-group"><label>➕ Tambah Jamaah ke Folder</label>
+    <input type="text" id="searchFolderJamaah" placeholder="🔍 Cari nama jamaah..." oninput="filterFolderJamaahSelect()" style="margin-bottom:8px;">
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <button onclick="pilihSemuaFolderJamaah()" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+        <button onclick="hapusPilihanFolderJamaah()" style="flex:1;padding:8px;background:#e2e8f0;color:#333;border:none;border-radius:8px;font-size:12px;cursor:pointer;">❌ Hapus Pilihan</button>
+    </div>
+    <div id="multiFolderJamaahSelect" style="max-height:200px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:8px;background:var(--card-bg);">${
+        availableJamaah.length === 0
+            ? '<p style="color:#999;font-size:13px;text-align:center;padding:8px;">Semua jamaah sudah ada di folder ini.</p>'
+            : availableJamaah.map(j => `
+        <label style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #eee;cursor:pointer;">
+            <input type="checkbox" value="${j.id}" onchange="updateJumlahDipilihFolder()" style="width:18px;height:18px;accent-color:#0D5C4A;cursor:pointer;">
+            <span style="font-size:13px;">${escapeHtml(j.nama_lengkap)}</span>
+        </label>`).join('')
+    }</div>
+    <div id="jumlahDipilihFolder" style="font-size:12px;color:#0D5C4A;margin-top:6px;font-weight:bold;"></div>
+    <button class="btn btn-primary btn-small mt-2" onclick="addJamaahToFolderMulti('${folderId}')">➕ Tambahkan ke Folder</button>
+    </div>
+    <div class="section-title">📋 Daftar Jamaah dalam Folder (${jamaahInFolder.length})</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <button onclick="pilihSemuaFolderList('${folderId}')" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+        <button onclick="hapusPilihanFolder('${folderId}')" style="flex:1;padding:8px;background:#EF4444;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">🗑️ Hapus Dipilih</button>
+    </div>
+    <div id="folderJamaahList">`;
+    if (jamaahInFolder.length === 0) html += '<p class="text-center">Belum ada jamaah</p>';
+    else jamaahInFolder.forEach(j => {
+        html += `<div class="jamaah-card"><div class="jamaah-header"><label style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;"><input type="checkbox" value="${j.id}" style="width:18px;height:18px;accent-color:#EF4444;cursor:pointer;"><div class="jamaah-nama">👤 ${escapeHtml(j.nama_lengkap)}</div></label><button class="btn-delete-jamaah" onclick="removeJamaahFromFolder('${folderId}', ${j.id})">🗑️ Hapus</button></div></div>`;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
 }
 
 function hapusPilihanFolder(folderId) {
@@ -7692,8 +7729,8 @@ function hapusPilihanFolder(folderId) {
     const folder = folderList.find(f => f.id == folderId);
     if (!folder) return;
     folder.jamaahIds = folder.jamaahIds.filter(id => !ids.includes(id));
-    saveFolderData();
-    openFolderDetail(folderId);
+    saveFolderDataSilent();
+    renderFolderJamaahSection(folderId);
     showToast(`🗑️ ${ids.length} jamaah berhasil dihapus dari folder!`);
 }
 
@@ -7738,8 +7775,8 @@ function addJamaahToFolderMulti(folderId) {
         berhasil++;
     });
     if (berhasil > 0) {
-        saveFolderData();
-        openFolderDetail(folderId);
+        saveFolderDataSilent();
+        renderFolderJamaahSection(folderId);
         let msg = `✅ ${berhasil} jamaah ditambahkan ke folder!`;
         if (duplikat > 0) msg += ` (${duplikat} sudah ada, dilewati)`;
         showToast(msg);
@@ -7756,8 +7793,8 @@ function addJamaahToFolder(folderId) {
     const folder = folderList.find(f => f.id == folderId); 
     if(folder && !folder.jamaahIds.includes(jamaahId)) { 
         folder.jamaahIds.push(jamaahId); 
-        saveFolderData(); 
-        openFolderDetail(folderId); 
+        saveFolderDataSilent();
+        renderFolderJamaahSection(folderId);
         showToast('Jamaah ditambahkan ke folder'); 
     } else { 
         showToast('Jamaah sudah ada di folder ini'); 
@@ -7769,8 +7806,8 @@ function removeJamaahFromFolder(folderId, jamaahId) {
         const folder = folderList.find(f => f.id == folderId); 
         if(folder) { 
             folder.jamaahIds = folder.jamaahIds.filter(id => id != jamaahId); 
-            saveFolderData(); 
-            openFolderDetail(folderId); 
+            saveFolderDataSilent();
+            renderFolderJamaahSection(folderId);
             showToast('Jamaah dihapus dari folder'); 
         } 
     } 
