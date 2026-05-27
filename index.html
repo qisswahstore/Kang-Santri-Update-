@@ -7641,7 +7641,7 @@ function openFolderDetail(folderId) {
     }
     const orderedFields = folder.fieldOrder.map(name => allDynFields.find(f => f.name === name)).filter(Boolean);
 
-    html += `<div class="card-premium" style="padding:12px;margin-bottom:12px;" onclick="event.stopPropagation();">
+    html += `<div id="folderFieldSelector" class="card-premium" style="padding:12px;margin-bottom:12px;" onclick="event.stopPropagation();">
         <div style="font-weight:bold;margin-bottom:10px;color:#0D5C4A;">📋 Pilih Field untuk PDF/Excel</div>
         <div style="font-size:11px;color:#888;margin-bottom:8px;">☑️ = ikut diekspor &nbsp;|&nbsp; ▲▼ = atur urutan kolom</div>
         <div style="display:flex;gap:8px;margin-bottom:10px;">
@@ -7797,9 +7797,8 @@ function pilihSemuaFolderField(folderId) {
     dynamicFieldsJamaah.forEach(fd => {
         if(!folder.selectedFields.includes(fd.name)) folder.selectedFields.push(fd.name);
     });
-    // Update checkbox UI
-    document.querySelectorAll('.folder-field-cb').forEach(cb => cb.checked = true);
     saveFolderData();
+    renderFolderFieldSelector(folderId);
     showToast('✅ Semua field dipilih!');
 }
 
@@ -7807,10 +7806,9 @@ function hapusPilihanFolderField(folderId) {
     const folder = folderList.find(f => f.id == folderId);
     if(!folder) return;
     folder.selectedFields = [];
-    // Update checkbox UI
-    document.querySelectorAll('.folder-field-cb').forEach(cb => cb.checked = false);
     saveFolderData();
-    showToast('❌ Semua field dihapus!');
+    renderFolderFieldSelector(folderId);
+    showToast('❌ Semua pilihan dihapus!');
 }
 
 function toggleFolderField(folderId, fieldKey, checked) {
@@ -7871,7 +7869,7 @@ function moveFolderFieldUp(folderId, idx) {
     if (!folder || !folder.fieldOrder || idx <= 0) return;
     [folder.fieldOrder[idx - 1], folder.fieldOrder[idx]] = [folder.fieldOrder[idx], folder.fieldOrder[idx - 1]];
     saveFolderData();
-    openFolderDetail(folderId);
+    renderFolderFieldSelector(folderId);
 }
 
 function moveFolderFieldDown(folderId, idx) {
@@ -7879,7 +7877,53 @@ function moveFolderFieldDown(folderId, idx) {
     if (!folder || !folder.fieldOrder || idx >= folder.fieldOrder.length - 1) return;
     [folder.fieldOrder[idx], folder.fieldOrder[idx + 1]] = [folder.fieldOrder[idx + 1], folder.fieldOrder[idx]];
     saveFolderData();
-    openFolderDetail(folderId);
+    renderFolderFieldSelector(folderId);
+}
+
+function renderFolderFieldSelector(folderId) {
+    const container = document.getElementById('folderFieldSelector');
+    if (!container) return;
+    const folder = folderList.find(f => f.id == folderId);
+    if (!folder) return;
+    const allDynFields = dynamicFieldsJamaah.length > 0 ? dynamicFieldsJamaah : [];
+    const selectedFields = folder.selectedFields || [];
+    if (!folder.fieldOrder || folder.fieldOrder.length === 0) {
+        folder.fieldOrder = allDynFields.map(f => f.name);
+    } else {
+        allDynFields.forEach(f => { if (!folder.fieldOrder.includes(f.name)) folder.fieldOrder.push(f.name); });
+    }
+    const orderedFields = folder.fieldOrder.map(name => allDynFields.find(f => f.name === name)).filter(Boolean);
+    let html = `
+        <div style="font-weight:bold;margin-bottom:10px;color:#0D5C4A;">📋 Pilih Field untuk PDF/Excel</div>
+        <div style="font-size:11px;color:#888;margin-bottom:8px;">☑️ = ikut diekspor &nbsp;|&nbsp; ▲▼ = atur urutan kolom</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+            <button onclick="event.stopPropagation();pilihSemuaFolderField('${folderId}')" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
+            <button onclick="event.stopPropagation();hapusPilihanFolderField('${folderId}')" style="flex:1;padding:8px;background:#e2e8f0;color:#333;border:none;border-radius:8px;font-size:12px;cursor:pointer;">❌ Hapus Pilihan</button>
+        </div>`;
+    if (allDynFields.length === 0) {
+        html += `<p style="color:#999;font-size:13px;">Belum ada field dinamis jamaah.</p>`;
+    } else {
+        orderedFields.forEach((fd, idx) => {
+            const checked = selectedFields.includes(fd.name) ? 'checked' : '';
+            const isFirst = idx === 0;
+            const isLast = idx === orderedFields.length - 1;
+            html += `<div style="display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid #eee;" onclick="event.stopPropagation();event.preventDefault();">
+                <input type="checkbox" value="${fd.name}" ${checked}
+                    class="folder-field-cb"
+                    onclick="event.stopPropagation();"
+                    onchange="event.stopPropagation();toggleFolderField('${folderId}', '${fd.name}', this.checked);"
+                    style="width:20px;height:20px;cursor:pointer;accent-color:#0D5C4A;flex-shrink:0;">
+                <span style="font-weight:bold;font-size:13px;flex:1;">${escapeHtml(fd.label)}</span>
+                <div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0;">
+                    <button onclick="event.stopPropagation();moveFolderFieldUp('${folderId}',${idx})" ${isFirst?'disabled':''}
+                        style="padding:2px 7px;font-size:12px;background:${isFirst?'#e2e8f0':'#0D5C4A'};color:${isFirst?'#aaa':'white'};border:none;border-radius:5px;cursor:${isFirst?'default':'pointer'};">▲</button>
+                    <button onclick="event.stopPropagation();moveFolderFieldDown('${folderId}',${idx})" ${isLast?'disabled':''}
+                        style="padding:2px 7px;font-size:12px;background:${isLast?'#e2e8f0':'#0D5C4A'};color:${isLast?'#aaa':'white'};border:none;border-radius:5px;cursor:${isLast?'default':'pointer'};">▼</button>
+                </div>
+            </div>`;
+        });
+    }
+    container.innerHTML = html;
 }
 
 async function exportFolderToPDF(folderId) {
