@@ -2614,7 +2614,7 @@
             </div>
             <div class="row"><div class="input-group"><label>Ukuran Label</label><select id="labelSize"><option value="small">Kecil (40x30mm)</option><option value="medium" selected>Sedang (60x40mm)</option><option value="large">Besar (80x50mm)</option></select></div><div class="input-group"><label>Template</label><select id="labelTemplate"><option value="nametag">Name Tag</option><option value="luggage">Stiker Koper</option><option value="both">Name Tag + Koper</option></select></div></div>
             <div style="display:flex;gap:10px;">
-                <button class="btn btn-secondary" onclick="openCustomizeNameTagModal()" style="flex:1"><i class="fas fa-cog"></i> Customize Fields</button>
+                <button class="btn btn-secondary" id="btnCustomizeNametag" onclick="openCustomizeNameTagModal()" style="flex:1;position:relative;"><i class="fas fa-cog"></i> Customize Fields<span id="badgeNametag" style="display:none;position:absolute;top:-6px;right:-6px;background:#ef4444;color:white;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:bold;line-height:18px;text-align:center;"></span></button>
                 <button class="btn btn-primary" onclick="cetakLabel()" style="flex:2"><i class="fas fa-print"></i> CETAK LABEL</button>
             </div>
         </div>
@@ -2901,7 +2901,7 @@ function internalShowPage(pageId) {
     if (pageId === 'scanqr') { renderSesiAktifInfo(); renderRekapAbsensi(); }
     if (pageId === 'etikettiket') { renderMultiTiketJamaah(); }
     if (pageId === 'pengingatwa') { loadPengingatData(); }
-    if (pageId === 'cetaklabel') { renderMultiLabelJamaah(); }
+    if (pageId === 'cetaklabel') { renderMultiLabelJamaah(); updateNametagnBadge(); }
     if (pageId === 'cetaklabel') { if(window.populateLabelDropdown) window.populateLabelDropdown(); }
     if (pageId === 'cloudstorage') { if(window.updateStorageInfo) window.updateStorageInfo(); }
     if (pageId === 'dashboard') { if(window.renderDashboard) window.renderDashboard(); }
@@ -9241,18 +9241,52 @@ function saveNameTagFieldsConfig(fields) {
     localStorage.setItem('safara_nametag_fields', JSON.stringify(fields));
 }
 
+function updateNametagnBadge() {
+    const badge = document.getElementById('badgeNametag');
+    if (!badge) return;
+    const saved = localStorage.getItem('safara_nametag_fields');
+    if (!saved) { badge.style.display = 'none'; return; }
+    try {
+        const savedIds = new Set(JSON.parse(saved).map(f => f.id));
+        const newCount = dynamicFieldsJamaah.filter(f => !savedIds.has(f.name)).length;
+        if (newCount > 0) {
+            badge.textContent = newCount;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+    } catch(e) { badge.style.display = 'none'; }
+}
+
 function openCustomizeNameTagModal() {
     const modal = document.getElementById('customizeNameTagModal');
     if (!modal) return;
     
     const fields = getNameTagFields();
+
+    // Cek field baru yang belum pernah ada di saved config
+    const saved = localStorage.getItem('safara_nametag_fields');
+    const savedIds = saved ? new Set(JSON.parse(saved).map(f => f.id)) : new Set();
+    const fieldBaru = dynamicFieldsJamaah.filter(f => !savedIds.has(f.name));
+
     const container = document.getElementById('nameTagFieldsList');
     if (!container) return;
-    
+
     let html = '';
+
+    // Banner notifikasi field baru
+    if (fieldBaru.length > 0) {
+        html += `<div style="background:#fef3c7;border:1.5px solid #f59e0b;border-radius:10px;padding:12px;margin-bottom:12px;">
+            <div style="font-weight:bold;color:#92400e;margin-bottom:4px;">🔔 ${fieldBaru.length} Field Baru dari Database</div>
+            <div style="font-size:12px;color:#78350f;margin-bottom:8px;">Sudah ditambahkan ke daftar di bawah (nonaktif). Aktifkan jika ingin tampil di nametag.</div>
+            <button onclick="aktifkanSemuaFieldBaruNametag()" style="padding:6px 14px;background:#f59e0b;color:white;border:none;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;">✅ Aktifkan Semua</button>
+        </div>`;
+    }
+
     fields.forEach((field, index) => {
+        const isNew = fieldBaru.some(f => f.name === field.id);
         html += `
-            <div style="background:white;border:1px solid #ddd;border-radius:8px;padding:12px;display:flex;align-items:center;gap:12px;">
+            <div style="background:${isNew ? '#fffbeb' : 'white'};border:1px solid ${isNew ? '#f59e0b' : '#ddd'};border-radius:8px;padding:12px;display:flex;align-items:center;gap:12px;">
                 <input type="checkbox" id="ntf_${field.id}" ${field.show ? 'checked' : ''} 
                     style="width:20px;height:20px;cursor:pointer;">
                 <div style="flex:1;">
@@ -9261,6 +9295,7 @@ function openCustomizeNameTagModal() {
                         <input type="text" id="ntf_label_${field.id}" value="${field.label}" 
                             style="border:1px solid #ddd;border-radius:4px;padding:4px 8px;font-size:13px;flex:1;"
                             placeholder="Label field">
+                        ${isNew ? '<span style="font-size:10px;background:#f59e0b;color:white;padding:2px 6px;border-radius:10px;white-space:nowrap;">BARU</span>' : ''}
                     </div>
                     <div style="font-size:11px;color:#888;">
                         Sumber: ${field.source === 'jamaah' ? 'Data Jamaah' : 'Data Jamaah Kita'} 
@@ -9281,6 +9316,17 @@ function openCustomizeNameTagModal() {
     
     container.innerHTML = html;
     modal.style.display = 'flex';
+    updateNametagnBadge();
+}
+
+function aktifkanSemuaFieldBaruNametag() {
+    const fields = getNameTagFields();
+    const saved = localStorage.getItem('safara_nametag_fields');
+    const savedIds = saved ? new Set(JSON.parse(saved).map(f => f.id)) : new Set();
+    fields.forEach(f => { if (!savedIds.has(f.id)) f.show = true; });
+    saveNameTagFieldsConfig(fields);
+    openCustomizeNameTagModal();
+    showToast('✅ Semua field baru diaktifkan!');
 }
 
 function closeCustomizeNameTagModal() {
