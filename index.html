@@ -2134,6 +2134,10 @@
                     <i class="fas fa-download"></i> Export <i class="fas fa-chevron-up" style="font-size:11px;"></i>
                 </button>
                 <div class="export-dropdown-menu" id="exportMenuOnProses">
+                    <div class="export-menu-item" onclick="cetakRekapOnProses(); toggleExportDropdown('exportMenuOnProses')">
+                        <div class="export-icon export-icon-cetak">📄</div>
+                        <div><div class="export-label">Cetak PDF Rekap</div><div class="export-desc">Satu tabel urut sesuai sort dipilih</div></div>
+                    </div>
                     <div class="export-menu-item" onclick="showGroupDialogJamaahKita(); toggleExportDropdown('exportMenuOnProses')">
                         <div class="export-icon export-icon-cetak">🖨️</div>
                         <div><div class="export-label">Cetak PDF Per Kelompok</div><div class="export-desc">Kelompokkan berdasarkan field</div></div>
@@ -6073,7 +6077,80 @@ function renderJamaahKitaDetailFields(jk) {
     return html;
 }
 
-function filterJamaahKitaList() { renderJamaahKitaList(); }
+function cetakRekapOnProses() {
+    if (jamaahKitaList.length === 0) return showToast('Tidak ada data untuk dicetak!');
+    const printFieldNames = getOnProsesPrintFields();
+    const printFields = dynamicFieldsJamaahKita.filter(f => printFieldNames.includes(f.name) && f.name !== 'whatsapp');
+    const sorted = getSortedKitaList([...jamaahKitaList]);
+    const cfg = getKonfigurasiProData();
+    const namaInstansi = cfg.instansi2?.nama || cfg.instansi1?.nama || 'Safara';
+    const watermarkHtml = buildPrintWatermark(cfg);
+    const sortLabel = { default: 'Terbaru', az: 'Nama A→Z', za: 'Nama Z→A', terlama: 'Tanggal Lama ke Baru', terbaru: 'Tanggal Baru ke Lama' }[kitaSortOrder] || '';
+    const batas = cfg.settings?.batas_lansia || 60;
+
+    let rowsHtml = '';
+    sorted.forEach((jk, i) => {
+        const f = getMergedJamaahKitaFields(jk);
+        const rowBg = i % 2 === 0 ? 'white' : '#f9fafb';
+        rowsHtml += `<tr style="background:${rowBg};">
+            <td style="text-align:center;padding:7px 6px;border-bottom:1px solid #eee;">${i + 1}</td>
+            <td style="padding:7px 8px;border-bottom:1px solid #eee;font-weight:500;">${escapeHtml(jk.nama_lengkap)}</td>
+            ${printFields.map(field => {
+                const val = f[field.name] || '-';
+                const isTgl = field.type === 'date' || field.name.includes('lahir');
+                if (isTgl && val !== '-') {
+                    const umur = hitungUmurDariTanggal(val);
+                    const status = getStatusLansia(umur);
+                    return `<td style="padding:7px 8px;border-bottom:1px solid #eee;">${escapeHtml(val)}<br><small style="color:#888;">${status||''}</small></td>`;
+                }
+                return `<td style="padding:7px 8px;border-bottom:1px solid #eee;">${escapeHtml(val)}</td>`;
+            }).join('')}
+        </tr>`;
+    });
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rekap On Proses</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;padding:20px;background:#f0f0f0;}
+        .box{background:white;max-width:1000px;margin:0 auto;border-radius:16px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,0.1);position:relative;overflow:hidden;}
+        .watermark-wrap{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+        .content{position:relative;z-index:1;}
+        h1{color:#0D5C4A;text-align:center;font-size:20px;margin-bottom:4px;}
+        .sub{text-align:center;color:#666;font-size:12px;margin-bottom:16px;}
+        table{width:100%;border-collapse:collapse;font-size:12px;}
+        thead th{background:#0D5C4A;color:white;padding:9px 8px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+        thead th:first-child{text-align:center;width:36px;}
+        .footer{text-align:center;margin-top:16px;font-size:11px;color:#999;border-top:1px solid #eee;padding-top:10px;}
+        .no-print{text-align:center;margin-top:20px;}
+        .no-print button{padding:10px 28px;margin:0 6px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;}
+        @media print{body{background:white;padding:0;}.box{box-shadow:none;border-radius:0;}.no-print{display:none!important;}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}
+    </style></head><body>
+    <div class="box">
+        <div class="watermark-wrap">${watermarkHtml}</div>
+        <div class="content">
+            <h1>📋 REKAP DATA JAMAAH ON PROSES</h1>
+            <div class="sub">${namaInstansi} &nbsp;|&nbsp; ${sorted.length} jamaah &nbsp;|&nbsp; Urutan: ${sortLabel} &nbsp;|&nbsp; ${new Date().toLocaleDateString('id-ID')}</div>
+            <table>
+                <thead><tr>
+                    <th>No</th>
+                    <th>Nama Jamaah</th>
+                    ${printFields.map(f => `<th>${f.icon || '📌'} ${escapeHtml(f.label)}</th>`).join('')}
+                </tr></thead>
+                <tbody>${rowsHtml}</tbody>
+            </table>
+            <div class="footer">Dicetak dari ${namaInstansi}</div>
+        </div>
+    </div>
+    <div class="no-print">
+        <button onclick="window.print()" style="background:#0D5C4A;color:white;">🖨️ CETAK</button>
+        <button onclick="window.close()" style="background:#e2e8f0;color:#333;">TUTUP</button>
+    </div>
+    </body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+}
 
 function pilihSemuaOnProses() {
     document.querySelectorAll('#jamaahKitaListContainer input[type=checkbox]').forEach(cb => cb.checked = true);
