@@ -6322,7 +6322,7 @@ async function printGroupedPDFJamaahKita() {
 
     const groups = {};
     const batas = getKonfigurasiProData().settings?.batas_lansia || 60;
-    jamaahKitaList.forEach(jk => {
+    getSortedKitaList([...jamaahKitaList]).forEach(jk => {
         const mergedFields = getMergedJamaahKitaFields(jk);
         const rawVal = mergedFields[groupField.name] || "";
         let key;
@@ -6372,7 +6372,7 @@ async function printGroupedPDFJamaahKita() {
     <div class="date">Tanggal Cetak: ${new Date().toLocaleDateString("id-ID")}</div>
     <div class="date">Berdasarkan: ${groupField.icon || '📌'} ${escapeHtml(groupField.label)}</div>`;
     sortedGroups.forEach((key, groupIdx) => {
-        const members = groups[key];
+        const members = getSortedKitaList([...groups[key]]); // ikuti urutan sort yang dipilih
         const pageBreak = groupIdx > 0 ? 'page-break-before:always;' : '';
         html += `<div class="group" style="${pageBreak}">
         <div class="group-title">${groupField.icon || '📌'} ${escapeHtml(groupField.label)}: ${escapeHtml(key)} (${members.length} orang)</div>
