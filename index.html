@@ -6375,8 +6375,34 @@ function renderJamaahKitaFieldsList() {
     const container = document.getElementById('jamaahKitaFieldsListContainer');
     if (!container) return;
     const saved = JSON.parse(localStorage.getItem('safara_onproses_print_fields') || '[]');
-    let html = '<div style="font-size:12px;font-weight:bold;color:var(--primary);margin:10px 0 6px;">Daftar Field & Pilih Cetak:</div>';
-    if (dynamicFieldsJamaahKita.length === 0) { container.innerHTML = '<p style="color:#999;font-size:13px;">Belum ada field.</p>'; return; }
+
+    // Cek field baru dari database yang belum ada di On Proses (kecuali yang diabaikan)
+    const kitaNames = new Set(dynamicFieldsJamaahKita.map(f => f.name));
+    const ignored = JSON.parse(localStorage.getItem('safara_kita_ignored_fields') || '[]');
+    const fieldBaru = dynamicFieldsJamaah.filter(f => !kitaNames.has(f.name) && !ignored.includes(f.name));
+
+    let html = '';
+
+    // Notifikasi field baru
+    if (fieldBaru.length > 0) {
+        html += `<div style="background:#fef3c7;border:1.5px solid #f59e0b;border-radius:10px;padding:12px;margin-bottom:12px;">
+            <div style="font-weight:bold;color:#92400e;margin-bottom:6px;">🔔 ${fieldBaru.length} Field Baru dari Database Jamaah</div>
+            <div style="font-size:12px;color:#78350f;margin-bottom:8px;">Pilih yang ingin ditambahkan ke On Proses:</div>
+            ${fieldBaru.map(f => `
+            <label style="display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;">
+                <input type="checkbox" id="newkita_${f.name}" checked
+                    style="width:16px;height:16px;accent-color:#f59e0b;cursor:pointer;">
+                <span style="font-size:13px;">${f.icon||'📌'} ${escapeHtml(f.label)}</span>
+            </label>`).join('')}
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button onclick="tambahFieldBaruDariDatabase()" style="flex:1;padding:8px;background:#f59e0b;color:white;border:none;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;">✅ Tambahkan yang Dipilih</button>
+                <button onclick="abaikanFieldBaru()" style="padding:8px 12px;background:#e2e8f0;color:#555;border:none;border-radius:8px;font-size:12px;cursor:pointer;">Abaikan</button>
+            </div>
+        </div>`;
+    }
+
+    html += '<div style="font-size:12px;font-weight:bold;color:var(--primary);margin:10px 0 6px;">Daftar Field & Pilih Cetak:</div>';
+    if (dynamicFieldsJamaahKita.length === 0) { container.innerHTML = html + '<p style="color:#999;font-size:13px;">Belum ada field.</p>'; return; }
     dynamicFieldsJamaahKita.forEach((f, idx) => {
         const isProtected = f.name === 'whatsapp';
         const checked = saved.length === 0 || saved.includes(f.name);
@@ -6408,6 +6434,32 @@ function renderJamaahKitaFieldsList() {
     container.innerHTML = html;
     const printContainer = document.getElementById('onProsesFieldPrintSelector');
     if (printContainer) printContainer.innerHTML = '';
+}
+
+function tambahFieldBaruDariDatabase() {
+    const kitaNames = new Set(dynamicFieldsJamaahKita.map(f => f.name));
+    const fieldBaru = dynamicFieldsJamaah.filter(f => !kitaNames.has(f.name));
+    const dipilih = fieldBaru.filter(f => {
+        const cb = document.getElementById(`newkita_${f.name}`);
+        return cb && cb.checked;
+    });
+    if (dipilih.length === 0) return showToast('Tidak ada field yang dipilih!');
+    dipilih.forEach(f => dynamicFieldsJamaahKita.push({ ...f }));
+    saveDynamicFieldsJamaahKita();
+    renderJamaahKitaFieldsList();
+    renderJamaahKitaDynamicFieldsForm();
+    showToast(`✅ ${dipilih.length} field berhasil ditambahkan ke On Proses!`);
+}
+
+function abaikanFieldBaru() {
+    // Tandai nama field yang diabaikan agar tidak muncul lagi
+    const kitaNames = new Set(dynamicFieldsJamaahKita.map(f => f.name));
+    const fieldBaru = dynamicFieldsJamaah.filter(f => !kitaNames.has(f.name));
+    const ignored = JSON.parse(localStorage.getItem('safara_kita_ignored_fields') || '[]');
+    fieldBaru.forEach(f => { if (!ignored.includes(f.name)) ignored.push(f.name); });
+    localStorage.setItem('safara_kita_ignored_fields', JSON.stringify(ignored));
+    renderJamaahKitaFieldsList();
+    showToast('Field baru diabaikan.');
 }
 
 function moveKitaFieldUp(idx) {
