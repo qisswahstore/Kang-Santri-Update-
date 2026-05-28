@@ -2114,6 +2114,14 @@
             <input type="text" id="searchJamaahKitaInput" placeholder="Cari nama jamaah..." onkeyup="filterJamaahKitaList()">
             <button onclick="resetJamaahKitaFilter()" style="width:auto; padding:0 16px; background:var(--gray);">Reset</button>
         </div>
+        <!-- Sort Selector -->
+        <div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;">
+            <button id="sortKita_default" onclick="setKitaSort('default')" style="flex-shrink:0;padding:6px 12px;border-radius:20px;border:1.5px solid #0D5C4A;background:#0D5C4A;color:white;font-size:12px;cursor:pointer;">📋 Asli</button>
+            <button id="sortKita_az" onclick="setKitaSort('az')" style="flex-shrink:0;padding:6px 12px;border-radius:20px;border:1.5px solid #ddd;background:white;color:#333;font-size:12px;cursor:pointer;">A → Z</button>
+            <button id="sortKita_za" onclick="setKitaSort('za')" style="flex-shrink:0;padding:6px 12px;border-radius:20px;border:1.5px solid #ddd;background:white;color:#333;font-size:12px;cursor:pointer;">Z → A</button>
+            <button id="sortKita_terlama" onclick="setKitaSort('terlama')" style="flex-shrink:0;padding:6px 12px;border-radius:20px;border:1.5px solid #ddd;background:white;color:#333;font-size:12px;cursor:pointer;">📅 Lama</button>
+            <button id="sortKita_terbaru" onclick="setKitaSort('terbaru')" style="flex-shrink:0;padding:6px 12px;border-radius:20px;border:1.5px solid #ddd;background:white;color:#333;font-size:12px;cursor:pointer;">🆕 Baru</button>
+        </div>
         <div style="display:flex;gap:8px;margin-bottom:10px;">
             <button onclick="pilihSemuaOnProses()" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
             <button onclick="hapusPilihanOnProses()" style="flex:1;padding:8px;background:#EF4444;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">🗑️ Hapus Dipilih</button>
@@ -5961,6 +5969,31 @@ function tambahJamaahKita() {
     showToast('Jamaah berhasil ditambahkan ke On Proses!');
 }
 
+let kitaSortOrder = 'default';
+
+function setKitaSort(mode) {
+    kitaSortOrder = mode;
+    // Update tampilan tombol
+    ['default','az','za','terlama','terbaru'].forEach(m => {
+        const btn = document.getElementById(`sortKita_${m}`);
+        if (!btn) return;
+        const active = m === mode;
+        btn.style.background = active ? '#0D5C4A' : 'white';
+        btn.style.color = active ? 'white' : '#333';
+        btn.style.borderColor = active ? '#0D5C4A' : '#ddd';
+    });
+    renderJamaahKitaList();
+}
+
+function getSortedKitaList(list) {
+    const arr = [...list];
+    if (kitaSortOrder === 'az') return arr.sort((a, b) => a.nama_lengkap.localeCompare(b.nama_lengkap, 'id'));
+    if (kitaSortOrder === 'za') return arr.sort((a, b) => b.nama_lengkap.localeCompare(a.nama_lengkap, 'id'));
+    if (kitaSortOrder === 'terlama') return arr; // urutan asli = terlama ke terbaru
+    if (kitaSortOrder === 'terbaru') return arr.reverse();
+    return arr.reverse(); // default = terbaru di atas (perilaku lama)
+}
+
 function renderJamaahKitaList() {
     const container = document.getElementById('jamaahKitaListContainer');
     if (!container) return;
@@ -5968,8 +6001,9 @@ function renderJamaahKitaList() {
     let filtered = [...jamaahKitaList];
     if (keyword) filtered = filtered.filter(j => j.nama_lengkap.toLowerCase().includes(keyword));
     if (filtered.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px;color:#94a3b8;">Belum ada data</div>'; return; }
+    const sorted = getSortedKitaList(filtered);
     let html = "";
-    [...filtered].reverse().forEach(jk => {
+    sorted.forEach(jk => {
         const isChecked = selectedJamaahKitaIds.includes(jk.id);
         html += `<div class="jamaah-kita-item">
             <input type="checkbox" class="jamaah-kita-checkbox" value="${jk.id}" ${isChecked ? "checked" : ""} onchange="toggleJamaahKitaSelect(${jk.id}, this.checked)">
@@ -6188,8 +6222,8 @@ function cetakLabelJamaahKita() {
         : `<div style="font-size:18px;">🕌</div>`;
 
     let cardsHtml = '';
-    jamaahKitaList.forEach(jk => {
-        const f = getMergedJamaahKitaFields(jk); // Pakai data terbaru dari Database
+    const sortedKita = getSortedKitaList([...jamaahKitaList]);
+        sortedKita.forEach(jk => {
         let fieldsHtml = '';
         printFields.forEach(field => {
             const val = f[field.name] || '';
