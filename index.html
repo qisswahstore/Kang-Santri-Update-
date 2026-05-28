@@ -7844,6 +7844,22 @@ function openFolderDetail(folderId) {
     document.getElementById('folderListContainer').innerHTML = html; 
 }
 
+let folderSortOrder = 'default';
+
+function setFolderSort(folderId, mode) {
+    folderSortOrder = mode;
+    renderFolderJamaahSection(folderId);
+}
+
+function getSortedFolderJamaah(list) {
+    const arr = [...list];
+    if (folderSortOrder === 'az') return arr.sort((a, b) => a.nama_lengkap.localeCompare(b.nama_lengkap, 'id'));
+    if (folderSortOrder === 'za') return arr.sort((a, b) => b.nama_lengkap.localeCompare(a.nama_lengkap, 'id'));
+    if (folderSortOrder === 'terlama') return arr;
+    if (folderSortOrder === 'terbaru') return arr.reverse();
+    return arr;
+}
+
 function renderFolderJamaahSection(folderId) {
     const container = document.getElementById('folderJamaahSection');
     if (!container) return;
@@ -7851,6 +7867,14 @@ function renderFolderJamaahSection(folderId) {
     if (!folder) return;
     const jamaahInFolder = folder.jamaahIds.map(id => jamaahList.find(j => j.id == id)).filter(j => j);
     const availableJamaah = jamaahList.filter(j => !folder.jamaahIds.includes(j.id));
+    const sortedJamaah = getSortedFolderJamaah(jamaahInFolder);
+
+    const sortBtn = (mode, label) => {
+        const active = folderSortOrder === mode;
+        return `<button onclick="event.stopPropagation();setFolderSort('${folderId}','${mode}')"
+            style="flex-shrink:0;padding:5px 10px;border-radius:20px;border:1.5px solid ${active?'#0D5C4A':'#ddd'};
+            background:${active?'#0D5C4A':'white'};color:${active?'white':'#333'};font-size:11px;cursor:pointer;">${label}</button>`;
+    };
     let html = `
     <div class="input-group"><label>➕ Tambah Jamaah ke Folder</label>
     <input type="text" id="searchFolderJamaah" placeholder="🔍 Cari nama jamaah..." oninput="filterFolderJamaahSelect()" style="margin-bottom:8px;">
@@ -7871,13 +7895,16 @@ function renderFolderJamaahSection(folderId) {
     <button class="btn btn-primary btn-small mt-2" onclick="addJamaahToFolderMulti('${folderId}')">➕ Tambahkan ke Folder</button>
     </div>
     <div class="section-title">📋 Daftar Jamaah dalam Folder (${jamaahInFolder.length})</div>
+    <div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;">
+        ${sortBtn('default','📋 Asli')}${sortBtn('az','A → Z')}${sortBtn('za','Z → A')}${sortBtn('terlama','📅 Lama')}${sortBtn('terbaru','🆕 Baru')}
+    </div>
     <div style="display:flex;gap:8px;margin-bottom:10px;">
         <button onclick="pilihSemuaFolderList('${folderId}')" style="flex:1;padding:8px;background:#0D5C4A;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">✅ Pilih Semua</button>
         <button onclick="hapusPilihanFolder('${folderId}')" style="flex:1;padding:8px;background:#EF4444;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;">🗑️ Hapus Dipilih</button>
     </div>
     <div id="folderJamaahList">`;
-    if (jamaahInFolder.length === 0) html += '<p class="text-center">Belum ada jamaah</p>';
-    else jamaahInFolder.forEach(j => {
+    if (sortedJamaah.length === 0) html += '<p class="text-center">Belum ada jamaah</p>';
+    else sortedJamaah.forEach(j => {
         html += `<div class="jamaah-card"><div class="jamaah-header"><label style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;"><input type="checkbox" value="${j.id}" style="width:18px;height:18px;accent-color:#EF4444;cursor:pointer;"><div class="jamaah-nama">👤 ${escapeHtml(j.nama_lengkap)}</div></label><button class="btn-delete-jamaah" onclick="removeJamaahFromFolder('${folderId}', ${j.id})">🗑️ Hapus</button></div></div>`;
     });
     html += `</div>`;
@@ -8135,7 +8162,7 @@ async function exportFolderToPDF(folderId) {
     const folder = folderList.find(f => f.id == folderId);
     if(!folder) return;
     const allJamaah = jamaahList;
-    const jamaahInFolder = folder.jamaahIds.map(id => allJamaah.find(j => j.id == id)).filter(j => j);
+    const jamaahInFolder = getSortedFolderJamaah(folder.jamaahIds.map(id => allJamaah.find(j => j.id == id)).filter(j => j));
     if(jamaahInFolder.length === 0) { showToast('Tidak ada jamaah dalam folder ini'); return; }
     const cfgFolder = getKonfigurasiProData();
     const namaInstansi = cfgFolder.instansi1.nama || 'Safara';
@@ -8203,9 +8230,8 @@ async function exportFolderToPDF(folderId) {
 function exportFolderToExcel(folderId) { 
     const folder = folderList.find(f => f.id == folderId); 
     if(!folder) return; 
-    // Ambil langsung dari localStorage supaya data selalu fresh
     const allJamaah = jamaahList;
-    const jamaahInFolder = folder.jamaahIds.map(id => allJamaah.find(j => j.id == id)).filter(j => j); 
+    const jamaahInFolder = getSortedFolderJamaah(folder.jamaahIds.map(id => allJamaah.find(j => j.id == id)).filter(j => j));
     if(jamaahInFolder.length === 0) { showToast('Tidak ada jamaah dalam folder ini'); return; } 
     const fields = folder.fields || [];
     // Baris info folder dulu
