@@ -6300,7 +6300,8 @@ function cetakLabelJamaahKita() {
 
     let cardsHtml = '';
     const sortedKita = getSortedKitaList([...jamaahKitaList]);
-        sortedKita.forEach(jk => {
+    sortedKita.forEach(jk => {
+        const f = getMergedJamaahKitaFields(jk);
         let fieldsHtml = '';
         printFields.forEach(field => {
             const val = f[field.name] || '';
@@ -7909,6 +7910,10 @@ function renderFolderJamaahSection(folderId) {
     });
     html += `</div>`;
     container.innerHTML = html;
+}
+
+function pilihSemuaFolderList(folderId) {
+    document.querySelectorAll('#folderJamaahList input[type=checkbox]').forEach(cb => cb.checked = true);
 }
 
 function hapusPilihanFolder(folderId) {
