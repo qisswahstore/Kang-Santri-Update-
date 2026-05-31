@@ -2772,7 +2772,30 @@
 <div id="detailModal" class="modal"><div class="modal-content"><h3 id="detailJudul"></h3><div id="detailIsi" style="margin:15px 0; white-space:pre-wrap;"></div><button class="btn btn-wa" onclick="shareDetailToWA()"> KIRIM KE WA</button><button class="btn btn-danger mt-2" onclick="closeDetailModal()">TUTUP</button></div></div>
 <div id="dokumenFieldModal" class="modal"><div class="modal-content"><h3>Tambah Jenis Dokumen</h3><div class="dynamic-field"><label>Nama Dokumen</label><input type="text" id="newDokumenName" placeholder="Contoh: Visa, Tiket, Sertifikat"></div><div class="dynamic-field"><label>Icon</label><select id="newDokumenIcon"><option value="🪪"> KTP</option><option value="📘"> Paspor</option><option value="📷"> Foto</option><option value="💉"> Vaksin</option><option value="🛂"> Visa</option><option value="🎫"> Tiket</option><option value="📄"> Dokumen</option></select></div><button class="btn btn-primary" onclick="addDokumenField()"> TAMBAH</button><button class="btn btn-danger mt-2" onclick="closeDokumenFieldModal()">BATAL</button></div></div>
 <div id="previewDokumenModal" class="modal"><div class="modal-content"><h3 id="previewDokumenTitle">Preview Dokumen</h3><img id="previewDokumenImage" class="preview-img" style="max-width:100%; border-radius:16px; margin:15px 0;"><button class="btn btn-primary" onclick="closePreviewDokumenModal()">Tutup</button></div></div>
-<div id="batchFloatingBar" class="batch-floating-bar" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:white; padding:12px 20px; border-radius:50px; box-shadow:0 4px 15px rgba(0,0,0,0.2); display:none; align-items:center; gap:15px; border:2px solid #25d366; z-index:9999;"><span id="batchCount" class="batch-count">0 dipilih</span><button class="btn-batch-wa" onclick="runBatchWA()" style="background:#25d366; color:white; border:none; padding:8px 18px; border-radius:30px;"><i class="fab fa-whatsapp"></i> Kirim WA Massal</button><button class="btn-batch-cancel" onclick="clearBatchSelection()" style="background:none; border:none; color:var(--red); font-size:20px;">✕</button></div>
+<div id="batchFloatingBar" class="batch-floating-bar" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:white; padding:12px 20px; border-radius:50px; box-shadow:0 4px 15px rgba(0,0,0,0.2); display:none; align-items:center; gap:10px; border:2px solid #0D5C4A; z-index:9999;">
+    <span id="batchCount" class="batch-count">0 dipilih</span>
+    <button onclick="showPindahModeModal()" style="background:#0D5C4A;color:white;border:none;padding:8px 14px;border-radius:30px;font-size:12px;cursor:pointer;">🔀 Pindah Mode</button>
+    <button class="btn-batch-wa" onclick="runBatchWA()" style="background:#25d366;color:white;border:none;padding:8px 14px;border-radius:30px;font-size:12px;cursor:pointer;"><i class="fab fa-whatsapp"></i> WA</button>
+    <button onclick="clearBatchSelection()" style="background:none;border:none;color:#ef4444;font-size:20px;cursor:pointer;">✕</button>
+</div>
+
+<!-- Modal Pindah Mode -->
+<div id="pindahModeModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:400px;">
+        <h3>🔀 Pindah Mode</h3>
+        <p id="pindahModeInfo" style="font-size:13px;color:#666;margin:8px 0 16px;"></p>
+        <div class="dynamic-field">
+            <label>Pilih Mode Tujuan</label>
+            <select id="pindahModeSelect" style="padding:10px;border:1.5px solid #ddd;border-radius:10px;width:100%;font-size:14px;">
+                <option value="">-- Pilih Mode --</option>
+            </select>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px;">
+            <button onclick="document.getElementById('pindahModeModal').style.display='none'" class="btn btn-secondary" style="flex:1">Batal</button>
+            <button onclick="executePindahMode()" class="btn btn-primary" style="flex:1">✅ Pindah Sekarang</button>
+        </div>
+    </div>
+</div>
 
 <script>
 // ==================== FUNGSI CETAK DOKUMEN (TAMBAHAN BARU) ====================
@@ -10334,7 +10357,7 @@ function renderMasterTable() {
         let whatsappValue = '';
         const whatsappField = masterDynamicFields.find(f => f.name.toLowerCase() === 'whatsapp' || f.label.toLowerCase() === 'whatsapp');
         if(whatsappField) whatsappValue = item.additional_fields?.[whatsappField.name] || '';
-        bodyHtml += `<tr><td class="checkbox-col"><input type="checkbox" class="master-checkbox" data-nama="${escapeHtml(item.nama)}" data-wa="${escapeHtml(whatsappValue)}" onchange="updateBatchBar()"></td><td style="text-align:center;">${displayNum}</td><td><strong>${escapeHtml(item.nama)}</strong></td>`;
+        bodyHtml += `<tr><td class="checkbox-col"><input type="checkbox" class="master-checkbox" data-id="${item.id}" data-nama="${escapeHtml(item.nama)}" data-wa="${escapeHtml(whatsappValue)}" onchange="updateBatchBar()"></td><td style="text-align:center;">${displayNum}</td><td><strong>${escapeHtml(item.nama)}</strong></td>`;
         for(const field of masterDynamicFields) {
             const val = item.additional_fields?.[field.name] || '-';
             bodyHtml += `<td>${escapeHtml(val)}</td>`;
@@ -10420,6 +10443,46 @@ function confirmDeleteAllMasterData() {
         renderMasterTable();
         showToast(`✅ Semua data dihapus`);
     }
+}
+
+function showPindahModeModal() {
+    const checked = document.querySelectorAll('.master-checkbox:checked');
+    if(checked.length === 0) return showToast('Pilih jamaah dulu!');
+    const modeOptions = activeModes.filter(m => m !== 'Semua')
+        .map(m => `<option value="${m}">${m}</option>`).join('');
+    document.getElementById('pindahModeSelect').innerHTML = '<option value="">-- Pilih Mode --</option>' + modeOptions;
+    document.getElementById('pindahModeInfo').textContent = `${checked.length} jamaah akan dipindahkan ke mode:`;
+    document.getElementById('pindahModeModal').style.display = 'flex';
+}
+
+function executePindahMode() {
+    const modeTujuan = document.getElementById('pindahModeSelect').value;
+    if(!modeTujuan) { showToast('Pilih mode tujuan dulu!'); return; }
+    const checked = document.querySelectorAll('.master-checkbox:checked');
+    let dipindah = 0, dilewati = 0, duplikat = [];
+    checked.forEach(cb => {
+        const id = cb.getAttribute('data-id');
+        const nama = cb.getAttribute('data-nama');
+        const item = masterDataList.find(d => d.id == id);
+        if(!item) return;
+        // Cek duplikat nama+mode tujuan (kecuali dirinya sendiri)
+        const sudahAda = masterDataList.find(d => d.id != id &&
+            d.nama.toLowerCase().trim() === nama.toLowerCase().trim() &&
+            d.mode === modeTujuan
+        );
+        if(sudahAda) { dilewati++; duplikat.push(nama); return; }
+        item.mode = modeTujuan;
+        dipindah++;
+    });
+    if(dipindah > 0) {
+        saveMasterDataToLocal();
+        renderMasterTable();
+    }
+    document.getElementById('pindahModeModal').style.display = 'none';
+    clearBatchSelection();
+    let msg = `✅ ${dipindah} jamaah dipindah ke ${modeTujuan}`;
+    if(dilewati > 0) msg += `, ${dilewati} dilewati (sudah ada di ${modeTujuan})`;
+    showToast(msg);
 }
 
 function deleteSelectedMasterData() {
